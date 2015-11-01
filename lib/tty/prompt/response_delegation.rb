@@ -14,24 +14,18 @@ module TTY
                                 :read_date,
                                 :read_datetime,
                                 :read_email,
+                                :read_file,
                                 :read_float,
                                 :read_input,
                                 :read_int,
+                                :read_keypress,
                                 :read_multiple,
+                                :read_password,
                                 :read_range,
                                 :read_regex,
-                                :read_string
-
-      #
-      # delegatable_method :dispatch, :read_text
-      #
-      # delegatable_method :dispatch, :read_symbol
-      #
-      # delegatable_method :dispatch, :read_file
-      #
-      # delegatable_method :dispatch, :read_password
-      #
-      # delegatable_method :dispatch, :read_keypress
+                                :read_string,
+                                :read_symbol,
+                                :read_text
 
       # Create response instance when question readed is invoked
       #
