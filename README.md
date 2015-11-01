@@ -45,7 +45,6 @@ Or install it yourself as:
   * [2.3 say](#23-say)
   * [2.4 suggest](#24-suggest)
 
-
 ## 1. Usage
 
 In order to start asking questions on the command line, create prompt:
