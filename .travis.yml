@@ -1,0 +1,24 @@
+language: ruby
+bundler_args: --without yard benchmarks
+script: "bundle exec rake ci"
+rvm:
+  - 1.9.3
+  - 2.0
+  - 2.1
+  - 2.2
+  - ruby-head
+matrix:
+  include:
+    - rvm: jruby-19mode
+    - rvm: jruby-20mode
+    - rvm: jruby-21mode
+    - rvm: jruby-head
+    - rvm: rbx-2
+  allow_failures:
+    - rvm: ruby-head
+    - rvm: jruby-head
+    - rvm: jruby-20mode
+    - rvm: jruby-21mode
+  fast_finish: true
+branches:
+  only: master
