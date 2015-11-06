@@ -3,28 +3,24 @@
 require 'spec_helper'
 
 RSpec.describe TTY::Prompt, '#warn' do
-  let(:input)  { StringIO.new }
-  let(:output) { StringIO.new }
   let(:color)  { Pastel.new(enabled: true) }
 
-  subject(:prompt) { TTY::Prompt.new(input, output) }
+  subject(:prompt) { TTY::TestPrompt.new }
 
   before { allow(Pastel).to receive(:new).and_return(color) }
 
-  after { output.rewind }
-
   it 'displays one message' do
     prompt.warn "Careful young apprentice!"
-    expect(output.string).to eql "\e[33mCareful young apprentice!\e[0m\n"
+    expect(prompt.output.string).to eql "\e[33mCareful young apprentice!\e[0m\n"
   end
 
   it 'displays many messages' do
     prompt.warn "Careful there!", "It's dangerous!"
-    expect(output.string).to eql "\e[33mCareful there!\e[0m\n\e[33mIt's dangerous!\e[0m\n"
+    expect(prompt.output.string).to eql "\e[33mCareful there!\e[0m\n\e[33mIt's dangerous!\e[0m\n"
   end
 
   it 'displays message with option' do
     prompt.warn "Careful young apprentice!", newline: false
-    expect(output.string).to eql "\e[33mCareful young apprentice!\e[0m"
+    expect(prompt.output.string).to eql "\e[33mCareful young apprentice!\e[0m"
   end
 end
