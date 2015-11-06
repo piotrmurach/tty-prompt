@@ -24,15 +24,16 @@ module TTY
         # @api public
         def raw(is_on=true, &block)
           value = nil
-          begin
-            on if is_on
-            value = block.call if block_given?
-            off
-            return value
-          rescue NoMethodError, Interrupt
-            off
-            exit
-          end
+          on if is_on
+          value = block.call if block_given?
+        rescue NoMethodError, Interrupt => error
+          puts "#{error.class} #{error.message}"
+          puts error.backtrace
+          off
+          exit
+        ensure
+          off
+          return value
         end
       end # Raw
     end # Mode

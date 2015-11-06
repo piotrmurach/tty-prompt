@@ -24,15 +24,16 @@ module TTY
         # @api public
         def echo(is_on=true, &block)
           value = nil
-          begin
-            off unless is_on
-            value = block.call if block_given?
-            on
-            return value
-          rescue NoMethodError, Interrupt
-            on
-            exit
-          end
+          off unless is_on
+          value = block.call if block_given?
+        rescue NoMethodError, Interrupt => error
+          puts "#{error.class} #{error.message}"
+          puts error.backtrace
+          on
+          exit
+        ensure
+          on
+          return value
         end
       end # Echo
     end # Mode
