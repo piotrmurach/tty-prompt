@@ -112,10 +112,10 @@ For asking questions involving list of options use `select` method by passing th
 ```ruby
 prompt.select("Choose your destiny?", %w(Scorpion Kano Jax))
 # =>
-Choose your destiny?
-‣ Scorpion
-  Kano
-  Jax
+# Choose your destiny?
+# ‣ Scorpion
+#   Kano
+#   Jax
 ```
 
 You can also provide options through DSL using the `choice` method for single entry and/or `choices` call for more than one choice:
@@ -127,10 +127,10 @@ prompt.select("Choose your destiny?") do |menu|
   menu.choice 'Jax'
 end
 # =>
-Choose your destiny?
-‣ Scorpion
-  Kano
-  Jax
+# Choose your destiny?
+# ‣ Scorpion
+#   Kano
+#   Jax
 ```
 
 By default the choice name is used as return value, but you can provide your custom values:
@@ -142,10 +142,10 @@ prompt.select("Choose your destiny?") do |menu|
   menu.choice 'Jax', 3
 end
 # =>
-Choose your destiny?
-‣ Scorpion
-  Kano
-  Jax
+# Choose your destiny?
+# ‣ Scorpion
+#  Kano
+#  Jax
 ```
 
 If you wish you can also provide a simple hash to denote choice name and its value like so:
@@ -166,10 +166,10 @@ prompt.select("Choose your destiny?") do |menu|
   menu.choice 'Jax', 3
 end
 # =>
-Choose your destiny?
-  Scorpion
-  Kano
-‣ Jax
+# Choose your destiny?
+#   Scorpion
+#   Kano
+# ‣ Jax
 ```
 
 ### 2.3 read
