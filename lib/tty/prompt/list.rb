@@ -95,15 +95,17 @@ module TTY
       #
       # @api private
       def render
+        @prompt.output.print(@cursor.hide)
         until @selected
-          @prompt.output.print(@cursor.hide)
           render_question
           process_input
           refresh
-          @prompt.output.print(@cursor.show)
         end
         render_question
-        @choices[@active - 1].value
+        result = @choices[@active - 1].value
+      ensure
+        @prompt.output.print(@cursor.show)
+        result
       end
 
       # Process keyboard input

@@ -19,8 +19,8 @@ RSpec.describe TTY::Prompt, '#select' do
       "  Medium\n",
       "  Small\n",
       "\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K",
-      "\e[?25hWhat size?\n",
-      "\e[32mLarge\e[0m\n"
+      "What size?\n",
+      "\e[32mLarge\e[0m\n\e[?25h"
     ].join)
   end
 
@@ -36,8 +36,8 @@ RSpec.describe TTY::Prompt, '#select' do
       "  medium\n",
       "  small\n",
       "\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K",
-      "\e[?25hWhat size?\n",
-      "\e[32m1\e[0m\n"
+      "What size?\n",
+      "\e[32m1\e[0m\n\e[?25h"
     ].join)
   end
 
@@ -56,8 +56,8 @@ RSpec.describe TTY::Prompt, '#select' do
       "  Medium\n",
       "  Small\n",
       "\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K",
-      "\e[?25hWhat size?\n",
-      "\e[32mLarge\e[0m\n"
+      "What size?\n",
+      "\e[32mLarge\e[0m\n\e[?25h"
     ].join)
   end
 
@@ -76,8 +76,8 @@ RSpec.describe TTY::Prompt, '#select' do
       "  medium\n",
       "  small\n",
       "\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K",
-      "\e[?25hWhat size?\n",
-      "\e[32m1\e[0m\n"
+      "What size?\n",
+      "\e[32m1\e[0m\n\e[?25h"
     ].join)
   end
 
@@ -95,8 +95,8 @@ RSpec.describe TTY::Prompt, '#select' do
       "  Medium\n",
       "  Small\n",
       "\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K",
-      "\e[?25hWhat size?\n",
-      "\e[32mLarge\e[0m\n"
+      "What size?\n",
+      "\e[32mLarge\e[0m\n\e[?25h"
     ].join)
   end
 
@@ -116,8 +116,8 @@ RSpec.describe TTY::Prompt, '#select' do
       "\e[32m‣ medium\e[0m\n",
       "  small\n",
       "\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K",
-      "\e[?25hWhat size?\n",
-      "\e[32m2\e[0m\n"
+      "What size?\n",
+      "\e[32m2\e[0m\n\e[?25h"
     ].join)
   end
 
@@ -136,8 +136,8 @@ RSpec.describe TTY::Prompt, '#select' do
       "\e[32m‣ medium\e[0m\n",
       "  small\n",
       "\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K",
-      "\e[?25hWhat size?\n",
-      "\e[32mGood choice!\e[0m\n"
+      "What size?\n",
+      "\e[32mGood choice!\e[0m\n\e[?25h"
     ].join)
   end
 
@@ -153,8 +153,8 @@ RSpec.describe TTY::Prompt, '#select' do
       "\e[32m‣ Medium\e[0m\n",
       "  Small\n",
       "\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K",
-      "\e[?25hWhat size?\n",
-      "\e[32mMedium\e[0m\n"
+      "What size?\n",
+      "\e[32mMedium\e[0m\n\e[?25h"
     ].join)
   end
 
@@ -170,8 +170,8 @@ RSpec.describe TTY::Prompt, '#select' do
       "  Medium\n",
       "  Small\n",
       "\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K",
-      "\e[?25hWhat size?\n",
-      "\e[34mLarge\e[0m\n"
+      "What size?\n",
+      "\e[34mLarge\e[0m\n\e[?25h"
     ].join)
   end
 
@@ -187,8 +187,8 @@ RSpec.describe TTY::Prompt, '#select' do
       "  Medium\n",
       "  Small\n",
       "\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K",
-      "\e[?25hWhat size?\n",
-      "\e[32mLarge\e[0m\n"
+      "What size?\n",
+      "\e[32mLarge\e[0m\n\e[?25h"
     ].join)
   end
 end
