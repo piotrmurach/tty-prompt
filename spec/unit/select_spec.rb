@@ -3,6 +3,10 @@
 require 'spec_helper'
 
 RSpec.describe TTY::Prompt, '#select' do
+  let(:color) { Pastel.new(enabled: true) }
+
+  before { allow(Pastel).to receive(:new).and_return(color) }
+
   it "selects by default first option" do
     prompt = TTY::TestPrompt.new
     choices = %w(Large Medium Small)
