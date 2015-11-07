@@ -41,9 +41,10 @@ Or install it yourself as:
 * [1. Usage](#1-usage)
 * [2. Interface](#2-interface)
   * [2.1 ask](#21-ask)
-  * [2.2 read](#22-read)
-  * [2.3 say](#23-say)
-  * [2.4 suggest](#24-suggest)
+  * [2.2 select](#22-select)
+  * [2.3 read](#23-read)
+  * [2.4 say](#24-say)
+  * [2.5 suggest](#25-suggest)
 
 ## 1. Usage
 
@@ -104,7 +105,74 @@ prompt.ask "What is your name?" do
 end.read_string
 ```
 
-### 2.2 read
+### 2.2 select
+
+For asking questions involving list of options use `select` method by passing the question and possible choices:
+
+```ruby
+prompt.select("Choose your destiny?", %w(Scorpion Kano Jax))
+# =>
+Choose your destiny?
+‣ Scorpion
+  Kano
+  Jax
+```
+
+You can also provide options through DSL using the `choice` method for single entry and/or `choices` call for more than one choice:
+
+```ruby
+prompt.select("Choose your destiny?") do |menu|
+  menu.choice 'Scorpion'
+  menu.choice 'Kano'
+  menu.choice 'Jax'
+end
+# =>
+Choose your destiny?
+‣ Scorpion
+  Kano
+  Jax
+```
+
+By default the choice name is used as return value, but you can provide your custom values:
+
+```ruby
+prompt.select("Choose your destiny?") do |menu|
+  menu.choice 'Scorpion', 1
+  menu.choice 'Kano', 2
+  menu.choice 'Jax', 3
+end
+# =>
+Choose your destiny?
+‣ Scorpion
+  Kano
+  Jax
+```
+
+If you wish you can also provide a simple hash to denote choice name and its value like so:
+
+```ruby
+choices = {'Scorpion' => 1, 'Kano' => 2, 'Jax' => 3}
+prompt.select("Choose your destiny?", choices)
+```
+
+To mark particular answer as select use `default` with index of the option starting from `1`:
+
+```ruby
+prompt.select("Choose your destiny?") do |menu|
+  menu.default 3
+
+  menu.choice 'Scorpion', 1
+  menu.choice 'Kano', 2
+  menu.choice 'Jax', 3
+end
+# =>
+Choose your destiny?
+  Scorpion
+  Kano
+‣ Jax
+```
+
+### 2.3 read
 
 To start reading the input from stdin simply call `read` method:
 
@@ -147,7 +215,7 @@ on the other hand, if we are interested in range answer then
 ask("Provide range of numbers?").read_range
 ```
 
-### 2.3 say
+### 2.4 say
 
 To simply print message out to stdout use `say` like so:
 
@@ -163,7 +231,7 @@ prompt.warn         # print message(s) in yellow
 prompt.error        # print message(s) in red
 ```
 
-### 2.4 suggest
+### 2.5 suggest
 
 To suggest possible matches for the user input use `suggest` method like so:
 
