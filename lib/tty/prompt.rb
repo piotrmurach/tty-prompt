@@ -20,12 +20,12 @@ module TTY
     # @api private
     attr_reader :output
 
-    # Shell prompt prefix
+    # Prompt prefix
     #
     # @api private
     attr_reader :prefix
 
-    # Initialize a Shell
+    # Initialize a Prompt
     #
     # @api public
     def initialize(input = stdin, output = stdout, options = {})
@@ -37,7 +37,7 @@ module TTY
     # Ask a question.
     #
     # @example
-    #   shell = TTY::Shell.new
+    #   shell = TTY::Prompt.new
     #   shell.ask("What is your name?")
     #
     # @param [String] statement
@@ -54,9 +54,43 @@ module TTY
     def ask(statement, *args, &block)
       options = Utils.extract_options!(args)
 
-      question = Question.new self, options
+      question = Question.new(self, options)
       question.instance_eval(&block) if block_given?
       question.prompt(statement)
+    end
+
+    # Ask a question with a list of options
+    #
+    # @example
+    #   prompt = TTY::Prompt.new
+    #   prompt.select("What size?", %w(large medium small))
+    #
+    # @example
+    #   prompt = TTY::Prompt.new
+    #   prompt.select("What size?") do |menu|
+    #     menu.choice :large
+    #     menu.choices %w(:medium :small)
+    #   end
+    #
+    # @param [String] statement
+    #   the question to ask
+    #
+    # @param [Array[Object]] choices
+    #   the choices to select from
+    #
+    # @api public
+    def select(statement, *args, &block)
+      options = Utils.extract_options!(args)
+      choices = if block
+                  []
+                elsif args.empty?
+                  options
+                else
+                  args.flatten
+                end
+
+      list = List.new(self, options)
+      list.call(statement, choices, &block)
     end
 
     # A shortcut method to ask the user positive question and return
