@@ -5,6 +5,7 @@ require 'pastel'
 require 'tty-platform'
 
 require 'tty/prompt'
+require 'tty/prompt/choice'
 require 'tty/prompt/mode'
 require 'tty/prompt/question'
 require 'tty/prompt/reader'
