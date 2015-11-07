@@ -6,8 +6,8 @@ module TTY
     # A class responsible for reading character input from STDIN
     class Reader
       # @api private
-      attr_reader :shell
-      private :shell
+      attr_reader :prompt
+      private :prompt
 
       attr_reader :mode
 
@@ -20,8 +20,8 @@ module TTY
       # Initialize a Reader
       #
       # @api public
-      def initialize(shell = Prompt.new)
-        @shell = shell
+      def initialize(prompt = Prompt.new)
+        @prompt = prompt
         @mode  = Mode.new
       end
 
@@ -36,14 +36,47 @@ module TTY
       #
       # @api public
       def buffer(&block)
-        bufferring = shell.output.sync
+        bufferring = prompt.output.sync
         # Immediately flush output
-        shell.output.sync = true
+        prompt.output.sync = true
 
         value = block.call if block_given?
 
-        shell.output.sync = bufferring
+        prompt.output.sync = bufferring
         value
+      end
+
+      # Read a single keypress that may include
+      # 2 or 3 escape characters.
+      #
+      # @return [String]
+      #
+      # @api public
+      def read_keypress
+        buffer do
+          mode.echo(false) do
+            mode.raw(true) do
+              read_char
+            end
+          end
+        end
+      end
+
+      # Reads single character including invisible multibyte codes
+      #
+      # @return [String]
+      #
+      # @api public
+      def read_char
+        chars = prompt.input.getc.chr
+        if chars == "\e"
+          chars = prompt.input.read_nonblock(3) rescue chars
+          chars = prompt.input.read_nonblock(2) rescue chars
+          chars = "\e" + chars
+        end
+        chars
+      rescue
+        chars
       end
 
       # Get a value from STDIN one key at a time. Each key press is echoed back
@@ -60,7 +93,7 @@ module TTY
         value = ''
         buffer do
           begin
-            while (char = shell.input.getbyte) &&
+            while (char = prompt.input.getbyte) &&
                 !(char == CARRIAGE_RETURN || char == NEWLINE)
               value = handle_char value, char, not_set, mask
             end
@@ -75,7 +108,7 @@ module TTY
       #
       # @api public
       def gets
-        shell.input.gets
+        prompt.input.gets
       end
 
       # Reads at maximum +maxlen+ characters.
@@ -84,7 +117,7 @@ module TTY
       #
       # @api public
       def readpartial(maxlen)
-        shell.input.readpartial(maxlen)
+        prompt.input.readpartial(maxlen)
       end
 
       private
@@ -106,7 +139,7 @@ module TTY
       #
       # @api private
       def print_char(char, not_set, mask)
-        shell.output.putc((not_set || !mask) ? char : mask)
+        prompt.output.putc((not_set || !mask) ? char : mask)
       end
     end # Reader
   end # Prompt
