@@ -102,10 +102,19 @@ module TTY
           refresh
         end
         render_question
-        result = @choices[@active - 1].value
+        answer = render_answer
       ensure
         @prompt.output.print(@cursor.show)
-        result
+        answer
+      end
+
+      # Find value for the choice selected
+      #
+      # @return [nil, Object]
+      #
+      # @api private
+      def render_answer
+        @choices[@active - 1].value
       end
 
       # Process keyboard input
