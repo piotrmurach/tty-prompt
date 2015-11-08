@@ -28,7 +28,7 @@ module TTY
         @cursor = Cursor.new
 
         @first_render = true
-        @selected     = false
+        @done         = false
         @active       = options.fetch(:default) { 1 }
         @choices      = Choices.new
         @color        = options.fetch(:color) { :green }
@@ -96,7 +96,7 @@ module TTY
       # @api private
       def render
         @prompt.output.print(@cursor.hide)
-        until @selected
+        until @done
           render_question
           process_input
           refresh
@@ -117,7 +117,7 @@ module TTY
         when Codes::SIGINT, Codes::ESCAPE
           exit 130
         when Codes::RETURN, Codes::SPACE
-          @selected = true
+          @done = true
         when Codes::KEY_UP, Codes::CTRL_K, Codes::CTRL_P
           @active = (@active == 1) ? @choices.length : @active - 1
         when Codes::KEY_DOWN, Codes::CTRL_J, Codes::CTRL_N
@@ -141,7 +141,7 @@ module TTY
         message += Codes::SPACE + @help if @first_render
         @prompt.output.puts(message)
 
-        if @selected
+        if @done
           selected_item = "#{@choices[@active - 1].value}"
           colored = @pastel.decorate(selected_item, @color)
           @prompt.output.puts(colored)
@@ -152,6 +152,8 @@ module TTY
         @first_render = false
       end
 
+      # Render menu with choices to select from
+      #
       # @api private
       def render_menu
         @choices.each_with_index do |choice, index|
