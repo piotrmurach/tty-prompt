@@ -72,14 +72,14 @@ module TTY
     #     menu.choices %w(:medium :small)
     #   end
     #
-    # @param [String] statement
+    # @param [String] question
     #   the question to ask
     #
     # @param [Array[Object]] choices
     #   the choices to select from
     #
     # @api public
-    def select(statement, *args, &block)
+    def select(question, *args, &block)
       options = Utils.extract_options!(args)
       choices = if block
                   []
@@ -90,7 +90,37 @@ module TTY
                 end
 
       list = List.new(self, options)
-      list.call(statement, choices, &block)
+      list.call(question, choices, &block)
+    end
+
+    # Ask a question with multiple attributes activated
+    #
+    # @example
+    #   prompt = TTY::Prompt.new
+    #   choices = %w(Scorpion Jax Kitana Baraka Jade)
+    #   prompt.multi_select("Choose your destiny?", choices)
+    #
+    # @param [String] question
+    #   the question to ask
+    #
+    # @param [Array[Object]] choices
+    #   the choices to select from
+    #
+    # @return [String]
+    #
+    # @api public
+    def multi_select(question, *args, &block)
+      options = Utils.extract_options!(args)
+      choices = if block
+                  []
+                elsif args.empty?
+                  options
+                else
+                  args.flatten
+                end
+
+      list = MultiList.new(self, options)
+      list.call(question, choices, &block)
     end
 
     # A shortcut method to ask the user positive question and return
