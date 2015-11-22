@@ -92,7 +92,20 @@ module TTY
       #
       # @api private
       def setup_defaults
+        validate_defaults
         @active = @default.first
+      end
+
+      # Validate default indexes to be within range
+      #
+      # @api private
+      def validate_defaults
+        @default.each do |d|
+          if d < 1 || d > @choices.size
+            fail PromptConfigurationError,
+                 "default index `#{d}` out of range (1 - #{@choices.size})"
+          end
+        end
       end
 
       # Render a selection list.

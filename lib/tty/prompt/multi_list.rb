@@ -31,7 +31,8 @@ module TTY
       #
       # @api private
       def setup_defaults
-        @selected = @choices.values_at(*@default.map{|d| d - 1})
+        validate_defaults
+        @selected = @choices.values_at(*@default.map { |d| d - 1 })
         @active = @default.last unless @selected.empty?
       end
 

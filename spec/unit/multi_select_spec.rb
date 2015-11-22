@@ -144,4 +144,20 @@ RSpec.describe TTY::Prompt do
             end
     expect(value).to match_array([{score: 20}, {score: 50}])
   end
+
+  it "raises error for defaults out of range" do
+    prompt = TTY::TestPrompt.new
+    prompt.input << "\r"
+    prompt.input.rewind
+    expect {
+      prompt.multi_select("Select drinks?",default: [2, 6]) do |menu|
+        menu.choice :vodka,   {score: 10}
+        menu.choice :beer,    {score: 20}
+        menu.choice :wine,    {score: 30}
+        menu.choice :whisky,  {score: 40}
+        menu.choice :bourbon, {score: 50}
+      end
+    }.to raise_error(TTY::PromptConfigurationError,
+                     /default index `6` out of range \(1 - 5\)/)
+  end
 end

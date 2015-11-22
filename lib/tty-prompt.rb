@@ -20,3 +20,7 @@ require 'tty/prompt/suggestion'
 require 'tty/prompt/test'
 require 'tty/prompt/utils'
 require 'tty/prompt/version'
+
+module TTY
+  PromptConfigurationError = Class.new(StandardError)
+end
