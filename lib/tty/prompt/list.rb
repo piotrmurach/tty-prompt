@@ -164,23 +164,30 @@ module TTY
         @prompt.output.print(@cursor.clear_lines(lines))
       end
 
-      # Render actual question with menu
+      # Render question with instructions and menu
       #
       # @api private
       def render_question
-        message = @question
-        message += Codes::SPACE + @help if @first_render
-        @prompt.output.puts(message)
-
-        if @done
-          selected_item = "#{@choices[@active - 1].value}"
-          colored = @pastel.decorate(selected_item, @color)
-          @prompt.output.puts(colored)
-        else
-          render_menu
-        end
-
+        header = @question + Codes::SPACE + render_header
+        @prompt.output.puts(header)
         @first_render = false
+        render_menu unless @done
+      end
+
+      # Render initial help and selected choice
+      #
+      # @return [String]
+      #
+      # @api private
+      def render_header
+        if @done
+          selected_item = "#{@choices[@active - 1].name}"
+          @pastel.decorate(selected_item, @color)
+        elsif @first_render
+          @pastel.decorate(@help, :bright_black)
+        else
+          ''
+        end
       end
 
       # Render menu with choices to select from
