@@ -49,14 +49,13 @@ module TTY
       attr_reader :character
 
       # @api private
-      attr_reader :shell
-      private :shell
+      attr_reader :prompt
 
       # Initialize a Question
       #
       # @api public
-      def initialize(shell, options = {})
-        @shell         = shell || Prompt.new
+      def initialize(prompt, options = {})
+        @prompt        = prompt || Prompt.new
         @required      = options.fetch(:required) { false }
         @echo          = options.fetch(:echo) { true }
         @raw           = options.fetch(:raw) { false }
@@ -71,16 +70,17 @@ module TTY
         @converter     = Necromancer.new
       end
 
-      # Set a new prompt
+      # Call the quesiton
       #
       # @param [String] message
       #
       # @return [self]
       #
       # @api public
-      def prompt(message)
+      def call(message, &block)
         self.statement = message
-        shell.say shell.prefix + statement
+        block.call(self) if block
+        prompt.output.print("#{prompt.prefix}#{message}")
         self
       end
 
@@ -298,6 +298,14 @@ module TTY
         within?(value)
         validation.valid_value?(value)
         modifier.apply_to(value)
+      end
+
+      def to_s
+        "#{statement}"
+      end
+
+      def inspect
+        "#<Question @message=#{statement}"
       end
 
       private

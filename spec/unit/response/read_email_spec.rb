@@ -36,7 +36,7 @@ RSpec.describe TTY::Prompt::Question, '#read_email' do
       input.rewind
       q = prompt.ask("What is your email?").on_error(:retry)
       expect(q.read_email).to eql "this.will@example.com"
-      expect(output.string).to eql "What is your email?\nWhat is your email?\n"
+      expect(output.string).to eql "What is your email?\nWhat is your email?"
     end
   end
 end

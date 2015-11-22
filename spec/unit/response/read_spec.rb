@@ -58,11 +58,11 @@ RSpec.describe TTY::Prompt::Question, '#read' do
     it 'asks with block' do
       input << "password"
       input.rewind
-      q = prompt.ask "What is your password: " do
-        echo  false
-        mask '*'
+      question = prompt.ask "What is your password: " do |q|
+        q.echo  false
+        q.mask '*'
       end
-      expect(q.read).to eq("password")
+      expect(question.read).to eq("password")
     end
   end
 end

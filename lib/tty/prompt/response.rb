@@ -180,7 +180,7 @@ module TTY
       # @api public
       def read_email
         question.validate(/^[a-z0-9._%+-]+@([a-z0-9-]+\.)+[a-z]{2,6}$/i)
-        question.prompt(question.statement) if question.error
+        question.call("\n" + question.statement) if question.error
         with_exception { read_string }
       end
 

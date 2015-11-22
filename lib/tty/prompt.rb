@@ -51,12 +51,11 @@ module TTY
     # @return [TTY::Question]
     #
     # @api public
-    def ask(statement, *args, &block)
+    def ask(message, *args, &block)
       options = Utils.extract_options!(args)
 
       question = Question.new(self, options)
-      question.instance_eval(&block) if block_given?
-      question.prompt(statement)
+      question.call(message, &block)
     end
 
     # Ask a question with a list of options

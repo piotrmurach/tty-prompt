@@ -32,7 +32,7 @@ module TTY
       # @param [Response] response
       #
       # @api private
-      def dispatch(response = Response.new(self, shell))
+      def dispatch(response = Response.new(self, prompt))
         @response ||= response
       end
 

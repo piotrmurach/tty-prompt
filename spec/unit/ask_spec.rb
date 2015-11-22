@@ -9,8 +9,8 @@ RSpec.describe TTY::Prompt, '#ask' do
   subject(:prompt) { TTY::TestPrompt.new(options) }
 
   it 'prints message' do
-    prompt.ask "What is your name?"
-    expect(prompt.output.string).to eql "What is your name?\n"
+    prompt.ask("What is your name?")
+    expect(prompt.output.string).to eql("What is your name?")
   end
 
   it 'prints an empty message ' do
@@ -32,17 +32,17 @@ RSpec.describe TTY::Prompt, '#ask' do
       prompt.input << ''
       prompt.input.rewind
       prompt.ask "Are you Polish?"
-      expect(prompt.output.string).to eql " > Are you Polish?\n"
+      expect(prompt.output.string).to eql " > Are you Polish?"
     end
   end
 
   it 'asks a question with block' do
     prompt.input << ''
     prompt.input.rewind
-    q = prompt.ask "What is your name?" do
-      default 'Piotr'
+    question = prompt.ask "What is your name?" do |q|
+      q.default 'Piotr'
     end
-    expect(q.read).to eql "Piotr"
+    expect(question.read).to eql "Piotr"
   end
 
   context 'yes?' do
