@@ -18,7 +18,7 @@ module TTY
       # @api public
       attr_reader :choices
 
-      def_delegators :choices, :length, :size, :to_ary, :empty?
+      def_delegators :choices, :length, :size, :to_ary, :empty?, :values_at
 
       # Convenience for creating choices
       #
