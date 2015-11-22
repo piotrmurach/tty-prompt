@@ -3,11 +3,11 @@
 module TTY
   # A class responsible for shell prompt interactions.
   class Prompt
-    # A class representing a statement output to shell.
+    # A class representing a statement output to prompt.
     class Statement
       # @api private
-      attr_reader :shell
-      private :shell
+      attr_reader :prompt
+      private :prompt
 
       # Flag to display newline
       #
@@ -21,7 +21,7 @@ module TTY
 
       # Initialize a Statement
       #
-      # @param [TTY::Shell] shell
+      # @param [TTY::Prompt] prompt
       #
       # @param [Hash] options
       #
@@ -32,14 +32,14 @@ module TTY
       #   change the message display to color
       #
       # @api public
-      def initialize(shell = Prompt.new, options = {})
-        @shell   = shell
+      def initialize(prompt = Prompt.new, options = {})
+        @prompt   = prompt
         @pastel  = Pastel.new
         @newline = options.fetch(:newline, true)
         @color   = options.fetch(:color, false)
       end
 
-      # Output the message to the shell
+      # Output the message to the prompt
       #
       # @param [String] message
       #   the message to be printed to stdout
@@ -49,10 +49,10 @@ module TTY
         message = @pastel.decorate message, *color if color
 
         if newline && /( |\t)(\e\[\d+(;\d+)*m)?\Z/ !~ message
-          shell.output.puts message
+          prompt.output.puts message
         else
-          shell.output.print message
-          shell.output.flush
+          prompt.output.print message
+          prompt.output.flush
         end
       end
     end # Statement
