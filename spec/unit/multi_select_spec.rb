@@ -50,7 +50,7 @@ RSpec.describe TTY::Prompt do
     ].join)
   end
 
-  it "allows to set custom values" do
+  it "sets choice custom values" do
     prompt = TTY::TestPrompt.new
     choices = {vodka: 1, beer: 2, wine: 3, whisky: 4, bourbon: 5}
     prompt.input << " \r"
@@ -75,7 +75,7 @@ RSpec.describe TTY::Prompt do
     ].join)
   end
 
-  it "allows to set name and value through DSL" do
+  it "sets choice name and value through DSL" do
     prompt = TTY::TestPrompt.new
     prompt.input << " \r"
     prompt.input.rewind
@@ -105,5 +105,43 @@ RSpec.describe TTY::Prompt do
     ].join)
   end
 
-  it "allows to set default options"
+  it "sets default options through DSL syntax" do
+    prompt = TTY::TestPrompt.new
+    prompt.input << "\r"
+    prompt.input.rewind
+    value = prompt.multi_select("Select drinks?") do |menu|
+              menu.default 2, 5
+
+              menu.choice :vodka,   {score: 10}
+              menu.choice :beer,    {score: 20}
+              menu.choice :wine,    {score: 30}
+              menu.choice :whisky,  {score: 40}
+              menu.choice :bourbon, {score: 50}
+            end
+    expect(value).to match_array([{score: 20}, {score: 50}])
+    expect(prompt.output.string).to eq([
+      "\e[?25lSelect drinks? beer, bourbon\n",
+      "  ⬡ vodka\n",
+      "  \e[32m⬢\e[0m beer\n",
+      "  ⬡ wine\n",
+      "  ⬡ whisky\n",
+      "‣ \e[32m⬢\e[0m bourbon\n",
+      "\e[1A\e[1000D\e[K" * 6,
+      "Select drinks? \e[32mbeer, bourbon\e[0m\n\e[?25h",
+    ].join)
+  end
+
+  it "sets default options through hash syntax" do
+    prompt = TTY::TestPrompt.new
+    prompt.input << "\r"
+    prompt.input.rewind
+    value = prompt.multi_select("Select drinks?",default: [2, 5]) do |menu|
+              menu.choice :vodka,   {score: 10}
+              menu.choice :beer,    {score: 20}
+              menu.choice :wine,    {score: 30}
+              menu.choice :whisky,  {score: 40}
+              menu.choice :bourbon, {score: 50}
+            end
+    expect(value).to match_array([{score: 20}, {score: 50}])
+  end
 end

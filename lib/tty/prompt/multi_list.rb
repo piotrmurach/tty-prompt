@@ -22,9 +22,18 @@ module TTY
         super
         @selected = []
         @help     = options.fetch(:help) { HELP }
+        @default  = options.fetch(:default) { [] }
       end
 
       private
+
+      # Setup default options and active selection
+      #
+      # @api private
+      def setup_defaults
+        @selected = @choices.values_at(*@default.map{|d| d - 1})
+        @active = @default.last unless @selected.empty?
+      end
 
       # Process keyboard input and maintain selected choices
       #
