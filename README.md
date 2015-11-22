@@ -112,7 +112,7 @@ For asking questions involving list of options use `select` method by passing th
 ```ruby
 prompt.select("Choose your destiny?", %w(Scorpion Kano Jax))
 # =>
-# Choose your destiny?
+# Choose your destiny? (Use arrow keys, press Enter to select)
 # ‣ Scorpion
 #   Kano
 #   Jax
@@ -127,7 +127,7 @@ prompt.select("Choose your destiny?") do |menu|
   menu.choice 'Jax'
 end
 # =>
-# Choose your destiny?
+# Choose your destiny? (Use arrow keys, press Enter to select)
 # ‣ Scorpion
 #   Kano
 #   Jax
@@ -142,10 +142,10 @@ prompt.select("Choose your destiny?") do |menu|
   menu.choice 'Jax', 3
 end
 # =>
-# Choose your destiny?
+# Choose your destiny? (Use arrow keys, press Enter to select)
 # ‣ Scorpion
-#  Kano
-#  Jax
+#   Kano
+#   Jax
 ```
 
 If you wish you can also provide a simple hash to denote choice name and its value like so:
@@ -155,7 +155,7 @@ choices = {'Scorpion' => 1, 'Kano' => 2, 'Jax' => 3}
 prompt.select("Choose your destiny?", choices)
 ```
 
-To mark particular answer as select use `default` with index of the option starting from `1`:
+To mark particular answer as selected use `default` with index of the option starting from `1`:
 
 ```ruby
 prompt.select("Choose your destiny?") do |menu|
@@ -166,10 +166,22 @@ prompt.select("Choose your destiny?") do |menu|
   menu.choice 'Jax', 3
 end
 # =>
-# Choose your destiny?
+# Choose your destiny? (Use arrow keys, press Enter to select)
 #   Scorpion
 #   Kano
 # ‣ Jax
+```
+
+You can configure help message, marker like so
+
+```ruby
+choices = %w(Scorpion Kano Jax)
+prompt.select("Choose your destiny?", choices, help: "(Bash keyboard)")
+# =>
+# Choose your destiny? (Bash keyboard)
+# ‣ Scorpion
+#   Kano
+#   Jax
 ```
 
 ### 2.3 read
