@@ -14,7 +14,7 @@ RSpec.describe TTY::Prompt do
     prompt.input.rewind
     expect(prompt.multi_select("Select drinks?", choices)). to eq([])
     expect(prompt.output.string).to eq([
-      "\e[?25lSelect drinks? \e[97m(Use arrow keys, press Space to select and Enter to finish)\e[0m\n",
+      "\e[?25lSelect drinks? \e[90m(Use arrow keys, press Space to select and Enter to finish)\e[0m\n",
       "‣ ⬡ vodka\n",
       "  ⬡ beer\n",
       "  ⬡ wine\n",
@@ -32,7 +32,7 @@ RSpec.describe TTY::Prompt do
     prompt.input.rewind
     expect(prompt.multi_select("Select drinks?", choices)). to eq(['vodka'])
     expect(prompt.output.string).to eq([
-      "\e[?25lSelect drinks? \e[97m(Use arrow keys, press Space to select and Enter to finish)\e[0m\n",
+      "\e[?25lSelect drinks? \e[90m(Use arrow keys, press Space to select and Enter to finish)\e[0m\n",
       "‣ ⬡ vodka\n",
       "  ⬡ beer\n",
       "  ⬡ wine\n",
@@ -57,7 +57,7 @@ RSpec.describe TTY::Prompt do
     prompt.input.rewind
     expect(prompt.multi_select("Select drinks?", choices)).to eq([1])
     expect(prompt.output.string).to eq([
-      "\e[?25lSelect drinks? \e[97m(Use arrow keys, press Space to select and Enter to finish)\e[0m\n",
+      "\e[?25lSelect drinks? \e[90m(Use arrow keys, press Space to select and Enter to finish)\e[0m\n",
       "‣ ⬡ vodka\n",
       "  ⬡ beer\n",
       "  ⬡ wine\n",
@@ -87,7 +87,7 @@ RSpec.describe TTY::Prompt do
             end
     expect(value).to eq([{score: 1}])
     expect(prompt.output.string).to eq([
-      "\e[?25lSelect drinks? \e[97m(Use arrow keys, press Space to select and Enter to finish)\e[0m\n",
+      "\e[?25lSelect drinks? \e[90m(Use arrow keys, press Space to select and Enter to finish)\e[0m\n",
       "‣ ⬡ vodka\n",
       "  ⬡ beer\n",
       "  ⬡ wine\n",

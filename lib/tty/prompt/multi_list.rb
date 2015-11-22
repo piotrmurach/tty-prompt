@@ -60,16 +60,6 @@ module TTY
         end
       end
 
-      # Render question with instructions and menu
-      #
-      # @api private
-      def render_question
-        header = @question + Codes::SPACE + render_header
-        @prompt.output.puts(header)
-        @first_render = false
-        render_menu unless @done
-      end
-
       # Render initial help text and then currently selected choices
       #
       # @api private
@@ -79,7 +69,7 @@ module TTY
         elsif @selected.size.nonzero?
           @selected.map(&:name).join(', ')
         elsif @first_render
-          @pastel.decorate(@help, :bright_white)
+          @pastel.decorate(@help, :bright_black)
         else
           ''
         end
