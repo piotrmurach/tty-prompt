@@ -224,6 +224,34 @@ prompt.multi_select("Select drinks?") do |menu|
 end
 ```
 
+To mark choice(s) as selected use the `default` option with index(s) of the option(s) starting from `1`:
+
+```ruby
+prompt.multi_select("Select drinks?") do |menu|
+  menu.default 2, 5
+
+  menu.choice :vodka,   {score: 10}
+  menu.choice :beer,    {score: 20}
+  menu.choice :wine,    {score: 30}
+  menu.choice :whisky,  {score: 40}
+  menu.choice :bourbon, {score: 50}
+end
+# =>
+# Select drinks? beer, bourbon
+#   ⬡ vodka
+#   ⬢ beer
+#   ⬡ wine
+#   ⬡ whisky
+# ‣ ⬢ bourbon
+```
+
+And when you press enter you will see the following selected:
+
+```ruby
+# Select drinks? beer, bourbon
+# => [{score: 20}, {score: 50}]
+```
+
 ### 2.4 read
 
 To start reading the input from stdin simply call `read` method:
