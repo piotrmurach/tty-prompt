@@ -1,4 +1,4 @@
-# encdoing: utf
+# encoding: utf-8
 
 require 'tty/prompt/list'
 
@@ -14,6 +14,9 @@ module TTY
 
       # Create instance of TTY::Prompt::MultiList menu.
       #
+      # @param [Prompt] :prompt
+      # @param [Hash] options
+      #
       # @api public
       def initialize(prompt, options)
         super
@@ -21,6 +24,11 @@ module TTY
         @help     = options.fetch(:help) { HELP }
       end
 
+      private
+
+      # Process keyboard input and maintain selected choices
+      #
+      # @api private
       def process_input
         chars = @reader.read_keypress
         case chars
@@ -42,7 +50,7 @@ module TTY
         end
       end
 
-      # Render question with instructions
+      # Render question with instructions and menu
       #
       # @api private
       def render_question
@@ -52,6 +60,8 @@ module TTY
         render_menu unless @done
       end
 
+      # Render initial help text and then currently selected choices
+      #
       # @api private
       def render_header
         if @done
@@ -65,6 +75,10 @@ module TTY
         end
       end
 
+      # All values for the choices selected
+      #
+      # @return [Array[nil,Object]]
+      #
       # @api private
       def render_answer
         @selected.map(&:value)
