@@ -42,9 +42,10 @@ Or install it yourself as:
 * [2. Interface](#2-interface)
   * [2.1 ask](#21-ask)
   * [2.2 select](#22-select)
-  * [2.3 read](#23-read)
-  * [2.4 say](#24-say)
-  * [2.5 suggest](#25-suggest)
+  * [2.3 multi_select](#23-multi_select)
+  * [2.4 read](#24-read)
+  * [2.5 say](#25-say)
+  * [2.6 suggest](#26-suggest)
 
 ## 1. Usage
 
@@ -184,7 +185,46 @@ prompt.select("Choose your destiny?", choices, help: "(Bash keyboard)")
 #   Jax
 ```
 
-### 2.3 read
+### 2.3 multi_select
+
+For asking questions involving multiple selection list use `multi_select` method by passing the question and possible choices:
+
+```ruby
+choices = %w(vodka beer wine whisky bourbon)
+prompt.select("Select drinks?", choices)
+# =>
+#
+# Select drinks? (Use arrow keys, press Space to select and Enter to finish)"
+# ‣ ⬡ vodka
+#   ⬡ beer
+#   ⬡ wine
+#   ⬡ whisky
+#   ⬡ bourbon
+```
+
+As a return value, the `multi_select` will always return an array by default populated with the names of the choices. If you wish to return custom values for the available choices do:
+
+```ruby
+choices = {vodka: 1, beer: 2, wine: 3, whisky: 4, bourbon: 5}
+prompt.select("Select drinks?", choices)
+
+Given selection of vodka and beer the function will return
+
+# => [1, 2]
+```
+
+Similar to `select` method, you can also provide options through DSL using the `choice` method for single entry and/or `choices` call for more than one choice:
+
+```ruby
+prompt.multi_select("Select drinks?") do |menu|
+  menu.choice :vodka, {score: 1}
+  menu.choice :beer, 2
+  menu.choice :wine, 3
+  menu.choices whisky: 4, bourbon: 5
+end
+```
+
+### 2.4 read
 
 To start reading the input from stdin simply call `read` method:
 
@@ -227,7 +267,7 @@ on the other hand, if we are interested in range answer then
 ask("Provide range of numbers?").read_range
 ```
 
-### 2.4 say
+### 2.5 say
 
 To simply print message out to stdout use `say` like so:
 
