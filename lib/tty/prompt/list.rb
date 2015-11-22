@@ -29,7 +29,8 @@ module TTY
 
         @first_render = true
         @done         = false
-        @active       = options.fetch(:default) { 1 }
+        @default      = Array[options.fetch(:default) { 1 }]
+        @active       = @default.first
         @choices      = Choices.new
         @color        = options.fetch(:color) { :green }
         @marker       = options.fetch(:marker) { Codes::ITEM_SELECTED }
@@ -46,8 +47,8 @@ module TTY
       # Set default option selected
       #
       # @api public
-      def default(value)
-        @active = value
+      def default(*default_values)
+        @default = default_values
       end
 
       # Add a single choice
@@ -81,10 +82,18 @@ module TTY
         choices(possibilities)
         @question = question
         block.call(self) if block
+        setup_defaults
         render
       end
 
       private
+
+      # Setup default option and active selection
+      #
+      # @api private
+      def setup_defaults
+        @active = @default.first
+      end
 
       # Render a selection list.
       #

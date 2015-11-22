@@ -24,7 +24,7 @@ RSpec.describe TTY::Prompt, '#select' do
     ].join)
   end
 
-  it "allows to set choice name and value" do
+  it "sets choice name and value" do
     prompt = TTY::TestPrompt.new
     choices = {large: 1, medium: 2, small: 3}
     prompt.input << " "
@@ -41,7 +41,7 @@ RSpec.describe TTY::Prompt, '#select' do
     ].join)
   end
 
-  it "allows to set choice name through DSL" do
+  it "sets choice name through DSL" do
     prompt = TTY::TestPrompt.new
     prompt.input << " "
     prompt.input.rewind
@@ -62,7 +62,7 @@ RSpec.describe TTY::Prompt, '#select' do
     ].join)
   end
 
-  it "allows to set choice name & value through DSL" do
+  it "sets choice name & value through DSL" do
     prompt = TTY::TestPrompt.new
     prompt.input << " "
     prompt.input.rewind
@@ -83,7 +83,7 @@ RSpec.describe TTY::Prompt, '#select' do
     ].join)
   end
 
-  it "allows to set choices and single choice through DSL" do
+  it "sets choices and single choice through DSL" do
     prompt = TTY::TestPrompt.new
     prompt.input << " "
     prompt.input.rewind
@@ -103,12 +103,13 @@ RSpec.describe TTY::Prompt, '#select' do
     ].join)
   end
 
-  it "allows to set choice name & value through DSL" do
+  it "sets choice name & value through DSL" do
     prompt = TTY::TestPrompt.new
     prompt.input << " "
     prompt.input.rewind
     value = prompt.select('What size?') do |menu|
               menu.default 2
+
               menu.choice :large, 1
               menu.choice :medium, 2
               menu.choice :small, 3
@@ -125,7 +126,7 @@ RSpec.describe TTY::Prompt, '#select' do
     ].join)
   end
 
-  it "allows to set choice value to proc and execute it" do
+  it "sets choice value to proc and executes it" do
     prompt = TTY::TestPrompt.new
     prompt.input << " "
     prompt.input.rewind
@@ -146,7 +147,7 @@ RSpec.describe TTY::Prompt, '#select' do
     ].join)
   end
 
-  it "allows to set default option" do
+  it "sets default option through hash syntax" do
     prompt = TTY::TestPrompt.new
     choices = %w(Large Medium Small)
     prompt.input << " "
@@ -163,7 +164,7 @@ RSpec.describe TTY::Prompt, '#select' do
     ].join)
   end
 
-  it "allows to change selected item color & marker" do
+  it "changes selected item color & marker" do
     prompt = TTY::TestPrompt.new
     choices = %w(Large Medium Small)
     prompt.input << " "
@@ -181,7 +182,7 @@ RSpec.describe TTY::Prompt, '#select' do
     ].join)
   end
 
-  it "allows to change help text" do
+  it "changes help text" do
     prompt = TTY::TestPrompt.new
     choices = %w(Large Medium Small)
     prompt.input << " "
