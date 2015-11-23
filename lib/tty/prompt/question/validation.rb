@@ -47,39 +47,24 @@ module TTY
           !!validation
         end
 
-        # Test if the value matches the validation
+        # Test if the input passes the validation
         #
         # @example
-        #   validation.valid_value?(value) # => true or false
+        #   Validation.new
+        #   validation.valid?(input) # => true
         #
-        # @param [Object] value
-        #  the value to validate
+        # @param [Object] input
+        #  the input to validate
         #
-        # @return [undefined]
+        # @return [Boolean]
         #
         # @api public
-        def valid_value?(value)
-          check_validation(value)
-        end
-
-        private
-
-        # Check if provided value passes validation
-        #
-        # @param [String] value
-        #
-        # @raise [TTY::InvalidArgument] unkown type of argument
-        #
-        # @return [undefined]
-        #
-        # @api private
-        def check_validation(value)
-          if validate? && value
-            value = value.to_s
-            if validation.is_a?(Regexp) && validation =~ value
-            elsif validation.is_a?(Proc) && validation.call(value)
-            else
-              fail InvalidArgument, "Invalid input for #{value}"
+        def call(input)
+          if validate? && input
+            input = input.to_s
+            if validation.is_a?(Regexp) && validation =~ input
+            elsif validation.is_a?(Proc) && validation.call(input)
+            else fail InvalidArgument, "Invalid input for #{input}"
             end
             true
           else
