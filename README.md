@@ -17,8 +17,8 @@
 
 ## Features
 
+* Number of prompt types for gathering user input
 * A robust API for getting and validating complex inputs
-* Number of coercion methods for converting response into Ruby types
 
 ## Installation
 
@@ -41,11 +41,12 @@ Or install it yourself as:
 * [1. Usage](#1-usage)
 * [2. Interface](#2-interface)
   * [2.1 ask](#21-ask)
+    * [2.1.1 settings](#211-settings)
+    * [2.1.2 valid read keywords](#212-valid-read-keywords)
   * [2.2 select](#22-select)
   * [2.3 multi_select](#23-multi_select)
-  * [2.4 read](#24-read)
-  * [2.5 say](#25-say)
-  * [2.6 suggest](#26-suggest)
+  * [2.4 say](#25-say)
+  * [2.5 suggest](#26-suggest)
 
 ## 1. Usage
 
@@ -55,55 +56,115 @@ In order to start asking questions on the command line, create prompt:
 prompt = TTY::Prompt.new
 ```
 
-and then call `ask` with the question message:
+and then call `ask` with the question for simple input:
 
 ```ruby
-question = prompt.ask('Do you like Ruby?')
+prompt.ask('Do you like Ruby?', type: :bool) # => true
 ```
 
-Finally, read and convert answer back to Ruby built-in type:
+Asking question with list of options couldn't be easier using `select` like so:
 
 ```ruby
-answer = question.read_bool
+prompt.select("Choose your destiny?", %w(Scorpion Kano Jax))
+# =>
+# Choose your destiny? (Use arrow keys, press Enter to select)
+# ‣ Scorpion
+#   Kano
+#   Jax
+```
+
+Also, asking multiple choice questions is a breeze with `multi_select`:
+
+```ruby
+choices = %w(vodka beer wine whisky bourbon)
+prompt.select("Select drinks?", choices)
+# =>
+#
+# Select drinks? (Use arrow keys, press Space to select and Enter to finish)"
+# ‣ ⬡ vodka
+#   ⬡ beer
+#   ⬡ wine
+#   ⬡ whisky
+#   ⬡ bourbon
 ```
 
 ## 2. Interface
 
 ### 2.1 ask
 
-In order to ask a basic question and parse an answer do:
+In order to ask a basic question with a string answer do:
 
 ```ruby
-answer = prompt.ask("What is your name?").read_string
+answer = prompt.ask("What is your name?")
 ```
 
-The **TTY::Prompt** provides small DSL to help with parsing and asking precise questions
+In order to prompt for more complex input you can use robust API by passing hash of properties or using block:
 
 ```ruby
-argument   # :required or :optional
+prompt.ask("What is your name?") do |q|
+  q.required true
+  q.validate /\A\w+\Z/
+  q.modify   :capitalize
+end
+```
+
+#### 2.1.1 settings
+
+Below is a list of the settings that may be used for customizing `ask` method behaviour:
+
+```ruby
 char       # turn character based input, otherwise line (default: false)
-clean      # reset question
 default    # default value used if none is provided
 echo       # turn echo on and off (default: true)
+in         # specify range '0-9', '0..9', '0...9' or negative '-1..-9'
 mask       # mask characters i.e '****' (default: false)
 modify     # apply answer modification :upcase, :downcase, :trim, :chomp etc..
-in         # specify range '0-9', '0..9', '0...9' or negative '-1..-9'
-validate   # regex against which stdin input is checked
-valid      # a list of expected valid options
+read       # Specifies the type of input such as :bool, :string [see](#211-valid-read-keywords)
+required   # If true, value entered must be non-empty (default: false)
+validate   # regex, proc against which stdin input is checked
 ```
 
-You can chain question methods or configure them inside a block:
+Validate setting can take `Regex`, `Proc` like so:
 
 ```ruby
-prompt.ask("What is your name?").argument(:required).default('Piotr').validate(/\w+\s\w+/).read_string
+prompt.ask('What is your username?') { |q|
+  q.validate { |input| input =~ (/^[^\.]+\.[^\.]+/) }
+}
+```
 
-prompt.ask "What is your name?" do
-  argument :required
-  default  'Piotr'
-  validate /\w+\s\w+/
-  valid    ['Piotr', 'Piotrek']
-  modify   :capitalize
-end.read_string
+For example, if we wanted to ask a user for a single digit in given range
+
+```ruby
+ask("Provide number in range: 0-9") { |q| q.in('0-9') }
+```
+
+#### 2.1.2 valid read keywords
+
+The most common thing to do is to cast the answer to specific type. The `read` property is used for that. By default `:string` answer is assumed but this can be changed using one of the following custom readers:
+
+```ruby
+:bool       # true or false for strings such as "Yes", "No"
+:char       # first character
+:date       # date type
+:datetime   # datetime type
+:email      # validate answer against email regex
+:file       # a File object
+:float      # decimal or error if cannot convert
+:int        # integer or error if cannot convert
+:multiline  # multiple line string
+:password   # string with echo turned off
+:range      # range type
+:regex      # regex expression
+:string     # string
+:symbol     # symbol
+:text       # multiline string
+:keypress   # the key pressed
+```
+
+For example, if you are interested in range type as answer do the following:
+
+```ruby
+ask("Provide range of numbers?", read: :range)
 ```
 
 ### 2.2 select
@@ -208,8 +269,7 @@ As a return value, the `multi_select` will always return an array by default pop
 choices = {vodka: 1, beer: 2, wine: 3, whisky: 4, bourbon: 5}
 prompt.select("Select drinks?", choices)
 
-Given selection of vodka and beer the function will return
-
+# Provided that vodka and beer have been selected, the function will return
 # => [1, 2]
 ```
 
@@ -252,50 +312,7 @@ And when you press enter you will see the following selected:
 # => [{score: 20}, {score: 50}]
 ```
 
-### 2.4 read
-
-To start reading the input from stdin simply call `read` method:
-
-```ruby
-prompt.read
-```
-
-However, there will be cases when your codebase expects answer to be of certain type. **TTY::Prompt** allows reading of answers and converting them into required types with custom readers:
-
-```ruby
-read_bool       # return true or false for strings such as "Yes", "No"
-read_char       # return first character
-read_date       # return date type
-read_datetime   # return datetime type
-read_email      # validate answer against email regex
-read_file       # return a File object
-read_float      # return decimal or error if cannot convert
-read_int        # return integer or error if cannot convert
-read_multiple   # return multiple line string
-read_password   # return string with echo turned off
-read_range      # return range type
-read_regex      # return regex expression
-read_string     # return string
-read_symbol     # return symbol
-read_text       # return multiline string
-read_keypress   # return the key pressed
-```
-
-For example, if we wanted to ask a user for a single digit in given range
-
-```ruby
-ask("Provide number in range: 0-9").in('0-9') do
-  on_error :retry
-end.read_int
-```
-
-on the other hand, if we are interested in range answer then
-
-```ruby
-ask("Provide range of numbers?").read_range
-```
-
-### 2.5 say
+### 2.4 say
 
 To simply print message out to stdout use `say` like so:
 
@@ -318,9 +335,9 @@ To suggest possible matches for the user input use `suggest` method like so:
 ```ruby
 prompt.suggest('sta', ['stage', 'stash', 'commit', 'branch'])
 # =>
-Did you mean one of these?
-        stage
-        stash
+# Did you mean one of these?
+#         stage
+#         stash
 ```
 
 To cusomize query text presented pass `:single_text` and `:plural_text` options to respectively change the message when one match is found or many.
@@ -329,8 +346,8 @@ To cusomize query text presented pass `:single_text` and `:plural_text` options 
 possible = %w(status stage stash commit branch blame)
 prompt.suggest('b', possible, indent: 4, single_text: 'Perhaps you meant?')
 # =>
-Perhaps you meant?
-    blame
+# Perhaps you meant?
+#     blame
 ```
 
 ## Contributing
