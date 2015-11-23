@@ -3,21 +3,24 @@
 require 'spec_helper'
 
 RSpec.describe TTY::Prompt::Question, '#in' do
-  let(:input)  { StringIO.new }
-  let(:output) { StringIO.new }
-  let(:prompt) { TTY::Prompt.new(input, output) }
-
   it 'reads number within range' do
-    input << 8
-    input.rewind
-    q = prompt.ask("How do you like it on scale 1-10").in('1-10')
-    expect(q.read_int).to eql 8
+    prompt = TTY::TestPrompt.new
+    prompt.input << 8
+    prompt.input.rewind
+    answer = prompt.ask("How do you like it on scale 1-10", read: :int) { |q|
+      q.in('1-10')
+    }
+    expect(answer).to eq(8)
   end
 
   it "reads number outside of range" do
-    input << 12
-    input.rewind
-    q = prompt.ask("How do you like it on scale 1-10").in('1-10')
-    expect { q.read_int }.to raise_error(ArgumentError)
+    prompt = TTY::TestPrompt.new
+    prompt.input << 12
+    prompt.input.rewind
+    expect {
+      prompt.ask("How do you like it on scale 1-10", read: :int) { |q|
+        q.in('1-10')
+      }
+    }.to raise_error(ArgumentError)
   end
 end

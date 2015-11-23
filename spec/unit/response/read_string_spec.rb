@@ -2,18 +2,13 @@
 
 require 'spec_helper'
 
-RSpec.describe TTY::Prompt::Question, '#initialize' do
-  let(:input)  { StringIO.new }
-  let(:output) { StringIO.new }
-  let(:prompt)  { TTY::Prompt.new(input, output) }
-
+RSpec.describe TTY::Prompt::Question, '#read_string' do
   it 'reads string' do
-    name = "Piotr"
-    input << name
-    input.rewind
-    q = prompt.ask("What is your name?")
-    answer = q.read_string
-    expect(answer).to be_kind_of String
-    expect(answer).to eql name
+    prompt = TTY::TestPrompt.new
+    prompt.input << 'Piotr'
+    prompt.input.rewind
+    answer = prompt.ask("What is your name?", read: :string)
+    expect(answer).to be_a(String)
+    expect(answer).to eq('Piotr')
   end
 end

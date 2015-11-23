@@ -2,22 +2,20 @@
 
 require 'spec_helper'
 
-RSpec.describe TTY::Prompt::Question, '#read_multiple' do
-  let(:input)  { StringIO.new }
-  let(:output) { StringIO.new }
-  let(:prompt) { TTY::Prompt.new(input, output) }
-
+RSpec.describe TTY::Prompt::Question, '#read_multiline' do
   it 'reads multiple lines' do
-    input << "First line\nSecond line\nThird line"
-    input.rewind
-    q = prompt.ask("Provide description?")
-    expect(q.read_multiple).to eq("First line\nSecond line\nThird line")
+    prompt = TTY::TestPrompt.new
+    prompt.input << "First line\nSecond line\nThird line"
+    prompt.input.rewind
+    answer = prompt.ask("Provide description?", read: :multiline)
+    expect(answer).to eq("First line\nSecond line\nThird line")
   end
 
   it 'terminates on empty lines' do
-    input << "First line\n\nSecond line"
-    input.rewind
-    q = prompt.ask("Provide description?")
-    expect(q.read_multiple).to eq("First line\n")
+    prompt = TTY::TestPrompt.new
+    prompt.input << "First line\n\nSecond line"
+    prompt.input.rewind
+    answer = prompt.ask("Provide description?")
+    expect(answer).to eq("First line\n")
   end
 end

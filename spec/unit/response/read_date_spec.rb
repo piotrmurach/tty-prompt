@@ -3,18 +3,14 @@
 require 'spec_helper'
 
 RSpec.describe TTY::Prompt::Question, '#read_date' do
-  let(:input)  { StringIO.new }
-  let(:output) { StringIO.new }
-  let(:prompt) { TTY::Prompt.new(input, output) }
-
   it 'reads date' do
-    input << "20th April 1887"
-    input.rewind
-    q = prompt.ask("When were your born?")
-    answer = q.read_date
-    expect(answer).to be_kind_of Date
-    expect(answer.day).to eql 20
-    expect(answer.month).to eql 4
-    expect(answer.year).to eql 1887
+    prompt = TTY::TestPrompt.new
+    prompt.input << "20th April 1887"
+    prompt.input.rewind
+    response = prompt.ask("When were your born?", read: :date)
+    expect(response).to be_kind_of(Date)
+    expect(response.day).to eq(20)
+    expect(response.month).to eq(4)
+    expect(response.year).to eq(1887)
   end
 end

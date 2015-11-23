@@ -3,42 +3,43 @@
 require 'spec_helper'
 
 RSpec.describe TTY::Prompt::Question, '#modify' do
-  let(:input)  { StringIO.new }
-  let(:output) { StringIO.new }
-  let(:prompt)  { TTY::Prompt.new(input, output) }
-
   it 'preserves answer for unkown modification' do
-    input << 'piotr'
-    input.rewind
-    q = prompt.ask("What is your name?").modify(:none)
-    expect(q.read_string).to eql 'piotr'
+    prompt = TTY::TestPrompt.new
+    prompt.input << 'piotr'
+    prompt.input.rewind
+    answer = prompt.ask("What is your name?") { |q| q.modify(:none) }
+    expect(answer).to eq('piotr')
   end
 
   it 'converts to upper case' do
-    input << 'piotr'
-    input.rewind
-    q = prompt.ask("What is your name?").modify(:upcase)
-    expect(q.read_string).to eql 'PIOTR'
+    prompt = TTY::TestPrompt.new
+    prompt.input << 'piotr'
+    prompt.input.rewind
+    answer = prompt.ask("What is your name?") { |q| q.modify(:upcase) }
+    expect(answer).to eq('PIOTR')
   end
 
   it 'trims whitespace' do
-    input << " Some   white\t   space\t \there!   \n"
-    input.rewind
-    q = prompt.ask("Enter some text: ").modify(:trim)
-    expect(q.read_string).to eql "Some   white\t   space\t \there!"
+    prompt = TTY::TestPrompt.new
+    prompt.input << " Some   white\t   space\t \there!   \n"
+    prompt.input.rewind
+    answer = prompt.ask('Enter some text: ') { |q| q.modify(:trim) }
+    expect(answer).to eq("Some   white\t   space\t \there!")
   end
 
   it 'collapses whitespace' do
-    input << " Some   white\t   space\t \there!   \n"
-    input.rewind
-    q = prompt.ask("Enter some text: ").modify(:collapse)
-    expect(q.read_string).to eql "Some white space here!"
+    prompt = TTY::TestPrompt.new
+    prompt.input << " Some   white\t   space\t \there!   \n"
+    prompt.input.rewind
+    answer = prompt.ask('Enter some text: ') { |q| q.modify(:collapse) }
+    expect(answer).to eq(' Some white space here! ')
   end
 
   it 'strips and collapses whitespace' do
-    input << " Some   white\t   space\t \there!   \n"
-    input.rewind
-    q = prompt.ask("Enter some text: ").modify(:strip, :collapse)
-    expect(q.read_string).to eql "Some white space here!"
+    prompt = TTY::TestPrompt.new
+    prompt.input << " Some   white\t   space\t \there!   \n"
+    prompt.input.rewind
+    answer = prompt.ask('Enter some text: ') { |q| q.modify(:strip, :collapse) }
+    expect(answer).to eq('Some white space here!')
   end
 end
