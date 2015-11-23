@@ -2,7 +2,6 @@
 
 require 'tty/prompt/question/modifier'
 require 'tty/prompt/question/validation'
-
 require 'tty/prompt/response_delegation'
 
 module TTY
@@ -51,7 +50,7 @@ module TTY
         @in            = options.fetch(:in) { false }
         @modifier      = Modifier.new options.fetch(:modifier) { [] }
         @validation    = Validation.new(options.fetch(:validation) { nil })
-        @default_value = options.fetch(:default) { nil }
+        @default       = options.fetch(:default) { nil }
         @error         = false
         @converter     = Necromancer.new
         @read          = options.fetch(:read) { nil }
@@ -82,9 +81,8 @@ module TTY
       #
       # @api public
       def default(value)
-        return self if value == ''
-        @default_value = value
-        self
+        return @default unless value
+        @default = value
       end
 
       # Check if default value is set
@@ -93,7 +91,7 @@ module TTY
       #
       # @api public
       def default?
-        !!@default_value
+        !!@default
       end
 
       # Ensure that passed argument is present or not
@@ -239,7 +237,7 @@ module TTY
       #
       # @api private
       def evaluate_response(input)
-        return default_value if !input && default?
+        return @default if !input && default?
         check_required(input)
         return if input.nil?
 
@@ -252,10 +250,10 @@ module TTY
       #
       # @api public
       def clean
-        @message       = nil
-        @default_value = nil
-        @required      = false
-        @modifier      = nil
+        @message  = nil
+        @default  = nil
+        @required = false
+        @modifier = nil
       end
 
       def to_s
@@ -263,7 +261,7 @@ module TTY
       end
 
       def inspect
-        "#<Question @message=#{message}"
+        "#<Question @message=#{message}>"
       end
 
       private
