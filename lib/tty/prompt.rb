@@ -123,13 +123,13 @@ module TTY
     end
 
     # A shortcut method to ask the user positive question and return
-    # true for 'yes' reply.
+    # true for 'yes' reply, false for 'no'.
     #
     # @return [Boolean]
     #
     # @api public
     def yes?(statement, *args, &block)
-      ask(statement, *args, &block).read_bool
+      ask(statement, {read: :bool}, &block)
     end
 
     # A shortcut method to ask the user negative question and return
