@@ -25,7 +25,8 @@ module TTY
                                 :read_regex,
                                 :read_string,
                                 :read_symbol,
-                                :read_text
+                                :read_text,
+                                :read_type
 
       # Create response instance when question readed is invoked
       #
