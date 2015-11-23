@@ -12,14 +12,9 @@ module TTY
     class Question
       include ResponseDelegation
 
-      PREFIX          = ' + '
-      MULTIPLE_PREFIX = '   * '
-      ERROR_PREFIX    = '  ERROR:'
-
-      # Store statement.
-      #
-      # @api private
-      attr_accessor :statement
+      # Store question message
+      # @api public
+      attr_reader :message
 
       # Store default value.
       #
@@ -76,7 +71,7 @@ module TTY
       #
       # @api public
       def call(message, &block)
-        self.statement = message
+        @message = message
         block.call(self) if block
         prompt.output.print("#{prompt.prefix}#{message}")
         render
@@ -283,11 +278,11 @@ module TTY
       end
 
       def to_s
-        "#{statement}"
+        "#{message}"
       end
 
       def inspect
-        "#<Question @message=#{statement}"
+        "#<Question @message=#{message}"
       end
 
       private
@@ -317,7 +312,8 @@ module TTY
       # @api private
       def within?(value)
         if in? && value
-          @in.include?(value) || fail(InvalidArgument, "Value #{value} is not included in the range #{@in}")
+          @in.include?(value) || fail(InvalidArgument,
+            "Value #{value} is not included in the range #{@in}")
         end
       end
     end # Question
