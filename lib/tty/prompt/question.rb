@@ -65,9 +65,10 @@ module TTY
         @modifier      = Modifier.new options.fetch(:modifier) { [] }
         @valid_values  = options.fetch(:valid) { [] }
         @validation    = Validation.new options.fetch(:validation) { nil }
-        @default_value = nil
+        @default_value = options.fetch(:default) { nil }
         @error         = false
         @converter     = Necromancer.new
+        @read          = options.fetch(:read) { nil }
       end
 
       # Call the quesiton
@@ -81,7 +82,14 @@ module TTY
         self.statement = message
         block.call(self) if block
         prompt.output.print("#{prompt.prefix}#{message}")
-        self
+        render
+      end
+
+      # Reader answer and convert to type
+      #
+      # @api private
+      def render
+        dispatch.read_type(@read)
       end
 
       # Set default value.
@@ -147,7 +155,6 @@ module TTY
       # @api public
       def valid(values)
         @valid_values = values
-        self
       end
 
       # Reset question object.
@@ -167,7 +174,6 @@ module TTY
       # @api public
       def modify(*rules)
         @modifier = Modifier.new(*rules)
-        self
       end
 
       # Setup behaviour when error(s) occur
@@ -175,7 +181,6 @@ module TTY
       # @api public
       def on_error(action = nil)
         @error = action
-        self
       end
 
       # Check if error behaviour is set
@@ -192,7 +197,6 @@ module TTY
       def echo(value = nil)
         return @echo if value.nil?
         @echo = value
-        self
       end
 
       # Chec if echo is set
@@ -208,7 +212,6 @@ module TTY
       def raw(value = nil)
         return @raw if value.nil?
         @raw = value
-        self
       end
 
       # Check if raw mode is set
@@ -228,7 +231,6 @@ module TTY
       def mask(char = nil)
         return @mask if char.nil?
         @mask = char
-        self
       end
 
       # Check if character mask is set
@@ -250,7 +252,6 @@ module TTY
       def char(value = nil)
         return @character if value.nil?
         @character = value
-        self
       end
 
       # Check if character intput is set
@@ -270,7 +271,6 @@ module TTY
       def in(value = nil)
         return @in if value.nil?
         @in = @converter.convert(value).to(:range, strict: true)
-        self
       end
 
       # Check if range is set
@@ -335,10 +335,7 @@ module TTY
       # @api private
       def within?(value)
         if in? && value
-          if @in.include?(value)
-          else
-            fail InvalidArgument, "Value #{value} is not included in the range #{@in}"
-          end
+          @in.include?(value) || fail(InvalidArgument, "Value #{value} is not included in the range #{@in}")
         end
       end
     end # Question
