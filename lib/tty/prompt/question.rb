@@ -26,9 +26,6 @@ module TTY
       # @api private
       attr_reader :default_value
 
-      attr_reader :required
-      private :required
-
       attr_reader :validation
 
       # Controls character processing of the answer
@@ -110,28 +107,13 @@ module TTY
         !!@default_value
       end
 
-      # Ensure that passed argument is present if required option
-      #
-      # @return [Question]
-      #
-      # @api public
-      def argument(value)
-        case value
-        when :required
-          @required = true
-        when :optional
-          @required = false
-        end
-        self
-      end
-
-      # Check if required argument present.
+      # Ensure that passed argument is present or not
       #
       # @return [Boolean]
       #
-      # @api private
-      def required?
-        required
+      # @api public
+      def required(value)
+        @required = value
       end
 
       # Set validation rule for an argument
@@ -314,7 +296,7 @@ module TTY
       #
       # @api private
       def check_required(value)
-        if required? && !default? && value.nil?
+        if @required && !default? && value.nil?
           fail ArgumentRequired, 'No value provided for required'
         end
       end

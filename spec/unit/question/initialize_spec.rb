@@ -3,14 +3,9 @@
 require 'spec_helper'
 
 RSpec.describe TTY::Prompt::Question, '#initialize' do
-  let(:input)  { StringIO.new }
-  let(:output) { StringIO.new }
-  let(:prompt) { TTY::Prompt.new(input, output) }
   let(:message) { 'Do you like me?' }
 
-  subject(:question) { described_class.new prompt }
-
-  it { expect(question.required?).to eq(false) }
+  subject(:question) { described_class.new(TTY::TestPrompt.new)}
 
   it { expect(question.echo).to eq(true) }
 
