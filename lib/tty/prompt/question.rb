@@ -50,7 +50,7 @@ module TTY
         @character     = options.fetch(:character) { false }
         @in            = options.fetch(:in) { false }
         @modifier      = Modifier.new options.fetch(:modifier) { [] }
-        @validation    = Validation.new options.fetch(:validation) { nil }
+        @validation    = Validation.new(options.fetch(:validation) { nil })
         @default_value = options.fetch(:default) { nil }
         @error         = false
         @converter     = Necromancer.new
@@ -114,9 +114,7 @@ module TTY
       # @api public
       def validate(value = nil, &block)
         @validation = Validation.new(value || block)
-        self
       end
-
 
       # Modify string according to the rule given.
       #
@@ -240,14 +238,14 @@ module TTY
       # @return [Object]
       #
       # @api private
-      def evaluate_response(value)
-        return default_value if !value && default?
-        check_required(value)
-        return if value.nil?
+      def evaluate_response(input)
+        return default_value if !input && default?
+        check_required(input)
+        return if input.nil?
 
-        within?(value)
-        validation.valid_value?(value)
-        modifier.apply_to(value)
+        within?(input)
+        validation.(input)
+        modifier.apply_to(input)
       end
 
       # Reset question object.

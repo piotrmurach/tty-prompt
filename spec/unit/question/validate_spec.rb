@@ -24,13 +24,15 @@ RSpec.describe TTY::Prompt::Question, '#validate' do
     expect(answer).to eq('piotr.murach')
   end
 
-  it 'validates input in block' do
+  it 'validates input with proc' do
     prompt = TTY::TestPrompt.new
     prompt.input << 'piotr.murach'
     prompt.input.rewind
     answer = prompt.ask('What is your username?') { |q|
-      q.validate { |arg| arg =~ /^[^\.]+\.[^\.]+/ }
+      q.validate { |input| input =~ /^[^\.]+\.[^\.]+/ }
     }
     expect(answer).to eq('piotr.murach')
   end
+
+  it 'understands custom validation like :email'
 end
