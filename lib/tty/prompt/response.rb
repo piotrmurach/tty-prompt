@@ -5,16 +5,6 @@ module TTY
   class Prompt
     # A class representing a shell response
     class Response
-      VALID_TYPES = [
-        :boolean,
-        :string,
-        :symbol,
-        :integer,
-        :float,
-        :date,
-        :datetime
-      ]
-
       attr_reader :reader
       private :reader
 
@@ -24,11 +14,11 @@ module TTY
       # Initialize a Response
       #
       # @api public
-      def initialize(question, shell = Shell.new)
+      def initialize(question, prompt)
         @question  = question
-        @shell     = shell
+        @prompt    = prompt
         @converter = Necromancer.new
-        @reader    = Reader.new(@shell)
+        @reader    = Reader.new(@prompt)
       end
 
       # Read input from STDIN either character or line
@@ -180,14 +170,14 @@ module TTY
       # @api public
       def read_email
         question.validate(/^[a-z0-9._%+-]+@([a-z0-9-]+\.)+[a-z]{2,6}$/i)
-        question.call("\n" + question.statement) if question.error
+        question.call("\n" + question.statement) if question.error?
         with_exception { read_string }
       end
 
       # Read answer provided on multiple lines
       #
       # @api public
-      def read_multiple
+      def read_multiline
         response = ''
         loop do
           value = evaluate_response
@@ -217,8 +207,6 @@ module TTY
         end
       end
 
-      private
-
       # Ignore exception
       #
       # @api private
@@ -232,20 +220,31 @@ module TTY
       #   :boolean, :string, :numeric, :array
       #
       # @api private
-      def read_type(class_or_name)
-        raise TypeError, "Type #{type} is not valid" if type && !valid_type?(type)
-        case type
+      def read_type(class_or_name = nil)
+        case class_or_name
+        when :bool
+          read_bool
+        when :email
+          read_email
+        when :char
+          read_char
+        when :date
+          read_date
+        when :int
+          read_int
+        when :range
+          read_range
+        when :multiline
+          read_multiline
+        when :float, ::Float
+          read_float
         when :string, ::String
           read_string
         when :symbol, ::Symbol
           read_symbol
-        when :float, ::Float
-          read_float
+        else
+          read
         end
-      end
-
-      def valid_type?(type)
-        self.class::VALID_TYPES.include? type.to_sym
       end
     end # Response
   end # Prompt
