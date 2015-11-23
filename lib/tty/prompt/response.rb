@@ -99,14 +99,6 @@ module TTY
         evaluate_response { |input| input.to_sym }
       end
 
-      # Read answer from predifined choicse
-      #
-      # @api public
-      def read_choice(type = nil)
-        question.argument(:required) unless question.default?
-        evaluate_response
-      end
-
       # Read integer value
       #
       # @api public
@@ -236,12 +228,16 @@ module TTY
           read_range
         when :multiline
           read_multiline
-        when :float, ::Float
+        when :float
           read_float
-        when :string, ::String
+        when :file
+          read_file
+        when :string
           read_string
-        when :symbol, ::Symbol
+        when :symbol
           read_symbol
+        when :keypress
+          read_keypress
         else
           read
         end
