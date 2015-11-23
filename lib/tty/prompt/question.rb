@@ -28,11 +28,6 @@ module TTY
       # @api public
       attr_reader :modifier
 
-      # Returns valid answers
-      #
-      # @api public
-      attr_reader :valid_values
-
       attr_reader :error
 
       # Returns character mode
@@ -55,7 +50,6 @@ module TTY
         @character     = options.fetch(:character) { false }
         @in            = options.fetch(:in) { false }
         @modifier      = Modifier.new options.fetch(:modifier) { [] }
-        @valid_values  = options.fetch(:valid) { [] }
         @validation    = Validation.new options.fetch(:validation) { nil }
         @default_value = options.fetch(:default) { nil }
         @error         = false
@@ -123,26 +117,6 @@ module TTY
         self
       end
 
-      # Set expected values
-      #
-      # @param [Array] values
-      #
-      # @return [self]
-      #
-      # @api public
-      def valid(values)
-        @valid_values = values
-      end
-
-      # Reset question object.
-      #
-      # @api public
-      def clean
-        @statement     = nil
-        @default_value = nil
-        @required      = false
-        @modifier      = nil
-      end
 
       # Modify string according to the rule given.
       #
@@ -271,10 +245,19 @@ module TTY
         check_required(value)
         return if value.nil?
 
-        check_valid(value) unless valid_values.empty?
         within?(value)
         validation.valid_value?(value)
         modifier.apply_to(value)
+      end
+
+      # Reset question object.
+      #
+      # @api public
+      def clean
+        @message       = nil
+        @default_value = nil
+        @required      = false
+        @modifier      = nil
       end
 
       def to_s
@@ -293,17 +276,6 @@ module TTY
       def check_required(value)
         if @required && !default? && value.nil?
           fail ArgumentRequired, 'No value provided for required'
-        end
-      end
-
-      # Check if value matches any of the expected values
-      #
-      # @api private
-      def check_valid(value)
-        if Array(value).all? { |val| valid_values.include? val }
-          return value
-        else
-          fail InvalidArgument, "Valid values are: #{valid_values.join(', ')}"
         end
       end
 
