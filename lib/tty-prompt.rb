@@ -2,13 +2,13 @@
 
 require 'necromancer'
 require 'pastel'
+require 'tty-cursor'
 require 'tty-platform'
 
 require 'tty/prompt'
 require 'tty/prompt/choice'
 require 'tty/prompt/choices'
 require 'tty/prompt/codes'
-require 'tty/prompt/cursor'
 require 'tty/prompt/list'
 require 'tty/prompt/multi_list'
 require 'tty/prompt/mode'

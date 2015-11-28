@@ -25,7 +25,7 @@ module TTY
         @prompt = prompt
         @reader = Reader.new(@prompt)
         @pastel = Pastel.new
-        @cursor = Cursor.new
+        @cursor = TTY::Cursor
 
         @first_render = true
         @done         = false
