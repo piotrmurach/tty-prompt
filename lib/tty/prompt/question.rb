@@ -38,6 +38,8 @@ module TTY
 
       attr_reader :converter
 
+      BLANK_REGEX = /^[[:space]]*$/.freeze
+
       # Initialize a Question
       #
       # @api public
@@ -65,9 +67,9 @@ module TTY
       #
       # @api public
       def call(message, &block)
+        return if message.nil? || "#{message}" =~ BLANK_REGEX
         @message = message
         block.call(self) if block
-        prompt.output.print("#{prompt.prefix}#{message}")
         render
       end
 
@@ -75,6 +77,10 @@ module TTY
       #
       # @api private
       def render
+        header = "#{prompt.prefix}#{message} "
+        header += "(#{@default}) " if @default
+        prompt.output.print(header)
+
         reader = Reader.new(@prompt)
         Response.new(self, reader).read_type(@read)
       end

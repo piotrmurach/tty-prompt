@@ -1,25 +1,23 @@
 # encoding: utf-8
 
-require 'spec_helper'
-
 RSpec.describe TTY::Prompt::Question, '#read' do
   context 'with no mask' do
     it 'asks with echo on' do
       prompt = TTY::TestPrompt.new
       prompt.input << "password"
       prompt.input.rewind
-      answer = prompt.ask("What is your password: ") { |q| q.echo(true) }
+      answer = prompt.ask("What is your password?") { |q| q.echo(true) }
       expect(answer).to eql("password")
-      expect(prompt.output.string).to eql('What is your password: ')
+      expect(prompt.output.string).to eql('What is your password? ')
     end
 
     it 'asks with echo off' do
       prompt = TTY::TestPrompt.new
       prompt.input << "password"
       prompt.input.rewind
-      answer = prompt.ask("What is your password: ") { |q| q.echo(false) }
+      answer = prompt.ask("What is your password?") { |q| q.echo(false) }
       expect(answer).to eql("password")
-      expect(prompt.output.string).to eql('What is your password: ')
+      expect(prompt.output.string).to eql('What is your password? ')
     end
   end
 
@@ -28,21 +26,21 @@ RSpec.describe TTY::Prompt::Question, '#read' do
       prompt = TTY::TestPrompt.new
       prompt.input << "password\n"
       prompt.input.rewind
-      answer = prompt.ask("What is your password: ") { |q| q.mask('*') }
+      answer = prompt.ask("What is your password?") { |q| q.mask('*') }
       expect(answer).to eql("password")
-      expect(prompt.output.string).to eql('What is your password: ********')
+      expect(prompt.output.string).to eql('What is your password? ********')
     end
 
     it 'ignores mask if echo is off' do
       prompt = TTY::TestPrompt.new
       prompt.input << "password"
       prompt.input.rewind
-      answer = prompt.ask('What is your password: ') do |q|
+      answer = prompt.ask('What is your password?') do |q|
         q.echo false
         q.mask '*'
       end
       expect(answer).to eql("password")
-      expect(prompt.output.string).to eql('What is your password: ')
+      expect(prompt.output.string).to eql('What is your password? ')
     end
   end
 
@@ -51,7 +49,7 @@ RSpec.describe TTY::Prompt::Question, '#read' do
       prompt = TTY::TestPrompt.new
       prompt.input << "password"
       prompt.input.rewind
-      answer = prompt.ask("What is your password: ", echo: false, mask: '*')
+      answer = prompt.ask("What is your password:", echo: false, mask: '*')
       expect(answer).to eq("password")
     end
 
@@ -59,7 +57,7 @@ RSpec.describe TTY::Prompt::Question, '#read' do
       prompt = TTY::TestPrompt.new
       prompt.input << "password"
       prompt.input.rewind
-      answer = prompt.ask "What is your password: " do |q|
+      answer = prompt.ask "What is your password:" do |q|
         q.echo  false
         q.mask '*'
       end

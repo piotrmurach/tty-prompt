@@ -1,7 +1,5 @@
 # encoding: utf-8
 
-require 'spec_helper'
-
 RSpec.describe TTY::Prompt::Question, '#read_bool' do
   it 'fails to read boolean' do
     prompt = TTY::TestPrompt.new
@@ -18,7 +16,7 @@ RSpec.describe TTY::Prompt::Question, '#read_bool' do
     prompt.input.rewind
     response = prompt.ask('Do you read books?', read: :bool, default: true)
     expect(response).to eql(true)
-    expect(prompt.output.string).to eq('Do you read books?')
+    expect(prompt.output.string).to eq('Do you read books? (true) ')
   end
 
   it "handles default values" do
