@@ -1,7 +1,5 @@
 # encoding: utf-8
 
-require 'spec_helper'
-
 RSpec.describe TTY::Prompt::Choice, '#==' do
   it "is true with the same name and value attributes" do
     expect(described_class.new(:large, 1)).

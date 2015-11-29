@@ -1,7 +1,5 @@
 # encoding: utf-8
 
-require 'spec_helper'
-
 RSpec.describe TTY::Prompt::Question, '#read_email' do
   context 'with valid email' do
     it 'reads empty' do

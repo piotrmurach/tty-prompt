@@ -1,7 +1,5 @@
 # encoding: utf-8
 
-require 'spec_helper'
-
 RSpec.describe TTY::Prompt::Question, '#read_char' do
   it 'reads single character' do
     prompt = TTY::TestPrompt.new

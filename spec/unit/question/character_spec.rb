@@ -1,7 +1,5 @@
 # encoding: utf-8
 
-require 'spec_helper'
-
 RSpec.describe TTY::Prompt::Question, '#character' do
   it 'switches to character input' do
     prompt = TTY::TestPrompt.new

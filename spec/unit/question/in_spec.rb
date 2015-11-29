@@ -1,10 +1,10 @@
 # encoding: utf-8
 
-require 'spec_helper'
-
 RSpec.describe TTY::Prompt::Question, '#in' do
+
+  subject(:prompt) { TTY::TestPrompt.new }
+
   it 'reads number within range' do
-    prompt = TTY::TestPrompt.new
     prompt.input << 8
     prompt.input.rewind
     answer = prompt.ask("How do you like it on scale 1-10", read: :int) { |q|
@@ -14,7 +14,6 @@ RSpec.describe TTY::Prompt::Question, '#in' do
   end
 
   it "reads number outside of range" do
-    prompt = TTY::TestPrompt.new
     prompt.input << 12
     prompt.input.rewind
     expect {

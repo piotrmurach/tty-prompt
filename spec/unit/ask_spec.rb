@@ -1,10 +1,6 @@
 # encoding: utf-8
 
 RSpec.describe TTY::Prompt, '#ask' do
-  let(:color) { Pastel.new(enabled: true) }
-
-  before { allow(Pastel).to receive(:new).and_return(color) }
-
   subject(:prompt) { TTY::TestPrompt.new }
 
   it 'asks question' do

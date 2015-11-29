@@ -1,11 +1,8 @@
 # encoding: utf-8
 
 RSpec.describe TTY::Prompt, '#say' do
-  let(:color)  { Pastel.new(enabled: true) }
 
   subject(:prompt) { TTY::TestPrompt.new }
-
-  before { allow(Pastel).to receive(:new).and_return(color) }
 
   it 'prints an empty message' do
     prompt.say('')

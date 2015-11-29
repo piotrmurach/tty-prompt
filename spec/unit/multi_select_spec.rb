@@ -1,12 +1,6 @@
 # encoding: utf-8
 
-require 'spec_helper'
-
 RSpec.describe TTY::Prompt do
-  let(:color) { Pastel.new(enabled: true) }
-
-  before { allow(Pastel).to receive(:new).and_return(color) }
-
   it "selects nothing when return pressed immediately" do
     prompt = TTY::TestPrompt.new
     choices = %w(vodka beer wine whisky bourbon)

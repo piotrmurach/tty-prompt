@@ -1,7 +1,5 @@
 # encoding: utf-8
 
-require 'spec_helper'
-
 RSpec.describe TTY::Prompt::Statement, '#new' do
   it "forces newline after the prompt message" do
     prompt = TTY::TestPrompt.new

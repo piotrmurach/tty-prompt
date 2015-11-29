@@ -1,7 +1,5 @@
 # encoding: utf-8
 
-require 'spec_helper'
-
 RSpec.describe TTY::Prompt::Question, '#read_date' do
   it 'reads date' do
     prompt = TTY::TestPrompt.new

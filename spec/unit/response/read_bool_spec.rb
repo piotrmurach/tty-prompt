@@ -1,8 +1,10 @@
 # encoding: utf-8
 
 RSpec.describe TTY::Prompt::Question, '#read_bool' do
+
+  subject(:prompt) { TTY::TestPrompt.new}
+
   it 'fails to read boolean' do
-    prompt = TTY::TestPrompt.new
     prompt.input << 'invalid'
     prompt.input.rewind
     expect {
@@ -11,7 +13,6 @@ RSpec.describe TTY::Prompt::Question, '#read_bool' do
   end
 
   it "handles default values" do
-    prompt = TTY::TestPrompt.new
     prompt.input << "\n"
     prompt.input.rewind
     response = prompt.ask('Do you read books?', read: :bool, default: true)
@@ -24,7 +25,6 @@ RSpec.describe TTY::Prompt::Question, '#read_bool' do
   end
 
   it "handles default values" do
-    prompt = TTY::TestPrompt.new
     prompt.input << "\n"
     prompt.input.rewind
     response = prompt.ask("Do you read books?") { |q|
@@ -35,7 +35,6 @@ RSpec.describe TTY::Prompt::Question, '#read_bool' do
   end
 
   it 'reads negative boolean' do
-    prompt = TTY::TestPrompt.new
     prompt.input << 'No'
     prompt.input.rewind
     response = prompt.ask('Do you read books?', read: :bool)
@@ -43,7 +42,6 @@ RSpec.describe TTY::Prompt::Question, '#read_bool' do
   end
 
   it 'reads positive boolean' do
-    prompt = TTY::TestPrompt.new
     prompt.input << 'Yes'
     prompt.input.rewind
     response = prompt.ask("Do you read books?", read: :bool)
@@ -51,7 +49,6 @@ RSpec.describe TTY::Prompt::Question, '#read_bool' do
   end
 
   it 'reads single positive boolean' do
-    prompt = TTY::TestPrompt.new
     prompt.input << 'y'
     prompt.input.rewind
     response = prompt.ask('Do you read books?', read: :bool)

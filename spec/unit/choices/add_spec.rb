@@ -1,7 +1,5 @@
 # encoding: utf-8
 
-require 'spec_helper'
-
 RSpec.describe TTY::Prompt::Choices, '#<<' do
   it "adds choice to collection" do
     choices = described_class.new

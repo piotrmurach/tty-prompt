@@ -1,13 +1,8 @@
 # encoding: utf-8
 
-require 'spec_helper'
-
 RSpec.describe TTY::Prompt, '#warn' do
-  let(:color)  { Pastel.new(enabled: true) }
 
   subject(:prompt) { TTY::TestPrompt.new }
-
-  before { allow(Pastel).to receive(:new).and_return(color) }
 
   it 'displays one message' do
     prompt.warn "Careful young apprentice!"

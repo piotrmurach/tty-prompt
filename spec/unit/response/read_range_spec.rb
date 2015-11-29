@@ -1,7 +1,5 @@
 # encoding: utf-8
 
-require 'spec_helper'
-
 RSpec.describe TTY::Prompt::Question, '#read_range' do
   it 'converts with valid range' do
     prompt = TTY::TestPrompt.new

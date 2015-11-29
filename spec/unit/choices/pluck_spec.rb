@@ -1,7 +1,5 @@
 # encoding: utf-8
 
-require 'spec_helper'
-
 RSpec.describe TTY::Prompt::Choices, '.pluck' do
   it "plucks choice from collection by name" do
     collection = %w(large medium small)

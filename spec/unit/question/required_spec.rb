@@ -1,10 +1,10 @@
 # encoding: utf-8
 
-require 'spec_helper'
-
 RSpec.describe TTY::Prompt::Question, '#required' do
+
+  subject(:prompt) { TTY::TestPrompt.new }
+
   it 'requires value to be present with helper' do
-    prompt = TTY::TestPrompt.new
     prompt.input << ''
     prompt.input.rewind
     expect {
@@ -13,7 +13,6 @@ RSpec.describe TTY::Prompt::Question, '#required' do
   end
 
   it 'requires value to be present with option' do
-    prompt = TTY::TestPrompt.new
     prompt.input << ''
     prompt.input.rewind
     expect {
@@ -22,7 +21,6 @@ RSpec.describe TTY::Prompt::Question, '#required' do
   end
 
   it "doesn't require value to be present" do
-    prompt = TTY::TestPrompt.new
     prompt.input << ''
     prompt.input.rewind
     answer = prompt.ask('What is your name?') { |q| q.required(false) }

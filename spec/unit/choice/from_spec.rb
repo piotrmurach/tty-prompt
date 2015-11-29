@@ -1,7 +1,5 @@
 # encoding: utf-8
 
-require 'spec_helper'
-
 RSpec.describe TTY::Prompt::Choice, '#from' do
   it "creates choice from choice" do
     choice = described_class.new(:large, 1)

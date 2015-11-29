@@ -1,13 +1,11 @@
 # encoding: utf-8
 
 RSpec.describe TTY::Prompt::Question, '#read' do
-  let(:color)  { Pastel.new(enabled: true) }
 
-  before { allow(Pastel).to receive(:new).and_return(color) }
+  subject(:prompt) { TTY::TestPrompt.new }
 
   context 'with no mask' do
     it 'asks with echo on' do
-      prompt = TTY::TestPrompt.new
       prompt.input << "password"
       prompt.input.rewind
       answer = prompt.ask("What is your password?") { |q| q.echo(true) }
@@ -20,7 +18,6 @@ RSpec.describe TTY::Prompt::Question, '#read' do
     end
 
     it 'asks with echo off' do
-      prompt = TTY::TestPrompt.new
       prompt.input << "password"
       prompt.input.rewind
       answer = prompt.ask("What is your password?") { |q| q.echo(false) }
@@ -35,7 +32,6 @@ RSpec.describe TTY::Prompt::Question, '#read' do
 
   context 'with mask' do
     it 'masks output with character' do
-      prompt = TTY::TestPrompt.new
       prompt.input << "password\n"
       prompt.input.rewind
       answer = prompt.ask("What is your password?") { |q| q.mask('*') }
@@ -48,7 +44,6 @@ RSpec.describe TTY::Prompt::Question, '#read' do
     end
 
     it 'ignores mask if echo is off' do
-      prompt = TTY::TestPrompt.new
       prompt.input << "password"
       prompt.input.rewind
       answer = prompt.ask('What is your password?') do |q|
@@ -66,7 +61,6 @@ RSpec.describe TTY::Prompt::Question, '#read' do
 
   context 'with mask and echo as options' do
     it 'asks with options' do
-      prompt = TTY::TestPrompt.new
       prompt.input << "password"
       prompt.input.rewind
       answer = prompt.ask("What is your password:", echo: false, mask: '*')
@@ -74,7 +68,6 @@ RSpec.describe TTY::Prompt::Question, '#read' do
     end
 
     it 'asks with block' do
-      prompt = TTY::TestPrompt.new
       prompt.input << "password"
       prompt.input.rewind
       answer = prompt.ask "What is your password:" do |q|

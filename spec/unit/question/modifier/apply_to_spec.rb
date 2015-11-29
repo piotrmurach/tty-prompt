@@ -1,7 +1,5 @@
 # encoding: utf-8
 
-require 'spec_helper'
-
 RSpec.describe TTY::Prompt::Question::Modifier, '#apply_to' do
   let(:instance) { described_class.new modifiers }
   let(:string)   { "Text to be modified"}

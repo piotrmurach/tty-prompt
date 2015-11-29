@@ -10,6 +10,7 @@ module TTY
       @output = StringIO.new
       options.merge!({input: @input, output: @output})
       super(options)
+      @pastel = Pastel.new(enabled: true)
     end
   end # TestPrompt
 end # TTY

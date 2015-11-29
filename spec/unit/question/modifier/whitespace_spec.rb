@@ -1,7 +1,5 @@
 # encoding: utf-8
 
-require 'spec_helper'
-
 RSpec.describe TTY::Prompt::Question::Modifier, '#whitespace' do
   let(:string) { "  text\t \n  to\t   modify\r\n" }
 

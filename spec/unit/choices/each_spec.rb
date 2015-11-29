@@ -1,7 +1,5 @@
 # encoding: utf-8
 
-require 'spec_helper'
-
 RSpec.describe TTY::Prompt::Choices, '.each' do
   it "iterates over collection" do
     choices = described_class[:large, :medium, :small]

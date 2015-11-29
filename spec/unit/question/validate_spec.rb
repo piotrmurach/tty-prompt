@@ -1,10 +1,10 @@
 # encoding: utf-8
 
-require 'spec_helper'
-
 RSpec.describe TTY::Prompt::Question, '#validate' do
+
+  subject(:prompt) { TTY::TestPrompt.new }
+
   it 'fails to validate input' do
-    prompt = TTY::TestPrompt.new
     prompt.input << 'piotrmurach'
     prompt.input.rewind
     expect {
@@ -15,7 +15,6 @@ RSpec.describe TTY::Prompt::Question, '#validate' do
   end
 
   it 'validates input with regex' do
-    prompt = TTY::TestPrompt.new
     prompt.input << 'piotr.murach'
     prompt.input.rewind
     answer = prompt.ask('What is your username?') { |q|
@@ -25,7 +24,6 @@ RSpec.describe TTY::Prompt::Question, '#validate' do
   end
 
   it 'validates input with proc' do
-    prompt = TTY::TestPrompt.new
     prompt.input << 'piotr.murach'
     prompt.input.rewind
     answer = prompt.ask('What is your username?') { |q|

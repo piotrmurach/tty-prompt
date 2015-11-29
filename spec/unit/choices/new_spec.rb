@@ -1,7 +1,5 @@
 # encoding: utf-8
 
-require 'spec_helper'
-
 RSpec.describe TTY::Prompt::Choices, '.new' do
   it "creates choices collection" do
     choice_1 = TTY::Prompt::Choice.from(:label1)
