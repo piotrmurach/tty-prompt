@@ -1,13 +1,8 @@
 # encoding: utf-8
 
-require 'spec_helper'
-
 RSpec.describe TTY::Prompt::Reader, '#getc' do
+  let(:prompt) { TTY::TestPrompt.new }
   let(:instance) { described_class.new(prompt) }
-
-  let(:input)  { StringIO.new }
-  let(:output) { StringIO.new }
-  let(:prompt) { TTY::Prompt.new(input, output) }
 
   subject(:reader) { instance.getc mask }
 
@@ -15,10 +10,10 @@ RSpec.describe TTY::Prompt::Reader, '#getc' do
     let(:mask) { '*'}
 
     it 'masks characters' do
-      input << "password\n"
-      input.rewind
+      prompt.input << "password\n"
+      prompt.input.rewind
       expect(reader).to eql "password"
-      expect(output.string).to eql("********")
+      expect(prompt.output.string).to eql("********")
     end
   end
 
@@ -26,17 +21,17 @@ RSpec.describe TTY::Prompt::Reader, '#getc' do
     let(:mask) { }
 
     it 'masks characters' do
-      input << "password\n"
-      input.rewind
+      prompt.input << "password\n"
+      prompt.input.rewind
       expect(reader).to eql "password"
-      expect(output.string).to eql("password")
+      expect(prompt.output.string).to eql("password")
     end
 
     it 'deletes characters when backspace pressed' do
-      input << "\b\b"
-      input.rewind
+      prompt.input << "\b\b"
+      prompt.input.rewind
       expect(reader).to eql ''
-      expect(output.string).to eql('')
+      expect(prompt.output.string).to eql('')
     end
   end
 end

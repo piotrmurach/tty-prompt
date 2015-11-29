@@ -8,8 +8,8 @@ module TTY
     def initialize(options = {})
       @input  = StringIO.new
       @output = StringIO.new
-
-      super(@input, @output, options)
+      options.merge!({input: @input, output: @output})
+      super(options)
     end
   end # TestPrompt
 end # TTY

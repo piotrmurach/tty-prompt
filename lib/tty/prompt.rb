@@ -28,9 +28,10 @@ module TTY
     # Initialize a Prompt
     #
     # @api public
-    def initialize(input = stdin, output = stdout, options = {})
-      @input  = input
-      @output = output
+    def initialize(*args)
+      options = Utils.extract_options!(args)
+      @input  = options.fetch(:input) { $stdin }
+      @output = options.fetch(:output) { $stdout }
       @prefix = options.fetch(:prefix) { '' }
     end
 
