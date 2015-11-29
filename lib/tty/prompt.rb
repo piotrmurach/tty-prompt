@@ -147,7 +147,7 @@ module TTY
     # tab character, a new line will not be appended.
     #
     # @example
-    #   say("Simple things.")
+    #   say("Simple things.", color: :red)
     #
     # @param [String] message
     #
@@ -155,11 +155,11 @@ module TTY
     #
     # @api public
     def say(message = '', options = {})
-      message = message.to_str
+      message = message.to_s
       return unless message.length > 0
 
       statement = Statement.new(self, options)
-      statement.declare message
+      statement.call(message)
     end
 
     # Print statement(s) out in red green.
