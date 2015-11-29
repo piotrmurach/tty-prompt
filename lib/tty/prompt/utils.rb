@@ -2,7 +2,7 @@
 
 module TTY
   module Utils
-    extend self
+    module_function
 
     def extract_options!(args)
       args.last.respond_to?(:to_hash) ? args.pop : {}

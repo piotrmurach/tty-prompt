@@ -27,7 +27,7 @@ module TTY
       #
       # @api public
       def read
-        question.evaluate_response(read_input)
+        evaluate_response
       end
 
       # @api private
@@ -49,14 +49,10 @@ module TTY
         end
       end
 
-      def no_input?(input)
-        !input || input == "\n" || input.empty?
-      end
-
       # @api private
       def evaluate_response
         input = read_input
-        input = if no_input?(input)
+        input = if question.blank?(input)
                   nil
                 elsif block_given?
                   yield(input)

@@ -1,12 +1,19 @@
 # encoding: utf-8
 
 RSpec.describe TTY::Prompt, '#ask' do
+  let(:color) { Pastel.new(enabled: true) }
+
+  before { allow(Pastel).to receive(:new).and_return(color) }
 
   subject(:prompt) { TTY::TestPrompt.new }
 
   it 'asks question' do
     prompt.ask('What is your name?')
-    expect(prompt.output.string).to eql('What is your name? ')
+    expect(prompt.output.string).to eq([
+      "What is your name? ",
+      "\e[1A\e[1000D\e[K",
+      "What is your name? "
+    ].join)
   end
 
   it 'asks an empty question ' do
@@ -17,27 +24,35 @@ RSpec.describe TTY::Prompt, '#ask' do
   it 'asks an empty question and returns nil if EOF is sent to stdin' do
     prompt.input << nil
     prompt.input.rewind
-    response = prompt.ask('')
-    expect(response).to eql(nil)
+    answer = prompt.ask('')
+    expect(answer).to eql(nil)
     expect(prompt.output.string).to eq('')
   end
 
   it "asks a question with a prefix [?]" do
     prompt = TTY::TestPrompt.new(prefix: "[?] ")
-    prompt.input << ''
+    prompt.input << "\r"
     prompt.input.rewind
-    response = prompt.ask 'Are you Polish?'
-    expect(response).to eq(nil)
-    expect(prompt.output.string).to eql '[?] Are you Polish? '
+    answer = prompt.ask 'Are you Polish?'
+    expect(answer).to eq(nil)
+    expect(prompt.output.string).to eq([
+      "[?] Are you Polish? ",
+      "\e[1A\e[1000D\e[K",
+      "[?] Are you Polish? "
+    ].join)
   end
 
   it 'asks a question with block' do
     prompt.input << ''
     prompt.input.rewind
-    value = prompt.ask "What is your name?" do |q|
+    answer = prompt.ask "What is your name?" do |q|
       q.default 'Piotr'
     end
-    expect(value).to eq('Piotr')
-    expect(prompt.output.string).to eq('What is your name? (Piotr) ')
+    expect(answer).to eq('Piotr')
+    expect(prompt.output.string).to eq([
+      "What is your name? \e[90m(Piotr)\e[0m ",
+      "\e[1A\e[1000D\e[K",
+      "What is your name? \e[32mPiotr\e[0m"
+    ].join)
   end
 end

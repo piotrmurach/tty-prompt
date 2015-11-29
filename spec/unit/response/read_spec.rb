@@ -8,7 +8,11 @@ RSpec.describe TTY::Prompt::Question, '#read' do
       prompt.input.rewind
       answer = prompt.ask("What is your password?") { |q| q.echo(true) }
       expect(answer).to eql("password")
-      expect(prompt.output.string).to eql('What is your password? ')
+      expect(prompt.output.string).to eq([
+        "What is your password? ",
+        "\e[1A\e[1000D\e[K",
+        "What is your password? \e[32mpassword\e[0m"
+      ].join)
     end
 
     it 'asks with echo off' do
@@ -17,7 +21,11 @@ RSpec.describe TTY::Prompt::Question, '#read' do
       prompt.input.rewind
       answer = prompt.ask("What is your password?") { |q| q.echo(false) }
       expect(answer).to eql("password")
-      expect(prompt.output.string).to eql('What is your password? ')
+      expect(prompt.output.string).to eq([
+        "What is your password? ",
+        "\e[1A\e[1000D\e[K",
+        "What is your password? "
+      ].join)
     end
   end
 
@@ -28,7 +36,11 @@ RSpec.describe TTY::Prompt::Question, '#read' do
       prompt.input.rewind
       answer = prompt.ask("What is your password?") { |q| q.mask('*') }
       expect(answer).to eql("password")
-      expect(prompt.output.string).to eql('What is your password? ********')
+      expect(prompt.output.string).to eq([
+        "What is your password? ********",
+        "\e[1A\e[1000D\e[K",
+        "What is your password? ********"
+      ].join)
     end
 
     it 'ignores mask if echo is off' do
@@ -40,7 +52,11 @@ RSpec.describe TTY::Prompt::Question, '#read' do
         q.mask '*'
       end
       expect(answer).to eql("password")
-      expect(prompt.output.string).to eql('What is your password? ')
+      expect(prompt.output.string).to eq([
+        "What is your password? ",
+        "\e[1A\e[1000D\e[K",
+        "What is your password? "
+      ].join)
     end
   end
 

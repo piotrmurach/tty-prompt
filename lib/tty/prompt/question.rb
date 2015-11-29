@@ -38,7 +38,7 @@ module TTY
 
       attr_reader :converter
 
-      BLANK_REGEX = /^[[:space]]*$/.freeze
+      BLANK_REGEX = /\A[[:space:]]*\z/o.freeze
 
       # Initialize a Question
       #
@@ -57,6 +57,10 @@ module TTY
         @error         = false
         @converter     = Necromancer.new
         @read          = options.fetch(:read) { nil }
+        @pastel        = Pastel.new
+        @color         = options.fetch(:color) { :green }
+        @cursor        = TTY::Cursor
+        @done          = false
       end
 
       # Call the quesiton
@@ -67,22 +71,52 @@ module TTY
       #
       # @api public
       def call(message, &block)
-        return if message.nil? || "#{message}" =~ BLANK_REGEX
+        return if blank?(message)
         @message = message
         block.call(self) if block
         render
       end
 
+
       # Read answer and convert to type
       #
       # @api private
       def render
-        header = "#{prompt.prefix}#{message} "
-        header += "(#{@default}) " if @default
-        prompt.output.print(header)
-
+        @answer = nil
+        render_question
         reader = Reader.new(@prompt)
-        Response.new(self, reader).read_type(@read)
+        @answer = Response.new(self, reader).read_type(@read)
+        @done = true
+        refresh
+        render_question
+        @answer
+      ensure
+        @answer
+      end
+
+      # Render quesiton
+      #
+      # @api private
+      def render_question
+        header = "#{prompt.prefix}#{message} "
+        if !echo?  #|| mask?
+          header
+        elsif mask?
+          header += "#{@mask * "#{@answer}".length}"
+        elsif @done
+          header += @pastel.decorate("#{@answer}", @color)
+        elsif @default
+          header += @pastel.decorate("(#{@default})", :bright_black) + ' '
+        end
+        @prompt.output.print(header)
+      end
+
+      # Determine area of the screen to clear
+      #
+      # @api private
+      def refresh
+        lines = @message.scan("\n").length + 1
+        @prompt.output.print(@cursor.clear_lines(lines))
       end
 
       # Set reader type
@@ -269,6 +303,12 @@ module TTY
         @default  = nil
         @required = false
         @modifier = nil
+      end
+
+      def blank?(value)
+        value.nil? ||
+        value.respond_to?(:empty?) && value.empty? ||
+        BLANK_REGEX === value
       end
 
       def to_s
