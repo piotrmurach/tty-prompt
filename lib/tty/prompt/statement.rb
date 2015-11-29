@@ -30,7 +30,6 @@ module TTY
       # @api public
       def initialize(prompt, options = {})
         @prompt  = prompt
-        @pastel  = Pastel.new
         @newline = options.fetch(:newline) { true }
         @color   = options.fetch(:color) { false }
       end
@@ -42,7 +41,7 @@ module TTY
       #
       # @api public
       def call(message)
-        message = @pastel.decorate(message, *color) if color
+        message = @prompt.decorate(message, *color) if color
 
         if newline && /( |\t)(\e\[\d+(;\d+)*m)?\Z/ !~ message
           @prompt.output.puts message
