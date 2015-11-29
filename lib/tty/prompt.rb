@@ -1,7 +1,11 @@
 # encoding: utf-8
 
+require 'forwardable'
+
 module TTY
   class Prompt
+    extend Forwardable
+
     # Raised when the passed in validation argument is of wrong type
     class ValidationCoercion < TypeError; end
 
@@ -25,6 +29,10 @@ module TTY
     # @api private
     attr_reader :prefix
 
+    def_delegators :@pastel, :decorate
+
+    def_delegators :@cursor, :clear_lines, :show, :hide
+
     # Initialize a Prompt
     #
     # @api public
@@ -33,6 +41,9 @@ module TTY
       @input  = options.fetch(:input) { $stdin }
       @output = options.fetch(:output) { $stdout }
       @prefix = options.fetch(:prefix) { '' }
+
+      @cursor = TTY::Cursor
+      @pastel = Pastel.new
     end
 
     # Ask a question.

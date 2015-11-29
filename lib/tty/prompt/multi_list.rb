@@ -65,11 +65,11 @@ module TTY
       # @api private
       def render_header
         if @done
-          @pastel.decorate(@selected.map(&:name).join(', '), :green)
+          @prompt.decorate(@selected.map(&:name).join(', '), :green)
         elsif @selected.size.nonzero?
           @selected.map(&:name).join(', ')
         elsif @first_render
-          @pastel.decorate(@help, :bright_black)
+          @prompt.decorate(@help, :bright_black)
         else
           ''
         end
@@ -92,7 +92,7 @@ module TTY
           indicator = (index + 1 == @active) ?  @marker : Codes::SPACE
           indicator += Codes::SPACE
           message = if @selected.include?(choice)
-                      selected = @pastel.decorate(Codes::RADIO_CHECKED, :green)
+                      selected = @prompt.decorate(Codes::RADIO_CHECKED, :green)
                       selected + Codes::SPACE + choice.name
                     else
                       Codes::RADIO_UNCHECKED + Codes::SPACE + choice.name

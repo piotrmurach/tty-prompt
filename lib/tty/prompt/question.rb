@@ -54,12 +54,10 @@ module TTY
         @modifier      = Modifier.new options.fetch(:modifier) { [] }
         @validation    = Validation.new(options.fetch(:validation) { nil })
         @default       = options.fetch(:default) { nil }
+        @read          = options.fetch(:read) { nil }
+        @color         = options.fetch(:color) { :green }
         @error         = false
         @converter     = Necromancer.new
-        @read          = options.fetch(:read) { nil }
-        @pastel        = Pastel.new
-        @color         = options.fetch(:color) { :green }
-        @cursor        = TTY::Cursor
         @done          = false
       end
 
@@ -104,9 +102,9 @@ module TTY
         elsif mask?
           header += "#{@mask * "#{@answer}".length}"
         elsif @done
-          header += @pastel.decorate("#{@answer}", @color)
+          header += @prompt.decorate("#{@answer}", @color)
         elsif @default
-          header += @pastel.decorate("(#{@default})", :bright_black) + ' '
+          header += @prompt.decorate("(#{@default})", :bright_black) + ' '
         end
         @prompt.output.print(header)
       end
@@ -116,7 +114,7 @@ module TTY
       # @api private
       def refresh
         lines = @message.scan("\n").length + 1
-        @prompt.output.print(@cursor.clear_lines(lines))
+        @prompt.output.print(@prompt.clear_lines(lines))
       end
 
       # Set reader type

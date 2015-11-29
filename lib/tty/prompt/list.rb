@@ -24,8 +24,6 @@ module TTY
       def initialize(prompt, options = {})
         @prompt = prompt
         @reader = Reader.new(@prompt)
-        @pastel = Pastel.new
-        @cursor = TTY::Cursor
 
         @first_render = true
         @done         = false
@@ -117,7 +115,7 @@ module TTY
       #
       # @api private
       def render
-        @prompt.output.print(@cursor.hide)
+        @prompt.output.print(@prompt.hide)
         until @done
           render_question
           process_input
@@ -126,7 +124,7 @@ module TTY
         render_question
         answer = render_answer
       ensure
-        @prompt.output.print(@cursor.show)
+        @prompt.output.print(@prompt.show)
         answer
       end
 
@@ -161,7 +159,7 @@ module TTY
       # @api private
       def refresh
         lines = @question.scan("\n").length + @choices.length + 1
-        @prompt.output.print(@cursor.clear_lines(lines))
+        @prompt.output.print(@prompt.clear_lines(lines))
       end
 
       # Render question with instructions and menu
@@ -182,9 +180,9 @@ module TTY
       def render_header
         if @done
           selected_item = "#{@choices[@active - 1].name}"
-          @pastel.decorate(selected_item, @color)
+          @prompt.decorate(selected_item, @color)
         elsif @first_render
-          @pastel.decorate(@help, :bright_black)
+          @prompt.decorate(@help, :bright_black)
         else
           ''
         end
@@ -197,7 +195,7 @@ module TTY
         @choices.each_with_index do |choice, index|
           message = if index + 1 == @active
                       selected = @marker + Codes::SPACE + choice.name
-                      @pastel.decorate("#{selected}", @color)
+                      @prompt.decorate("#{selected}", @color)
                     else
                       Codes::SPACE * 2 + choice.name
                     end
