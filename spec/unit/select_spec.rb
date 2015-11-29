@@ -189,4 +189,20 @@ RSpec.describe TTY::Prompt, '#select' do
       "What size? \e[32mLarge\e[0m\n\e[?25h"
     ].join)
   end
+
+  it "sets prompt prefix" do
+    prompt = TTY::TestPrompt.new(prefix: '[?] ')
+    choices = %w(Large Medium Small)
+    prompt.input << "\r"
+    prompt.input.rewind
+    expect(prompt.select('What size?', choices)).to eq('Large')
+    expect(prompt.output.string).to eq([
+      "\e[?25l[?] What size? \e[90m(Use arrow keys, press Enter to select)\e[0m\n",
+      "\e[32m‣ Large\e[0m\n",
+      "  Medium\n",
+      "  Small\n",
+      "\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K",
+      "[?] What size? \e[32mLarge\e[0m\n\e[?25h"
+    ].join)
+  end
 end

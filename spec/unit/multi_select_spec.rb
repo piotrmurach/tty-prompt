@@ -160,4 +160,22 @@ RSpec.describe TTY::Prompt do
     }.to raise_error(TTY::PromptConfigurationError,
                      /default index `6` out of range \(1 - 5\)/)
   end
+
+  it "sets prompt prefix" do
+    prompt = TTY::TestPrompt.new(prefix: '[?] ')
+    choices = %w(vodka beer wine whisky bourbon)
+    prompt.input << "\r"
+    prompt.input.rewind
+    expect(prompt.multi_select("Select drinks?", choices)). to eq([])
+    expect(prompt.output.string).to eq([
+      "\e[?25l[?] Select drinks? \e[90m(Use arrow keys, press Space to select and Enter to finish)\e[0m\n",
+      "‣ ⬡ vodka\n",
+      "  ⬡ beer\n",
+      "  ⬡ wine\n",
+      "  ⬡ whisky\n",
+      "  ⬡ bourbon\n",
+      "\e[1A\e[1000D\e[K" * 6,
+      "[?] Select drinks? \n\e[?25h"
+    ].join)
+  end
 end

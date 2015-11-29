@@ -24,13 +24,13 @@ RSpec.describe TTY::Prompt, '#ask' do
     expect(prompt.output.string).to eq('')
   end
 
-  it "asks a question with a prefix '>'" do
-    prompt = TTY::TestPrompt.new(prefix: ' > ')
+  it "asks a question with a prefix [?]" do
+    prompt = TTY::TestPrompt.new(prefix: "[?] ")
     prompt.input << ''
     prompt.input.rewind
     response = prompt.ask "Are you Polish?"
     expect(response).to eq(nil)
-    expect(prompt.output.string).to eql " > Are you Polish?"
+    expect(prompt.output.string).to eql "[?] Are you Polish?"
   end
 
   it 'asks a question with block' do

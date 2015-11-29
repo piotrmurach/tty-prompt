@@ -168,7 +168,7 @@ module TTY
       #
       # @api private
       def render_question
-        header = @question + Codes::SPACE + render_header
+        header = "#{@prompt.prefix}#{@question} #{render_header}"
         @prompt.output.puts(header)
         @first_render = false
         render_menu unless @done
