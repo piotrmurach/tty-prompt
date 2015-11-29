@@ -75,7 +75,8 @@ module TTY
       #
       # @api private
       def render
-        Response.new(@prompt, self).read_type(@read)
+        reader = Reader.new(@prompt)
+        Response.new(self, reader).read_type(@read)
       end
 
       # Set reader type

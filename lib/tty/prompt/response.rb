@@ -14,10 +14,9 @@ module TTY
       # Initialize a Response
       #
       # @api public
-      def initialize(prompt, question)
-        @prompt    = prompt
-        @question  = question
-        @reader    = Reader.new(@prompt)
+      def initialize(question, reader)
+        @question = question
+        @reader   = reader
       end
 
       # Read input from STDIN either character or line
@@ -27,8 +26,8 @@ module TTY
       # @return [undefined]
       #
       # @api public
-      def read(type = nil)
-        question.evaluate_response read_input
+      def read
+        question.evaluate_response(read_input)
       end
 
       # @api private
@@ -72,7 +71,7 @@ module TTY
       #   error to display on failed conversion to string type
       #
       # @api public
-      def read_string(error = nil)
+      def read_string
         evaluate_response { |input| String(input).strip }
       end
 
@@ -94,14 +93,14 @@ module TTY
       # Read ansewr and cast to Symbol type
       #
       # @api public
-      def read_symbol(error = nil)
+      def read_symbol
         evaluate_response { |input| input.to_sym }
       end
 
       # Read integer value
       #
       # @api public
-      def read_int(error = nil)
+      def read_int
         evaluate_response { |input|
           @question.converter.convert(input).to(:integer)
         }
@@ -110,7 +109,7 @@ module TTY
       # Read float value
       #
       # @api public
-      def read_float(error = nil)
+      def read_float
         evaluate_response { |input|
           @question.converter.convert(input).to(:float)
         }
@@ -119,7 +118,7 @@ module TTY
       # Read regular expression
       #
       # @api public
-      def read_regex(error = nil)
+      def read_regex
         evaluate_response { |input| Kernel.send(:Regex, input) }
       end
 
@@ -153,7 +152,7 @@ module TTY
       # Read boolean
       #
       # @api public
-      def read_bool(error = nil)
+      def read_bool
         evaluate_response { |input|
           @question.converter.convert(input).to(:boolean, strict: true)
         }
@@ -162,7 +161,7 @@ module TTY
       # Read file contents
       #
       # @api public
-      def read_file(error = nil)
+      def read_file
         evaluate_response { |input| File.open(File.join(directory, input)) }
       end
 
