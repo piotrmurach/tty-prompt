@@ -1,9 +1,9 @@
 # encoding: utf-8
 
 module TTY
-  # A class responsible for shell prompt interactions
+  # A class responsible for terminal prompt interactions
   class Prompt
-    # A class representing a shell response
+    # A class responsible for reading an answer
     class Response
       attr_reader :reader
       private :reader
@@ -14,10 +14,9 @@ module TTY
       # Initialize a Response
       #
       # @api public
-      def initialize(question, prompt)
-        @question  = question
+      def initialize(prompt, question)
         @prompt    = prompt
-        @converter = Necromancer.new
+        @question  = question
         @reader    = Reader.new(@prompt)
       end
 
@@ -103,14 +102,18 @@ module TTY
       #
       # @api public
       def read_int(error = nil)
-        evaluate_response { |input| @converter.convert(input).to(:integer) }
+        evaluate_response { |input|
+          @question.converter.convert(input).to(:integer)
+        }
       end
 
       # Read float value
       #
       # @api public
       def read_float(error = nil)
-        evaluate_response { |input| @converter.convert(input).to(:float) }
+        evaluate_response { |input|
+          @question.converter.convert(input).to(:float)
+        }
       end
 
       # Read regular expression
@@ -124,28 +127,36 @@ module TTY
       #
       # @api public
       def read_range
-        evaluate_response { |input| @converter.convert(input).to(:range, strict: true) }
+        evaluate_response { |input|
+          @question.converter.convert(input).to(:range, strict: true)
+        }
       end
 
       # Read date
       #
       # @api public
       def read_date
-        evaluate_response { |input| @converter.convert(input).to(:date) }
+        evaluate_response { |input|
+          @question.converter.convert(input).to(:date)
+        }
       end
 
       # Read datetime
       #
       # @api public
       def read_datetime
-        evaluate_response { |input| @converter.convert(input).to(:datetime) }
+        evaluate_response { |input|
+          @question.converter.convert(input).to(:datetime)
+        }
       end
 
       # Read boolean
       #
       # @api public
       def read_bool(error = nil)
-        evaluate_response { |input| @converter.convert(input).to(:boolean, strict: true) }
+        evaluate_response { |input|
+          @question.converter.convert(input).to(:boolean, strict: true)
+        }
       end
 
       # Read file contents

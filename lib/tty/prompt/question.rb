@@ -36,11 +36,13 @@ module TTY
       # @api private
       attr_reader :prompt
 
+      attr_reader :converter
+
       # Initialize a Question
       #
       # @api public
       def initialize(prompt, options = {})
-        @prompt        = prompt || Prompt.new
+        @prompt        = prompt
         @required      = options.fetch(:required) { false }
         @echo          = options.fetch(:echo) { true }
         @raw           = options.fetch(:raw) { false }
@@ -73,7 +75,7 @@ module TTY
       #
       # @api private
       def render
-        Response.new(self, @prompt).read_type(@read)
+        Response.new(@prompt, self).read_type(@read)
       end
 
       # Set reader type
