@@ -38,11 +38,11 @@ module TTY
     # Ask a question.
     #
     # @example
-    #   shell = TTY::Prompt.new
-    #   shell.ask("What is your name?")
+    #   propmt = TTY::Prompt.new
+    #   prompt.ask("What is your name?")
     #
-    # @param [String] statement
-    #   string question to be asked
+    # @param [String] message
+    #   the question to be asked
     #
     # @yieldparam [TTY::Question] question
     #   further configure the question
@@ -165,8 +165,8 @@ module TTY
     # Print statement(s) out in red green.
     #
     # @example
-    #   shell.confirm "Are you sure?"
-    #   shell.confirm "All is fine!", "This is fine too."
+    #   prompt.confirm "Are you sure?"
+    #   prompt.confirm "All is fine!", "This is fine too."
     #
     # @param [Array] messages
     #
@@ -181,8 +181,8 @@ module TTY
     # Print statement(s) out in yellow color.
     #
     # @example
-    #   shell.warn "This action can have dire consequences"
-    #   shell.warn "Carefull young apprentice", "This is potentially dangerous"
+    #   prompt.warn "This action can have dire consequences"
+    #   prompt.warn "Carefull young apprentice", "This is potentially dangerous"
     #
     # @param [Array] messages
     #
@@ -197,8 +197,8 @@ module TTY
     # Print statement(s) out in red color.
     #
     # @example
-    #   shell.error "Shutting down all systems!"
-    #   shell.error "Nothing is fine!", "All is broken!"
+    #   prompt.error "Shutting down all systems!"
+    #   prompt.error "Nothing is fine!", "All is broken!"
     #
     # @param [Array] messages
     #
@@ -214,7 +214,7 @@ module TTY
     # matches to suggest an unambigous string
     #
     # @example
-    #   shell.suggest('sta', ['status', 'stage', 'commit', 'branch'])
+    #   prompt.suggest('sta', ['status', 'stage', 'commit', 'branch'])
     #   # => "status, stage"
     #
     # @param [String] message
@@ -237,7 +237,7 @@ module TTY
       say(suggestion.suggest(message, possibilities))
     end
 
-    # Check if outputing to shell
+    # Check if outputing to terminal
     #
     # @return [Boolean]
     #

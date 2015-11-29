@@ -3,9 +3,11 @@
 require 'tty/prompt/distance'
 
 module TTY
-  # A class responsible for shell prompt interactions.
+  # A class responsible for terminal prompt interactions.
   class Prompt
-    # A class representing a suggestion
+    # A class representing a suggestion out of possible choices
+    #
+    # @api public
     class Suggestion
       DEFAULT_INDENT = 8
 

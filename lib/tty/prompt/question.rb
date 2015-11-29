@@ -7,7 +7,9 @@ require 'tty/prompt/response_delegation'
 module TTY
   # A class responsible for shell prompt interactions.
   class Prompt
-    # A class representing a command line question
+    # A class responsible for gathering user input
+    #
+    # @api public
     class Question
       include ResponseDelegation
 
