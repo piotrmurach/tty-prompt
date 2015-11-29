@@ -1,6 +1,10 @@
 # encoding: utf-8
 
 RSpec.describe TTY::Prompt::Question, '#read' do
+  let(:color)  { Pastel.new(enabled: true) }
+
+  before { allow(Pastel).to receive(:new).and_return(color) }
+
   context 'with no mask' do
     it 'asks with echo on' do
       prompt = TTY::TestPrompt.new
