@@ -36,7 +36,7 @@ module TTY
       def self.from(val)
         case val
         when Choice
-          return val
+          val
         when String, Symbol
           new(val, val)
         when Array
