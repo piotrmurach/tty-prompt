@@ -2,7 +2,6 @@
 
 require 'tty/prompt/question/modifier'
 require 'tty/prompt/question/validation'
-require 'tty/prompt/response_delegation'
 
 module TTY
   # A class responsible for shell prompt interactions.
@@ -11,8 +10,6 @@ module TTY
     #
     # @api public
     class Question
-      include ResponseDelegation
-
       # Store question message
       # @api public
       attr_reader :message
@@ -72,11 +69,18 @@ module TTY
         render
       end
 
-      # Reader answer and convert to type
+      # Read answer and convert to type
       #
       # @api private
       def render
-        dispatch.read_type(@read)
+        Response.new(self, @prompt).read_type(@read)
+      end
+
+      # Set reader type
+      #
+      # @api public
+      def read(value)
+        @read = value
       end
 
       # Set default value.
