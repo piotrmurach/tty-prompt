@@ -21,7 +21,7 @@ module TTY
       #   the marker for the selected item
       #
       # @api public
-      def initialize(prompt, options)
+      def initialize(prompt, options = {})
         @prompt = prompt
         @reader = Reader.new(@prompt)
         @pastel = Pastel.new
