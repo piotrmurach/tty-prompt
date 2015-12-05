@@ -43,10 +43,11 @@ Or install it yourself as:
   * [2.1 ask](#21-ask)
     * [2.1.1 settings](#211-settings)
     * [2.1.2 valid read keywords](#212-valid-read-keywords)
-  * [2.2 select](#22-select)
-  * [2.3 multi_select](#23-multi_select)
-  * [2.4 say](#25-say)
-  * [2.5 suggest](#26-suggest)
+  * [2.2 yes?/no?](#22-yesno)
+  * [2.3 select](#22-select)
+  * [2.4 multi_select](#23-multi_select)
+  * [2.5 say](#25-say)
+  * [2.6 suggest](#26-suggest)
 
 ## 1. Usage
 
@@ -167,7 +168,31 @@ For example, if you are interested in range type as answer do the following:
 ask("Provide range of numbers?", read: :range)
 ```
 
-### 2.2 select
+### 2.2 yes?/no?
+
+In order to display a query asking for boolean input from user use `yes?` like so:
+
+```ruby
+prompt.yes?('Do you like Ruby?')
+# =>
+# Do you like Ruby? (Y/n)
+```
+
+the same can be achieved by using plain `ask`:
+
+```ruby
+prompt.ask('Do you like Ruby? (Y/n)', read: :bool)
+```
+
+There is also the opposite for asking confirmation of negative option:
+
+```ruby
+prompt.no?('Do you like Ruby?')
+# =>
+# Do you like Ruby? (y/N)
+```
+
+### 2.3 select
 
 For asking questions involving list of options use `select` method by passing the question and possible choices:
 
@@ -246,7 +271,7 @@ prompt.select("Choose your destiny?", choices, help: "(Bash keyboard)")
 #   Jax
 ```
 
-### 2.3 multi_select
+### 2.4 multi_select
 
 For asking questions involving multiple selection list use `multi_select` method by passing the question and possible choices:
 
@@ -312,7 +337,7 @@ And when you press enter you will see the following selected:
 # => [{score: 20}, {score: 50}]
 ```
 
-### 2.4 say
+### 2.5 say
 
 To simply print message out to stdout use `say` like so:
 
@@ -328,7 +353,7 @@ prompt.warn         # print message(s) in yellow
 prompt.error        # print message(s) in red
 ```
 
-### 2.5 suggest
+### 2.6 suggest
 
 To suggest possible matches for the user input use `suggest` method like so:
 
