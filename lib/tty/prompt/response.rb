@@ -52,13 +52,13 @@ module TTY
       # @api private
       def evaluate_response
         input = read_input
-        input = if question.blank?(input)
-                  nil
-                elsif block_given?
-                  yield(input)
-                else input
-                end
-        question.evaluate_response(input)
+        answer = if question.blank?(input)
+                   nil
+                 elsif block_given?
+                   yield(input)
+                 else input
+                 end
+        [input, question.evaluate_response(answer)]
       end
 
       # Read answer and cast to String type
@@ -177,13 +177,14 @@ module TTY
       # @api public
       def read_multiline
         response = ''
+        raw_input = ''
         loop do
-          value = evaluate_response
+          raw_input, value = evaluate_response
           break if !value || value == ''
           next  if value !~ /\S/
           response << value
         end
-        response
+        [raw_input, response]
       end
 
       # Read password

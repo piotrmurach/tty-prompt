@@ -1,7 +1,5 @@
 # coding: utf-8
 
-require 'spec_helper'
-
 RSpec.describe TTY::Prompt::Distance, '.distance' do
   let(:object) { described_class.new }
 

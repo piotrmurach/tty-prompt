@@ -81,9 +81,11 @@ module TTY
       # @api private
       def render
         @answer = nil
+        @raw_input = nil
         render_question
         reader = Reader.new(@prompt)
-        @answer = Response.new(self, reader).read_type(@read)
+        @raw_input, @answer = Response.new(self, reader).read_type(@read)
+        @raw_input = @default if blank?(@raw_input)
         @done = true
         refresh
         render_question
@@ -100,9 +102,9 @@ module TTY
         if !echo?  #|| mask?
           header
         elsif mask?
-          header += "#{@mask * "#{@answer}".length}"
+          header += "#{@mask * "#{@raw_input}".length}"
         elsif @done
-          header += @prompt.decorate("#{@answer}", @color)
+          header += @prompt.decorate("#{@raw_input}", @color)
         elsif @default
           header += @prompt.decorate("(#{@default})", :bright_black) + ' '
         end
