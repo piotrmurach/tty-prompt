@@ -22,6 +22,7 @@ module TTY
       CTRL_K = "\x0B"
       CTRL_P = "\x10"
       SIGINT = "\x03"
+      CTRL_C = "\x03"
 
       ITEM_SECURE     = "•"
       ITEM_SELECTED   = "‣"
