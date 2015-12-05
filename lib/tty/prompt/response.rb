@@ -195,17 +195,6 @@ module TTY
         evaluate_response
       end
 
-      # Read a single keypress
-      #
-      # @api public
-      def read_keypress
-        question.echo false
-        question.raw true
-        question.evaluate_response(read_input).tap do |key|
-          raise Interrupt if key == "\x03" # Ctrl-C
-        end
-      end
-
       # Ignore exception
       #
       # @api private
@@ -243,8 +232,6 @@ module TTY
           read_string
         when :symbol
           read_symbol
-        when :keypress
-          read_keypress
         else
           read
         end
