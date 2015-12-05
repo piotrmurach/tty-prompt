@@ -98,7 +98,9 @@ module TTY
       # @api private
       def render_question
         header = "#{prompt.prefix}#{message} "
-        if !echo?  #|| mask?
+        if @read == :bool && !@done
+          header += @prompt.decorate("(Y/n)", :bright_black) + ' '
+        elsif !echo?
           header
         elsif mask?
           header += "#{@mask * "#{@raw_input}".length}"

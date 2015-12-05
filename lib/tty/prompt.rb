@@ -3,6 +3,7 @@
 require 'forwardable'
 
 module TTY
+  # A main entry for asking prompt questions.
   class Prompt
     extend Forwardable
 
@@ -144,14 +145,14 @@ module TTY
     #
     # @example
     #   prompt = TTY::Prompt.new
-    #   prompt.yes?('Are you human? [Y/n]') # => true
+    #   prompt.yes?('Are you human? (Y/n)') # => true
     #
     # @return [Boolean]
     #
     # @api public
     def yes?(question, *args, &block)
       options = Utils.extract_options!(args)
-      options.merge!({read: :bool})
+      options.merge!(read: :bool)
       args << options
       ask(question, *args, &block)
     end
@@ -161,13 +162,13 @@ module TTY
     #
     # @example
     #   prompt = TTY::Prompt.new
-    #   prompt.no?('Are you alien? [N/y]') # => true
+    #   prompt.no?('Are you alien? (y/N)') # => true
     #
     # @return [Boolean]
     #
     # @api public
-    def no?(statement, *args, &block)
-      !yes?(statement, *args, &block)
+    def no?(question, *args, &block)
+      !yes?(question, *args, &block)
     end
 
     # Print statement out. If the supplied message ends with a space or

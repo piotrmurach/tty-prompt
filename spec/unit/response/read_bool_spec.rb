@@ -18,7 +18,7 @@ RSpec.describe TTY::Prompt::Question, '#read_bool' do
     response = prompt.ask('Do you read books?', read: :bool, default: true)
     expect(response).to eql(true)
     expect(prompt.output.string).to eq([
-      "Do you read books? \e[90m(true)\e[0m ",
+      "Do you read books? \e[90m(Y/n)\e[0m ",
       "\e[1A\e[1000D\e[K",
       "Do you read books? \e[32mtrue\e[0m"
     ].join)
