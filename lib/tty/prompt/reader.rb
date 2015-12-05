@@ -5,11 +5,11 @@ module TTY
   class Prompt
     # A class responsible for reading character input from STDIN
     class Reader
-      # @api private
-      attr_reader :prompt
-      private :prompt
-
       attr_reader :mode
+
+      attr_reader :input
+
+      attr_reader :output
 
       # Key input constants for decimal codes
       CARRIAGE_RETURN = 13.freeze
@@ -17,12 +17,15 @@ module TTY
       BACKSPACE       = 127.freeze
       DELETE          = 8.freeze
 
+      CSI = "\e[".freeze
+
       # Initialize a Reader
       #
       # @api public
-      def initialize(prompt = Prompt.new)
-        @prompt = prompt
-        @mode  = Mode.new
+      def initialize(input, output)
+        @input  = input
+        @output = output
+        @mode   = Mode.new
       end
 
       # Get input in unbuffered mode.
@@ -36,13 +39,13 @@ module TTY
       #
       # @api public
       def buffer(&block)
-        bufferring = prompt.output.sync
+        bufferring = output.sync
         # Immediately flush output
-        prompt.output.sync = true
+        output.sync = true
 
         value = block.call if block_given?
 
-        prompt.output.sync = bufferring
+        output.sync = bufferring
         value
       end
 
@@ -68,14 +71,12 @@ module TTY
       #
       # @api public
       def read_char
-        chars = prompt.input.getc.chr
-        if chars == "\e"
-          chars = prompt.input.read_nonblock(3) rescue chars
-          chars = prompt.input.read_nonblock(2) rescue chars
-          chars = "\e" + chars
+        chars = input.read_nonblock(1) rescue chars
+        while CSI.start_with?(chars) ||
+              chars.start_with?(CSI) && !chars.codepoints[-1].between?(64, 126)
+          next_char = read_char
+          chars << next_char
         end
-        chars
-      rescue
         chars
       end
 
@@ -93,7 +94,7 @@ module TTY
         value = ''
         buffer do
           begin
-            while (char = prompt.input.getbyte) &&
+            while (char = input.getbyte) &&
                 !(char == CARRIAGE_RETURN || char == NEWLINE)
               value = handle_char value, char, not_set, mask
             end
@@ -108,7 +109,7 @@ module TTY
       #
       # @api public
       def gets
-        prompt.input.gets
+        input.gets
       end
 
       # Reads at maximum +maxlen+ characters.
@@ -117,7 +118,7 @@ module TTY
       #
       # @api public
       def readpartial(maxlen)
-        prompt.input.readpartial(maxlen)
+        input.readpartial(maxlen)
       end
 
       private
@@ -139,7 +140,7 @@ module TTY
       #
       # @api private
       def print_char(char, not_set, mask)
-        prompt.output.putc((not_set || !mask) ? char : mask)
+        output.putc((not_set || !mask) ? char : mask)
       end
     end # Reader
   end # Prompt
