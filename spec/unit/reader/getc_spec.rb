@@ -1,38 +1,33 @@
 # encoding: utf-8
 
 RSpec.describe TTY::Prompt::Reader, '#getc' do
-  let(:input) { StringIO.new }
+  let(:input)  { StringIO.new }
   let(:output) { StringIO.new }
-  let(:instance) { described_class.new(input, output) }
 
-  subject(:reader) { instance.getc mask }
+  subject(:reader) { described_class.new(input, output) }
 
-  context 'with mask' do
-    let(:mask) { '*'}
-
-    it 'masks characters' do
-      input << "password\n"
-      input.rewind
-      expect(reader).to eql "password"
-      expect(output.string).to eql("********")
-    end
+  it 'masks characters' do
+    mask = '*'
+    input << "password\n"
+    input.rewind
+    answer = reader.getc(mask)
+    expect(answer).to eq("password")
+    expect(output.string).to eq("********")
   end
 
-  context "without mask" do
-    let(:mask) { }
+  it "echoes characters back" do
+    input << "password\n"
+    input.rewind
+    answer = reader.getc
+    expect(answer).to eq("password")
+    expect(output.string).to eq("password")
+  end
 
-    it 'masks characters' do
-      input << "password\n"
-      input.rewind
-      expect(reader).to eql "password"
-      expect(output.string).to eql("password")
-    end
-
-    it 'deletes characters when backspace pressed' do
-      input << "\b\b"
-      input.rewind
-      expect(reader).to eql ''
-      expect(output.string).to eql('')
-    end
+  it 'deletes characters when backspace pressed' do
+    input << "\b\b"
+    input.rewind
+    answer = reader.getc
+    expect(answer).to eq('')
+    expect(output.string).to eq('')
   end
 end
