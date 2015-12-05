@@ -24,6 +24,8 @@ module TTY
     # @api private
     attr_reader :output
 
+    attr_reader :reader
+
     # Prompt prefix
     #
     # @api private
@@ -32,6 +34,8 @@ module TTY
     def_delegators :@pastel, :decorate
 
     def_delegators :@cursor, :clear_lines, :show, :hide
+
+    def_delegators :@reader, :read_keypress
 
     # Initialize a Prompt
     #
@@ -44,6 +48,7 @@ module TTY
 
       @cursor = TTY::Cursor
       @pastel = Pastel.new
+      @reader = Reader.new(@input, @output)
     end
 
     # Ask a question.
