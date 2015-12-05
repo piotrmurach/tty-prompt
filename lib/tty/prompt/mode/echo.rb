@@ -33,7 +33,7 @@ module TTY
           exit
         ensure
           on
-          return value
+          value
         end
       end # Echo
     end # Mode

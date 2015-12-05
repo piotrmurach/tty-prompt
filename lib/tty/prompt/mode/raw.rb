@@ -33,7 +33,7 @@ module TTY
           exit
         ensure
           off
-          return value
+          value
         end
       end # Raw
     end # Mode
