@@ -26,6 +26,17 @@ RSpec.describe TTY::Prompt, '#yes?' do
         "Are you a human? \e[32mno\e[0m"
       ].join)
     end
+
+    it 'assumes default true' do
+      prompt.input << "\r"
+      prompt.input.rewind
+      expect(prompt.yes?("Are you a human?", default: true)).to eq(true)
+      expect(prompt.output.string).to eq([
+        "Are you a human? \e[90m(true)\e[0m ",
+        "\e[1A\e[1000D\e[K",
+        "Are you a human? \e[32mtrue\e[0m"
+      ].join)
+    end
   end
 
   context 'no?' do

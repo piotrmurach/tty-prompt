@@ -137,15 +137,26 @@ module TTY
     # A shortcut method to ask the user positive question and return
     # true for 'yes' reply, false for 'no'.
     #
+    # @example
+    #   prompt = TTY::Prompt.new
+    #   prompt.yes?('Are you human? [Y/n]') # => true
+    #
     # @return [Boolean]
     #
     # @api public
-    def yes?(statement, *args, &block)
-      ask(statement, {read: :bool}, &block)
+    def yes?(question, *args, &block)
+      options = Utils.extract_options!(args)
+      options.merge!({read: :bool})
+      args << options
+      ask(question, *args, &block)
     end
 
     # A shortcut method to ask the user negative question and return
     # true for 'no' reply.
+    #
+    # @example
+    #   prompt = TTY::Prompt.new
+    #   prompt.no?('Are you alien? [N/y]') # => true
     #
     # @return [Boolean]
     #
