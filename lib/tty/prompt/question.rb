@@ -83,8 +83,7 @@ module TTY
         @answer = nil
         @raw_input = nil
         render_question
-        reader = Reader.new(@prompt)
-        @raw_input, @answer = Response.new(self, reader).read_type(@read)
+        @raw_input, @answer = Response.new(self, @prompt.reader).read_type(@read)
         @raw_input = @default if blank?(@raw_input)
         @done = true
         refresh

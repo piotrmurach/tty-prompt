@@ -22,9 +22,7 @@ module TTY
       #
       # @api public
       def initialize(prompt, options = {})
-        @prompt = prompt
-        @reader = Reader.new(@prompt)
-
+        @prompt       = prompt
         @first_render = true
         @done         = false
         @default      = Array[options.fetch(:default) { 1 }]
@@ -141,7 +139,7 @@ module TTY
       #
       # @api private
       def process_input
-        chars = @reader.read_keypress
+        chars = @prompt.read_keypress
         case chars
         when Codes::SIGINT, Codes::ESCAPE
           exit 130

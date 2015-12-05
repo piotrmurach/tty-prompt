@@ -40,7 +40,7 @@ module TTY
       #
       # @api private
       def process_input
-        chars = @reader.read_keypress
+        chars = @prompt.read_keypress
         case chars
         when Codes::SIGINT, Codes::ESCAPE
           exit 130
