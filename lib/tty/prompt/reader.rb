@@ -59,7 +59,9 @@ module TTY
         buffer do
           mode.echo(false) do
             mode.raw(true) do
-              read_char
+              key = read_char
+              exit 130 if key == Codes::CTRL_C
+              key
             end
           end
         end
@@ -73,7 +75,8 @@ module TTY
       def read_char
         chars = input.read_nonblock(1) rescue chars
         while CSI.start_with?(chars) ||
-              chars.start_with?(CSI) && !(64..126).include?(chars.codepoints[-1])
+              chars.start_with?(CSI) &&
+              !(64..126).include?(chars.each_codepoint.to_a.last)
           next_char = read_char
           chars << next_char
         end
