@@ -73,7 +73,7 @@ module TTY
       def read_char
         chars = input.read_nonblock(1) rescue chars
         while CSI.start_with?(chars) ||
-              chars.start_with?(CSI) && !chars.codepoints[-1].between?(64, 126)
+              chars.start_with?(CSI) && !(64..126).include?(chars.codepoints[-1])
           next_char = read_char
           chars << next_char
         end
