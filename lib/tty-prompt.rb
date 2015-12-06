@@ -5,10 +5,12 @@ require 'pastel'
 require 'tty-cursor'
 require 'tty-platform'
 
+
 require 'tty/prompt'
 require 'tty/prompt/choice'
 require 'tty/prompt/choices'
 require 'tty/prompt/codes'
+require 'tty/prompt/evaluator'
 require 'tty/prompt/list'
 require 'tty/prompt/multi_list'
 require 'tty/prompt/mode'
@@ -21,6 +23,8 @@ require 'tty/prompt/test'
 require 'tty/prompt/utils'
 require 'tty/prompt/version'
 
+# A collection of small libraries for building CLI apps,
+# each following unix philosophy of focused task
 module TTY
   PromptConfigurationError = Class.new(StandardError)
 end
