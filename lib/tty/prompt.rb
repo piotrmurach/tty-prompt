@@ -27,6 +27,8 @@ module TTY
 
     attr_reader :reader
 
+    attr_reader :cursor
+
     # Prompt prefix
     #
     # @api private
