@@ -14,11 +14,6 @@ module TTY
       # @api public
       attr_reader :message
 
-      # Store default value.
-      #
-      # @api private
-      attr_reader :default_value
-
       attr_reader :validation
 
       # Controls character processing of the answer
@@ -52,7 +47,7 @@ module TTY
         @character     = options.fetch(:character) { false }
         @in            = options.fetch(:in) { false }
         @modifier      = Modifier.new options.fetch(:modifier) { [] }
-        @validation    = Validation.new(options.fetch(:validation) { nil })
+        @validation    = options.fetch(:validation) { nil }
         @default       = options.fetch(:default) { nil }
         @read          = options.fetch(:read) { nil }
         @color         = options.fetch(:color) { :green }
@@ -61,7 +56,7 @@ module TTY
         @done          = false
       end
 
-      # Call the quesiton
+      # Call the question
       #
       # @param [String] message
       #
