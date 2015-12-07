@@ -3,20 +3,22 @@
 RSpec.describe TTY::Prompt::Question::Validation, '#coerce' do
   let(:instance) { described_class.new }
 
-  it "coerces into proc" do
-    validation = lambda { "^[^\.]+\.[^\.]+" }
-    expect(instance.coerce(validation)).to be_kind_of(Proc)
+  it "coerces lambda into proc" do
+    pattern = lambda { "^[^\.]+\.[^\.]+" }
+    validation = described_class.new(pattern)
+    expect(validation.pattern).to be_a(Proc)
   end
 
-  it "cources into regex" do
-    validation = "^[^\.]+\.[^\.]+"
-    expect(instance.coerce(validation)).to be_kind_of(Regexp)
+  it "cources string into regex" do
+    pattern = "^[^\.]+\.[^\.]+"
+    validation = described_class.new(pattern)
+    expect(validation.pattern).to be_a(Regexp)
   end
 
-  it "fails to coerce validation" do
-    validation = Object.new
+  it "fails to coerce pattern into validation" do
+    pattern = Object.new
     expect {
-      instance.coerce(validation)
+      described_class.new(pattern)
     }.to raise_error(TTY::Prompt::ValidationCoercion)
   end
 end

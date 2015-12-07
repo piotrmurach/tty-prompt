@@ -5,19 +5,17 @@ module TTY
     class Question
       # A class representing question validation.
       class Validation
-        # @api private
-        attr_reader :validation
-        private :validation
+        attr_reader :pattern
 
         # Initialize a Validation
         #
-        # @param [Object] validation
+        # @param [Object] pattern
         #
         # @return [undefined]
         #
         # @api private
-        def initialize(validation = nil)
-          @validation = validation ? coerce(validation) : validation
+        def initialize(pattern)
+          @pattern = coerce(pattern)
         end
 
         # Convert validation into known type.
@@ -27,24 +25,15 @@ module TTY
         # @raise [TTY::ValidationCoercion] failed to convert validation
         #
         # @api private
-        def coerce(validation)
-          case validation
+        def coerce(pattern)
+          case pattern
           when Proc
-            validation
+            pattern
           when Regexp, String
-            Regexp.new(validation.to_s)
+            Regexp.new(pattern.to_s)
           else
-            fail ValidationCoercion, "Wrong type, got #{validation.class}"
+            fail ValidationCoercion, "Wrong type, got #{pattern.class}"
           end
-        end
-
-        # Check if validation is required
-        #
-        # @return [Boolean]
-        #
-        # @api public
-        def validate?
-          !!validation
         end
 
         # Test if the input passes the validation
@@ -60,15 +49,12 @@ module TTY
         #
         # @api public
         def call(input)
-          if validate? && input
-            input = input.to_s
-            if validation.is_a?(Regexp) && validation =~ input
-            elsif validation.is_a?(Proc) && validation.call(input)
-            else fail InvalidArgument, "Invalid input for #{input}"
-            end
-            true
-          else
-            false
+          if pattern.is_a?(Regexp)
+            !pattern.match(input).nil?
+          elsif pattern.is_a?(Proc)
+            result = pattern.call(input)
+            result.nil? ? false : result
+          else false
           end
         end
       end # Validation

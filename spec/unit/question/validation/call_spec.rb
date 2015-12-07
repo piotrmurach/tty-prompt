@@ -2,19 +2,25 @@
 
 RSpec.describe TTY::Prompt::Question::Validation, '#call' do
   let(:pattern) { /^[^\.]+\.[^\.]+/ }
-  let(:validation) { described_class.new(pattern) }
 
   it "validates nil input" do
+    validation = described_class.new(pattern)
     expect(validation.(nil)).to eq(false)
   end
 
   it "validates successfully when the value matches pattern" do
+    validation = described_class.new(pattern)
     expect(validation.('piotr.murach')).to eq(true)
   end
 
+  it "validates with a proc" do
+    pat = proc { |input| !pattern.match(input).nil? }
+    validation = described_class.new(pat)
+    expect(validation.call('piotr.murach')).to eq(true)
+  end
+
   it "fails validation when not maching pattern" do
-    expect {
-      validation.('piotrmurach')
-    }.to raise_error(TTY::Prompt::InvalidArgument)
+    validation = described_class.new(pattern)
+    expect(validation.('piotrmurach')).to eq(false)
   end
 end
