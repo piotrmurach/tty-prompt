@@ -7,25 +7,23 @@ module TTY
     # Evaluates provided parameters and stops if any of them fails
     # @api private
     class Evaluator
+      attr_reader :results
+
       def initialize(question, &block)
         @question = question
-        @result = []
+        @results = []
         instance_eval(&block) if block
       end
 
       def call(initial)
         seed = Result::Success.new(@question, initial)
-        @result.reduce(seed, &:with)
+        results.reduce(seed, &:with)
       end
 
       def check(proc = nil, &block)
-        @result << (proc || block)
+        results << (proc || block)
       end
-      alias_method :>=, :check
-
-      def results
-        @checks
-      end
+      alias_method :<<, :check
     end # Evaluator
   end # Prompt
 end # TTY
