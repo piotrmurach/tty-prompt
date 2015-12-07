@@ -19,6 +19,11 @@ RSpec.describe TTY::Prompt::Question::Validation, '#call' do
     expect(validation.call('piotr.murach')).to eq(true)
   end
 
+  it "validates with custom name" do
+    validation = described_class.new(:email)
+    expect(validation.call('piotr@example.com')).to eq(true)
+  end
+
   it "fails validation when not maching pattern" do
     validation = described_class.new(pattern)
     expect(validation.('piotrmurach')).to eq(false)

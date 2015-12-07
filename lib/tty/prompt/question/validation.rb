@@ -7,6 +7,10 @@ module TTY
       class Validation
         attr_reader :pattern
 
+        VALIDATORS = {
+          email: /^[a-z0-9._%+-]+@([a-z0-9-]+\.)+[a-z]{2,6}$/i
+        }
+
         # Initialize a Validation
         #
         # @param [Object] pattern
@@ -20,16 +24,17 @@ module TTY
 
         # Convert validation into known type.
         #
-        # @param [Object] validation
+        # @param [Object] pattern
         #
-        # @raise [TTY::ValidationCoercion] failed to convert validation
+        # @raise [TTY::ValidationCoercion]
+        #   raised when failed to convert validation
         #
         # @api private
         def coerce(pattern)
           case pattern
-          when Proc
+          when String, Symbol, Proc
             pattern
-          when Regexp, String
+          when Regexp
             Regexp.new(pattern.to_s)
           else
             fail ValidationCoercion, "Wrong type, got #{pattern.class}"
@@ -39,8 +44,8 @@ module TTY
         # Test if the input passes the validation
         #
         # @example
-        #   Validation.new
-        #   validation.valid?(input) # => true
+        #   Validation.new(/pattern/)
+        #   validation.call(input) # => true
         #
         # @param [Object] input
         #  the input to validate
@@ -49,7 +54,10 @@ module TTY
         #
         # @api public
         def call(input)
-          if pattern.is_a?(Regexp)
+          if pattern.is_a?(String) || pattern.is_a?(Symbol)
+            VALIDATORS.key?(pattern.to_sym)
+            !VALIDATORS[pattern.to_sym].match(input).nil?
+          elsif pattern.is_a?(Regexp)
             !pattern.match(input).nil?
           elsif pattern.is_a?(Proc)
             result = pattern.call(input)
