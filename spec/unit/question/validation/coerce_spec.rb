@@ -9,8 +9,14 @@ RSpec.describe TTY::Prompt::Question::Validation, '#coerce' do
     expect(validation.pattern).to be_a(Proc)
   end
 
-  it "cources string into regex" do
-    pattern = "^[^\.]+\.[^\.]+"
+  it "doesn't coerce symbols" do
+    pattern = :email
+    validation =described_class.new(pattern)
+    expect(validation.pattern).to eq(:email)
+  end
+
+  it "coerces into regex" do
+    pattern = /^[^\.]+\.[^\.]+/
     validation = described_class.new(pattern)
     expect(validation.pattern).to be_a(Regexp)
   end
