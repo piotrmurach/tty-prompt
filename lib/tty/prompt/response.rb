@@ -58,7 +58,7 @@ module TTY
                    yield(input)
                  else input
                  end
-        [input, question.evaluate_response(answer)]
+        [input, answer]
       end
 
       # Read answer and cast to String type
@@ -68,7 +68,7 @@ module TTY
       #
       # @api public
       def read_string
-        evaluate_response { |input| String(input).strip }
+        evaluate_response { |input| String(input).chomp }
       end
 
       # Read answer's first character
