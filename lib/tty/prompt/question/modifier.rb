@@ -6,13 +6,12 @@ module TTY
       # A class representing String modifications.
       class Modifier
         attr_reader :modifiers
-        private :modifiers
 
         # Initialize a Modifier
         #
         # @api public
-        def initialize(*modifiers)
-          @modifiers = Array(modifiers)
+        def initialize(modifiers)
+          @modifiers = modifiers
         end
 
         # Change supplied value according to the given string transformation.
@@ -26,8 +25,8 @@ module TTY
         # @api private
         def apply_to(value)
           modifiers.reduce(value) do |result, mod|
-            result = Modifier.letter_case mod, result
-            Modifier.whitespace mod, result
+            result = Modifier.letter_case(mod, result)
+            Modifier.whitespace(mod, result)
           end
         end
 

@@ -1,29 +1,24 @@
 # encoding: utf-8
 
 RSpec.describe TTY::Prompt::Question::Modifier, '#apply_to' do
-  let(:instance) { described_class.new modifiers }
-  let(:string)   { "Text to be modified"}
+  let(:string)   { "text   to   be    modified"}
 
   it "doesn't apply modifiers" do
     modifier = described_class.new([])
     expect(modifier.apply_to(string)).to eq(string)
   end
 
-  it 'applies letter case modifications' do
-    modifiers = [:down, :capitalize]
-    allow(described_class).to receive(:letter_case)
+  it 'combines whitespace & letter case modifications' do
+    modifiers = [:collapse, :capitalize]
     modifier = described_class.new(modifiers)
-    modifier.apply_to(string)
-    expect(described_class).to have_received(:letter_case).
-      with(modifiers, string)
+    modified = modifier.apply_to(string)
+    expect(modified).to eq('Text to be modified')
   end
 
-  it 'applies whitespace modifications' do
-    modifiers = [:up, :capitalize]
-    allow(described_class).to receive(:whitespace)
+  it 'combines letter case & whitespace modifications' do
+    modifiers = [:up, :collapse]
     modifier = described_class.new(modifiers)
-    modifier.apply_to(string)
-    expect(described_class).to have_received(:whitespace).
-      with(modifiers, string)
+    modified = modifier.apply_to(string)
+    expect(modified).to eq('TEXT TO BE MODIFIED')
   end
 end
