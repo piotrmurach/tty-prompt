@@ -10,7 +10,7 @@ RSpec.describe TTY::Prompt::Question, '#initialize' do
 
   it { expect(question.character).to eq(false) }
 
-  it { expect(question.modifier).to be_kind_of(TTY::Prompt::Question::Modifier) }
+  it { expect(question.modifier).to eq([]) }
 
   it { expect(question.validation).to eq(nil) }
 end

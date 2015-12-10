@@ -46,7 +46,7 @@ module TTY
         @mask          = options.fetch(:mask) { false  }
         @character     = options.fetch(:character) { false }
         @in            = options.fetch(:in) { false }
-        @modifier      = Modifier.new options.fetch(:modifier) { [] }
+        @modifier      = options.fetch(:modifier) { [] }
         @validation    = options.fetch(:validation) { nil }
         @default       = options.fetch(:default) { nil }
         @read          = options.fetch(:read) { nil }
@@ -165,7 +165,7 @@ module TTY
       #
       # @api public
       def modify(*rules)
-        @modifier = Modifier.new(*rules)
+        @modifier = rules
       end
 
       # Setup behaviour when error(s) occur
