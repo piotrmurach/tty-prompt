@@ -161,17 +161,6 @@ module TTY
         evaluate_response { |input| File.open(File.join(directory, input)) }
       end
 
-      # Read string answer and validate against email regex
-      #
-      # @return [String]
-      #
-      # @api public
-      def read_email
-        question.validate(/^[a-z0-9._%+-]+@([a-z0-9-]+\.)+[a-z]{2,6}$/i)
-        question.call("\n" + question.statement) if question.error?
-        with_exception { read_string }
-      end
-
       # Read answer provided on multiple lines
       #
       # @api public
@@ -212,8 +201,6 @@ module TTY
         case class_or_name
         when :bool
           read_bool
-        when :email
-          read_email
         when :char
           read_char
         when :date
