@@ -2,9 +2,9 @@
 
 RSpec.describe TTY::Prompt::Question, 'read_file' do
   it "converts to file" do
-    prompt = TTY::TestPrompt.new
-    file = spy(:file)
+    file = double(:file)
     allow(File).to receive(:open).with(/test\.txt/).and_return(file)
+    prompt = TTY::TestPrompt.new
     prompt.input << "test.txt"
     prompt.input.rewind
     answer = prompt.ask("Which file to open?", read: :file)
