@@ -3,6 +3,8 @@
 require 'tty/prompt/question/modifier'
 require 'tty/prompt/question/validation'
 require 'tty/prompt/question/checks'
+require 'tty/prompt/converter_dsl'
+require 'tty/prompt/converters'
 
 module TTY
   # A class responsible for shell prompt interactions.
@@ -12,6 +14,7 @@ module TTY
     # @api public
     class Question
       include Checks
+      include Converters
 
       # Store question message
       # @api public
@@ -85,7 +88,7 @@ module TTY
           render_question
 
           # process_input
-          @raw_input, @input = Response.new(self, @prompt.reader).read_type(@read)
+          @raw_input, @input = process_input(@read)
           @raw_input = @default if blank?(@raw_input)
           result = evaluate_response(@input)
 
@@ -105,6 +108,52 @@ module TTY
         @answer = result.value
       ensure
         @answer
+      end
+
+      def reader
+        @prompt.reader
+      end
+
+      # Process input
+      #
+      # @api private
+      def read_input
+        if mask? && echo?
+          reader.getc(mask)
+        else
+          reader.mode.echo(echo) do
+            reader.mode.raw(raw) do
+              if raw?
+                reader.readpartial(10)
+              elsif character?
+                reader.getc(mask)
+              else
+                reader.gets
+              end
+            end
+          end
+        end
+      end
+
+      # Read input from STDIN and convert
+      #
+      # @param [Symbol] type
+      #
+      # @return [undefined]
+      #
+      # @api private
+      def process_input(type = nil)
+        input = read_input
+        answer = if blank?(input)
+                   nil
+                 elsif !type.nil? && converter_registry.key?(type)
+                   converter_registry.(type, input)
+                 elsif block_given?
+                   yield(input)
+                 else input
+                 end
+
+        [input, answer]
       end
 
       # Render quesiton

@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 RSpec.describe TTY::Prompt::Question, '#read_multiline' do
-  it 'reads multiple lines' do
+  xit 'reads multiple lines' do
     prompt = TTY::TestPrompt.new
     prompt.input << "First line\nSecond line\nThird line"
     prompt.input.rewind
