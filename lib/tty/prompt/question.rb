@@ -58,7 +58,6 @@ module TTY
         @read          = options.fetch(:read) { nil }
         @color         = options.fetch(:color) { :green }
         @error         = false
-        @converter     = Necromancer.new
         @done          = false
       end
 
@@ -339,9 +338,9 @@ module TTY
       # @param [String] value
       #
       # @api public
-      def in(value = nil)
-        return @in if value.nil?
-        @in = @converter.convert(value).to(:range, strict: true)
+      def in(value = (not_set = true))
+        return @in if not_set
+        @in = converter_registry.(:range, value)
       end
 
       # Check if range is set
