@@ -2,6 +2,7 @@
 
 require 'tty/prompt/question/modifier'
 require 'tty/prompt/question/validation'
+require 'tty/prompt/question/checks'
 
 module TTY
   # A class responsible for shell prompt interactions.
@@ -10,6 +11,8 @@ module TTY
     #
     # @api public
     class Question
+      include Checks
+
       # Store question message
       # @api public
       attr_reader :message
@@ -70,20 +73,36 @@ module TTY
         render
       end
 
-
       # Read answer and convert to type
       #
       # @api private
       def render
         @answer = nil
         @raw_input = nil
+        errors = []
+
+        until @done
+          render_question
+
+          # process_input
+          @raw_input, @input = Response.new(self, @prompt.reader).read_type(@read)
+          @raw_input = @default if blank?(@raw_input)
+          result = evaluate_response(@input)
+
+          if result.failure?
+            errors = result.errors
+            errors.each do |err|
+              @prompt.output.print(@prompt.cursor.clear_line)
+              @prompt.output.puts(@prompt.decorate('>>', :red) + ' ' + err)
+            end
+          else
+            @done = true
+          end
+
+          refresh_screen(errors)
+        end
         render_question
-        @raw_input, @answer = Response.new(self, @prompt.reader).read_type(@read)
-        @raw_input = @default if blank?(@raw_input)
-        @done = true
-        refresh
-        render_question
-        @answer
+        @answer = result.value
       ensure
         @answer
       end
@@ -94,7 +113,7 @@ module TTY
       def render_question
         header = "#{prompt.prefix}#{message} "
         if @read == :bool && !@done
-          header += @prompt.decorate("(Y/n)", :bright_black) + ' '
+          header += @prompt.decorate('(Y/n)', :bright_black) + ' '
         elsif !echo?
           header
         elsif mask?
@@ -110,8 +129,15 @@ module TTY
       # Determine area of the screen to clear
       #
       # @api private
-      def refresh
+      def refresh_screen(errors = nil)
         lines = @message.scan("\n").length + 1
+
+        if errors.count.nonzero?
+          @prompt.output.print(@prompt.cursor.up(errors.count))
+          if @done
+            @prompt.output.print(@prompt.clear_lines(errors.count, :down))
+          end
+        end
         @prompt.output.print(@prompt.clear_lines(lines))
       end
 
@@ -125,8 +151,8 @@ module TTY
       # Set default value.
       #
       # @api public
-      def default(value)
-        return @default unless value
+      def default(value = (not_set = true))
+        return @default if not_set
         @default = value
       end
 
@@ -148,6 +174,10 @@ module TTY
         @required = value
       end
 
+      def required?
+        @required
+      end
+
       # Set validation rule for an argument
       #
       # @param [Object] value
@@ -156,7 +186,7 @@ module TTY
       #
       # @api public
       def validate(value = nil, &block)
-        @validation = Validation.new(value || block)
+        @validation = (value || block)
       end
 
       # Modify string according to the rule given.
@@ -282,13 +312,15 @@ module TTY
       #
       # @api private
       def evaluate_response(input)
-        return @default if !input && default?
-        check_required(input)
-        return if input.nil?
+        evaluator = Evaluator.new(self)
 
-        within?(input)
-        validation.(input)
-        modifier.apply_to(input)
+        evaluator << CheckRequired
+        evaluator << CheckDefault
+        evaluator << CheckRange
+        evaluator << CheckValidation
+        evaluator << CheckModifier
+
+        evaluator.(input)
       end
 
       # Reset question object.
@@ -313,27 +345,6 @@ module TTY
 
       def inspect
         "#<Question @message=#{message}>"
-      end
-
-      private
-
-      # Check if value is present
-      #
-      # @api private
-      def check_required(value)
-        if @required && !default? && value.nil?
-          fail ArgumentRequired, 'No value provided for required'
-        end
-      end
-
-      # Check if value is within expected range
-      #
-      # @api private
-      def within?(value)
-        if in? && value
-          @in.include?(value) || fail(InvalidArgument,
-            "Value #{value} is not included in the range #{@in}")
-        end
       end
     end # Question
   end # Prompt

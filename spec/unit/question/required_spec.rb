@@ -4,20 +4,26 @@ RSpec.describe TTY::Prompt::Question, '#required' do
 
   subject(:prompt) { TTY::TestPrompt.new }
 
-  it 'requires value to be present with helper' do
-    prompt.input << ''
+  it 'requires value to be present' do
+    prompt.input << "Piotr"
     prompt.input.rewind
-    expect {
-      prompt.ask('What is your name?') { |q| q.required(true) }
-    }.to raise_error(ArgumentError)
+    prompt.ask('What is your name?') { |q| q.required(true) }
+    expect(prompt.output.string).to eq([
+      "What is your name? ",
+      "\e[1A\e[1000D\e[K",
+      "What is your name? \e[32mPiotr\e[0m"
+    ].join)
   end
 
   it 'requires value to be present with option' do
-    prompt.input << ''
+    prompt.input << "Piotr"
     prompt.input.rewind
-    expect {
-      prompt.ask('What is your name?', required: true)
-    }.to raise_error(ArgumentError)
+    prompt.ask('What is your name?') { |q| q.required(true) }
+    expect(prompt.output.string).to eq([
+      "What is your name? ",
+      "\e[1A\e[1000D\e[K",
+      "What is your name? \e[32mPiotr\e[0m"
+    ].join)
   end
 
   it "doesn't require value to be present" do

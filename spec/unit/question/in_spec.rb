@@ -4,22 +4,31 @@ RSpec.describe TTY::Prompt::Question, '#in' do
 
   subject(:prompt) { TTY::TestPrompt.new }
 
-  it 'reads number within range' do
-    prompt.input << 8
+  it 'reads number within string range' do
+    prompt.input << '8'
     prompt.input.rewind
-    answer = prompt.ask("How do you like it on scale 1-10", read: :int) { |q|
+    answer = prompt.ask("How do you like it on scale 1-10?", read: :int) do |q|
       q.in('1-10')
-    }
+    end
     expect(answer).to eq(8)
+    expect(prompt.output.string).to eq([
+      "How do you like it on scale 1-10? ",
+      "\e[1A\e[1000D\e[K",
+      "How do you like it on scale 1-10? \e[32m8\e[0m",
+    ].join)
   end
 
-  it "reads number outside of range" do
-    prompt.input << 12
+  it 'reads number within string range' do
+    prompt.input << '8'
     prompt.input.rewind
-    expect {
-      prompt.ask("How do you like it on scale 1-10", read: :int) { |q|
-        q.in('1-10')
-      }
-    }.to raise_error(ArgumentError)
+    answer = prompt.ask("How do you like it on scale 1-10?", read: :int) do |q|
+      q.in(1..10)
+    end
+    expect(answer).to eq(8)
+    expect(prompt.output.string).to eq([
+      "How do you like it on scale 1-10? ",
+      "\e[1A\e[1000D\e[K",
+      "How do you like it on scale 1-10? \e[32m8\e[0m",
+    ].join)
   end
 end
