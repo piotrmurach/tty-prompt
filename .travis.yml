@@ -9,12 +9,10 @@ rvm:
   - 2.0
   - 2.1
   - 2.2
-  - rbx-2
-  - jruby
-  - jruby-19mode
-  - jruby-20mode
-  - jruby-21mode
   - ruby-head
+  - jruby-19mode
+  - jruby
+  - rbx-2
 env:
   global:
     - JRUBY_OPTS="-Xcli.debug=true --debug"
