@@ -184,15 +184,6 @@ module TTY
         evaluate_response
       end
 
-      # Ignore exception
-      #
-      # @api private
-      def with_exception(&block)
-        yield
-      rescue
-        question.error? ? block.call : raise
-      end
-
       # @param [Symbol] type
       #   :boolean, :string, :numeric, :array
       #
