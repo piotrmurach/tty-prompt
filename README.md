@@ -42,7 +42,10 @@ Or install it yourself as:
 * [2. Interface](#2-interface)
   * [2.1 ask](#21-ask)
     * [2.1.1 settings](#211-settings)
-    * [2.1.2 valid read keywords](#212-valid-read-keywords)
+    * [2.1.2 default](#212-default)
+    * [2.1.3 validate](#213-validate)
+    * [2.1.4 in](#214-in)
+    * [2.1.5 read](#215-read)
   * [2.2 yes?/no?](#22-yesno)
   * [2.3 select](#22-select)
   * [2.4 multi_select](#23-multi_select)
@@ -120,46 +123,55 @@ echo       # turn echo on and off (default: true)
 in         # specify range '0-9', '0..9', '0...9' or negative '-1..-9'
 mask       # mask characters i.e '****' (default: false)
 modify     # apply answer modification :upcase, :downcase, :trim, :chomp etc..
-read       # Specifies the type of input such as :bool, :string [see](#211-valid-read-keywords)
+read       # Specifies the type of input such as :bool, :string
 required   # If true, value entered must be non-empty (default: false)
 validate   # regex, proc against which stdin input is checked
 ```
 
-Validate setting can take `Regex`, `Proc` like so:
+#### 2.1.2 default
+
+#### 2.1.3 required
+
+#### 2.1.4 validate
+
+In order to validate that input matches a given patter you can pass the `validate` option. Validate setting accepts `Regex`, `Proc` or `Symbol`.
 
 ```ruby
-prompt.ask('What is your username?') { |q|
-  q.validate { |input| input =~ (/^[^\.]+\.[^\.]+/) }
-}
+prompt.ask('What is your username?') do |q|
+  q.validate /^[^\.]+\.[^\.]+/
+end
 ```
 
-For example, if we wanted to ask a user for a single digit in given range
+The **TTY::Prompt** comes with bult-in validations for `:email` and you can use them directly like so:
+
+```prompt
+prompt.ask('What is your email?') { |q| q.validate :email }
+```
+
+#### 2.1.5 in
+
+In order to check that provided input falls inside a range of inputs use the `in` option. For example, if we wanted to ask a user for a single digit in given range we may do following:
 
 ```ruby
 ask("Provide number in range: 0-9") { |q| q.in('0-9') }
 ```
 
-#### 2.1.2 valid read keywords
+#### 2.1.6 read
 
-The most common thing to do is to cast the answer to specific type. The `read` property is used for that. By default `:string` answer is assumed but this can be changed using one of the following custom readers:
+The most common thing to do is to cast the answer to specific type. The `read` property is used for that. By default `:string` answer is assumed but this can be changed using one of the following custom answer conversions:
 
 ```ruby
 :bool       # true or false for strings such as "Yes", "No"
 :char       # first character
 :date       # date type
 :datetime   # datetime type
-:email      # validate answer against email regex
 :file       # a File object
 :float      # decimal or error if cannot convert
 :int        # integer or error if cannot convert
-:multiline  # multiple line string
-:password   # string with echo turned off
 :range      # range type
 :regex      # regex expression
 :string     # string
 :symbol     # symbol
-:text       # multiline string
-:keypress   # the key pressed
 ```
 
 For example, if you are interested in range type as answer do the following:
