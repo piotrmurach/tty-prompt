@@ -1,6 +1,7 @@
 # encoding: utf-8
 
 require 'pathname'
+require 'necromancer'
 require 'tty/prompt/converter_dsl'
 
 module TTY
