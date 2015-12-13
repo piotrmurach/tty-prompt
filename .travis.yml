@@ -1,4 +1,7 @@
+---
 language: ruby
+sudo: false
+cache: bundler
 bundler_args: --without yard benchmarks
 script: "bundle exec rake ci"
 rvm:
@@ -6,14 +9,16 @@ rvm:
   - 2.0
   - 2.1
   - 2.2
+  - rbx-2
+  - jruby
+  - jruby-19mode
+  - jruby-20mode
+  - jruby-21mode
   - ruby-head
+env:
+  global:
+    - JRUBY_OPTS="-Xcli.debug=true --debug"
 matrix:
-  include:
-    - rvm: jruby-19mode
-    - rvm: jruby-20mode
-    - rvm: jruby-21mode
-    - rvm: jruby-head
-    - rvm: rbx-2
   allow_failures:
     - rvm: ruby-head
     - rvm: jruby-head
