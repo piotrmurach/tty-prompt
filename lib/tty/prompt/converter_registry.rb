@@ -18,7 +18,7 @@ module TTY
         end
 
         if key?(key)
-          fail Error, "Converter for #{key.inspect} already registered"
+          fail ArgumentError, "Converter for #{key.inspect} already registered"
         else
           @_registry[key] = item
         end
@@ -39,7 +39,7 @@ module TTY
       # @api public
       def call(key, input)
         converter = @_registry.fetch(key) do
-          fail Error, "#{key.inspect} is not registered"
+          fail ArgumentError, "#{key.inspect} is not registered"
         end
         converter.call(input)
       end
