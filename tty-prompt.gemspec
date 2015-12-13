@@ -23,5 +23,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency "tty-cursor",   "~> 0.1.0"
   spec.add_dependency "tty-platform", "~> 0.1.0"
 
-  spec.add_development_dependency "bundler", "~> 1.6"
+  spec.add_development_dependency "bundler"
+  spec.add_development_dependency "rake"
 end
