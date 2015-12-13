@@ -18,10 +18,10 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
-  spec.add_runtime_dependency "necromancer",  "~> 0.3.0"
-  spec.add_runtime_dependency "pastel",       "~> 0.5.2"
-  spec.add_runtime_dependency "tty-cursor",   "~> 0.1.0"
-  spec.add_runtime_dependency "tty-platform", "~> 0.1.0"
+  spec.add_dependency "necromancer",  "~> 0.3.0"
+  spec.add_dependency "pastel",       "~> 0.5.2"
+  spec.add_dependency "tty-cursor",   "~> 0.1.0"
+  spec.add_dependency "tty-platform", "~> 0.1.0"
 
   spec.add_development_dependency "bundler"
   spec.add_development_dependency "rake"
