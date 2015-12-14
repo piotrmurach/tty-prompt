@@ -30,8 +30,8 @@ module TTY
         # Check if input requires validation
         class CheckValidation
           def self.call(question, value)
-            if !question.validation ||
-              (question.validation &&
+            if !question.validation? ||
+              (question.validation? &&
                 Validation.new(question.validation).call(value))
               value
             else

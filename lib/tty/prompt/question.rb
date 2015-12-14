@@ -18,35 +18,33 @@ module TTY
 
       BLANK_REGEX = /\A[[:space:]]*\z/o.freeze
 
-      Undefined = Module.new
+      UndefinedSetting = Module.new
 
       # Store question message
       # @api public
       attr_reader :message
 
-      attr_reader :validation
-
       attr_reader :modifier
 
-      attr_reader :character
-
       attr_reader :prompt
+
+      attr_reader :validation
 
       # Initialize a Question
       #
       # @api public
       def initialize(prompt, options = {})
         @prompt        = prompt
-        @default       = options.fetch(:default) { Undefined }
+        @default       = options.fetch(:default) { UndefinedSetting }
         @required      = options.fetch(:required) { false }
         @echo          = options.fetch(:echo) { true }
         @raw           = options.fetch(:raw) { false }
-        @mask          = options.fetch(:mask) { Undefined  }
+        @mask          = options.fetch(:mask) { UndefinedSetting  }
         @character     = options.fetch(:character) { false }
-        @in            = options.fetch(:in) { false }
+        @in            = options.fetch(:in) { UndefinedSetting }
         @modifier      = options.fetch(:modifier) { [] }
-        @validation    = options.fetch(:validation) { nil }
-        @read          = options.fetch(:read) { nil }
+        @validation    = options.fetch(:validation) { UndefinedSetting }
+        @read          = options.fetch(:read) { UndefinedSetting }
         @color         = options.fetch(:color) { :green }
         @done          = false
       end
@@ -198,7 +196,7 @@ module TTY
       #
       # @api public
       def default?
-        @default != Undefined
+        @default != UndefinedSetting
       end
 
       # Ensure that passed argument is present or not
@@ -210,10 +208,7 @@ module TTY
         return @required if not_set
         @required = value
       end
-
-      def required?
-        @required
-      end
+      alias_method :required?, :required
 
       # Set validation rule for an argument
       #
@@ -224,6 +219,10 @@ module TTY
       # @api public
       def validate(value = nil, &block)
         @validation = (value || block)
+      end
+
+      def validation?
+        @validation != UndefinedSetting
       end
 
       # Modify string according to the rule given.
@@ -243,13 +242,7 @@ module TTY
         return @echo if value.nil?
         @echo = value
       end
-
-      # Chec if echo is set
-      #
-      # @api public
-      def echo?
-        !!@echo
-      end
+      alias_method :echo?, :echo
 
       # Turn raw mode on or off. This enables character-based input.
       #
@@ -258,13 +251,7 @@ module TTY
         return @raw if value.nil?
         @raw = value
       end
-
-      # Check if raw mode is set
-      #
-      # @api public
-      def raw?
-        !!@raw
-      end
+      alias_method :raw?, :raw
 
       # Set character for masking the STDIN input
       #
@@ -284,7 +271,7 @@ module TTY
       #
       # @api public
       def mask?
-        @mask != Undefined
+        @mask != UndefinedSetting
       end
 
       # Set if the input is character based or not
@@ -298,17 +285,9 @@ module TTY
         return @character if value.nil?
         @character = value
       end
+      alias_method :character?, :char
 
-      # Check if character intput is set
-      #
-      # @return [Boolean]
-      #
-      # @api public
-      def character?
-        !!@character
-      end
-
-      # Set expect range of values
+      # Set expected range of values
       #
       # @param [String] value
       #
@@ -324,7 +303,7 @@ module TTY
       #
       # @api public
       def in?
-        !!@in
+        @in != UndefinedSetting
       end
 
       # Check if response matches all the requirements set by the question
