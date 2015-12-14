@@ -16,36 +16,28 @@ module TTY
       include Checks
       include Converters
 
+      BLANK_REGEX = /\A[[:space:]]*\z/o.freeze
+
+      Undefined = Module.new
+
       # Store question message
       # @api public
       attr_reader :message
 
       attr_reader :validation
 
-      # Controls character processing of the answer
-      #
-      # @api public
       attr_reader :modifier
 
-      attr_reader :error
-
-      # Returns character mode
-      #
-      # @api public
       attr_reader :character
 
-      # @api private
       attr_reader :prompt
-
-      attr_reader :converter
-
-      BLANK_REGEX = /\A[[:space:]]*\z/o.freeze
 
       # Initialize a Question
       #
       # @api public
       def initialize(prompt, options = {})
         @prompt        = prompt
+        @default       = options.fetch(:default) { Undefined }
         @required      = options.fetch(:required) { false }
         @echo          = options.fetch(:echo) { true }
         @raw           = options.fetch(:raw) { false }
@@ -54,10 +46,8 @@ module TTY
         @in            = options.fetch(:in) { false }
         @modifier      = options.fetch(:modifier) { [] }
         @validation    = options.fetch(:validation) { nil }
-        @default       = options.fetch(:default) { nil }
         @read          = options.fetch(:read) { nil }
         @color         = options.fetch(:color) { :green }
-        @error         = false
         @done          = false
       end
 
@@ -89,7 +79,9 @@ module TTY
           # process_input
           @raw_input = process_input
           @input     = conversion(@raw_input, @read)
-          @raw_input = @default if blank?(@raw_input)
+          if blank?(@raw_input)
+            @raw_input = default? ? default : ''
+          end
           result = evaluate_response(@input)
 
           if result.failure?
@@ -168,8 +160,8 @@ module TTY
           header += "#{@mask * "#{@raw_input}".length}"
         elsif @done
           header += @prompt.decorate("#{@raw_input}", @color)
-        elsif @default
-          header += @prompt.decorate("(#{@default})", :bright_black) + ' '
+        elsif default?
+          header += @prompt.decorate("(#{default})", :bright_black) + ' '
         end
         @prompt.output.print(header)
       end
@@ -210,7 +202,7 @@ module TTY
       #
       # @api public
       def default?
-        !!@default
+        @default != Undefined
       end
 
       # Ensure that passed argument is present or not
@@ -218,7 +210,8 @@ module TTY
       # @return [Boolean]
       #
       # @api public
-      def required(value)
+      def required(value = (not_set = true))
+        return @required if not_set
         @required = value
       end
 
@@ -244,20 +237,6 @@ module TTY
       # @api public
       def modify(*rules)
         @modifier = rules
-      end
-
-      # Setup behaviour when error(s) occur
-      #
-      # @api public
-      def on_error(action = nil)
-        @error = action
-      end
-
-      # Check if error behaviour is set
-      #
-      # @api public
-      def error?
-        !!@error
       end
 
       # Turn terminal echo on or off. This is used to secure the display so
@@ -293,13 +272,13 @@ module TTY
 
       # Set character for masking the STDIN input
       #
-      # @param [String] character
+      # @param [String] char
       #
       # @return [self]
       #
       # @api public
-      def mask(char = nil)
-        return @mask if char.nil?
+      def mask(char = (not_set = true))
+        return @mask if not_set
         @mask = char
       end
 
@@ -369,16 +348,6 @@ module TTY
         evaluator << CheckModifier
 
         evaluator.(input)
-      end
-
-      # Reset question object.
-      #
-      # @api public
-      def clean
-        @message  = nil
-        @default  = nil
-        @required = false
-        @modifier = nil
       end
 
       def blank?(value)
