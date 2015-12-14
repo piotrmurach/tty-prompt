@@ -90,16 +90,20 @@ module TTY
       # @param [String] mask
       #   the character to use as mask
       #
+      # @param [Boolean] echo
+      #   echo back characters or not
+      #
       # @return [String]
       #
       # @api public
-      def getc(mask = (not_set = true))
+      def getc(mask = (not_set = true), echo = true)
+        mask = false if not_set
         value = ''
         buffer do
           begin
             while (char = input.getbyte) &&
                 !(char == CARRIAGE_RETURN || char == NEWLINE)
-              value = handle_char value, char, not_set, mask
+              value = handle_char(value, char, mask, echo)
             end
           ensure
             mode.echo_on
@@ -115,35 +119,26 @@ module TTY
         input.gets
       end
 
-      # Reads at maximum +maxlen+ characters.
-      #
-      # @param [Integer] maxlen
-      #
-      # @api public
-      def readpartial(maxlen)
-        input.readpartial(maxlen)
-      end
-
       private
 
       # Handle single character by appending to or removing from output
       #
       # @api private
-      def handle_char(value, char, not_set, mask)
+      def handle_char(input, char, mask, echo)
         if char == BACKSPACE || char == DELETE
-          value.slice!(-1, 1) unless value.empty?
+          input.slice!(-1, 1) unless input.empty?
         else
-          print_char char, not_set, mask
-          value << char
+          print_char(char, mask) if echo
+          input << char
         end
-        value
+        input
       end
 
       # Print out character back to shell STDOUT
       #
       # @api private
-      def print_char(char, not_set, mask)
-        output.putc((not_set || !mask) ? char : mask)
+      def print_char(char, mask)
+        output.putc((mask != false) ? mask : char)
       end
     end # Reader
   end # Prompt
