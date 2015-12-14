@@ -87,7 +87,8 @@ module TTY
           render_question
 
           # process_input
-          @raw_input, @input = process_input(@read)
+          @raw_input = process_input
+          @input     = conversion(@raw_input, @read)
           @raw_input = @default if blank?(@raw_input)
           result = evaluate_response(@input)
 
@@ -134,6 +135,15 @@ module TTY
         end
       end
 
+      def conversion(input, type = nil)
+        if blank?(input)
+          nil
+        elsif !type.nil? && converter_registry.key?(type)
+          converter_registry.(type, input)
+        else input
+        end
+      end
+
       # Read input from STDIN and convert
       #
       # @param [Symbol] type
@@ -141,18 +151,8 @@ module TTY
       # @return [undefined]
       #
       # @api private
-      def process_input(type = nil)
-        input = read_input
-        answer = if blank?(input)
-                   nil
-                 elsif !type.nil? && converter_registry.key?(type)
-                   converter_registry.(type, input)
-                 elsif block_given?
-                   yield(input)
-                 else input
-                 end
-
-        [input, answer]
+      def process_input
+        read_input
       end
 
       # Render quesiton
