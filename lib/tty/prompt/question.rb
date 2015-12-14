@@ -41,7 +41,7 @@ module TTY
         @required      = options.fetch(:required) { false }
         @echo          = options.fetch(:echo) { true }
         @raw           = options.fetch(:raw) { false }
-        @mask          = options.fetch(:mask) { false  }
+        @mask          = options.fetch(:mask) { Undefined  }
         @character     = options.fetch(:character) { false }
         @in            = options.fetch(:in) { false }
         @modifier      = options.fetch(:modifier) { [] }
@@ -110,18 +110,14 @@ module TTY
       #
       # @api private
       def read_input
-        if mask? && echo?
-          reader.getc(mask)
-        else
-          reader.mode.echo(echo) do
-            reader.mode.raw(raw) do
-              if raw?
-                reader.readpartial(10)
-              elsif character?
-                reader.getc(mask)
-              else
-                reader.gets
-              end
+        reader.mode.echo(echo) do
+          reader.mode.raw(raw) do
+            if character?
+              reader.read_keypress
+            elsif mask?
+              reader.getc(mask, echo)
+            else
+              reader.gets
             end
           end
         end
@@ -288,7 +284,7 @@ module TTY
       #
       # @api public
       def mask?
-        !!@mask
+        @mask != Undefined
       end
 
       # Set if the input is character based or not

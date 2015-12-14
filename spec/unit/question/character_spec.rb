@@ -6,6 +6,6 @@ RSpec.describe TTY::Prompt::Question, '#character' do
     prompt.input << "abcd"
     prompt.input.rewind
     answer = prompt.ask("Which one do you prefer a, b, c or d?") { |q| q.char(true) }
-    expect(answer).to eq("abcd")
+    expect(answer).to eq("a")
   end
 end
