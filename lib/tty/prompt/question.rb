@@ -113,7 +113,7 @@ module TTY
             if character?
               reader.read_keypress
             elsif mask?
-              reader.getc(mask, echo)
+              reader.read_line(mask, echo)
             else
               reader.gets
             end

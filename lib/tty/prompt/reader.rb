@@ -96,7 +96,7 @@ module TTY
       # @return [String]
       #
       # @api public
-      def getc(mask = (not_set = true), echo = true)
+      def read_line(mask = (not_set = true), echo = true)
         mask = false if not_set
         value = ''
         buffer do

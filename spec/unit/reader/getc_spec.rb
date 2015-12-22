@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-RSpec.describe TTY::Prompt::Reader, '#getc' do
+RSpec.describe TTY::Prompt::Reader, '#read_line' do
   let(:input)  { StringIO.new }
   let(:output) { StringIO.new }
 
@@ -10,7 +10,7 @@ RSpec.describe TTY::Prompt::Reader, '#getc' do
     mask = '*'
     input << "password\n"
     input.rewind
-    answer = reader.getc(mask)
+    answer = reader.read_line(mask)
     expect(answer).to eq("password")
     expect(output.string).to eq("********")
   end
@@ -18,7 +18,7 @@ RSpec.describe TTY::Prompt::Reader, '#getc' do
   it "echoes characters back" do
     input << "password\n"
     input.rewind
-    answer = reader.getc
+    answer = reader.read_line
     expect(answer).to eq("password")
     expect(output.string).to eq("password")
   end
@@ -26,7 +26,7 @@ RSpec.describe TTY::Prompt::Reader, '#getc' do
   it 'deletes characters when backspace pressed' do
     input << "\b\b"
     input.rewind
-    answer = reader.getc
+    answer = reader.read_line
     expect(answer).to eq('')
     expect(output.string).to eq('')
   end
