@@ -1,10 +1,14 @@
 # encoding: utf-8
 
+require 'wisper'
+
 module TTY
   # A class responsible for shell prompt interactions.
   class Prompt
     # A class responsible for reading character input from STDIN
     class Reader
+      include Wisper::Publisher
+
       attr_reader :mode
 
       attr_reader :input
@@ -42,9 +46,7 @@ module TTY
         bufferring = output.sync
         # Immediately flush output
         output.sync = true
-
         value = block.call if block_given?
-
         output.sync = bufferring
         value
       end
@@ -60,6 +62,7 @@ module TTY
           mode.echo(false) do
             mode.raw(true) do
               key = read_char
+              publish_keypress_event(key)
               exit 130 if key == Codes::CTRL_C
               key
             end
@@ -103,6 +106,7 @@ module TTY
           begin
             while (char = input.getbyte) &&
                 !(char == CARRIAGE_RETURN || char == NEWLINE)
+              publish_keypress_event(convert_byte(char))
               value = handle_char(value, char, mask, echo)
             end
           ensure
@@ -110,6 +114,47 @@ module TTY
           end
         end
         value
+      end
+
+      # Publish event
+      #
+      # @param [String] key
+      #   the key pressed
+      #
+      # @return [nil]
+      #
+      # @api public
+      def publish_keypress_event(key)
+        publish(parse_key(key), key)
+        publish(:keypress, key)
+      end
+
+      # Interpret the key and provide event name
+      #
+      # @return [Symbol]
+      #
+      # @api public
+      def parse_key(key)
+        case key
+        when Codes::LINEFEED
+          :keyenter
+        when Codes::KEY_UP, Codes::CTRL_K, Codes::CTRL_P
+          :keyup
+        when Codes::KEY_DOWN, Codes::CTRL_J, Codes::CTRL_N
+          :keydown
+        when Codes::SPACE
+          :keyspace
+        when Codes::RETURN
+          :keyreturn
+        when Codes::TAB
+          :keytab
+        when Codes::ESCAPE
+          :keyescape
+        when Codes::CTRL_C
+          :keyinterrupt
+        when /\d+/
+          :keynum
+        end
       end
 
       # Get a value from STDIN using line input.
@@ -120,6 +165,15 @@ module TTY
       end
 
       private
+
+      # Convert byte to unicode character
+      #
+      # @return [String]
+      #
+      # @api private
+      def convert_byte(byte)
+        Array(byte).pack('U*')
+      end
 
       # Handle single character by appending to or removing from output
       #
