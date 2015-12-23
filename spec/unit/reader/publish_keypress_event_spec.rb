@@ -9,7 +9,7 @@ RSpec.describe TTY::Prompt::Reader, '#publish_keypress_event' do
     input << "abc\n"
     input.rewind
     chars = []
-    reader.on(:keypress) { |char| chars << char }
+    reader.on(:keypress) { |event| chars << event.value }
     answer = reader.read_line
     expect(chars).to eq(%w(a b c))
     expect(answer).to eq("abc")
@@ -19,9 +19,9 @@ RSpec.describe TTY::Prompt::Reader, '#publish_keypress_event' do
     input << "\e[Aaa"
     input.rewind
     keys = []
-    reader.on(:keypress) { |key| keys << "keypress_#{key}" }
-    reader.on(:keyup)    { |key| keys << "keyup_#{key}" }
-    reader.on(:keydown)  { |key| keys << "keydown_#{key}" }
+    reader.on(:keypress) { |event| keys << "keypress_#{event.value}" }
+    reader.on(:keyup)    { |event| keys << "keyup_#{event.value}" }
+    reader.on(:keydown)  { |event| keys << "keydown_#{event.value}" }
 
     answer = reader.read_keypress
     expect(keys).to eq(["keyup_\e[A", "keypress_\e[A"])
@@ -32,9 +32,9 @@ RSpec.describe TTY::Prompt::Reader, '#publish_keypress_event' do
     input << "\e[Baa"
     input.rewind
     keys = []
-    reader.on(:keypress) { |key| keys << "keypress_#{key}" }
-    reader.on(:keyup)    { |key| keys << "keyup_#{key}" }
-    reader.on(:keydown)  { |key| keys << "keydown_#{key}" }
+    reader.on(:keypress) { |event| keys << "keypress_#{event.value}" }
+    reader.on(:keyup)    { |event| keys << "keyup_#{event.value}" }
+    reader.on(:keydown)  { |event| keys << "keydown_#{event.value}" }
 
     answer = reader.read_keypress
     expect(keys).to eq(["keydown_\e[B", "keypress_\e[B"])
@@ -45,22 +45,22 @@ RSpec.describe TTY::Prompt::Reader, '#publish_keypress_event' do
     input << "5aa"
     input.rewind
     keys = []
-    reader.on(:keypress) { |key| keys << "keypress_#{key}" }
-    reader.on(:keyup)    { |key| keys << "keyup_#{key}" }
-    reader.on(:keynum)   { |key| keys << "keynum_#{key}" }
+    reader.on(:keypress) { |event| keys << "keypress_#{event.value}" }
+    reader.on(:keyup)    { |event| keys << "keyup_#{event.value}" }
+    reader.on(:keynum)   { |event| keys << "keynum_#{event.value}" }
 
     answer = reader.read_keypress
     expect(keys).to eq(["keynum_5", "keypress_5"])
     expect(answer).to eq("5")
   end
 
-  it "publishes :keyspace event" do
+  it "publishes :keyreturn event" do
     input << "\r"
     input.rewind
     keys = []
-    reader.on(:keypress) { |key| keys << "keypress" }
-    reader.on(:keyup)    { |key| keys << "keyup" }
-    reader.on(:keyreturn) { |key| keys << "keyreturn" }
+    reader.on(:keypress)  { |event| keys << "keypress" }
+    reader.on(:keyup)     { |event| keys << "keyup" }
+    reader.on(:keyreturn) { |event| keys << "keyreturn" }
 
     answer = reader.read_keypress
     expect(keys).to eq(["keyreturn", "keypress"])
@@ -71,8 +71,8 @@ RSpec.describe TTY::Prompt::Reader, '#publish_keypress_event' do
     input << "\n"
     input.rewind
     keys = []
-    reader.on(:keyenter) { |key| keys << "keyenter" }
-          .on(:keypress) { |key| keys << "keypress" }
+    reader.on(:keyenter) { |event| keys << "keyenter" }
+          .on(:keypress) { |event| keys << "keypress" }
 
     answer = reader.read_keypress
     expect(keys).to eq(["keyenter", "keypress"])
