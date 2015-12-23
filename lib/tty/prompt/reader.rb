@@ -124,9 +124,60 @@ module TTY
       # @return [nil]
       #
       # @api public
-      def publish_keypress_event(key)
-        publish(parse_key(key), key)
-        publish(:keypress, key)
+      def publish_keypress_event(char)
+        event = create_key_event(char)
+        event_name = parse_key_event(event)
+        publish(event_name, event) unless event_name.nil?
+        publish(:keypress, event)
+      end
+
+      class Key < Struct.new(:name, :ctrl, :meta, :shift)
+        def initialize(*)
+          super
+          @ctrl = false
+          @meta = false
+          @shift = false
+        end
+      end
+
+      class KeyEvent < Struct.new(:value, :key)
+      end
+
+      META_KEY_CODE_RE = /^(?:\x1b+)(O|N|\[|\[\[)(?:(\d+)(?:;(\d+))?([~^$])|(?:1;)?(\d+)?([a-zA-Z]))/
+
+      def create_key_event(char)
+        key = Key.new
+        case char
+        when Codes::RETURN
+          key.name = :return
+        when Codes::LINEFEED
+          key.name = :enter
+        when Codes::TAB
+          key.name = :tab
+        when Codes::BACKSPACE
+          key.name = :backspace
+        when Codes::SPACE
+          key.name = :space
+        when proc { |char| char <= "\x1a" }
+          codes = char.each_codepoint.to_a
+          key.name = "#{codes}"
+          key.ctrl = true
+        when /\d/
+          key.name = :num
+        when META_KEY_CODE_RE
+          key.meta = true
+          case char
+          when Codes::KEY_UP, Codes::CTRL_K, Codes::CTRL_P
+            key.name = :up
+          when Codes::KEY_DOWN, Codes::CTRL_J, Codes::CTRL_N
+            key.name = :down
+          when Codes::KEY_RIGHT, Codes::CTRL_L
+            key.name = :right
+          when Codes::KEY_LEFT, Codes::CTRL_H
+            key.name = :left
+          end
+        end
+        KeyEvent.new(char, key)
       end
 
       # Interpret the key and provide event name
@@ -134,27 +185,11 @@ module TTY
       # @return [Symbol]
       #
       # @api public
-      def parse_key(key)
-        case key
-        when Codes::LINEFEED
-          :keyenter
-        when Codes::KEY_UP, Codes::CTRL_K, Codes::CTRL_P
-          :keyup
-        when Codes::KEY_DOWN, Codes::CTRL_J, Codes::CTRL_N
-          :keydown
-        when Codes::SPACE
-          :keyspace
-        when Codes::RETURN
-          :keyreturn
-        when Codes::TAB
-          :keytab
-        when Codes::ESCAPE
-          :keyescape
-        when Codes::CTRL_C
-          :keyinterrupt
-        when /\d+/
-          :keynum
-        end
+      def parse_key_event(event)
+        return if event.key.nil?
+        permitted_events = %w(up down left right space return enter num)
+        return unless permitted_events.include?("#{event.key.name}")
+        :"key#{event.key.name}"
       end
 
       # Get a value from STDIN using line input.
