@@ -1,5 +1,6 @@
 # encoding: utf-8
 
+require 'tty/prompt/reader/codes'
 require 'wisper'
 
 module TTY

@@ -29,7 +29,7 @@ module TTY
         @active       = @default.first
         @choices      = Choices.new
         @color        = options.fetch(:color) { :green }
-        @marker       = options.fetch(:marker) { Codes::ITEM_SELECTED }
+        @marker       = options.fetch(:marker) { Symbols::ITEM_SELECTED }
         @help         = options.fetch(:help) { HELP }
 
         @prompt.subscribe(self)
@@ -197,10 +197,10 @@ module TTY
       def render_menu
         @choices.each_with_index do |choice, index|
           message = if index + 1 == @active
-                      selected = @marker + Codes::SPACE + choice.name
+                      selected = @marker + Symbols::SPACE + choice.name
                       @prompt.decorate("#{selected}", @color)
                     else
-                      Codes::SPACE * 2 + choice.name
+                      Symbols::SPACE * 2 + choice.name
                     end
           @prompt.output.puts(message)
         end

@@ -77,13 +77,13 @@ module TTY
       # @api private
       def render_menu
         @choices.each_with_index do |choice, index|
-          indicator = (index + 1 == @active) ?  @marker : Codes::SPACE
-          indicator += Codes::SPACE
+          indicator = (index + 1 == @active) ?  @marker : Symbols::SPACE
+          indicator += Symbols::SPACE
           message = if @selected.include?(choice)
-                      selected = @prompt.decorate(Codes::RADIO_CHECKED, :green)
-                      selected + Codes::SPACE + choice.name
+                      selected = @prompt.decorate(Symbols::RADIO_CHECKED, :green)
+                      selected + Symbols::SPACE + choice.name
                     else
-                      Codes::RADIO_UNCHECKED + Codes::SPACE + choice.name
+                      Symbols::RADIO_UNCHECKED + Symbols::SPACE + choice.name
                     end
           @prompt.output.puts(indicator + message)
         end
