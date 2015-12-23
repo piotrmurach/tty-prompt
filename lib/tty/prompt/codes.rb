@@ -35,6 +35,8 @@ module TTY
       CTRL_P = "\x10"
       SIGINT = "\x03"
       CTRL_C = "\x03"
+      CTRL_H = "\b"
+      CTRL_L = "\f"
 
       F1 = "\eOP"
       F2 = "\eOQ"
