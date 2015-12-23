@@ -38,7 +38,7 @@ module TTY
 
     def_delegators :@cursor, :clear_lines, :show, :hide
 
-    def_delegators :@reader, :read_keypress
+    def_delegators :@reader, :read_keypress, :on, :subscribe
 
     # Initialize a Prompt
     #

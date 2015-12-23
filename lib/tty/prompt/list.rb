@@ -31,6 +31,8 @@ module TTY
         @color        = options.fetch(:color) { :green }
         @marker       = options.fetch(:marker) { Codes::ITEM_SELECTED }
         @help         = options.fetch(:help) { HELP }
+
+        @prompt.subscribe(self)
       end
 
       # Set marker
@@ -82,6 +84,26 @@ module TTY
         render
       end
 
+      def keyescape(event)
+        exit 130
+      end
+
+      def keyspace(event)
+        @done = true
+      end
+
+      def keyreturn(event)
+        @done = true
+      end
+
+      def keyup(event)
+        @active = (@active == 1) ? @choices.length : @active - 1
+      end
+
+      def keydown(event)
+        @active = (@active == @choices.length) ? 1 : @active + 1
+      end
+
       private
 
       # Setup default option and active selection
@@ -116,7 +138,7 @@ module TTY
         @prompt.output.print(@prompt.hide)
         until @done
           render_question
-          process_input
+          @prompt.read_keypress
           refresh
         end
         render_question
@@ -133,23 +155,6 @@ module TTY
       # @api private
       def render_answer
         @choices[@active - 1].value
-      end
-
-      # Process keyboard input
-      #
-      # @api private
-      def process_input
-        chars = @prompt.read_keypress
-        case chars
-        when Codes::SIGINT, Codes::ESCAPE
-          exit 130
-        when Codes::RETURN, Codes::SPACE
-          @done = true
-        when Codes::KEY_UP, Codes::CTRL_K, Codes::CTRL_P
-          @active = (@active == 1) ? @choices.length : @active - 1
-        when Codes::KEY_DOWN, Codes::CTRL_J, Codes::CTRL_N
-          @active = (@active == @choices.length) ? 1 : @active + 1
-        end
       end
 
       # Determine area of the screen to clear
