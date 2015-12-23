@@ -158,6 +158,8 @@ module TTY
           key.name = :backspace
         when Codes::SPACE
           key.name = :space
+        when Codes::CTRL_C, Codes::ESCAPE
+          key.name = :escape
         when proc { |char| char <= "\x1a" }
           codes = char.each_codepoint.to_a
           key.name = "#{codes}"
