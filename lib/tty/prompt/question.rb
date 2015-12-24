@@ -75,11 +75,11 @@ module TTY
           render_question
 
           # process_input
-          @raw_input = process_input
-          @input     = conversion(@raw_input, @read)
+          @raw_input = read_input
           if blank?(@raw_input)
             @raw_input = default? ? default : ''
           end
+          @input = conversion(@raw_input, @read)
           result = evaluate_response(@input)
 
           if result.failure?
@@ -128,17 +128,6 @@ module TTY
           converter_registry.(type, input)
         else input
         end
-      end
-
-      # Read input from STDIN and convert
-      #
-      # @param [Symbol] type
-      #
-      # @return [undefined]
-      #
-      # @api private
-      def process_input
-        read_input
       end
 
       # Render quesiton
