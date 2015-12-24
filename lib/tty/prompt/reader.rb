@@ -117,6 +117,28 @@ module TTY
         value
       end
 
+      # Read multiple lines,
+      #
+      # @yield [String] line
+      #
+      # @return [Array[String]]
+      #
+      # @api public
+      def read_multiline
+        response = []
+        loop do
+          line = read_line
+          break if !line || line == ''
+          next  if line !~ /\S/
+          if block_given?
+            yield(line)
+          else
+            response << line
+          end
+        end
+        response
+      end
+
       # Publish event
       #
       # @param [String] key
