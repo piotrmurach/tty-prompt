@@ -144,13 +144,6 @@ module TTY
         :"key#{event.key.name}"
       end
 
-      # Get a value from STDIN using line input.
-      #
-      # @api public
-      def gets
-        input.gets
-      end
-
       private
 
       # Convert byte to unicode character
