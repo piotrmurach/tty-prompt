@@ -73,14 +73,7 @@ module TTY
 
         until @done
           render_question
-
-          # process_input
-          @raw_input = read_input
-          if blank?(@raw_input)
-            @raw_input = default? ? default : ''
-          end
-          @input = conversion(@raw_input, @read)
-          result = evaluate_response(@input)
+          result = process_input
 
           if result.failure?
             errors = result.errors
@@ -91,13 +84,21 @@ module TTY
           else
             @done = true
           end
-
           refresh_screen(errors)
         end
         render_question
         @answer = result.value
       ensure
         @answer
+      end
+
+      def process_input
+        @raw_input = read_input
+        if blank?(@raw_input)
+          @raw_input = default? ? default : ''
+        end
+        @input = conversion(@raw_input, @read)
+        evaluate_response(@input)
       end
 
       def reader
