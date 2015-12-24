@@ -12,7 +12,7 @@ RSpec.describe TTY::Prompt::Question, '#validate' do
     end
     expect(answer).to eq('piotr.murach')
     expect(prompt.output.string).to eq([
-      "What is your username? ",
+      "What is your username? piotr.murach",
       "\e[1A\e[1000D\e[K",
       "What is your username? \e[32mpiotr.murach\e[0m"
     ].join)

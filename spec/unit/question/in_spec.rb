@@ -12,7 +12,7 @@ RSpec.describe TTY::Prompt::Question, '#in' do
     end
     expect(answer).to eq(8)
     expect(prompt.output.string).to eq([
-      "How do you like it on scale 1-10? ",
+      "How do you like it on scale 1-10? 8",
       "\e[1A\e[1000D\e[K",
       "How do you like it on scale 1-10? \e[32m8\e[0m",
     ].join)
@@ -26,7 +26,7 @@ RSpec.describe TTY::Prompt::Question, '#in' do
     end
     expect(answer).to eq(8)
     expect(prompt.output.string).to eq([
-      "How do you like it on scale 1-10? ",
+      "How do you like it on scale 1-10? 8",
       "\e[1A\e[1000D\e[K",
       "How do you like it on scale 1-10? \e[32m8\e[0m",
     ].join)

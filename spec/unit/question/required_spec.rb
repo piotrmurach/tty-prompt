@@ -9,7 +9,7 @@ RSpec.describe TTY::Prompt::Question, '#required' do
     prompt.input.rewind
     prompt.ask('What is your name?') { |q| q.required(true) }
     expect(prompt.output.string).to eq([
-      "What is your name? ",
+      "What is your name? Piotr",
       "\e[1A\e[1000D\e[K",
       "What is your name? \e[32mPiotr\e[0m"
     ].join)
@@ -20,7 +20,7 @@ RSpec.describe TTY::Prompt::Question, '#required' do
     prompt.input.rewind
     prompt.ask('What is your name?') { |q| q.required(true) }
     expect(prompt.output.string).to eq([
-      "What is your name? ",
+      "What is your name? Piotr",
       "\e[1A\e[1000D\e[K",
       "What is your name? \e[32mPiotr\e[0m"
     ].join)

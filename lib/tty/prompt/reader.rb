@@ -101,7 +101,7 @@ module TTY
       #
       # @api public
       def read_line(mask = (not_set = true), echo = true)
-        mask = false if not_set
+        mask = false if not_set || mask.nil? || mask == false
         value = ''
         buffer do
           begin

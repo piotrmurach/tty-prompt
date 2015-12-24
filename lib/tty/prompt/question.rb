@@ -108,16 +108,10 @@ module TTY
       #
       # @api private
       def read_input
-        reader.mode.echo(echo) do
-          reader.mode.raw(raw) do
-            if character?
-              reader.read_keypress
-            elsif mask?
-              reader.read_line(mask, echo)
-            else
-              reader.gets
-            end
-          end
+        if character?
+          reader.read_keypress
+        else
+          reader.read_line(mask? ? mask : false, echo)
         end
       end
 
