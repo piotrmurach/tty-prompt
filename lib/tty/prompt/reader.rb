@@ -168,6 +168,8 @@ module TTY
 
       private
 
+      trap('SIGINT') { exit 130 }
+
       # Convert byte to unicode character
       #
       # @return [String]
