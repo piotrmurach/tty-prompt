@@ -1,7 +1,7 @@
 # encoding: utf-8
 
-require 'tty/prompt/reader/codes'
 require 'wisper'
+require 'tty/prompt/reader/key_event'
 
 module TTY
   # A class responsible for shell prompt interactions.
@@ -126,61 +126,10 @@ module TTY
       #
       # @api public
       def publish_keypress_event(char)
-        event = create_key_event(char)
+        event = KeyEvent.from(char)
         event_name = parse_key_event(event)
         publish(event_name, event) unless event_name.nil?
         publish(:keypress, event)
-      end
-
-      class Key < Struct.new(:name, :ctrl, :meta, :shift)
-        def initialize(*)
-          super
-          @ctrl = false
-          @meta = false
-          @shift = false
-        end
-      end
-
-      class KeyEvent < Struct.new(:value, :key)
-      end
-
-      META_KEY_CODE_RE = /^(?:\x1b+)(O|N|\[|\[\[)(?:(\d+)(?:;(\d+))?([~^$])|(?:1;)?(\d+)?([a-zA-Z]))/
-
-      def create_key_event(char)
-        key = Key.new
-        case char
-        when Codes::RETURN
-          key.name = :return
-        when Codes::LINEFEED
-          key.name = :enter
-        when Codes::TAB
-          key.name = :tab
-        when Codes::BACKSPACE
-          key.name = :backspace
-        when Codes::SPACE
-          key.name = :space
-        when Codes::CTRL_C, Codes::ESCAPE
-          key.name = :escape
-        when proc { |char| char <= "\x1a" }
-          codes = char.each_codepoint.to_a
-          key.name = "#{codes}"
-          key.ctrl = true
-        when /\d/
-          key.name = :num
-        when META_KEY_CODE_RE
-          key.meta = true
-          case char
-          when Codes::KEY_UP, Codes::CTRL_K, Codes::CTRL_P
-            key.name = :up
-          when Codes::KEY_DOWN, Codes::CTRL_J, Codes::CTRL_N
-            key.name = :down
-          when Codes::KEY_RIGHT, Codes::CTRL_L
-            key.name = :right
-          when Codes::KEY_LEFT, Codes::CTRL_H
-            key.name = :left
-          end
-        end
-        KeyEvent.new(char, key)
       end
 
       # Interpret the key and provide event name
