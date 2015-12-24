@@ -2,6 +2,7 @@
 
 require 'wisper'
 require 'tty/prompt/reader/key_event'
+require 'tty/prompt/reader/mode'
 
 module TTY
   # A class responsible for shell prompt interactions.
