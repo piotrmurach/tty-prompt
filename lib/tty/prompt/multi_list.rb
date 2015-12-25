@@ -85,7 +85,7 @@ module TTY
                     else
                       Symbols::RADIO_UNCHECKED + Symbols::SPACE + choice.name
                     end
-          @prompt.output.puts(indicator + message)
+          @prompt.puts(indicator + message)
         end
       end
     end # MultiList

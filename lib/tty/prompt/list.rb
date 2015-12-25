@@ -135,7 +135,7 @@ module TTY
       #
       # @api private
       def render
-        @prompt.output.print(@prompt.hide)
+        @prompt.print(@prompt.hide)
         until @done
           render_question
           @prompt.read_keypress
@@ -144,7 +144,7 @@ module TTY
         render_question
         answer = render_answer
       ensure
-        @prompt.output.print(@prompt.show)
+        @prompt.print(@prompt.show)
         answer
       end
 
@@ -162,7 +162,7 @@ module TTY
       # @api private
       def refresh
         lines = @question.scan("\n").length + @choices.length + 1
-        @prompt.output.print(@prompt.clear_lines(lines))
+        @prompt.print(@prompt.clear_lines(lines))
       end
 
       # Render question with instructions and menu
@@ -170,7 +170,7 @@ module TTY
       # @api private
       def render_question
         header = "#{@prompt.prefix}#{@question} #{render_header}"
-        @prompt.output.puts(header)
+        @prompt.puts(header)
         @first_render = false
         render_menu unless @done
       end
@@ -202,7 +202,7 @@ module TTY
                     else
                       Symbols::SPACE * 2 + choice.name
                     end
-          @prompt.output.puts(message)
+          @prompt.puts(message)
         end
       end
     end # List

@@ -44,10 +44,10 @@ module TTY
         message = @prompt.decorate(message, *color) if color
 
         if newline && /( |\t)(\e\[\d+(;\d+)*m)?\Z/ !~ message
-          @prompt.output.puts message
+          @prompt.puts message
         else
-          @prompt.output.print message
-          @prompt.output.flush
+          @prompt.print message
+          @prompt.flush
         end
       end
     end # Statement

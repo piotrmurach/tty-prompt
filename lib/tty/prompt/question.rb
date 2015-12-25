@@ -79,8 +79,8 @@ module TTY
           if result.failure?
             errors = result.errors
             errors.each do |err|
-              @prompt.output.print(@prompt.cursor.clear_line)
-              @prompt.output.puts(@prompt.decorate('>>', :red) + ' ' + err)
+              @prompt.print(@prompt.cursor.clear_line)
+              @prompt.puts(@prompt.decorate('>>', :red) + ' ' + err)
             end
           else
             @done = true
@@ -106,10 +106,6 @@ module TTY
         end
       end
 
-      def reader
-        @prompt.reader
-      end
-
       def process_input
         @raw_input = read_input
         if blank?(@raw_input)
@@ -123,9 +119,9 @@ module TTY
       # @api private
       def read_input
         if character?
-          reader.read_keypress
+          @prompt.read_keypress
         else
-          reader.read_line(mask? ? mask : false, echo)
+          @prompt.read_line(mask? ? mask : false, echo)
         end
       end
 
@@ -145,7 +141,7 @@ module TTY
         elsif default?
           header += @prompt.decorate("(#{default})", :bright_black) + ' '
         end
-        @prompt.output.print(header)
+        @prompt.print(header)
       end
 
       # Determine area of the screen to clear
@@ -155,12 +151,12 @@ module TTY
         lines = @message.scan("\n").length + 1
 
         if errors.count.nonzero?
-          @prompt.output.print(@prompt.cursor.up(errors.count))
+          @prompt.print(@prompt.cursor.up(errors.count))
           if @done
-            @prompt.output.print(@prompt.clear_lines(errors.count, :down))
+            @prompt.print(@prompt.clear_lines(errors.count, :down))
           end
         end
-        @prompt.output.print(@prompt.clear_lines(lines))
+        @prompt.print(@prompt.clear_lines(lines))
       end
 
       # Set reader type
