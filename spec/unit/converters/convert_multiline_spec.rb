@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-RSpec.describe TTY::Prompt::Question, '#read_multiline' do
+RSpec.describe TTY::Prompt::Question, 'read multiline' do
   xit 'reads multiple lines' do
     prompt = TTY::TestPrompt.new
     prompt.input << "First line\nSecond line\nThird line"

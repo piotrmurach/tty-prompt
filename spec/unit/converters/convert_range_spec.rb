@@ -1,11 +1,11 @@
 # encoding: utf-8
 
-RSpec.describe TTY::Prompt::Question, '#read_range' do
+RSpec.describe TTY::Prompt::Question, 'convert range' do
   it 'converts with valid range' do
     prompt = TTY::TestPrompt.new
     prompt.input << "20-30"
     prompt.input.rewind
-    answer = prompt.ask("Which age group?", read: :range)
+    answer = prompt.ask("Which age group?", convert: :range)
     expect(answer).to be_a(Range)
     expect(answer).to eq(20..30)
   end
@@ -15,7 +15,7 @@ RSpec.describe TTY::Prompt::Question, '#read_range' do
     prompt.input << "abcd"
     prompt.input.rewind
     expect {
-      prompt.ask('Which age group?', read: :range)
+      prompt.ask('Which age group?', convert: :range)
     }.to raise_error(Necromancer::ConversionTypeError)
   end
 end

@@ -45,6 +45,7 @@ module TTY
         @modifier      = options.fetch(:modifier) { [] }
         @validation    = options.fetch(:validation) { UndefinedSetting }
         @read          = options.fetch(:read) { UndefinedSetting }
+        @convert       = options.fetch(:convert) { UndefinedSetting }
         @color         = options.fetch(:color) { :green }
         @done          = false
       end
@@ -92,17 +93,21 @@ module TTY
         @answer
       end
 
+      def reader
+        @prompt.reader
+      end
+
       def process_input
         @raw_input = read_input
         if blank?(@raw_input)
-          @raw_input = default? ? default : ''
+          @raw_input = default? ? default : nil
         end
-        @input = conversion(@raw_input, @read)
+        if convert?
+          @input = converter_registry.(@convert, @raw_input)
+        else
+          @input = @raw_input
+        end
         evaluate_response(@input)
-      end
-
-      def reader
-        @prompt.reader
       end
 
       # Process input
@@ -116,21 +121,12 @@ module TTY
         end
       end
 
-      def conversion(input, type = nil)
-        if blank?(input)
-          nil
-        elsif !type.nil? && converter_registry.key?(type)
-          converter_registry.(type, input)
-        else input
-        end
-      end
-
       # Render quesiton
       #
       # @api private
       def render_question
         header = "#{prompt.prefix}#{message} "
-        if @read == :bool && !@done
+        if @convert == :bool && !@done
           header += @prompt.decorate('(Y/n)', :bright_black) + ' '
         elsif !echo?
           header
@@ -164,6 +160,14 @@ module TTY
       # @api public
       def read(value)
         @read = value
+      end
+
+      def convert(value)
+        @convert = value
+      end
+
+      def convert?
+        @convert != UndefinedSetting
       end
 
       # Set default value.

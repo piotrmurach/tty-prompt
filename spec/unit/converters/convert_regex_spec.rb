@@ -1,11 +1,11 @@
 # encoding: utf-8
 
-RSpec.describe TTY::Prompt::Question do
-  it "reads regex" do
+RSpec.describe TTY::Prompt::Question, 'convert regexp' do
+  it "converts regex" do
     prompt = TTY::TestPrompt.new
     prompt.input << "[a-z]*"
     prompt.input.rewind
-    answer = prompt.ask("Regex?", read: :regexp)
+    answer = prompt.ask("Regex?", convert: :regexp)
     expect(answer).to be_a(Regexp)
     expect(answer).to eq(/[a-z]*/)
   end

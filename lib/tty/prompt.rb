@@ -63,12 +63,12 @@ module TTY
     # @param [String] message
     #   the question to be asked
     #
-    # @yieldparam [TTY::Question] question
+    # @yieldparam [TTY::Prompt::Question] question
     #   further configure the question
     #
     # @yield [question]
     #
-    # @return [TTY::Question]
+    # @return [TTY::Prompt::Question]
     #
     # @api public
     def ask(message, *args, &block)
@@ -154,7 +154,7 @@ module TTY
     # @api public
     def yes?(question, *args, &block)
       options = Utils.extract_options!(args)
-      options.merge!(read: :bool)
+      options.merge!(convert: :bool)
       args << options
       ask(question, *args, &block)
     end
