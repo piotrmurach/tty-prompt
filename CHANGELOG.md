@@ -11,6 +11,10 @@
 * Add ability to specify in-built names for validation e.i. :email
 * Add KeyEvent for keyboard events publishing to Reader
 * Add #read_multiline to Reader
+* Add :convert option for ask configuration
+* Add ability to specify custom proc converters
+* Add #ask_keypress to gather character input
+* Add #ask_multiline to gather multiline input
 
 ### Changed
 * Change Reader#read_keypress to be robust and read correctly byte sequences
@@ -19,6 +23,8 @@
 * Change List & MultiList to subscribe to keyboard events
 * Change to move mode inside reader namespace
 * Remove Response
+* Remove :char option from #ask
+* Change :read option to specify mode of reading out of :line, :multiline, :keypress
 
 ## [v0.2.0] - 2015-11-23
 
@@ -36,6 +42,6 @@
 
 * Initial implementation and release
 
-[v0.3.0]: https://github.com/peter-murach/finite_machine/compare/v0.2.0...v0.3.0
-[v0.2.0]: https://github.com/peter-murach/finite_machine/compare/v0.1.0...v0.2.0
-[v0.1.0]: https://github.com/peter-murach/finite_machine/compare/v0.1.0
+[v0.3.0]: https://github.com/peter-murach/tty-prompt/compare/v0.2.0...v0.3.0
+[v0.2.0]: https://github.com/peter-murach/tty-prompt/compare/v0.1.0...v0.2.0
+[v0.1.0]: https://github.com/peter-murach/tty-prompt/compare/v0.1.0
