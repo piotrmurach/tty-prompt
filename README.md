@@ -42,15 +42,21 @@ Or install it yourself as:
 * [2. Interface](#2-interface)
   * [2.1 ask](#21-ask)
     * [2.1.1 settings](#211-settings)
-    * [2.1.2 default](#212-default)
-    * [2.1.3 validate](#213-validate)
-    * [2.1.4 in](#214-in)
-    * [2.1.5 read](#215-read)
-  * [2.2 yes?/no?](#22-yesno)
-  * [2.3 select](#22-select)
-  * [2.4 multi_select](#23-multi_select)
-  * [2.5 say](#25-say)
-  * [2.6 suggest](#26-suggest)
+    * [2.1.2 convert](#212-convert)
+    * [2.1.3 default](#213-default)
+    * [2.1.4 echo](#214-echo)
+    * [2.1.5 in](#215-in)
+    * [2.1.6 mask](#216-mask)
+    * [2.1.7 modify](#217-modify)
+    * [2.1.8 required](#218-required)
+    * [2.1.9 validate](#219-validate)
+  * [2.2 ask_keypress](#22-ask-keypress)
+  * [2.3 ask_multiline](#23-ask-multiline)
+  * [2.4 yes?/no?](#24-yesno)
+  * [2.5 select](#26-select)
+  * [2.6 multi_select](#26-multi_select)
+  * [2.7 say](#27-say)
+  * [2.8 suggest](#28-suggest)
 
 ## 1. Usage
 
@@ -96,13 +102,13 @@ prompt.select("Select drinks?", choices)
 
 ### 2.1 ask
 
-In order to ask a basic question with a string answer do:
+In order to ask a basic question do:
 
 ```ruby
-answer = prompt.ask("What is your name?")
+prompt.ask("What is your name?")
 ```
 
-In order to prompt for more complex input you can use robust API by passing hash of properties or using block:
+However, to prompt for more complex input you can use robust API by passing hash of properties or using a block like so:
 
 ```ruby
 prompt.ask("What is your name?") do |q|
@@ -117,22 +123,75 @@ end
 Below is a list of the settings that may be used for customizing `ask` method behaviour:
 
 ```ruby
-char       # turn character based input, otherwise line (default: false)
+convert    # conversion applied to input such as :bool or proc
 default    # default value used if none is provided
 echo       # turn echo on and off (default: true)
 in         # specify range '0-9', '0..9', '0...9' or negative '-1..-9'
 mask       # mask characters i.e '****' (default: false)
 modify     # apply answer modification :upcase, :downcase, :trim, :chomp etc..
-read       # Specifies the type of input such as :bool, :string
 required   # If true, value entered must be non-empty (default: false)
-validate   # regex, proc against which stdin input is checked
+validate   # regex, proc against which input is checked
 ```
 
-#### 2.1.2 default
+#### 2.1.2 convert
 
-#### 2.1.3 required
+ The `convert` property is used to convert input to a required type. By default no conversion is performed. The following conversions are provided:
 
-#### 2.1.4 validate
+```ruby
+:bool       # true or false for strings such as "Yes", "No"
+:date       # date type
+:datetime   # datetime type
+:file       # File object
+:float      # decimal or error if cannot convert
+:int        # integer or error if cannot convert
+:path       # Pathname object
+:range      # range type
+:regexp     # regex expression
+:string     # string
+:symbol     # symbol
+```
+
+For example, if you are interested in range type as answer do the following:
+
+```ruby
+prompt.ask("Provide range of numbers?", convert: :range)
+```
+
+You can also provide a custom conversion like so:
+
+```ruby
+prompt.ask('Ingredients? (comma sep list)') do |q|
+  q.convert -> (input) { input.split(/,\s*/) }
+end
+```
+
+#### 2.1.3 default
+
+The `:default` option is used if the user presses return key:
+
+```ruby
+prompt.ask('What is your name?', default: 'Anonymous')
+# =>
+# What is your name? (Anonymous)
+```
+
+#### 2.1.4 echo
+
+#### 2.1.5 in
+
+In order to check that provided input falls inside a range of inputs use the `in` option. For example, if we wanted to ask a user for a single digit in given range we may do following:
+
+```ruby
+ask("Provide number in range: 0-9") { |q| q.in('0-9') }
+```
+
+#### 2.1.6 mask
+
+#### 2.1.7 modify
+
+#### 2.1.8 required
+
+#### 2.1.9 validate
 
 In order to validate that input matches a given patter you can pass the `validate` option. Validate setting accepts `Regex`, `Proc` or `Symbol`.
 
@@ -148,37 +207,23 @@ The **TTY::Prompt** comes with bult-in validations for `:email` and you can use 
 prompt.ask('What is your email?') { |q| q.validate :email }
 ```
 
-#### 2.1.5 in
+### 2.2 ask_keypress
 
-In order to check that provided input falls inside a range of inputs use the `in` option. For example, if we wanted to ask a user for a single digit in given range we may do following:
-
-```ruby
-ask("Provide number in range: 0-9") { |q| q.in('0-9') }
-```
-
-#### 2.1.6 read
-
-The most common thing to do is to cast the answer to specific type. The `read` property is used for that. By default `:string` answer is assumed but this can be changed using one of the following custom answer conversions:
+In order to ask question with a single character or keypress answer use `ask_keypress`:
 
 ```ruby
-:bool       # true or false for strings such as "Yes", "No"
-:char       # first character
-:date       # date type
-:datetime   # datetime type
-:file       # a File object
-:float      # decimal or error if cannot convert
-:int        # integer or error if cannot convert
-:range      # range type
-:regex      # regex expression
-:string     # string
-:symbol     # symbol
+prompt.ask_keypress("Which one do you prefer a, b, c or d ?")
 ```
 
-For example, if you are interested in range type as answer do the following:
+### 2.3 ask_multiline
+
+Asking for multiline input can be done with `ask_multiline` method. 
 
 ```ruby
-ask("Provide range of numbers?", read: :range)
+prompt.ask_multiline("Provide description?")
 ```
+
+The reading of input will terminate when empty line is submitted.
 
 ### 2.2 yes?/no?
 
@@ -193,7 +238,7 @@ prompt.yes?('Do you like Ruby?')
 the same can be achieved by using plain `ask`:
 
 ```ruby
-prompt.ask('Do you like Ruby? (Y/n)', read: :bool)
+prompt.ask('Do you like Ruby? (Y/n)', convert: :bool)
 ```
 
 There is also the opposite for asking confirmation of negative option:
