@@ -8,9 +8,9 @@ module TTY
         class CheckModifier
           def self.call(question, value)
             if !question.modifier.nil? || question.modifier
-              Modifier.new(question.modifier).apply_to(value)
+              [Modifier.new(question.modifier).apply_to(value)]
             else
-              value
+              [value]
             end
           end
         end
@@ -20,7 +20,7 @@ module TTY
           def self.call(question, value)
             if !question.in? ||
               (question.in? && question.in.include?(value))
-              value
+              [value]
             else
               [value, ["Value #{value} is not included in the range #{question.in}"]]
             end
@@ -33,7 +33,7 @@ module TTY
             if !question.validation? ||
               (question.validation? &&
                 Validation.new(question.validation).call(value))
-              value
+              [value]
             else
               [value, ["Your answer is invalid (must match #{question.validation.inspect})"]]
             end
@@ -44,9 +44,9 @@ module TTY
         class CheckDefault
           def self.call(question, value)
             if value.nil? && question.default?
-              question.default
+              [question.default]
             else
-              value
+              [value]
             end
           end
         end
@@ -57,7 +57,7 @@ module TTY
             if question.required? && !question.default? && value.nil?
               [value, ['No value provided for required']]
             else
-              value
+              [value]
             end
           end
         end
