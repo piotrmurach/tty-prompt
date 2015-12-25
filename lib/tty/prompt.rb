@@ -81,6 +81,30 @@ module TTY
       question.call(message, &block)
     end
 
+    # Ask a question with a keypress answer
+    #
+    # @see #ask
+    #
+    # @api public
+    def ask_keypress(message, *args, &block)
+      options = Utils.extract_options!(args)
+      options.merge!(read: :keypress)
+      args << options
+      ask(message, *args, &block)
+    end
+
+    # Ask a question with a multiline answer
+    #
+    # @see @ask
+    #
+    # @api public
+    def ask_multiline(message, *args, &block)
+      options = Utils.extract_options!(args)
+      options.merge!(read: :multiline)
+      args << options
+      ask(message, *args, &block)
+    end
+
     # Ask a question with a list of options
     #
     # @example
