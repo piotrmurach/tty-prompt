@@ -88,9 +88,22 @@ module TTY
           refresh_screen(errors)
         end
         render_question
-        @answer = result.value
+        @answer = convert_result(result.value)
       ensure
         @answer
+      end
+
+      # Convert value to expected type
+      #
+      # @param [Object] value
+      #
+      # @api private
+      def convert_result(value)
+        if convert? & !blank?(value)
+          converter_registry.(@convert, value)
+        else
+          value
+        end
       end
 
       def reader
@@ -102,12 +115,7 @@ module TTY
         if blank?(@raw_input)
           @raw_input = default? ? default : nil
         end
-        if convert?
-          @input = converter_registry.(@convert, @raw_input)
-        else
-          @input = @raw_input
-        end
-        evaluate_response(@input)
+        evaluate_response(@raw_input)
       end
 
       # Process input
