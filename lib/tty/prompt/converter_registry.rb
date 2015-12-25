@@ -38,8 +38,12 @@ module TTY
       #
       # @api public
       def call(key, input)
-        converter = @_registry.fetch(key) do
-          fail ArgumentError, "#{key.inspect} is not registered"
+        if key.respond_to?(:call)
+          converter = key
+        else
+          converter = @_registry.fetch(key) do
+            fail ArgumentError, "#{key.inspect} is not registered"
+          end
         end
         converter.call(input)
       end
