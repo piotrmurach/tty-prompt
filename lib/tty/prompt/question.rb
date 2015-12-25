@@ -38,9 +38,7 @@ module TTY
         @default       = options.fetch(:default) { UndefinedSetting }
         @required      = options.fetch(:required) { false }
         @echo          = options.fetch(:echo) { true }
-        @raw           = options.fetch(:raw) { false }
         @mask          = options.fetch(:mask) { UndefinedSetting  }
-        @character     = options.fetch(:character) { false }
         @in            = options.fetch(:in) { UndefinedSetting }
         @modifier      = options.fetch(:modifier) { [] }
         @validation    = options.fetch(:validation) { UndefinedSetting }
@@ -118,9 +116,10 @@ module TTY
       #
       # @api private
       def read_input
-        if character?
+        case @read
+        when :keypress
           @prompt.read_keypress
-        elsif @read == :multiline
+        when :multiline
           @prompt.read_multiline
         else
           @prompt.read_line(mask? ? mask : false, echo)
@@ -267,19 +266,6 @@ module TTY
       def mask?
         @mask != UndefinedSetting
       end
-
-      # Set if the input is character based or not
-      #
-      # @param [Boolean] value
-      #
-      # @return [self]
-      #
-      # @api public
-      def char(value = nil)
-        return @character if value.nil?
-        @character = value
-      end
-      alias_method :character?, :char
 
       # Set expected range of values
       #

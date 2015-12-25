@@ -8,8 +8,6 @@ RSpec.describe TTY::Prompt::Question, '#initialize' do
 
   it { expect(question.mask).to eq(TTY::Prompt::Question::UndefinedSetting) }
 
-  it { expect(question.char).to eq(false) }
-
   it { expect(question.modifier).to eq([]) }
 
   it { expect(question.validation).to eq(TTY::Prompt::Question::UndefinedSetting) }
