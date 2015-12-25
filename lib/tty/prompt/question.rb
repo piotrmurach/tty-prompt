@@ -120,6 +120,8 @@ module TTY
       def read_input
         if character?
           @prompt.read_keypress
+        elsif @read == :multiline
+          @prompt.read_multiline
         else
           @prompt.read_line(mask? ? mask : false, echo)
         end
