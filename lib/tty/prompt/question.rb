@@ -46,6 +46,9 @@ module TTY
         @convert       = options.fetch(:convert) { UndefinedSetting }
         @color         = options.fetch(:color) { :green }
         @done          = false
+        @done_masked   = false
+
+        @prompt.subscribe(self)
       end
 
       # Call the question
@@ -67,7 +70,7 @@ module TTY
       # @api private
       def render
         @answer = nil
-        @raw_input = nil
+        @input = nil
         errors = []
 
         until @done
@@ -86,47 +89,13 @@ module TTY
           refresh_screen(errors)
         end
         render_question
+
         @answer = convert_result(result.value)
       ensure
         @answer
       end
 
-      # Convert value to expected type
-      #
-      # @param [Object] value
-      #
-      # @api private
-      def convert_result(value)
-        if convert? & !blank?(value)
-          converter_registry.(@convert, value)
-        else
-          value
-        end
-      end
-
-      def process_input
-        @raw_input = read_input
-        if blank?(@raw_input)
-          @raw_input = default? ? default : nil
-        end
-        evaluate_response(@raw_input)
-      end
-
-      # Process input
-      #
-      # @api private
-      def read_input
-        case @read
-        when :keypress
-          @prompt.read_keypress
-        when :multiline
-          @prompt.read_multiline
-        else
-          @prompt.read_line(mask? ? mask : false, echo)
-        end
-      end
-
-      # Render quesiton
+      # Render question
       #
       # @api private
       def render_question
@@ -136,13 +105,64 @@ module TTY
         elsif !echo?
           header
         elsif mask?
-          header += "#{@mask * "#{@raw_input}".length}"
+          masked = "#{@mask * "#{@input}".length}"
+          if @done_masked
+            masked = @prompt.decorate(masked, @color)
+          end
+          header += masked
         elsif @done
-          header += @prompt.decorate("#{@raw_input}", @color)
+          header += @prompt.decorate("#{@input}", @color)
         elsif default?
           header += @prompt.decorate("(#{default})", :bright_black) + ' '
         end
         @prompt.print(header)
+      end
+
+      # Decide how to handle input from user
+      #
+      # @api private
+      def process_input
+        @input = read_input
+        if blank?(@input)
+          @input = default? ? default : nil
+        end
+        evaluate_response(@input)
+      end
+
+      def keyreturn(event)
+        @done_masked = true
+      end
+
+      def keypress(event)
+        if mask? && echo? && event.value =~ /^[^\e]/
+          @input += event.value
+        end
+      end
+
+      # Process input
+      #
+      # @api private
+      def read_input
+        if mask? && echo?
+          @done_masked = false
+          @input = ''
+          while !@done_masked
+            @prompt.read_keypress
+            @prompt.print(@prompt.cursor.clear_line)
+            render_question
+          end
+          @prompt.print(@prompt.cursor.clear_line)
+          @input
+        else
+          case @read
+          when :keypress
+            @prompt.read_keypress
+          when :multiline
+            @prompt.read_multiline
+          else
+            @prompt.read_line(mask? ? mask : false, echo)
+          end
+        end
       end
 
       # Determine area of the screen to clear
@@ -157,7 +177,24 @@ module TTY
             @prompt.print(@prompt.clear_lines(errors.count, :down))
           end
         end
-        @prompt.print(@prompt.clear_lines(lines))
+        if mask?
+          @prompt.print(@prompt.clear_line)
+        else
+          @prompt.print(@prompt.clear_lines(lines))
+        end
+      end
+
+      # Convert value to expected type
+      #
+      # @param [Object] value
+      #
+      # @api private
+      def convert_result(value)
+        if convert? & !blank?(value)
+          converter_registry.(@convert, value)
+        else
+          value
+        end
       end
 
       # Set reader type

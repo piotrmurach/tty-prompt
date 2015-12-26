@@ -40,7 +40,7 @@ RSpec.describe TTY::Prompt::Question, '#in' do
     end
     expect(answer).to eq('E')
     expect(prompt.output.string).to eq([
-      "Your favourite vitamin? (A-K) E",
+      "Your favourite vitamin? (A-K) ",
       "\e[1A\e[1000D\e[K",
       "Your favourite vitamin? (A-K) \e[32mE\e[0m"
     ].join)

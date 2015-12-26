@@ -11,7 +11,7 @@ RSpec.describe TTY::Prompt::Question, '#read' do
       answer = prompt.ask("What is your password?") { |q| q.echo(true) }
       expect(answer).to eql("password")
       expect(prompt.output.string).to eq([
-        "What is your password? password",
+        "What is your password? ",
         "\e[1A\e[1000D\e[K",
         "What is your password? \e[32mpassword\e[0m"
       ].join)
@@ -32,14 +32,24 @@ RSpec.describe TTY::Prompt::Question, '#read' do
 
   context 'with mask' do
     it 'masks output with character' do
-      prompt.input << "password\n"
+      prompt.input << "pass\r"
       prompt.input.rewind
       answer = prompt.ask("What is your password?") { |q| q.mask('*') }
-      expect(answer).to eql("password")
+      expect(answer).to eql("pass\r")
       expect(prompt.output.string).to eq([
-        "What is your password? ********",
-        "\e[1A\e[1000D\e[K",
-        "What is your password? ********"
+        "What is your password? ",
+        "\e[1000D\e[K",
+        "What is your password? *",
+        "\e[1000D\e[K",
+        "What is your password? **",
+        "\e[1000D\e[K",
+        "What is your password? ***",
+        "\e[1000D\e[K",
+        "What is your password? ****",
+        "\e[1000D\e[K",
+        "What is your password? \e[32m*****\e[0m",
+        "\e[1000D\e[K\e[1000D\e[K",
+        "What is your password? \e[32m*****\e[0m",
       ].join)
     end
 
@@ -53,7 +63,7 @@ RSpec.describe TTY::Prompt::Question, '#read' do
       expect(answer).to eql("password")
       expect(prompt.output.string).to eq([
         "What is your password? ",
-        "\e[1A\e[1000D\e[K",
+        "\e[1000D\e[K",
         "What is your password? "
       ].join)
     end
