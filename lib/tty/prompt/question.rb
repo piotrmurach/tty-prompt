@@ -141,7 +141,7 @@ module TTY
         if mask? && echo?
           if [:backspace, :delete].include?(event.key.name)
             @input.chop! unless @input.empty?
-          else event.value =~ /^[^\e\n\r]/
+          elsif event.value =~ /^[^\e\n\r]/
             @input += event.value
           end
         end
