@@ -64,7 +64,7 @@ module TTY
           mode.echo(false) do
             mode.raw(true) do
               key = read_char
-              publish_keypress_event(key)
+              publish_keypress_event(key) if key
               exit 130 if key == Codes::CTRL_C
               key
             end
@@ -85,6 +85,9 @@ module TTY
           next_char = read_char
           chars << next_char
         end
+        chars
+      rescue EOFError
+        # Finished processing
         chars
       end
 
