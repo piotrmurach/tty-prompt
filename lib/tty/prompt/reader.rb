@@ -103,19 +103,19 @@ module TTY
       # @api public
       def read_line(mask = (not_set = true), echo = true)
         mask = false if not_set || mask.nil? || mask == false
-        value = ''
+        line = ''
         buffer do
           begin
             while (char = input.getbyte) &&
                 !(char == CARRIAGE_RETURN || char == NEWLINE)
               publish_keypress_event(convert_byte(char))
-              value = handle_char(value, char, mask, echo)
+              line = handle_char(line, char)
             end
           ensure
             mode.echo_on
           end
         end
-        value
+        line
       end
 
       # Read multiple lines,
@@ -183,21 +183,12 @@ module TTY
       # Handle single character by appending to or removing from output
       #
       # @api private
-      def handle_char(input, char, mask, echo)
+      def handle_char(line, char)
         if char == BACKSPACE || char == DELETE
-          input.slice!(-1, 1) unless input.empty?
+          line.empty? ? line : line.slice(-1, 1)
         else
-          print_char(char, mask) if echo
-          input << char
+          line << char
         end
-        input
-      end
-
-      # Print out character back to shell STDOUT
-      #
-      # @api private
-      def print_char(char, mask)
-        output.putc((mask != false) ? mask : char)
       end
     end # Reader
   end # Prompt
