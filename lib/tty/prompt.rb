@@ -36,7 +36,8 @@ module TTY
 
     def_delegators :@pastel, :decorate
 
-    def_delegators :@cursor, :clear_lines, :show, :hide
+    def_delegators :@cursor, :clear_lines, :clear_line,
+                   :show, :hide
 
     def_delegators :@reader, :read_line, :read_keypress,
                    :read_multiline, :on, :subscribe
