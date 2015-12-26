@@ -34,6 +34,8 @@ module TTY
             key.name = :tab
           when Codes::BACKSPACE
             key.name = :backspace
+          when Codes::DELETE
+            key.name = :delete
           when Codes::SPACE
             key.name = :space
           when Codes::CTRL_C, Codes::ESCAPE
