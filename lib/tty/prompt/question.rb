@@ -133,9 +133,17 @@ module TTY
         @done_masked = true
       end
 
+      def keyenter(event)
+        @done_masked = true
+      end
+
       def keypress(event)
-        if mask? && echo? && event.value =~ /^[^\e]/
-          @input += event.value
+        if mask? && echo?
+          if [:backspace, :delete].include?(event.key.name)
+            @input.chop! unless @input.empty?
+          else event.value =~ /^[^\e\n\r]/
+            @input += event.value
+          end
         end
       end
 

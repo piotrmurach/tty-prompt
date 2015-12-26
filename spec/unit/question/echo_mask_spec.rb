@@ -35,7 +35,7 @@ RSpec.describe TTY::Prompt::Question, '#read' do
       prompt.input << "pass\r"
       prompt.input.rewind
       answer = prompt.ask("What is your password?") { |q| q.mask('*') }
-      expect(answer).to eql("pass\r")
+      expect(answer).to eql("pass")
       expect(prompt.output.string).to eq([
         "What is your password? ",
         "\e[1000D\e[K",
@@ -47,9 +47,29 @@ RSpec.describe TTY::Prompt::Question, '#read' do
         "\e[1000D\e[K",
         "What is your password? ****",
         "\e[1000D\e[K",
-        "What is your password? \e[32m*****\e[0m",
+        "What is your password? \e[32m****\e[0m",
         "\e[1000D\e[K\e[1000D\e[K",
-        "What is your password? \e[32m*****\e[0m",
+        "What is your password? \e[32m****\e[0m",
+      ].join)
+    end
+
+    it "masks with unicode character" do
+      prompt.input << "lov\n"
+      prompt.input.rewind
+      answer = prompt.ask("What is your password?", mask: "\u2665")
+      expect(answer).to eql("lov")
+      expect(prompt.output.string).to eq([
+        "What is your password? ",
+        "\e[1000D\e[K",
+        "What is your password? ♥",
+        "\e[1000D\e[K",
+        "What is your password? ♥♥",
+        "\e[1000D\e[K",
+        "What is your password? ♥♥♥",
+        "\e[1000D\e[K",
+        "What is your password? \e[32m♥♥♥\e[0m",
+        "\e[1000D\e[K\e[1000D\e[K",
+        "What is your password? \e[32m♥♥♥\e[0m",
       ].join)
     end
 
