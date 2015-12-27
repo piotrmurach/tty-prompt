@@ -4,4 +4,4 @@ require 'tty-prompt'
 
 prompt = TTY::Prompt.new
 
-prompt.ask('What is your name?') { |q| q.required(true) }
+prompt.ask('What is your name?', default: ENV['USER'])
