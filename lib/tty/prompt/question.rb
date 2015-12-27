@@ -318,6 +318,9 @@ module TTY
       #
       # @api public
       def in(value = (not_set = true))
+        if in? && !@in.is_a?(Range)
+          @in = converter_registry.(:range, @in)
+        end
         return @in if not_set
         @in = converter_registry.(:range, value)
       end

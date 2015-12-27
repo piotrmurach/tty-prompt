@@ -4,6 +4,13 @@ RSpec.describe TTY::Prompt::Question, '#in' do
 
   subject(:prompt) { TTY::TestPrompt.new }
 
+  it "reads range from option" do
+    prompt.input << '8'
+    prompt.input.rewind
+    answer = prompt.ask("How do you like it on scale 1-10?", in: '1-10')
+    expect(answer).to eq('8')
+  end
+
   it 'reads number within string range' do
     prompt.input << '8'
     prompt.input.rewind
