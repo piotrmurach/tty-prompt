@@ -59,9 +59,9 @@ module TTY
       # @return [String]
       #
       # @api public
-      def read_keypress
+      def read_keypress(echo = false)
         buffer do
-          mode.echo(false) do
+          mode.echo(echo) do
             mode.raw(true) do
               key = read_char
               publish_keypress_event(key) if key
@@ -95,17 +95,13 @@ module TTY
       # to the shell masked with character(if given). The input finishes when
       # enter key is pressed.
       #
-      # @param [String] mask
-      #   the character to use as mask
-      #
       # @param [Boolean] echo
       #   echo back characters or not
       #
       # @return [String]
       #
       # @api public
-      def read_line(mask = (not_set = true), echo = true)
-        mask = false if not_set || mask.nil? || mask == false
+      def read_line(echo = true)
         line = ''
         buffer do
           begin
