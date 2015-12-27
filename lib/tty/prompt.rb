@@ -87,7 +87,7 @@ module TTY
     # @see #ask
     #
     # @api public
-    def ask_keypress(message, *args, &block)
+    def keypress(message, *args, &block)
       options = Utils.extract_options!(args)
       options.merge!(read: :keypress)
       args << options
@@ -99,7 +99,7 @@ module TTY
     # @see @ask
     #
     # @api public
-    def ask_multiline(message, *args, &block)
+    def multiline(message, *args, &block)
       options = Utils.extract_options!(args)
       options.merge!(read: :multiline)
       args << options

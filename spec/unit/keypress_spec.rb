@@ -13,7 +13,7 @@ RSpec.describe TTY::Prompt::Question, 'ask keypress' do
     prompt = TTY::TestPrompt.new
     prompt.input << "abcd"
     prompt.input.rewind
-    answer = prompt.ask_keypress("Which one do you prefer a, b, c or d?")
+    answer = prompt.keypress("Which one do you prefer a, b, c or d?")
     expect(answer).to eq("a")
   end
 end

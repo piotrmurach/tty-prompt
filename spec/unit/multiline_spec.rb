@@ -13,7 +13,7 @@ RSpec.describe TTY::Prompt::Question, 'ask multiline' do
     prompt = TTY::TestPrompt.new
     prompt.input << "First\nSecond\nThird"
     prompt.input.rewind
-    answer = prompt.ask_multiline("Provide description?")
+    answer = prompt.multiline("Provide description?")
     expect(answer).to eq(['First', 'Second', 'Third'])
   end
 end
