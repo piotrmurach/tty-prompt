@@ -26,6 +26,7 @@
 * Remove Response & Error objects
 * Remove :char option from #ask
 * Change :read option to specify mode of reading out of :line, :multiline, :keypress
+* Rename #confirm to #ok
 
 ## [v0.2.0] - 2015-11-23
 
