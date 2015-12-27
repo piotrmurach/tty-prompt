@@ -15,6 +15,7 @@
 * Add ability to specify custom proc converters
 * Add #ask_keypress to gather character input
 * Add #ask_multiline to gather multiline input
+* Add MaskedQuestion & #mask method for masking input stream characters
 
 ### Changed
 * Change Reader#read_keypress to be robust and read correctly byte sequences
@@ -22,7 +23,7 @@
 * Extract cursor movement to dependency tty-cursor
 * Change List & MultiList to subscribe to keyboard events
 * Change to move mode inside reader namespace
-* Remove Response
+* Remove Response & Error objects
 * Remove :char option from #ask
 * Change :read option to specify mode of reading out of :line, :multiline, :keypress
 
