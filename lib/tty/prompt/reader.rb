@@ -91,12 +91,12 @@ module TTY
         chars
       end
 
-      # Get a value from STDIN one key at a time. Each key press is echoed back
-      # to the shell masked with character(if given). The input finishes when
-      # enter key is pressed.
+      # Get a single line from STDIN
+      # Each key pressed is echoed back  to the shell.
+      # The input terminates when enter or return key is pressed.
       #
       # @param [Boolean] echo
-      #   echo back characters or not
+      #   if true echo back characters, output nothing otherwise
       #
       # @return [String]
       #
@@ -104,20 +104,18 @@ module TTY
       def read_line(echo = true)
         line = ''
         buffer do
-          begin
+          mode.echo(echo) do
             while (char = input.getbyte) &&
                 !(char == CARRIAGE_RETURN || char == NEWLINE)
               publish_keypress_event(convert_byte(char))
               line = handle_char(line, char)
             end
-          ensure
-            mode.echo_on
           end
         end
         line
       end
 
-      # Read multiple lines,
+      # Read multiple lines and terminate when empty line is submitted.
       #
       # @yield [String] line
       #
