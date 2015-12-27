@@ -17,9 +17,27 @@ module TTY
 
         # Check if value is within range
         class CheckRange
+          def self.float?(value)
+            !/[-+]?(\d*[.])?\d+/.match(value.to_s).nil?
+          end
+
+          def self.int?(value)
+            !/^[-+]?\d+$/.match(value.to_s).nil?
+          end
+
+          def self.cast(value)
+            if float?(value)
+              value.to_f
+            elsif int?(value)
+              value.to_i
+            else
+              value
+            end
+          end
+
           def self.call(question, value)
             if !question.in? ||
-              (question.in? && question.in.include?(value))
+              (question.in? && question.in.include?(cast(value)))
               [value]
             else
               [value, ["Value #{value} is not included in the range #{question.in}"]]
