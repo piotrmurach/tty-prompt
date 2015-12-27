@@ -239,15 +239,15 @@ module TTY
     # Print statement(s) out in red green.
     #
     # @example
-    #   prompt.confirm "Are you sure?"
-    #   prompt.confirm "All is fine!", "This is fine too."
+    #   prompt.ok "Are you sure?"
+    #   prompt.ok "All is fine!", "This is fine too."
     #
     # @param [Array] messages
     #
     # @return [Array] messages
     #
     # @api public
-    def confirm(*args)
+    def ok(*args)
       options = Utils.extract_options!(args)
       args.each { |message| say message, options.merge(color: :green) }
     end
