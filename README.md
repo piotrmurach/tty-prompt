@@ -155,6 +155,8 @@ For example, if you are interested in range type as answer do the following:
 
 ```ruby
 prompt.ask("Provide range of numbers?", convert: :range)
+# Provide range of numbers? 1-10
+# => 1..10
 ```
 
 You can also provide a custom conversion like so:
@@ -163,6 +165,8 @@ You can also provide a custom conversion like so:
 prompt.ask('Ingredients? (comma sep list)') do |q|
   q.convert -> (input) { input.split(/,\s*/) }
 end
+# Ingredients? (comma sep list) milk, eggs, flour
+# => ['milk', 'eggs', 'flour']
 ```
 
 #### 2.1.3 default
@@ -182,7 +186,7 @@ prompt.ask('What is your name?', default: 'Anonymous')
 In order to check that provided input falls inside a range of inputs use the `in` option. For example, if we wanted to ask a user for a single digit in given range we may do following:
 
 ```ruby
-ask("Provide number in range: 0-9") { |q| q.in('0-9') }
+ask("Provide number in range: 0-9?") { |q| q.in('0-9') }
 ```
 
 #### 2.1.6 mask
