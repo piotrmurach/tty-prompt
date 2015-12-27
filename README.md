@@ -46,17 +46,17 @@ Or install it yourself as:
     * [2.1.3 default](#213-default)
     * [2.1.4 echo](#214-echo)
     * [2.1.5 in](#215-in)
-    * [2.1.6 mask](#216-mask)
-    * [2.1.7 modify](#217-modify)
-    * [2.1.8 required](#218-required)
-    * [2.1.9 validate](#219-validate)
+    * [2.1.6 modify](#217-modify)
+    * [2.1.7 required](#218-required)
+    * [2.1.8 validate](#219-validate)
   * [2.2 ask_keypress](#22-ask-keypress)
   * [2.3 ask_multiline](#23-ask-multiline)
-  * [2.4 yes?/no?](#24-yesno)
-  * [2.5 select](#26-select)
-  * [2.6 multi_select](#26-multi_select)
-  * [2.7 say](#27-say)
-  * [2.8 suggest](#28-suggest)
+  * [2.4 mask](#24-mask)
+  * [2.5 yes?/no?](#25-yesno)
+  * [2.6 select](#26-select)
+  * [2.7 multi_select](#27-multi_select)
+  * [2.8 say](#28-say)
+  * [2.9 suggest](#29-suggest)
 
 ## 1. Usage
 
@@ -69,7 +69,22 @@ prompt = TTY::Prompt.new
 and then call `ask` with the question for simple input:
 
 ```ruby
-prompt.ask('Do you like Ruby?', type: :bool) # => true
+prompt.ask('What is your name?', default: ENV['USER'])
+# => What is your name? (piotr)
+```
+
+To confirm input use `yes?`:
+
+```ruby
+prompt.yes?('Do you like Ruby?')
+# => Do you like Ruby? (Y/n)
+```
+
+If you want to input password or secret information use `mask`:
+
+```ruby
+prompt.mask("What is your secret?")
+# => What is your secret? ••••
 ```
 
 Asking question with list of options couldn't be easier using `select` like so:
@@ -127,7 +142,6 @@ convert    # conversion applied to input such as :bool or proc
 default    # default value used if none is provided
 echo       # turn echo on and off (default: true)
 in         # specify range '0-9', '0..9', '0...9' or negative '-1..-9'
-mask       # mask characters i.e '****' (default: false)
 modify     # apply answer modification :upcase, :downcase, :trim, :chomp etc..
 required   # If true, value entered must be non-empty (default: false)
 validate   # regex, proc against which input is checked
@@ -189,8 +203,6 @@ In order to check that provided input falls inside a range of inputs use the `in
 ask("Provide number in range: 0-9?") { |q| q.in('0-9') }
 ```
 
-#### 2.1.6 mask
-
 #### 2.1.7 modify
 
 #### 2.1.8 required
@@ -221,7 +233,7 @@ prompt.ask_keypress("Which one do you prefer a, b, c or d ?")
 
 ### 2.3 ask_multiline
 
-Asking for multiline input can be done with `ask_multiline` method. 
+Asking for multiline input can be done with `ask_multiline` method.
 
 ```ruby
 prompt.ask_multiline("Provide description?")
@@ -229,7 +241,30 @@ prompt.ask_multiline("Provide description?")
 
 The reading of input will terminate when empty line is submitted.
 
-### 2.2 yes?/no?
+
+### 2.4 mask
+
+If you require input of confidential information use `mask` method. By default each character that is printed is replaced by `•` symbol. All configuration options applicable to `ask` method can be used with `mask` as well.
+
+```ruby
+prompt.mask('What is your secret?')
+# => What is your secret? ••••
+```
+
+The masking character can be changed by passing `:mask` option:
+
+```ruby
+prompt.mask('What is your secret?', mask: '\u2665')
+# => What is your secret? ♥♥♥♥♥
+```
+
+If you don't wish to show any output use `:echo` option like so:
+
+```ruby
+prompt.mask('What is your secret?', echo: false)
+```
+
+### 2.5 yes?/no?
 
 In order to display a query asking for boolean input from user use `yes?` like so:
 
@@ -248,12 +283,12 @@ prompt.ask('Do you like Ruby? (Y/n)', convert: :bool)
 There is also the opposite for asking confirmation of negative option:
 
 ```ruby
-prompt.no?('Do you like Ruby?')
+prompt.no?('Do you hate Ruby?')
 # =>
 # Do you like Ruby? (y/N)
 ```
 
-### 2.3 select
+### 2.6 select
 
 For asking questions involving list of options use `select` method by passing the question and possible choices:
 
