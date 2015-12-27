@@ -41,22 +41,22 @@ Or install it yourself as:
 * [1. Usage](#1-usage)
 * [2. Interface](#2-interface)
   * [2.1 ask](#21-ask)
-    * [2.1.1 settings](#211-settings)
-    * [2.1.2 convert](#212-convert)
-    * [2.1.3 default](#213-default)
-    * [2.1.4 echo](#214-echo)
-    * [2.1.5 in](#215-in)
-    * [2.1.6 modify](#217-modify)
-    * [2.1.7 required](#218-required)
-    * [2.1.8 validate](#219-validate)
-  * [2.2 ask_keypress](#22-ask-keypress)
-  * [2.3 ask_multiline](#23-ask-multiline)
-  * [2.4 mask](#24-mask)
-  * [2.5 yes?/no?](#25-yesno)
-  * [2.6 select](#26-select)
-  * [2.7 multi_select](#27-multi_select)
-  * [2.8 say](#28-say)
-  * [2.9 suggest](#29-suggest)
+  * [2.2 settings](#211-settings)
+    * [2.2.1 convert](#212-convert)
+    * [2.2.2 default](#213-default)
+    * [2.2.3 echo](#214-echo)
+    * [2.2.4 in](#215-in)
+    * [2.2.5 modify](#217-modify)
+    * [2.2.6 required](#218-required)
+    * [2.2.7 validate](#219-validate)
+  * [2.3 keypress](#23-keypress)
+  * [2.4 multiline](#24-multiline)
+  * [2.5 mask](#25-mask)
+  * [2.6 yes?/no?](#26-yesno)
+  * [2.7 select](#27-select)
+  * [2.8 multi_select](#28-multi_select)
+  * [2.9 say](#29-say)
+  * [2.10 suggest](#210-suggest)
 
 ## 1. Usage
 
@@ -133,21 +133,21 @@ prompt.ask("What is your name?") do |q|
 end
 ```
 
-#### 2.1.1 settings
+### 2.2 settings
 
-Below is a list of the settings that may be used for customizing `ask` method behaviour:
+Below is a list of the settings that may be used for customizing `ask`, `mask`, `multiline`, `keypress` methods behaviour:
 
 ```ruby
-convert    # conversion applied to input such as :bool or proc
-default    # default value used if none is provided
-echo       # turn echo on and off (default: true)
-in         # specify range '0-9', '0..9', '0...9' or negative '-1..-9'
-modify     # apply answer modification :upcase, :downcase, :trim, :chomp etc..
-required   # If true, value entered must be non-empty (default: false)
-validate   # regex, proc against which input is checked
+:convert    # conversion applied to input such as :bool or proc
+:default    # default value used if none is provided
+:echo       # turn echo on and off (default: true)
+:in         # specify range '0-9', '0..9', '0...9' or negative '-1..-9'
+:modify     # apply answer modification :upcase, :downcase, :trim, :chomp etc..
+:required   # If true, value entered must be non-empty (default: false)
+:validate   # regex, proc against which input is checked
 ```
 
-#### 2.1.2 convert
+#### 2.2.1 convert
 
  The `convert` property is used to convert input to a required type. By default no conversion is performed. The following conversions are provided:
 
@@ -183,7 +183,7 @@ end
 # => ['milk', 'eggs', 'flour']
 ```
 
-#### 2.1.3 default
+#### 2.2.2 default
 
 The `:default` option is used if the user presses return key:
 
@@ -193,9 +193,15 @@ prompt.ask('What is your name?', default: 'Anonymous')
 # What is your name? (Anonymous)
 ```
 
-#### 2.1.4 echo
+#### 2.2.3 echo
 
-#### 2.1.5 in
+To control whether the input is shown back in terminal or not use `:echo` option like so:
+
+```ruby
+prompt.ask('password:', echo: false)
+```
+
+#### 2.2.4 in
 
 In order to check that provided input falls inside a range of inputs use the `in` option. For example, if we wanted to ask a user for a single digit in given range we may do following:
 
@@ -203,11 +209,42 @@ In order to check that provided input falls inside a range of inputs use the `in
 ask("Provide number in range: 0-9?") { |q| q.in('0-9') }
 ```
 
-#### 2.1.7 modify
+#### 2.2.5 modify
 
-#### 2.1.8 required
+Set the `:modify` option if you want to handle whitespace or letter capitalization. 
 
-#### 2.1.9 validate
+```ruby
+prompt.ask('Enter text:') do |q|
+  q.modify :strip, :collapse
+end
+```
+
+Available letter casing settings are:
+```ruby
+:up         # change to small case
+:down       # change to upper case
+:capitalize # capitalize each word
+```
+
+Available whitespace settings are:
+```ruby
+:trim     # remove whitespace from both ends of the input
+:chomp    # remove whitespace at the end of input
+:collapse # reduce all whitespace to single character
+:remove   # remove all whitespace
+```
+
+#### 2.2.6 required
+
+To ensure that input is provided use `:required` option:
+
+```ruby
+prompt.ask("What's your phone number?", required: true)
+# What's your phone number?
+# >> No value provided for required
+```
+
+#### 2.2.7 validate
 
 In order to validate that input matches a given patter you can pass the `validate` option. Validate setting accepts `Regex`, `Proc` or `Symbol`.
 
@@ -223,7 +260,7 @@ The **TTY::Prompt** comes with bult-in validations for `:email` and you can use 
 prompt.ask('What is your email?') { |q| q.validate :email }
 ```
 
-### 2.2 ask_keypress
+### 2.3 keypress
 
 In order to ask question with a single character or keypress answer use `ask_keypress`:
 
@@ -231,7 +268,7 @@ In order to ask question with a single character or keypress answer use `ask_key
 prompt.ask_keypress("Which one do you prefer a, b, c or d ?")
 ```
 
-### 2.3 ask_multiline
+### 2.4 multiline
 
 Asking for multiline input can be done with `ask_multiline` method.
 
@@ -242,7 +279,7 @@ prompt.ask_multiline("Provide description?")
 The reading of input will terminate when empty line is submitted.
 
 
-### 2.4 mask
+### 2.5 mask
 
 If you require input of confidential information use `mask` method. By default each character that is printed is replaced by `•` symbol. All configuration options applicable to `ask` method can be used with `mask` as well.
 
@@ -264,7 +301,7 @@ If you don't wish to show any output use `:echo` option like so:
 prompt.mask('What is your secret?', echo: false)
 ```
 
-### 2.5 yes?/no?
+### 2.6 yes?/no?
 
 In order to display a query asking for boolean input from user use `yes?` like so:
 
@@ -288,7 +325,7 @@ prompt.no?('Do you hate Ruby?')
 # Do you like Ruby? (y/N)
 ```
 
-### 2.6 select
+### 2.7 select
 
 For asking questions involving list of options use `select` method by passing the question and possible choices:
 
@@ -367,7 +404,7 @@ prompt.select("Choose your destiny?", choices, help: "(Bash keyboard)")
 #   Jax
 ```
 
-### 2.4 multi_select
+### 2.8 multi_select
 
 For asking questions involving multiple selection list use `multi_select` method by passing the question and possible choices:
 
@@ -433,7 +470,7 @@ And when you press enter you will see the following selected:
 # => [{score: 20}, {score: 50}]
 ```
 
-### 2.5 say
+### 2.9 say
 
 To simply print message out to stdout use `say` like so:
 
@@ -449,7 +486,7 @@ prompt.warn         # print message(s) in yellow
 prompt.error        # print message(s) in red
 ```
 
-### 2.6 suggest
+### 2.10 suggest
 
 To suggest possible matches for the user input use `suggest` method like so:
 
