@@ -500,17 +500,19 @@ prompt.suggest('b', possible, indent: 4, single_text: 'Perhaps you meant?')
 To simply print message out to stdout use `say` like so:
 
 ```ruby
-prompt.say(...)          # print message to stdout
+prompt.say(...)
 ```
 
-**TTY::Prompt** provides more specific versions of `say` method to better express intenation behind the message:
+The `say` method also accepts option `:color` which supports all the colors provided by [pastel](https://github.com/peter-murach/pastel#3-supported-colors)
+
+**TTY::Prompt** provides more specific versions of `say` method to better express intenation behind the message such as `ok`, `warn` and `error`.
 
 ### 2.11 ok
 
 Print message(s) in green do:
 
 ```ruby
-prompt.ok
+prompt.ok(...)
 ```
 
 ### 2.12 warn
@@ -518,7 +520,7 @@ prompt.ok
 Print message(s) in yellow do:
 
 ```ruby
-prompt.warn
+prompt.warn(...)
 ```
 
 ### 2.13 error
@@ -526,7 +528,7 @@ prompt.warn
 Print message(s) in red do:
 
 ```ruby
-prompt.error
+prompt.error(...)
 ```
 
 ## Contributing
