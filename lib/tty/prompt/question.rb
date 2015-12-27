@@ -38,7 +38,6 @@ module TTY
         @default       = options.fetch(:default) { UndefinedSetting }
         @required      = options.fetch(:required) { false }
         @echo          = options.fetch(:echo) { true }
-        @mask          = options.fetch(:mask) { UndefinedSetting  }
         @in            = options.fetch(:in) { UndefinedSetting }
         @modifier      = options.fetch(:modifier) { [] }
         @validation    = options.fetch(:validation) { UndefinedSetting }
@@ -46,9 +45,6 @@ module TTY
         @convert       = options.fetch(:convert) { UndefinedSetting }
         @color         = options.fetch(:color) { :green }
         @done          = false
-        @done_masked   = false
-
-        @prompt.subscribe(self)
       end
 
       # Call the question
@@ -71,22 +67,22 @@ module TTY
       def render
         @answer = nil
         @input = nil
-        errors = []
+        @errors = []
 
         until @done
           render_question
           result = process_input
 
           if result.failure?
-            errors = result.errors
-            errors.each do |err|
-              @prompt.print(@prompt.cursor.clear_line)
+            @errors = result.errors
+            @errors.each do |err|
+              @prompt.print(@prompt.clear_line)
               @prompt.puts(@prompt.decorate('>>', :red) + ' ' + err)
             end
           else
             @done = true
           end
-          refresh_screen(errors)
+          refresh_screen(@errors)
         end
         render_question
 
@@ -104,12 +100,6 @@ module TTY
           header += @prompt.decorate('(Y/n)', :bright_black) + ' '
         elsif !echo?
           header
-        elsif mask?
-          masked = "#{@mask * "#{@input}".length}"
-          if @done_masked
-            masked = @prompt.decorate(masked, @color)
-          end
-          header += masked
         elsif @done
           header += @prompt.decorate("#{@input}", @color)
         elsif default?
@@ -129,47 +119,17 @@ module TTY
         evaluate_response(@input)
       end
 
-      def keyreturn(event)
-        @done_masked = true
-      end
-
-      def keyenter(event)
-        @done_masked = true
-      end
-
-      def keypress(event)
-        if mask? && echo?
-          if [:backspace, :delete].include?(event.key.name)
-            @input.chop! unless @input.empty?
-          elsif event.value =~ /^[^\e\n\r]/
-            @input += event.value
-          end
-        end
-      end
-
       # Process input
       #
       # @api private
       def read_input
-        if mask? && echo?
-          @done_masked = false
-          @input = ''
-          while !@done_masked
-            @prompt.read_keypress
-            @prompt.print(@prompt.cursor.clear_line)
-            render_question
-          end
-          @prompt.print(@prompt.cursor.clear_line)
-          @input
+        case @read
+        when :keypress
+          @prompt.read_keypress
+        when :multiline
+          @prompt.read_multiline
         else
-          case @read
-          when :keypress
-            @prompt.read_keypress
-          when :multiline
-            @prompt.read_multiline
-          else
-            @prompt.read_line(mask? ? mask : false, echo)
-          end
+          @prompt.read_line(echo)
         end
       end
 
@@ -185,11 +145,8 @@ module TTY
             @prompt.print(@prompt.clear_lines(errors.count, :down))
           end
         end
-        if mask?
-          @prompt.print(@prompt.clear_line)
-        else
-          @prompt.print(@prompt.clear_lines(lines))
-        end
+
+        @prompt.print(@prompt.clear_lines(lines))
       end
 
       # Convert value to expected type
@@ -212,10 +169,18 @@ module TTY
         @read = value
       end
 
+      # Specify answer conversion
+      #
+      # @api public
       def convert(value)
         @convert = value
       end
 
+      # Check if conversion is set
+      #
+      # @return [Boolean]
+      #
+      # @api public
       def convert?
         @convert != UndefinedSetting
       end
@@ -290,27 +255,6 @@ module TTY
         @raw = value
       end
       alias_method :raw?, :raw
-
-      # Set character for masking the STDIN input
-      #
-      # @param [String] char
-      #
-      # @return [self]
-      #
-      # @api public
-      def mask(char = (not_set = true))
-        return @mask if not_set
-        @mask = char
-      end
-
-      # Check if character mask is set
-      #
-      # @return [Boolean]
-      #
-      # @api public
-      def mask?
-        @mask != UndefinedSetting
-      end
 
       # Set expected range of values
       #
