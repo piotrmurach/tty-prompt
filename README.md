@@ -41,22 +41,25 @@ Or install it yourself as:
 * [1. Usage](#1-usage)
 * [2. Interface](#2-interface)
   * [2.1 ask](#21-ask)
-  * [2.2 settings](#211-settings)
-    * [2.2.1 convert](#212-convert)
-    * [2.2.2 default](#213-default)
-    * [2.2.3 echo](#214-echo)
-    * [2.2.4 in](#215-in)
-    * [2.2.5 modify](#217-modify)
-    * [2.2.6 required](#218-required)
-    * [2.2.7 validate](#219-validate)
+  * [2.2 settings](#22-settings)
+    * [2.2.1 convert](#221-convert)
+    * [2.2.2 default](#222-default)
+    * [2.2.3 echo](#223-echo)
+    * [2.2.4 in](#224-in)
+    * [2.2.5 modify](#225-modify)
+    * [2.2.6 required](#226-required)
+    * [2.2.7 validate](#227-validate)
   * [2.3 keypress](#23-keypress)
   * [2.4 multiline](#24-multiline)
   * [2.5 mask](#25-mask)
   * [2.6 yes?/no?](#26-yesno)
   * [2.7 select](#27-select)
   * [2.8 multi_select](#28-multi_select)
-  * [2.9 say](#29-say)
-  * [2.10 suggest](#210-suggest)
+  * [2.9 suggest](#29-suggest)
+  * [2.10 say](#210-say)
+  * [2.11 ok](#211-ok)
+  * [2.12 warn](#212-warn)
+  * [2.13 error](#213-warn)
 
 ## 1. Usage
 
@@ -470,23 +473,7 @@ And when you press enter you will see the following selected:
 # => [{score: 20}, {score: 50}]
 ```
 
-### 2.9 say
-
-To simply print message out to stdout use `say` like so:
-
-```ruby
-prompt.say(...)          # print message to stdout
-```
-
-**TTY::Prompt** provides more specific versions of `say` method to better express intenation behind the message:
-
-```ruby
-prompt.confirm      # print message(s) in green
-prompt.warn         # print message(s) in yellow
-prompt.error        # print message(s) in red
-```
-
-### 2.10 suggest
+### 2.9 suggest
 
 To suggest possible matches for the user input use `suggest` method like so:
 
@@ -506,6 +493,40 @@ prompt.suggest('b', possible, indent: 4, single_text: 'Perhaps you meant?')
 # =>
 # Perhaps you meant?
 #     blame
+```
+
+### 2.10 say
+
+To simply print message out to stdout use `say` like so:
+
+```ruby
+prompt.say(...)          # print message to stdout
+```
+
+**TTY::Prompt** provides more specific versions of `say` method to better express intenation behind the message:
+
+### 2.11 ok
+
+Print message(s) in green do:
+
+```ruby
+prompt.ok
+```
+
+### 2.12 warn
+
+Print message(s) in yellow do:
+
+```ruby
+prompt.warn
+```
+
+### 2.13 error
+
+Print message(s) in red do:
+
+```ruby
+prompt.error
 ```
 
 ## Contributing
