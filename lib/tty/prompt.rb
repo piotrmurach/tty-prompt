@@ -106,6 +106,22 @@ module TTY
       ask(message, *args, &block)
     end
 
+    # Ask masked question
+    #
+    # @example
+    #   propmt = TTY::Prompt.new
+    #   prompt.mask("What is your secret?")
+    #
+    # @return [TTY::Prompt::MaskQuestion]
+    #
+    # @api public
+    def mask(message, *args, &block)
+      options = Utils.extract_options!(args)
+
+      question = MaskQuestion.new(self, options)
+      question.call(message, &block)
+    end
+
     # Ask a question with a list of options
     #
     # @example
