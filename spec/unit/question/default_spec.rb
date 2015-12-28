@@ -12,8 +12,9 @@ RSpec.describe TTY::Prompt::Question, '#default' do
     expect(answer).to eq(name)
     expect(prompt.output.string).to eq([
       "What is your name? \e[90m(Anonymous)\e[0m ",
-      "\e[1A\e[1000D\e[K",
-      "What is your name? \e[32mAnonymous\e[0m"
+      "\e[1000D\e[K\e[1A",
+      "\e[1000D\e[K",
+      "What is your name? \e[32mAnonymous\e[0m\n"
     ].join)
   end
 
@@ -23,8 +24,9 @@ RSpec.describe TTY::Prompt::Question, '#default' do
     expect(answer).to eq(name)
     expect(prompt.output.string).to eq([
       "What is your name? \e[90m(Anonymous)\e[0m ",
-      "\e[1A\e[1000D\e[K",
-      "What is your name? \e[32mAnonymous\e[0m"
+      "\e[1000D\e[K\e[1A",
+      "\e[1000D\e[K",
+      "What is your name? \e[32mAnonymous\e[0m\n"
     ].join)
   end
 end

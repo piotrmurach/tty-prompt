@@ -11,8 +11,9 @@ RSpec.describe TTY::Prompt, '#yes?' do
       expect(prompt.yes?("Are you a human?")).to eq(true)
       expect(prompt.output.string).to eq([
         "Are you a human? \e[90m(Y/n)\e[0m ",
-        "\e[1A\e[1000D\e[K",
-        "Are you a human? \e[32myes\e[0m"
+        "\e[1000D\e[K\e[1A",
+        "\e[1000D\e[K",
+        "Are you a human? \e[32myes\e[0m\n"
       ].join)
     end
 
@@ -22,8 +23,9 @@ RSpec.describe TTY::Prompt, '#yes?' do
       expect(prompt.yes?("Are you a human?")).to eq(false)
       expect(prompt.output.string).to eq([
         "Are you a human? \e[90m(Y/n)\e[0m ",
-        "\e[1A\e[1000D\e[K",
-        "Are you a human? \e[32mno\e[0m"
+        "\e[1000D\e[K\e[1A",
+        "\e[1000D\e[K",
+        "Are you a human? \e[32mno\e[0m\n"
       ].join)
     end
 
@@ -33,8 +35,9 @@ RSpec.describe TTY::Prompt, '#yes?' do
       expect(prompt.yes?("Are you a human?", default: true)).to eq(true)
       expect(prompt.output.string).to eq([
         "Are you a human? \e[90m(Y/n)\e[0m ",
-        "\e[1A\e[1000D\e[K",
-        "Are you a human? \e[32mtrue\e[0m"
+        "\e[1000D\e[K\e[1A",
+        "\e[1000D\e[K",
+        "Are you a human? \e[32mtrue\e[0m\n"
       ].join)
     end
   end
@@ -46,8 +49,9 @@ RSpec.describe TTY::Prompt, '#yes?' do
       expect(prompt.no?("Are you a human?")).to eq(true)
       expect(prompt.output.string).to eq([
         "Are you a human? \e[90m(Y/n)\e[0m ",
-        "\e[1A\e[1000D\e[K",
-        "Are you a human? \e[32mno\e[0m"
+        "\e[1000D\e[K\e[1A",
+        "\e[1000D\e[K",
+        "Are you a human? \e[32mno\e[0m\n"
       ].join)
     end
 
@@ -57,8 +61,9 @@ RSpec.describe TTY::Prompt, '#yes?' do
       expect(prompt.no?("Are you a human?")).to eq(false)
       expect(prompt.output.string).to eq([
         "Are you a human? \e[90m(Y/n)\e[0m ",
-        "\e[1A\e[1000D\e[K",
-        "Are you a human? \e[32myes\e[0m"
+        "\e[1000D\e[K\e[1A",
+        "\e[1000D\e[K",
+        "Are you a human? \e[32myes\e[0m\n"
       ].join)
     end
   end

@@ -19,8 +19,9 @@ RSpec.describe TTY::Prompt::Question, 'convert bool' do
     expect(response).to eql(true)
     expect(prompt.output.string).to eq([
       "Do you read books? \e[90m(Y/n)\e[0m ",
-      "\e[1A\e[1000D\e[K",
-      "Do you read books? \e[32mtrue\e[0m"
+      "\e[1000D\e[K\e[1A",
+      "\e[1000D\e[K",
+      "Do you read books? \e[32mtrue\e[0m\n"
     ].join)
   end
 

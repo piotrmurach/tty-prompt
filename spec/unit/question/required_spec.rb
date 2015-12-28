@@ -10,8 +10,9 @@ RSpec.describe TTY::Prompt::Question, '#required' do
     prompt.ask('What is your name?') { |q| q.required(true) }
     expect(prompt.output.string).to eq([
       "What is your name? ",
-      "\e[1A\e[1000D\e[K",
-      "What is your name? \e[32mPiotr\e[0m"
+      "\e[1000D\e[K\e[1A",
+      "\e[1000D\e[K",
+      "What is your name? \e[32mPiotr\e[0m\n"
     ].join)
   end
 
@@ -21,8 +22,9 @@ RSpec.describe TTY::Prompt::Question, '#required' do
     prompt.ask('What is your name?') { |q| q.required(true) }
     expect(prompt.output.string).to eq([
       "What is your name? ",
-      "\e[1A\e[1000D\e[K",
-      "What is your name? \e[32mPiotr\e[0m"
+      "\e[1000D\e[K\e[1A",
+      "\e[1000D\e[K",
+      "What is your name? \e[32mPiotr\e[0m\n"
     ].join)
   end
 
