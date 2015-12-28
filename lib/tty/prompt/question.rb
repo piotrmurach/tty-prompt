@@ -34,17 +34,19 @@ module TTY
       #
       # @api public
       def initialize(prompt, options = {})
-        @prompt        = prompt
-        @default       = options.fetch(:default) { UndefinedSetting }
-        @required      = options.fetch(:required) { false }
-        @echo          = options.fetch(:echo) { true }
-        @in            = options.fetch(:in) { UndefinedSetting }
-        @modifier      = options.fetch(:modifier) { [] }
-        @validation    = options.fetch(:validation) { UndefinedSetting }
-        @read          = options.fetch(:read) { UndefinedSetting }
-        @convert       = options.fetch(:convert) { UndefinedSetting }
-        @color         = options.fetch(:color) { :green }
-        @done          = false
+        @prompt     = prompt
+        @default    = options.fetch(:default) { UndefinedSetting }
+        @required   = options.fetch(:required) { false }
+        @echo       = options.fetch(:echo) { true }
+        @in         = options.fetch(:in) { UndefinedSetting }
+        @modifier   = options.fetch(:modifier) { [] }
+        @validation = options.fetch(:validation) { UndefinedSetting }
+        @read       = options.fetch(:read) { UndefinedSetting }
+        @convert    = options.fetch(:convert) { UndefinedSetting }
+        @color      = options.fetch(:color) { :green }
+        @done       = false
+        @answer     = nil
+        @input      = nil
       end
 
       # Call the question
@@ -65,24 +67,12 @@ module TTY
       #
       # @api private
       def render
-        @answer = nil
-        @input = nil
-        @errors = []
-
         until @done
           render_question
           result = process_input
-
-          if result.failure?
-            @errors = result.errors
-            @errors.each do |err|
-              @prompt.print(@prompt.clear_line)
-              @prompt.puts(@prompt.decorate('>>', :red) + ' ' + err)
-            end
-          else
-            @done = true
-          end
-          refresh_screen(@errors)
+          errors = result.errors
+          render_error_or_finish(result)
+          refresh_screen(errors.count)
         end
         render_question
 
@@ -134,17 +124,35 @@ module TTY
         end
       end
 
+      # Handle error condition
+      #
+      # @api private
+      def render_error_or_finish(result)
+        if result.failure?
+          result.errors.each do |err|
+            @prompt.print(@prompt.clear_line)
+            @prompt.print(@prompt.decorate('>>', :red) + ' ' + err)
+          end
+          @prompt.print(@prompt.cursor.up(result.errors.count))
+        else
+          @done = true
+          if result.errors.count.nonzero?
+            @prompt.print(@prompt.cursor.down(result.errors.count))
+          end
+        end
+      end
+
       # Determine area of the screen to clear
+      #
+      # @param [Integer] errors
       #
       # @api private
       def refresh_screen(errors = nil)
-        lines = @message.scan("\n").length + (!echo? ? 1 : 2) # clear user enter
+        lines = @message.scan("\n").length
+        lines += ((!echo? || errors.nonzero?) ? 1 : 2) # clear user enter
 
-        if errors.count.nonzero?
-          @prompt.print(@prompt.cursor.up(errors.count))
-          if @done
-            @prompt.print(@prompt.clear_lines(errors.count, :down))
-          end
+        if errors.nonzero? && @done
+          lines += errors
         end
 
         @prompt.print(@prompt.clear_lines(lines))
