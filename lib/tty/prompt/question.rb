@@ -45,8 +45,15 @@ module TTY
         @convert    = options.fetch(:convert) { UndefinedSetting }
         @color      = options.fetch(:color) { :green }
         @done       = false
-        @answer     = nil
         @input      = nil
+
+        @evaluator = Evaluator.new(self)
+
+        @evaluator << CheckRequired
+        @evaluator << CheckDefault
+        @evaluator << CheckRange
+        @evaluator << CheckValidation
+        @evaluator << CheckModifier
       end
 
       # Call the question
@@ -75,10 +82,7 @@ module TTY
           refresh_screen(errors.count)
         end
         render_question
-
-        @answer = convert_result(result.value)
-      ensure
-        @answer
+        convert_result(result.value)
       end
 
       # Render question
@@ -107,7 +111,7 @@ module TTY
         if blank?(@input)
           @input = default? ? default : nil
         end
-        evaluate_response(@input)
+        @evaluator.(@input)
       end
 
       # Process input
@@ -287,25 +291,6 @@ module TTY
         @in != UndefinedSetting
       end
 
-      # Check if response matches all the requirements set by the question
-      #
-      # @param [Object] value
-      #
-      # @return [Object]
-      #
-      # @api private
-      def evaluate_response(input)
-        evaluator = Evaluator.new(self)
-
-        evaluator << CheckRequired
-        evaluator << CheckDefault
-        evaluator << CheckRange
-        evaluator << CheckValidation
-        evaluator << CheckModifier
-
-        evaluator.(input)
-      end
-
       def blank?(value)
         value.nil? ||
         value.respond_to?(:empty?) && value.empty? ||
@@ -316,8 +301,10 @@ module TTY
         "#{message}"
       end
 
+      # String representation of this question
+      # @api public
       def inspect
-        "#<Question @message=#{message}>"
+        "#<Question @message=#{message}, @input=#{@input}>"
       end
     end # Question
   end # Prompt
