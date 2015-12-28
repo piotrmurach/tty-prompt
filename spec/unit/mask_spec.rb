@@ -20,9 +20,9 @@ RSpec.describe TTY::Prompt, '#mask' do
       "\e[1000D\e[K",
       "What is your password? ••••",
       "\e[1000D\e[K",
-      "What is your password? \e[32m••••\e[0m",
-      "\e[1000D\e[K\e[1000D\e[K",
-      "What is your password? \e[32m••••\e[0m"
+      "What is your password? \e[32m••••\e[0m\n",
+      "\e[1000D\e[K\e[1A\e[1000D\e[K",
+      "What is your password? \e[32m••••\e[0m\n"
     ].join)
   end
 
@@ -42,9 +42,9 @@ RSpec.describe TTY::Prompt, '#mask' do
       "\e[1000D\e[K",
       "What is your password? ****",
       "\e[1000D\e[K",
-      "What is your password? \e[32m****\e[0m",
-      "\e[1000D\e[K\e[1000D\e[K",
-      "What is your password? \e[32m****\e[0m",
+      "What is your password? \e[32m****\e[0m\n",
+      "\e[1000D\e[K\e[1A\e[1000D\e[K",
+      "What is your password? \e[32m****\e[0m\n",
     ].join)
   end
 
@@ -62,9 +62,9 @@ RSpec.describe TTY::Prompt, '#mask' do
       "\e[1000D\e[K",
       "What is your password? ♥♥♥",
       "\e[1000D\e[K",
-      "What is your password? \e[32m♥♥♥\e[0m",
-      "\e[1000D\e[K\e[1000D\e[K",
-      "What is your password? \e[32m♥♥♥\e[0m",
+      "What is your password? \e[32m♥♥♥\e[0m\n",
+      "\e[1000D\e[K\e[1A\e[1000D\e[K",
+      "What is your password? \e[32m♥♥♥\e[0m\n",
     ].join)
   end
 
@@ -87,9 +87,9 @@ RSpec.describe TTY::Prompt, '#mask' do
       "\e[1000D\e[K",
       "What is your password? ",
       "\e[1000D\e[K",
-      "What is your password? ",
-      "\e[1000D\e[K\e[1000D\e[K",
-      "What is your password? ",
+      "What is your password? \n",
+      "\e[1000D\e[K",
+      "What is your password? \n",
     ].join)
   end
 end

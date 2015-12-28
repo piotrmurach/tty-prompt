@@ -11,8 +11,9 @@ module TTY
       # @api public
       def initialize(prompt, options = {})
         super
-        @mask = options.fetch(:mask) { Symbols::ITEM_SECURE }
+        @mask        = options.fetch(:mask) { Symbols::ITEM_SECURE }
         @done_masked = false
+        @failure     = false
         @prompt.subscribe(self)
       end
 
@@ -51,12 +52,18 @@ module TTY
         header = "#{prompt.prefix}#{message} "
         if echo?
           masked = "#{@mask * "#{@input}".length}"
-          if @done_masked
+          if @done_masked && !@failure
             masked = @prompt.decorate(masked, @color)
           end
           header += masked
         end
         @prompt.print(header)
+        @prompt.print("\n") if @done
+      end
+
+      def render_error_or_finish(result)
+        @failure = result.failure?
+        super
       end
 
       # Read input from user masked by character
@@ -70,19 +77,8 @@ module TTY
           @prompt.print(@prompt.clear_line)
           render_question
         end
-        @prompt.print(@prompt.clear_line)
+        @prompt.print("\n")
         @input
-      end
-
-      # Clear input line
-      #
-      # @api privatek
-      def refresh_screen(errors = nil)
-        @prompt.print(@prompt.clear_line)
-      end
-
-      def inspect
-        "#<MaskedQuestion @message=#{message}>"
       end
     end # MaskQuestion
   end # Prompt
