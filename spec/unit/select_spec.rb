@@ -15,8 +15,8 @@ RSpec.describe TTY::Prompt, '#select' do
       "\e[?25lWhat size? \e[90m(Use arrow keys, press Enter to select)\e[0m\n",
       "\e[32m‣ Large\e[0m\n",
       "  Medium\n",
-      "  Small\n",
-      "\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K",
+      "  Small",
+      "\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K",
       "What size? \e[32mLarge\e[0m\n\e[?25h"
     ].join)
   end
@@ -30,8 +30,8 @@ RSpec.describe TTY::Prompt, '#select' do
       "\e[?25lWhat size? \e[90m(Use arrow keys, press Enter to select)\e[0m\n",
       "\e[32m‣ large\e[0m\n",
       "  medium\n",
-      "  small\n",
-      "\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K",
+      "  small",
+      "\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K",
       "What size? \e[32mlarge\e[0m\n\e[?25h"
     ].join)
   end
@@ -49,8 +49,8 @@ RSpec.describe TTY::Prompt, '#select' do
       "\e[?25lWhat size? \e[90m(Use arrow keys, press Enter to select)\e[0m\n",
       "\e[32m‣ Large\e[0m\n",
       "  Medium\n",
-      "  Small\n",
-      "\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K",
+      "  Small",
+      "\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K",
       "What size? \e[32mLarge\e[0m\n\e[?25h"
     ].join)
   end
@@ -68,8 +68,8 @@ RSpec.describe TTY::Prompt, '#select' do
       "\e[?25lWhat size? \e[90m(Use arrow keys, press Enter to select)\e[0m\n",
       "\e[32m‣ large\e[0m\n",
       "  medium\n",
-      "  small\n",
-      "\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K",
+      "  small",
+      "\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K",
       "What size? \e[32mlarge\e[0m\n\e[?25h"
     ].join)
   end
@@ -86,8 +86,8 @@ RSpec.describe TTY::Prompt, '#select' do
       "\e[?25lWhat size? \e[90m(Use arrow keys, press Enter to select)\e[0m\n",
       "\e[32m‣ Large\e[0m\n",
       "  Medium\n",
-      "  Small\n",
-      "\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K",
+      "  Small",
+      "\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K",
       "What size? \e[32mLarge\e[0m\n\e[?25h"
     ].join)
   end
@@ -107,8 +107,8 @@ RSpec.describe TTY::Prompt, '#select' do
       "\e[?25lWhat size? \e[90m(Use arrow keys, press Enter to select)\e[0m\n",
       "  large\n",
       "\e[32m‣ medium\e[0m\n",
-      "  small\n",
-      "\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K",
+      "  small",
+      "\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K",
       "What size? \e[32mmedium\e[0m\n\e[?25h"
     ].join)
   end
@@ -126,8 +126,8 @@ RSpec.describe TTY::Prompt, '#select' do
       "\e[?25lWhat size? \e[90m(Use arrow keys, press Enter to select)\e[0m\n",
       "  large\n",
       "\e[32m‣ medium\e[0m\n",
-      "  small\n",
-      "\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K",
+      "  small",
+      "\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K",
       "What size? \e[32mmedium\e[0m\n\e[?25h"
     ].join)
   end
@@ -141,8 +141,8 @@ RSpec.describe TTY::Prompt, '#select' do
       "\e[?25lWhat size? \e[90m(Use arrow keys, press Enter to select)\e[0m\n",
       "  Large\n",
       "\e[32m‣ Medium\e[0m\n",
-      "  Small\n",
-      "\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K",
+      "  Small",
+      "\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K",
       "What size? \e[32mMedium\e[0m\n\e[?25h"
     ].join)
   end
@@ -157,8 +157,8 @@ RSpec.describe TTY::Prompt, '#select' do
       "\e[?25lWhat size? \e[90m(Use arrow keys, press Enter to select)\e[0m\n",
       "\e[34m> Large\e[0m\n",
       "  Medium\n",
-      "  Small\n",
-      "\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K",
+      "  Small",
+      "\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K",
       "What size? \e[34mLarge\e[0m\n\e[?25h"
     ].join)
   end
@@ -173,8 +173,8 @@ RSpec.describe TTY::Prompt, '#select' do
       "\e[?25lWhat size? \e[90m(Bash keyboard)\e[0m\n",
       "\e[32m‣ Large\e[0m\n",
       "  Medium\n",
-      "  Small\n",
-      "\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K",
+      "  Small",
+      "\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K",
       "What size? \e[32mLarge\e[0m\n\e[?25h"
     ].join)
   end
@@ -189,8 +189,8 @@ RSpec.describe TTY::Prompt, '#select' do
       "\e[?25l[?] What size? \e[90m(Use arrow keys, press Enter to select)\e[0m\n",
       "\e[32m‣ Large\e[0m\n",
       "  Medium\n",
-      "  Small\n",
-      "\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K",
+      "  Small",
+      "\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K",
       "[?] What size? \e[32mLarge\e[0m\n\e[?25h"
     ].join)
   end

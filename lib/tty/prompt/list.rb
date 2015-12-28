@@ -202,7 +202,8 @@ module TTY
                     else
                       Symbols::SPACE * 2 + choice.name
                     end
-          @prompt.puts(message)
+          newline = (index == @choices.length - 1) ? '' : "\n"
+          @prompt.print(message + newline)
         end
       end
     end # List
