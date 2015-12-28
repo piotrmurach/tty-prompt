@@ -1,6 +1,6 @@
 # Change log
 
-## [v0.3.0] - 2015-12-**
+## [v0.3.0] - 2015-12-28
 
 ### Added
 * Add prefix option to prompt to customize #ask, #select, #multi_select
