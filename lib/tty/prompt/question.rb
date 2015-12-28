@@ -79,7 +79,7 @@ module TTY
           result = process_input
           errors = result.errors
           render_error_or_finish(result)
-          refresh_screen(errors.count)
+          refresh(errors.count)
         end
         render_question
         convert_result(result.value)
@@ -151,7 +151,7 @@ module TTY
       # @param [Integer] errors
       #
       # @api private
-      def refresh_screen(errors = nil)
+      def refresh(errors = nil)
         lines = @message.scan("\n").length
         lines += ((!echo? || errors.nonzero?) ? 1 : 2) # clear user enter
 
@@ -304,7 +304,7 @@ module TTY
       # String representation of this question
       # @api public
       def inspect
-        "#<Question @message=#{message}, @input=#{@input}>"
+        "#<#{self.class.name} @message=#{message}, @input=#{@input}>"
       end
     end # Question
   end # Prompt
