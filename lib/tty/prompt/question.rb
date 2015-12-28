@@ -106,6 +106,7 @@ module TTY
           header += @prompt.decorate("(#{default})", :bright_black) + ' '
         end
         @prompt.print(header)
+        @prompt.print("\n") if @done
       end
 
       # Decide how to handle input from user
@@ -137,7 +138,7 @@ module TTY
       #
       # @api private
       def refresh_screen(errors = nil)
-        lines = @message.scan("\n").length + 1
+        lines = @message.scan("\n").length + (!echo? ? 1 : 2) # clear user enter
 
         if errors.count.nonzero?
           @prompt.print(@prompt.cursor.up(errors.count))
