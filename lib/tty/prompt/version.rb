@@ -2,6 +2,6 @@
 
 module TTY
   class Prompt
-    VERSION = "0.2.0"
+    VERSION = "0.3.0"
   end # Prompt
 end # TTY
