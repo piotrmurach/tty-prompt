@@ -1,5 +1,7 @@
 # encoding: utf-8
 
+require 'spec_helper'
+
 RSpec.describe TTY::Prompt::Question, 'convert file' do
   it "converts to file" do
     file = double(:file)
