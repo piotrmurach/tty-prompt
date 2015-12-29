@@ -105,7 +105,7 @@ Also, asking multiple choice questions is a breeze with `multi_select`:
 
 ```ruby
 choices = %w(vodka beer wine whisky bourbon)
-prompt.select("Select drinks?", choices)
+prompt.multi_select("Select drinks?", choices)
 # =>
 #
 # Select drinks? (Use arrow keys, press Space to select and Enter to finish)"
@@ -224,8 +224,8 @@ end
 
 Available letter casing settings are:
 ```ruby
-:up         # change to small case
-:down       # change to upper case
+:up         # change to upper case
+:down       # change to small case
 :capitalize # capitalize each word
 ```
 
@@ -265,22 +265,21 @@ prompt.ask('What is your email?') { |q| q.validate :email }
 
 ### 2.3 keypress
 
-In order to ask question with a single character or keypress answer use `ask_keypress`:
+In order to ask question with a single character or keypress answer use `keypress`:
 
 ```ruby
-prompt.ask_keypress("Which one do you prefer a, b, c or d ?")
+prompt.keypress("Which one do you prefer a, b, c or d ?")
 ```
 
 ### 2.4 multiline
 
-Asking for multiline input can be done with `ask_multiline` method.
+Asking for multiline input can be done with `multiline` method.
 
 ```ruby
-prompt.ask_multiline("Provide description?")
+prompt.multiline("Provide description?")
 ```
 
 The reading of input will terminate when empty line is submitted.
-
 
 ### 2.5 mask
 
