@@ -324,7 +324,7 @@ There is also the opposite for asking confirmation of negative option:
 ```ruby
 prompt.no?('Do you hate Ruby?')
 # =>
-# Do you like Ruby? (y/N)
+# Do you hate Ruby? (y/N)
 ```
 
 ### 2.7 select
