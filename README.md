@@ -340,7 +340,7 @@ prompt.select("Choose your destiny?", %w(Scorpion Kano Jax))
 #   Jax
 ```
 
-You can also provide options through DSL using the `choice` method for single entry and/or `choices` call for more than one choice:
+You can also provide options through DSL using the `choice` method for single entry and/or `choices` for more than one choice:
 
 ```ruby
 prompt.select("Choose your destiny?") do |menu|
