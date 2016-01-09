@@ -394,6 +394,23 @@ end
 # ‣ Jax
 ```
 
+For ordered choices set `numpad` to `true`. In that way, you can use arrows keys and and numbers (0-9) to select the item.
+
+```ruby
+prompt.select("Choose your destiny?") do |menu|
+  menu.numpad true
+
+  menu.choice 'Scorpion', 1
+  menu.choice 'Kano', 2
+  menu.choice 'Jax', 3
+end
+# =>
+# Choose your destiny? (Use arrow keys, press Enter to select)
+#   1. Scorpion
+#   2. Kano
+# ‣ 3. Jax
+```
+
 You can configure help message, marker like so
 
 ```ruby
@@ -464,6 +481,28 @@ end
 #   ⬡ whisky
 # ‣ ⬢ bourbon
 ```
+
+Like `select`, for ordered choices set `numpad` to `true`. In that way, you can use arrows keys and and numbers (0-9) to select the item.
+
+```ruby
+prompt.multi_select("Select drinks?") do |menu|
+  menu.numpad true
+
+  menu.choice :vodka,   {score: 10}
+  menu.choice :beer,    {score: 20}
+  menu.choice :wine,    {score: 30}
+  menu.choice :whisky,  {score: 40}
+  menu.choice :bourbon, {score: 50}
+end
+# =>
+# Select drinks? beer, bourbon
+#   ⬡ 1. vodka
+#   ⬢ 2. beer
+#   ⬡ 3. wine
+#   ⬡ 4. whisky
+# ‣ ⬢ 5. bourbon
+```
+
 
 And when you press enter you will see the following selected:
 

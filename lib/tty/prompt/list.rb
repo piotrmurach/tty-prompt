@@ -19,12 +19,15 @@ module TTY
       #   the color for the selected item, defualts to :green
       # @option options [Symbol] :marker
       #   the marker for the selected item
+      # @option options [Symbol] :numpad, defaults to false
+      #   turn on the option to select @active index using numbers
       #
       # @api public
       def initialize(prompt, options = {})
         @prompt       = prompt
         @first_render = true
         @done         = false
+        @numpad       = options.fetch(:numpad) { false }
         @default      = Array[options.fetch(:default) { 1 }]
         @active       = @default.first
         @choices      = Choices.new
@@ -47,6 +50,13 @@ module TTY
       # @api public
       def default(*default_values)
         @default = default_values
+      end
+
+      # Set selecting active index using number pad
+      #
+      # @api public
+      def numpad(value)
+        @numpad = value
       end
 
       # Add a single choice
@@ -82,6 +92,17 @@ module TTY
         block.call(self) if block
         setup_defaults
         render
+      end
+
+      def keynum(event)
+        @numpad_value = (@numpad_value or '') + event.value
+        value = @numpad_value.to_i
+        if (value > @choices.count)
+          @numpad_value = event.value
+          value = @numpad_value.to_i
+        end
+
+        @active = value if (value <= @choices.count)
       end
 
       def keyescape(event)
@@ -196,11 +217,12 @@ module TTY
       # @api private
       def render_menu
         @choices.each_with_index do |choice, index|
+          num = (@numpad ? (index + 1).to_s + Symbols::DOT + Symbols::SPACE : '')
           message = if index + 1 == @active
-                      selected = @marker + Symbols::SPACE + choice.name
+                      selected = @marker + Symbols::SPACE + num + choice.name
                       @prompt.decorate("#{selected}", @color)
                     else
-                      Symbols::SPACE * 2 + choice.name
+                      Symbols::SPACE * 2 + num + choice.name
                     end
           newline = (index == @choices.length - 1) ? '' : "\n"
           @prompt.print(message + newline)
