@@ -3,7 +3,6 @@
 module TTY
   class Prompt
     module Symbols
-      DOT = "."
       SPACE = " "
       ITEM_SECURE     = "•"
       ITEM_SELECTED   = "‣"

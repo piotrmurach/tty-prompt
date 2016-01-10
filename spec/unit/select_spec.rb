@@ -97,7 +97,7 @@ RSpec.describe TTY::Prompt, '#select' do
     prompt.input.rewind
     value = prompt.select('What size?') do |menu|
               menu.default 2
-              menu.numpad true
+              menu.enum '.'
 
               menu.choice :large, 1
               menu.choice :medium, 2
@@ -117,7 +117,7 @@ RSpec.describe TTY::Prompt, '#select' do
   it "sets choice value to proc and executes it" do
     prompt.input << " "
     prompt.input.rewind
-    value = prompt.select('What size?', default: 2, numpad: true) do |menu|
+    value = prompt.select('What size?', default: 2, enum: ')') do |menu|
               menu.choice :large, 1
               menu.choice :medium do 'Good choice!' end
               menu.choice :small, 3
@@ -125,9 +125,9 @@ RSpec.describe TTY::Prompt, '#select' do
     expect(value).to eq('Good choice!')
     expect(prompt.output.string).to eq([
       "\e[?25lWhat size? \e[90m(Use arrow keys, press Enter to select)\e[0m\n",
-      "  1. large\n",
-      "\e[32m‣ 2. medium\e[0m\n",
-      "  3. small",
+      "  1) large\n",
+      "\e[32m‣ 2) medium\e[0m\n",
+      "  3) small",
       "\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K",
       "What size? \e[32mmedium\e[0m\n\e[?25h"
     ].join)
@@ -137,7 +137,7 @@ RSpec.describe TTY::Prompt, '#select' do
     choices = %w(Large Medium Small)
     prompt.input << " "
     prompt.input.rewind
-    expect(prompt.select('What size?', choices, default: 2, numpad: true)).to eq('Medium')
+    expect(prompt.select('What size?', choices, default: 2, enum: '.')).to eq('Medium')
     expect(prompt.output.string).to eq([
       "\e[?25lWhat size? \e[90m(Use arrow keys, press Enter to select)\e[0m\n",
       "  1. Large\n",

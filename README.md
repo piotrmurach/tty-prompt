@@ -214,7 +214,7 @@ ask("Provide number in range: 0-9?") { |q| q.in('0-9') }
 
 #### 2.2.5 modify
 
-Set the `:modify` option if you want to handle whitespace or letter capitalization. 
+Set the `:modify` option if you want to handle whitespace or letter capitalization.
 
 ```ruby
 prompt.ask('Enter text:') do |q|
@@ -394,11 +394,11 @@ end
 # ‣ Jax
 ```
 
-For ordered choices set `numpad` to `true`. In that way, you can use arrows keys and and numbers (0-9) to select the item.
+For ordered choices set `enum` to any delimiter String. In that way, you can use arrows keys and and numbers (0-9) to select the item.
 
 ```ruby
 prompt.select("Choose your destiny?") do |menu|
-  menu.numpad true
+  menu.enum '.'
 
   menu.choice 'Scorpion', 1
   menu.choice 'Kano', 2
@@ -482,11 +482,11 @@ end
 # ‣ ⬢ bourbon
 ```
 
-Like `select`, for ordered choices set `numpad` to `true`. In that way, you can use arrows keys and and numbers (0-9) to select the item.
+Like `select`, for ordered choices set `enum` to any delimiter String. In that way, you can use arrows keys and and numbers (0-9) to select the item.
 
 ```ruby
 prompt.multi_select("Select drinks?") do |menu|
-  menu.numpad true
+  menu.enum ')'
 
   menu.choice :vodka,   {score: 10}
   menu.choice :beer,    {score: 20}
@@ -496,11 +496,11 @@ prompt.multi_select("Select drinks?") do |menu|
 end
 # =>
 # Select drinks? beer, bourbon
-#   ⬡ 1. vodka
-#   ⬢ 2. beer
-#   ⬡ 3. wine
-#   ⬡ 4. whisky
-# ‣ ⬢ 5. bourbon
+#   ⬡ 1) vodka
+#   ⬢ 2) beer
+#   ⬡ 3) wine
+#   ⬡ 4) whisky
+# ‣ ⬢ 5) bourbon
 ```
 
 
