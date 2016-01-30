@@ -394,7 +394,7 @@ end
 # ‣ Jax
 ```
 
-For ordered choices set `enum` to any delimiter String. In that way, you can use arrows keys and and numbers (0-9) to select the item.
+For ordered choices set `enum` to any delimiter String. In that way, you can use arrows keys and numbers (0-9) to select the item.
 
 ```ruby
 prompt.select("Choose your destiny?") do |menu|
@@ -405,7 +405,7 @@ prompt.select("Choose your destiny?") do |menu|
   menu.choice 'Jax', 3
 end
 # =>
-# Choose your destiny? (Use arrow keys, press Enter to select)
+# Choose your destiny? (Use arrow or number (0-9) keys, press Enter to select)
 #   1. Scorpion
 #   2. Kano
 # ‣ 3. Jax
@@ -482,7 +482,7 @@ end
 # ‣ ⬢ bourbon
 ```
 
-Like `select`, for ordered choices set `enum` to any delimiter String. In that way, you can use arrows keys and and numbers (0-9) to select the item.
+Like `select`, for ordered choices set `enum` to any delimiter String. In that way, you can use arrows keys and numbers (0-9) to select the item.
 
 ```ruby
 prompt.multi_select("Select drinks?") do |menu|
@@ -502,7 +502,6 @@ end
 #   ⬡ 4) whisky
 # ‣ ⬢ 5) bourbon
 ```
-
 
 And when you press enter you will see the following selected:
 
@@ -579,4 +578,4 @@ prompt.error(...)
 
 ## Copyright
 
-Copyright (c) 2015 Piotr Murach. See LICENSE for further details.
+Copyright (c) 2015-2016 Piotr Murach. See LICENSE for further details.
