@@ -1,5 +1,13 @@
 # Change log
 
+## [v0.4.0] - 2016-x-x
+
+### Added
+* Add :enum option for #select & #multi_select to allow numerical selection by @rtoshiro
+* Add new key event types to KeyEvent
+
+### Changed
+
 ## [v0.3.0] - 2015-12-28
 
 ### Added
@@ -44,6 +52,7 @@
 
 * Initial implementation and release
 
+[v0.4.0]: https://github.com/peter-murach/tty-prompt/compare/v0.3.0...v0.4.0
 [v0.3.0]: https://github.com/peter-murach/tty-prompt/compare/v0.2.0...v0.3.0
 [v0.2.0]: https://github.com/peter-murach/tty-prompt/compare/v0.1.0...v0.2.0
 [v0.1.0]: https://github.com/peter-murach/tty-prompt/compare/v0.1.0
