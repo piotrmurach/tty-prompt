@@ -7,7 +7,7 @@ module TTY
     #
     # @api private
     class List
-      HELP = '(Use arrow keys, press Enter to select)'.freeze
+      HELP = '(Use arrow%s keys, press Enter to select)'.freeze
 
       # Create instance of TTY::Prompt::List menu.
       #
@@ -33,7 +33,7 @@ module TTY
         @choices      = Choices.new
         @color        = options.fetch(:color) { :green }
         @marker       = options.fetch(:marker) { Symbols::ITEM_SELECTED }
-        @help         = options.fetch(:help) { HELP }
+        @help         = options[:help]
 
         @prompt.subscribe(self)
       end
@@ -199,6 +199,14 @@ module TTY
         render_menu unless @done
       end
 
+      # Provide help information
+      #
+      # @return [String]
+      def help
+        return @help if !@help.nil?
+        self.class::HELP % [enumerate? ? ' or number (0-9)' : '']
+      end
+
       # Render initial help and selected choice
       #
       # @return [String]
@@ -209,7 +217,7 @@ module TTY
           selected_item = "#{@choices[@active - 1].name}"
           @prompt.decorate(selected_item, @color)
         elsif @first_render
-          @prompt.decorate(@help, :bright_black)
+          @prompt.decorate(help, :bright_black)
         else
           ''
         end

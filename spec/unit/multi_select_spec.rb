@@ -74,6 +74,8 @@ RSpec.describe TTY::Prompt do
     prompt.input << " \r"
     prompt.input.rewind
     value = prompt.multi_select("Select drinks?") do |menu|
+              menu.enum ')'
+
               menu.choice :vodka, {score: 1}
               menu.choice :beer, 2
               menu.choice :wine, 3
@@ -81,19 +83,19 @@ RSpec.describe TTY::Prompt do
             end
     expect(value).to eq([{score: 1}])
     expect(prompt.output.string).to eq([
-      "\e[?25lSelect drinks? \e[90m(Use arrow keys, press Space to select and Enter to finish)\e[0m\n",
-      "‣ ⬡ vodka\n",
-      "  ⬡ beer\n",
-      "  ⬡ wine\n",
-      "  ⬡ whisky\n",
-      "  ⬡ bourbon",
+      "\e[?25lSelect drinks? \e[90m(Use arrow or number (0-9) keys, press Space to select and Enter to finish)\e[0m\n",
+      "‣ ⬡ 1) vodka\n",
+      "  ⬡ 2) beer\n",
+      "  ⬡ 3) wine\n",
+      "  ⬡ 4) whisky\n",
+      "  ⬡ 5) bourbon",
       "\e[1000D\e[K\e[1A" * 5, "\e[1000D\e[K",
       "Select drinks? vodka\n",
-      "‣ \e[32m⬢\e[0m vodka\n",
-      "  ⬡ beer\n",
-      "  ⬡ wine\n",
-      "  ⬡ whisky\n",
-      "  ⬡ bourbon",
+      "‣ \e[32m⬢\e[0m 1) vodka\n",
+      "  ⬡ 2) beer\n",
+      "  ⬡ 3) wine\n",
+      "  ⬡ 4) whisky\n",
+      "  ⬡ 5) bourbon",
       "\e[1000D\e[K\e[1A" * 5, "\e[1000D\e[K",
       "Select drinks? \e[32mvodka\e[0m\n\e[?25h"
     ].join)

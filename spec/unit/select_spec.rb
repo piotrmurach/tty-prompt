@@ -105,7 +105,7 @@ RSpec.describe TTY::Prompt, '#select' do
             end
     expect(value).to eq(2)
     expect(prompt.output.string).to eq([
-      "\e[?25lWhat size? \e[90m(Use arrow keys, press Enter to select)\e[0m\n",
+      "\e[?25lWhat size? \e[90m(Use arrow or number (0-9) keys, press Enter to select)\e[0m\n",
       "  1. large\n",
       "\e[32m‣ 2. medium\e[0m\n",
       "  3. small",
@@ -124,7 +124,7 @@ RSpec.describe TTY::Prompt, '#select' do
             end
     expect(value).to eq('Good choice!')
     expect(prompt.output.string).to eq([
-      "\e[?25lWhat size? \e[90m(Use arrow keys, press Enter to select)\e[0m\n",
+      "\e[?25lWhat size? \e[90m(Use arrow or number (0-9) keys, press Enter to select)\e[0m\n",
       "  1) large\n",
       "\e[32m‣ 2) medium\e[0m\n",
       "  3) small",
@@ -139,7 +139,7 @@ RSpec.describe TTY::Prompt, '#select' do
     prompt.input.rewind
     expect(prompt.select('What size?', choices, default: 2, enum: '.')).to eq('Medium')
     expect(prompt.output.string).to eq([
-      "\e[?25lWhat size? \e[90m(Use arrow keys, press Enter to select)\e[0m\n",
+      "\e[?25lWhat size? \e[90m(Use arrow or number (0-9) keys, press Enter to select)\e[0m\n",
       "  1. Large\n",
       "\e[32m‣ 2. Medium\e[0m\n",
       "  3. Small",
