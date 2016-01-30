@@ -108,23 +108,23 @@ module TTY
         @active = value
       end
 
-      def keyescape(event)
+      def keyescape(*)
         exit 130
       end
 
-      def keyspace(event)
+      def keyspace(*)
         @done = true
       end
 
-      def keyreturn(event)
+      def keyreturn(*)
         @done = true
       end
 
-      def keyup(event)
+      def keyup(*)
         @active = (@active == 1) ? @choices.length : @active - 1
       end
 
-      def keydown(event)
+      def keydown(*)
         @active = (@active == @choices.length) ? 1 : @active + 1
       end
 
@@ -203,7 +203,7 @@ module TTY
       #
       # @return [String]
       def help
-        return @help if !@help.nil?
+        return @help unless @help.nil?
         self.class::HELP % [enumerate? ? ' or number (0-9)' : '']
       end
 

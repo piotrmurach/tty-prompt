@@ -9,7 +9,6 @@ module TTY
     #
     # @api private
     class MultiList < List
-
       HELP = '(Use arrow%s keys, press Space to select and Enter to finish)'.freeze
 
       # Create instance of TTY::Prompt::MultiList menu.
@@ -28,7 +27,7 @@ module TTY
       # Callback fired when space key is pressed
       #
       # @api private
-      def keyspace(event)
+      def keyspace(*)
         active_choice = @choices[@active - 1]
         if @selected.include?(active_choice)
           @selected.delete(active_choice)
