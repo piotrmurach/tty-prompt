@@ -4,7 +4,7 @@ module TTY
   class Prompt
     class Reader
       module Codes
-        BACKSPACE = "\177"
+        BACKSPACE = "\x7F"
         DELETE   = "\004"
         ESCAPE   = "\e"
         LINEFEED = "\n"
@@ -39,15 +39,21 @@ module TTY
         CTRL_H = "\b"
         CTRL_L = "\f"
 
-        F1 = "\eOP"
-        F2 = "\eOQ"
-        F3 = "\eOR"
-        F4 = "\eOS"
+        F1_XTERM = "\eOP"
+        F2_XTERM = "\eOQ"
+        F3_XTERM = "\eOR"
+        F4_XTERM = "\eOS"
 
-        F1_ALT = "\e[11~"
-        F2_ALT = "\e[12~"
-        F3_ALT = "\e[13~"
-        F4_ALT = "\e[14~"
+        F1_GNOME = "\e[11~"
+        F2_GNOME = "\e[12~"
+        F3_GNOME = "\e[13~"
+        F4_GNOME = "\e[14~"
+
+        F1_WIN = "\e[[A"
+        F2_WIN = "\e[[B"
+        F3_WIN = "\e[[C"
+        F4_WIN = "\e[[D"
+        F5_WIN = "\e[[E"
 
         F5 =  "\e[15~"
         F6 =  "\e[17~"
