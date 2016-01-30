@@ -8,6 +8,10 @@ module TTY
   # A class responsible for shell prompt interactions.
   class Prompt
     # A class responsible for reading character input from STDIN
+    #
+    # Used internally to provide key and line reading functionality
+    #
+    # @api private
     class Reader
       include Wisper::Publisher
 
@@ -56,6 +60,9 @@ module TTY
       # Read a single keypress that may include
       # 2 or 3 escape characters.
       #
+      # @param [Boolean] echo
+      #   whether to echo chars back or not, defaults to false
+      #
       # @return [String]
       #
       # @api public
@@ -64,7 +71,7 @@ module TTY
           mode.echo(echo) do
             mode.raw(true) do
               key = read_char
-              publish_keypress_event(key) if key
+              emit_key_event(key) if key
               exit 130 if key == Codes::CTRL_C
               key
             end
@@ -107,7 +114,7 @@ module TTY
           mode.echo(echo) do
             while (char = input.getbyte) &&
                 !(char == CARRIAGE_RETURN || char == NEWLINE)
-              publish_keypress_event(convert_byte(char))
+              emit_key_event(convert_byte(char))
               line = handle_char(line, char)
             end
           end
@@ -145,23 +152,10 @@ module TTY
       # @return [nil]
       #
       # @api public
-      def publish_keypress_event(char)
-        event = KeyEvent.from(char)
-        event_name = parse_key_event(event)
-        publish(event_name, event) unless event_name.nil?
+      def emit_key_event(key)
+        event = KeyEvent.from(key)
+        publish(:"key#{event.key.name}", event) if event.emit?
         publish(:keypress, event)
-      end
-
-      # Interpret the key and provide event name
-      #
-      # @return [Symbol]
-      #
-      # @api public
-      def parse_key_event(event)
-        return if event.key.nil?
-        permitted_events = %w(up down left right space return enter num)
-        return unless permitted_events.include?("#{event.key.name}")
-        :"key#{event.key.name}"
       end
 
       private

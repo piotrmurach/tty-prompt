@@ -61,6 +61,15 @@ module TTY
           end
           new(char, key)
         end
+
+        # Check if key event can be emitted
+        #
+        # @return [Boolean]
+        #
+        # @api public
+        def emit?
+          !key.nil? && !key.name.nil?
+        end
       end # KeyEvent
     end # Reader
   end # Prompt
