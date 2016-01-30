@@ -19,12 +19,15 @@ module TTY
       #   the color for the selected item, defualts to :green
       # @option options [Symbol] :marker
       #   the marker for the selected item
+      # @option options [String] :enum
+      #   the delimiter for the item index
       #
       # @api public
       def initialize(prompt, options = {})
         @prompt       = prompt
         @first_render = true
         @done         = false
+        @enum         = options.fetch(:enum) { nil }
         @default      = Array[options.fetch(:default) { 1 }]
         @active       = @default.first
         @choices      = Choices.new
@@ -47,6 +50,13 @@ module TTY
       # @api public
       def default(*default_values)
         @default = default_values
+      end
+
+      # Set selecting active index using number pad
+      #
+      # @api public
+      def enum(value)
+        @enum = value
       end
 
       # Add a single choice
@@ -82,6 +92,19 @@ module TTY
         block.call(self) if block
         setup_defaults
         render
+      end
+
+      def keynum(event)
+        if not @enum.nil?
+          @enum_value = (@enum_value or '') + event.value
+          value = @enum_value.to_i
+          if (value > @choices.count)
+            @enum_value = event.value
+            value = @enum_value.to_i
+          end
+
+          @active = value if (value <= @choices.count)
+        end
       end
 
       def keyescape(event)
@@ -196,11 +219,12 @@ module TTY
       # @api private
       def render_menu
         @choices.each_with_index do |choice, index|
+          num = (not @enum.nil?) ? (index + 1).to_s + @enum + Symbols::SPACE : ''
           message = if index + 1 == @active
-                      selected = @marker + Symbols::SPACE + choice.name
+                      selected = @marker + Symbols::SPACE + num + choice.name
                       @prompt.decorate("#{selected}", @color)
                     else
-                      Symbols::SPACE * 2 + choice.name
+                      Symbols::SPACE * 2 + num + choice.name
                     end
           newline = (index == @choices.length - 1) ? '' : "\n"
           @prompt.print(message + newline)
