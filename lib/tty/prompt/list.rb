@@ -94,17 +94,18 @@ module TTY
         render
       end
 
-      def keynum(event)
-        if not @enum.nil?
-          @enum_value = (@enum_value or '') + event.value
-          value = @enum_value.to_i
-          if (value > @choices.count)
-            @enum_value = event.value
-            value = @enum_value.to_i
-          end
+      # Check if list is enumerated
+      #
+      # @return [Boolean]
+      def enumerate?
+        !@enum.nil?
+      end
 
-          @active = value if (value <= @choices.count)
-        end
+      def keynum(event)
+        return unless enumerate?
+        value = event.value.to_i
+        return unless (1..@choices.count).include?(value)
+        @active = value
       end
 
       def keyescape(event)
@@ -219,7 +220,7 @@ module TTY
       # @api private
       def render_menu
         @choices.each_with_index do |choice, index|
-          num = (not @enum.nil?) ? (index + 1).to_s + @enum + Symbols::SPACE : ''
+          num = enumerate? ? (index + 1).to_s + @enum + Symbols::SPACE : ''
           message = if index + 1 == @active
                       selected = @marker + Symbols::SPACE + num + choice.name
                       @prompt.decorate("#{selected}", @color)

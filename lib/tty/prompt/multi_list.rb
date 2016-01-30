@@ -77,7 +77,7 @@ module TTY
       # @api private
       def render_menu
         @choices.each_with_index do |choice, index|
-          num = (not @enum.nil?) ? (index + 1).to_s + @enum + Symbols::SPACE : ''
+          num = enumerate? ? (index + 1).to_s + @enum + Symbols::SPACE : ''
           indicator = (index + 1 == @active) ?  @marker : Symbols::SPACE
           indicator += Symbols::SPACE
           message = if @selected.include?(choice)
