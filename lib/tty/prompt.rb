@@ -203,6 +203,24 @@ module TTY
       ask(question, *args, &block)
     end
 
+    # Ask a question with a range slider
+    #
+    # @example
+    #   prompt = TTY::Prompt.new
+    #   prompt.slider('What size?', min: 32, max: 54, step: 2)
+    #
+    # @param [String] question
+    #   the question to ask
+    #
+    # @return [String]
+    #
+    # @api public
+    def slider(question, *args, &block)
+      options = Utils.extract_options!(args)
+      slider = Slider.new(self, options)
+      slider.call(question, &block)
+    end
+
     # A shortcut method to ask the user negative question and return
     # true for 'no' reply.
     #
