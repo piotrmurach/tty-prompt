@@ -5,6 +5,7 @@
 ### Added
 * Add :enum option for #select & #multi_select to allow numerical selection by @rtoshiro
 * Add new key event types to KeyEvent
+* Add #slider for picking values from range of numbers
 
 ### Changed
 
