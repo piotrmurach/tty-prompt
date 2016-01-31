@@ -1,7 +1,5 @@
 # encoding: utf-8
 
-require 'spec_helper'
-
 RSpec.describe TTY::Prompt, '#select' do
 
   subject(:prompt) { TTY::TestPrompt.new }
