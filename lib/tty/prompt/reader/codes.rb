@@ -4,7 +4,7 @@ module TTY
   class Prompt
     class Reader
       module Codes
-        BACKSPACE = "\x7F"
+        BACKSPACE = "\177"
         DELETE   = "\004"
         ESCAPE   = "\e"
         LINEFEED = "\n"

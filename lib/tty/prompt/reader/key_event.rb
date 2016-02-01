@@ -21,21 +21,21 @@ module TTY
       #
       # @api public
       class KeyEvent < Struct.new(:value, :key)
-        include Codes
-
         META_KEY_CODE_RE = /^(?:\e)(O|N|\[|\[\[)(?:(\d+)(?:;(\d+))?([~^$])|(?:1;)?(\d+)?([a-zA-Z]))/
 
         def self.from(char)
           key = Key.new
           case char
-          when RETURN   then key.name = :return
-          when LINEFEED then key.name = :enter
-          when TAB      then key.name = :tab
-          when BACKSPACE, CTRL_H, "#{ESCAPE}#{BACKSPACE}", "#{ESCAPE}#{CTRL_H}"
+          when Codes::RETURN   then key.name = :return
+          when Codes::LINEFEED then key.name = :enter
+          when Codes::TAB      then key.name = :tab
+          when Codes::BACKSPACE, Codes::CTRL_H,
+              "#{Codes::ESCAPE}#{Codes::BACKSPACE}",
+              "#{Codes::ESCAPE}#{Codes::CTRL_H}"
             key.name = :backspace
-          when DELETE   then key.name = :delete
-          when SPACE    then key.name = :space
-          when CTRL_C, ESCAPE then key.name = :escape
+          when Codes::DELETE   then key.name = :delete
+          when Codes::SPACE    then key.name = :space
+          when Codes::CTRL_C, Codes::ESCAPE then key.name = :escape
           when proc { |c| c.length == 1 && c =~ /[a-z]/ }
             key.name = char
           when proc { |c| c.length == 1 && c =~ /[A-Z]/ }
@@ -48,32 +48,32 @@ module TTY
 
             case char
             # f1 - f12
-            when F1_XTERM, F1_GNOME, F1_WIN then key.name = :f1
-            when F2_XTERM, F2_GNOME, F2_WIN then key.name = :f2
-            when F3_XTERM, F3_GNOME, F3_WIN then key.name = :f3
-            when F4_XTERM, F4_GNOME, F4_WIN then key.name = :f4
-            when F5 then key.name = :f5
-            when F6 then key.name = :f6
-            when F7 then key.name = :f7
-            when F8 then key.name = :f8
-            when F9 then key.name = :f9
-            when F10 then key.name = :f10
-            when F11 then key.name = :f11
-            when F12 then key.name = :f12
+            when Codes::F1_XTERM, Codes::F1_GNOME, Codes::F1_WIN then key.name = :f1
+            when Codes::F2_XTERM, Codes::F2_GNOME, Codes::F2_WIN then key.name = :f2
+            when Codes::F3_XTERM, Codes::F3_GNOME, Codes::F3_WIN then key.name = :f3
+            when Codes::F4_XTERM, Codes::F4_GNOME, Codes::F4_WIN then key.name = :f4
+            when Codes::F5 then key.name = :f5
+            when Codes::F6 then key.name = :f6
+            when Codes::F7 then key.name = :f7
+            when Codes::F8 then key.name = :f8
+            when Codes::F9 then key.name = :f9
+            when Codes::F10 then key.name = :f10
+            when Codes::F11 then key.name = :f11
+            when Codes::F12 then key.name = :f12
             # navigation
-            when KEY_UP, KEY_UP_ALT, CTRL_K, CTRL_P
+            when Codes::KEY_UP, Codes::KEY_UP_ALT, Codes::CTRL_K, Codes::CTRL_P
               key.name = :up
-            when KEY_DOWN, KEY_DOWN_ALT, CTRL_J, Codes::CTRL_N
+            when Codes::KEY_DOWN, Codes::KEY_DOWN_ALT, Codes::CTRL_J, Codes::CTRL_N
               key.name = :down
-            when KEY_RIGHT, KEY_RIGHT_ALT, CTRL_L
+            when Codes::KEY_RIGHT, Codes::KEY_RIGHT_ALT, Codes::CTRL_L
               key.name = :right
-            when KEY_LEFT, KEY_LEFT_ALT, CTRL_H
+            when Codes::KEY_LEFT, Codes::KEY_LEFT_ALT, Codes::CTRL_H
               key.name = :left
-            when KEY_CLEAR, KEY_CLEAR_ALT
+            when Codes::KEY_CLEAR, Codes::KEY_CLEAR_ALT
               key.name = :clear
-            when KEY_END, KEY_END_ALT
+            when Codes::KEY_END, Codes::KEY_END_ALT
               key.name = :end
-            when KEY_HOME, KEY_HOME_ALT
+            when Codes::KEY_HOME, Codes::KEY_HOME_ALT
               key.name = :home
             end
           end
