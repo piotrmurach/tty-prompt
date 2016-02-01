@@ -196,7 +196,7 @@ module TTY
         header = "#{@prompt.prefix}#{@question} #{render_header}"
         @prompt.puts(header)
         @first_render = false
-        render_menu unless @done
+        @prompt.print(render_menu) unless @done
       end
 
       # Provide help information
@@ -227,6 +227,7 @@ module TTY
       #
       # @api private
       def render_menu
+        output = ''
         @choices.each_with_index do |choice, index|
           num = enumerate? ? (index + 1).to_s + @enum + Symbols::SPACE : ''
           message = if index + 1 == @active
@@ -236,8 +237,9 @@ module TTY
                       Symbols::SPACE * 2 + num + choice.name
                     end
           newline = (index == @choices.length - 1) ? '' : "\n"
-          @prompt.print(message + newline)
+          output << (message + newline)
         end
+        output
       end
     end # List
   end # Prompt

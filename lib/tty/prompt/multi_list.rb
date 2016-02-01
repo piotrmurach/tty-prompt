@@ -75,6 +75,7 @@ module TTY
       #
       # @api private
       def render_menu
+        output = ''
         @choices.each_with_index do |choice, index|
           num = enumerate? ? (index + 1).to_s + @enum + Symbols::SPACE : ''
           indicator = (index + 1 == @active) ?  @marker : Symbols::SPACE
@@ -86,8 +87,9 @@ module TTY
                       Symbols::RADIO_UNCHECKED + Symbols::SPACE + num + choice.name
                     end
           newline = (index == @choices.length - 1) ? '' : "\n"
-          @prompt.print(indicator + message + newline)
+          output << indicator + message + newline
         end
+        output
       end
     end # MultiList
   end # Prompt
