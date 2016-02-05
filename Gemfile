@@ -6,6 +6,7 @@ group :development do
   gem 'rspec', '~> 3.4.0'
   gem 'yard',  '~> 0.8.7'
   gem 'benchmark-ips', '~> 2.0.0'
+  gem 'byebug', platform: :mri
 end
 
 group :metrics do
