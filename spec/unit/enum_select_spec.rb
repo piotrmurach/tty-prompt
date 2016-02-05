@@ -16,7 +16,7 @@ RSpec.describe TTY::Prompt do
       "  2) /usr/bin/vim.basic\n",
       "  3) /usr/bin/vim.tiny\n",
       "  Choose 1-3 [1]: ",
-      "\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K",
+      "\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[J",
       "Select an editor? \e[32m/bin/nano\e[0m\n"
     ].join)
   end
@@ -33,13 +33,13 @@ RSpec.describe TTY::Prompt do
       "\e[32m  2) /usr/bin/vim.basic\e[0m\n",
       "  3) /usr/bin/vim.tiny\n",
       "  Choose 1-3 [2]: ",
-      "\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K",
+      "\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[J",
       "Select an editor? \n",
       "  1) /bin/nano\n",
       "  2) /usr/bin/vim.basic\n",
       "\e[32m  3) /usr/bin/vim.tiny\e[0m\n",
       "  Choose 1-3 [2]: 3",
-      "\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K",
+      "\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[J",
       "Select an editor? \e[32m/usr/bin/vim.tiny\e[0m\n"
     ].join)
   end
@@ -62,7 +62,7 @@ RSpec.describe TTY::Prompt do
       "\e[32m  2) /usr/bin/vim.basic\e[0m\n",
       "  3) /usr/bin/vim.tiny\n",
       "  Choose 1-3 [2]: ",
-      "\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K",
+      "\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[J",
       "Select an editor? \e[32m/usr/bin/vim.basic\e[0m\n"
     ].join)
   end
