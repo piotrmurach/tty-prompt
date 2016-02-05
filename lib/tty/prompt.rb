@@ -186,6 +186,50 @@ module TTY
       list.call(question, choices, &block)
     end
 
+    # Ask a question with indexed list
+    #
+    # @example
+    #   prompt = TTY::Prompt.new
+    #   editors = %w(emacs nano vim)
+    #   prompt.enum_select(EnumList, "Select editor: ", editors)
+    #
+    # @param [String] question
+    #   the question to ask
+    #
+    # @param [Array[Object]] choices
+    #   the choices to select from
+    #
+    # @return [String]
+    #
+    # @api public
+    def enum_select(question, *args, &block)
+      invoke_select(EnumList, question, *args, &block)
+    end
+
+    # Invoke a list type of prompt
+    #
+    # @example
+    #   prompt = TTY::Prompt.new
+    #   editors = %w(emacs nano vim)
+    #   prompt.invoke_select(EnumList, "Select editor: ", editors)
+    #
+    # @return [String]
+    #
+    # @api public
+    def invoke_select(object, question, *args, &block)
+      options = Utils.extract_options!(args)
+      choices = if block
+                  []
+                elsif args.empty?
+                  options
+                else
+                  args.flatten
+                end
+
+      list = object.new(self, options)
+      list.call(question, choices, &block)
+    end
+
     # A shortcut method to ask the user positive question and return
     # true for 'yes' reply, false for 'no'.
     #
