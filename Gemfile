@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 gemspec
 
-group :development do
+group :tools do
   gem 'yard',  '~> 0.8.7'
   gem 'benchmark-ips', '~> 2.0.0'
   gem 'byebug', platform: :mri
