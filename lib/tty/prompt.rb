@@ -143,17 +143,7 @@ module TTY
     #
     # @api public
     def select(question, *args, &block)
-      options = Utils.extract_options!(args)
-      choices = if block
-                  []
-                elsif args.empty?
-                  options
-                else
-                  args.flatten
-                end
-
-      list = List.new(self, options)
-      list.call(question, choices, &block)
+      invoke_select(List, question, *args, &block)
     end
 
     # Ask a question with multiple attributes activated
@@ -173,17 +163,7 @@ module TTY
     #
     # @api public
     def multi_select(question, *args, &block)
-      options = Utils.extract_options!(args)
-      choices = if block
-                  []
-                elsif args.empty?
-                  options
-                else
-                  args.flatten
-                end
-
-      list = MultiList.new(self, options)
-      list.call(question, choices, &block)
+      invoke_select(MultiList, question, *args, &block)
     end
 
     # Ask a question with indexed list
