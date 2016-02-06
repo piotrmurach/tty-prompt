@@ -49,6 +49,7 @@ RSpec.describe TTY::Prompt do
     prompt.input.rewind
     value = prompt.enum_select("Select an editor?") do |menu|
       menu.default 2
+      menu.enum '.'
 
       menu.choice "/bin/nano"
       menu.choice "/usr/bin/vim.basic"
@@ -58,12 +59,35 @@ RSpec.describe TTY::Prompt do
     expect(value).to eq('/usr/bin/vim.basic')
     expect(prompt.output.string).to eq([
       "Select an editor? \n",
-      "  1) /bin/nano\n",
-      "\e[32m  2) /usr/bin/vim.basic\e[0m\n",
-      "  3) /usr/bin/vim.tiny\n",
+      "  1. /bin/nano\n",
+      "\e[32m  2. /usr/bin/vim.basic\e[0m\n",
+      "  3. /usr/bin/vim.tiny\n",
       "  Choose 1-3 [2]: ",
       "\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[J",
       "Select an editor? \e[32m/usr/bin/vim.basic\e[0m\n"
+    ].join)
+  end
+
+  it "selects option through DSL with key and value" do
+    prompt.input << "\n"
+    prompt.input.rewind
+    value = prompt.enum_select("Select an editor?") do |menu|
+      menu.default 2
+
+      menu.choice :nano,  '/bin/nano'
+      menu.choice :vim,   '/usr/bin/vim'
+      menu.choice :emacs, '/usr/bin/emacs'
+    end
+
+    expect(value).to eq('/usr/bin/vim')
+    expect(prompt.output.string).to eq([
+      "Select an editor? \n",
+      "  1) nano\n",
+      "\e[32m  2) vim\e[0m\n",
+      "  3) emacs\n",
+      "  Choose 1-3 [2]: ",
+      "\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[J",
+      "Select an editor? \e[32mvim\e[0m\n"
     ].join)
   end
 end
