@@ -7,6 +7,10 @@
 * Add new key event types to KeyEvent
 * Add #slider for picking values from range of numbers
 * Add #enum_select for selecting option from enumerated list
+* Add new ConversionError type
+
+### Changed
+* Move #blank? to Utils
 
 ### Changed
 
