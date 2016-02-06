@@ -16,8 +16,6 @@ module TTY
       include Checks
       include Converters
 
-      BLANK_REGEX = /\A[[:space:]]*\z/o.freeze
-
       UndefinedSetting = Module.new
 
       # Store question message
@@ -64,7 +62,7 @@ module TTY
       #
       # @api public
       def call(message, &block)
-        return if blank?(message)
+        return if Utils.blank?(message)
         @message = message
         block.call(self) if block
         render
@@ -108,7 +106,7 @@ module TTY
       # @api private
       def process_input
         @input = read_input
-        if blank?(@input)
+        if Utils.blank?(@input)
           @input = default? ? default : nil
         end
         @evaluator.(@input)
@@ -168,7 +166,7 @@ module TTY
       #
       # @api private
       def convert_result(value)
-        if convert? & !blank?(value)
+        if convert? & !Utils.blank?(value)
           converter_registry.(@convert, value)
         else
           value
@@ -291,12 +289,7 @@ module TTY
         @in != UndefinedSetting
       end
 
-      def blank?(value)
-        value.nil? ||
-        value.respond_to?(:empty?) && value.empty? ||
-        BLANK_REGEX === value
-      end
-
+      # @api public
       def to_s
         "#{message}"
       end
