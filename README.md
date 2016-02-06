@@ -55,11 +55,13 @@ Or install it yourself as:
   * [2.6 yes?/no?](#26-yesno)
   * [2.7 select](#27-select)
   * [2.8 multi_select](#28-multi_select)
-  * [2.9 suggest](#29-suggest)
-  * [2.10 say](#210-say)
-  * [2.11 ok](#211-ok)
-  * [2.12 warn](#212-warn)
-  * [2.13 error](#213-warn)
+  * [2.9 enum_select-unreleased](#29-enum_select-unreleased)
+  * [2.10 suggest](#210-suggest)
+  * [2.11 slider-unreleased](#211-slider-unreleased)
+  * [2.12 say](#212-say)
+  * [2.13 ok](#213-ok)
+  * [2.14 warn](#214-warn)
+  * [2.15 error](#215-warn)
 
 ## 1. Usage
 
@@ -114,6 +116,20 @@ prompt.multi_select("Select drinks?", choices)
 #   ⬡ wine
 #   ⬡ whisky
 #   ⬡ bourbon
+```
+
+To ask for a selection from enumerated list you can use `enum_select`:
+
+```ruby
+choices = %w(emacs nano vim)
+prompt.enum_select("Select an editor?")
+# =>
+#
+# Select an editor?
+#   1) /bin/nano
+#   2) /usr/bin/vim.basic
+#   3) /usr/bin/vim.tiny
+#   Choose 1-3 [2]:
 ```
 
 ## 2. Interface
@@ -510,7 +526,66 @@ And when you press enter you will see the following selected:
 # => [{score: 20}, {score: 50}]
 ```
 
-### 2.9 suggest
+### 2.9 enum_select-unreleased
+
+In order to ask for standard selection from indexed list you can use `enum_select` and pass question together with possible choices:
+
+```ruby
+choices = %w(emacs nano vim)
+prompt.enum_select("Select an editor?")
+# =>
+#
+# Select an editor?
+#   1) nano
+#   2) vim
+#   3) emacs
+#   Choose 1-3 [1]:
+```
+
+Similar to `select` and `multi_select`, you can provide question options through DSL using `choice` method and/or `choices` like so:
+
+```ruby
+choices = %w(nano vim emacs)
+prompt.enum_select("Select an editor?") do |menu|
+  menu.choice :nano,  '/bin/nano'
+  menu.choice :vim,   '/usr/bin/vim'
+  menu.choice :emacs, '/usr/bin/emacs'
+end
+# =>
+#
+# Select an editor?
+#   1) nano
+#   2) vim
+#   3) emacs
+#   Choose 1-3 [1]:
+#
+# Select an editor? /bin/nano
+```
+
+You can change the indexed numbers by passing `enum` option and the default option by using `default` like so
+
+```ruby
+choices = %w(nano vim emacs)
+prompt.enum_select("Select an editor?") do |menu|
+  menu.default 2
+  menu.enum '.'
+
+  menu.choice :nano,  '/bin/nano'
+  menu.choice :vim,   '/usr/bin/vim'
+  menu.choice :emacs, '/usr/bin/emacs'
+end
+# =>
+#
+# Select an editor?
+#   1. nano
+#   2. vim
+#   3. emacs
+#   Choose 1-3 [2]:
+#
+# Select an editor? /usr/bin/vim
+```
+
+### 2.10 suggest
 
 To suggest possible matches for the user input use `suggest` method like so:
 
@@ -532,7 +607,34 @@ prompt.suggest('b', possible, indent: 4, single_text: 'Perhaps you meant?')
 #     blame
 ```
 
-### 2.10 say
+### 2.11 slider-unreleased
+
+If you have constrained range of numbers for user to choose from you may consider using `slider`. The slider provides easy visiaul way of picking a value marked by `O` marker.
+
+```ruby
+prompt.slider('What size?', min: 32, max: 54, step: 2)
+# =>
+#
+# What size? (User arrow keys, press Enter to select)
+# |------O-----| 44
+```
+
+Slider can be configured through DSL as well:
+
+```ruby
+prompt.slider('What size?') do |range|
+  range.default 4
+  range.min 0
+  range.max 20
+  range.step 2
+end
+# =>
+#
+# What size? (User arrow keys, press Enter to select)
+# |--O-------| 4
+```
+
+### 2.12 say
 
 To simply print message out to stdout use `say` like so:
 
@@ -544,7 +646,7 @@ The `say` method also accepts option `:color` which supports all the colors prov
 
 **TTY::Prompt** provides more specific versions of `say` method to better express intenation behind the message such as `ok`, `warn` and `error`.
 
-### 2.11 ok
+### 2.13 ok
 
 Print message(s) in green do:
 
@@ -552,7 +654,7 @@ Print message(s) in green do:
 prompt.ok(...)
 ```
 
-### 2.12 warn
+### 2.14 warn
 
 Print message(s) in yellow do:
 
@@ -560,7 +662,7 @@ Print message(s) in yellow do:
 prompt.warn(...)
 ```
 
-### 2.13 error
+### 2.15 error
 
 Print message(s) in red do:
 
