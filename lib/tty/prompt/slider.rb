@@ -22,14 +22,49 @@ module TTY
         @step         = options.fetch(:step) { 1 }
         @default      = options[:default]
 
-        @range = (@min..@max).step(@step).to_a
-        if @default.nil?
-          @active = @range.size / 2
-        else
-          @active = @range.index(@default)
-        end
-
         @prompt.subscribe(self)
+      end
+
+      # Setup initial active position
+      #
+      # @return [Integer]
+      #
+      # @api private
+      def initial
+        if @default.nil?
+          range.size / 2
+        else
+          range.index(@default)
+        end
+      end
+
+      # Range of numbers to render
+      #
+      # @return [Array[Integer]]
+      #
+      # @apip private
+      def range
+        (@min..@max).step(@step).to_a
+      end
+
+      # @api public
+      def default(value)
+        @default = value
+      end
+
+      # @api public
+      def min(value)
+        @min = value
+      end
+
+      # @api public
+      def max(value)
+        @max = value
+      end
+
+      # @api public
+      def step(value)
+        @step = value
       end
 
       # Call the slider by passing question
@@ -41,6 +76,7 @@ module TTY
       def call(question, &block)
         @question = question
         block.call(self) if block
+        @active = initial
         render
       end
 
@@ -50,7 +86,7 @@ module TTY
       alias_method :keydown, :keyleft
 
       def keyright(*)
-        @active += 1 if @active < @range.size
+        @active += 1 if (@active + @step) <= range.size
       end
       alias_method :keyup, :keyright
 
@@ -78,41 +114,56 @@ module TTY
         answer
       end
 
-      def render_answer
-        @range[@active]
+      # Clear screen
+      #
+      # @api private
+      def refresh
+        lines = @question.scan("\n").length + 2
+        @prompt.print(@prompt.clear_lines(lines))
       end
 
+      # @return [Integer]
+      #
+      # @api private
+      def render_answer
+        range[@active]
+      end
+
+      # Render question with the slider
+      #
+      # @api private
       def render_question
         header = "#{@prompt.prefix}#{@question} #{render_header}"
         @prompt.puts(header)
         @first_render = false
-        render_slider unless @done
+        @prompt.print(render_slider) unless @done
       end
 
+      # Render actual answer or help
+      #
+      # @api private
       def render_header
         if @done
-          @prompt.decorate(@range[@active].to_s, @color)
+          @prompt.decorate(render_answer.to_s, @color)
         elsif @first_render
           @prompt.decorate(HELP, :bright_black)
-        else
-          ''
         end
       end
 
+      # Render slider representation
+      #
+      # @return [String]
+      #
+      # @api private
       def render_slider
-        slider = ''
-        slider << Symbols::SLIDER_END
-        slider << '-' * @active
-        slider << @prompt.decorate(Symbols::SLIDER_HANDLE, @color)
-        slider << '-' * (@range.size - @active - 1)
-        slider << Symbols::SLIDER_END
-        slider << " #{@range[@active]}"
-        @prompt.print(slider)
-      end
-
-      def refresh
-        lines = @question.scan("\n").length + 2
-        @prompt.print(@prompt.clear_lines(lines))
+        output = ''
+        output << Symbols::SLIDER_END
+        output << '-' * @active
+        output << @prompt.decorate(Symbols::SLIDER_HANDLE, @color)
+        output << '-' * (range.size - @active - 1)
+        output << Symbols::SLIDER_END
+        output << " #{range[@active]}"
+        output
       end
     end # Slider
   end # Prompt
