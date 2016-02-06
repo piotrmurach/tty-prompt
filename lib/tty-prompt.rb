@@ -26,5 +26,9 @@ require 'tty/prompt/version'
 # A collection of small libraries for building CLI apps,
 # each following unix philosophy of focused task
 module TTY
-  PromptConfigurationError = Class.new(StandardError)
-end
+  class Prompt
+    ConfigurationError = Class.new(StandardError)
+
+    ConversionError = Class.new(StandardError)
+  end
+end # TTY
