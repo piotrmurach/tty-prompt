@@ -57,8 +57,6 @@ module TTY
           @selected.map(&:name).join(', ')
         elsif @first_render
           @prompt.decorate(help, :bright_black)
-        else
-          ''
         end
       end
 

@@ -218,8 +218,6 @@ module TTY
           @prompt.decorate(selected_item, @color)
         elsif @first_render
           @prompt.decorate(help, :bright_black)
-        else
-          ''
         end
       end
 
