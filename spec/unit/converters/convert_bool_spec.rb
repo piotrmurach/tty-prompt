@@ -9,7 +9,7 @@ RSpec.describe TTY::Prompt::Question, 'convert bool' do
     prompt.input.rewind
     expect {
       prompt.ask("Do you read books?", convert: :bool)
-    }.to raise_error(Necromancer::ConversionTypeError)
+    }.to raise_error(TTY::Prompt::ConversionError)
   end
 
   it "handles default values" do

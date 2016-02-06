@@ -1,8 +1,10 @@
 # encoding: utf-8
 
 RSpec.describe TTY::Prompt::Question, 'convert range' do
+
+  subject(:prompt) { TTY::TestPrompt.new}
+
   it 'converts with valid range' do
-    prompt = TTY::TestPrompt.new
     prompt.input << "20-30"
     prompt.input.rewind
     answer = prompt.ask("Which age group?", convert: :range)
@@ -11,11 +13,10 @@ RSpec.describe TTY::Prompt::Question, 'convert range' do
   end
 
   it "fails to convert to range" do
-    prompt = TTY::TestPrompt.new
     prompt.input << "abcd"
     prompt.input.rewind
     expect {
       prompt.ask('Which age group?', convert: :range)
-    }.to raise_error(Necromancer::ConversionTypeError)
+    }.to raise_error(TTY::Prompt::ConversionError)
   end
 end

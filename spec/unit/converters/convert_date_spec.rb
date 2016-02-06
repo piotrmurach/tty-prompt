@@ -1,8 +1,18 @@
 # encoding: utf-8
 
 RSpec.describe TTY::Prompt::Question, 'convert date' do
+
+  subject(:prompt) { TTY::TestPrompt.new}
+
+  it 'fails to convert date' do
+    prompt.input << 'invalid'
+    prompt.input.rewind
+    expect {
+      prompt.ask("When were you born?", convert: :date)
+    }.to raise_error(TTY::Prompt::ConversionError)
+  end
+
   it 'converts date' do
-    prompt = TTY::TestPrompt.new
     prompt.input << "20th April 1887"
     prompt.input.rewind
     response = prompt.ask("When were your born?", convert: :date)
@@ -13,7 +23,6 @@ RSpec.describe TTY::Prompt::Question, 'convert date' do
   end
 
   it "converts datetime" do
-    prompt = TTY::TestPrompt.new
     prompt.input << "20th April 1887"
     prompt.input.rewind
     response = prompt.ask("When were your born?", convert: :datetime)

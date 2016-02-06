@@ -1,8 +1,18 @@
 # encoding: utf-8
 
 RSpec.describe TTY::Prompt::Question, 'convert numbers' do
+
+  subject(:prompt) { TTY::TestPrompt.new }
+
+  it 'fails to convert integer' do
+    prompt.input << 'invalid'
+    prompt.input.rewind
+    expect {
+      prompt.ask("What temparture?", convert: :int)
+    }.to raise_error(TTY::Prompt::ConversionError)
+  end
+
   it 'converts integer' do
-    prompt = TTY::TestPrompt.new
     prompt.input << 35
     prompt.input.rewind
     answer = prompt.ask("What temperature?", convert: :int)
@@ -10,8 +20,15 @@ RSpec.describe TTY::Prompt::Question, 'convert numbers' do
     expect(answer).to eq(35)
   end
 
+  it 'fails to convert float' do
+    prompt.input << 'invalid'
+    prompt.input.rewind
+    expect {
+      prompt.ask("How tall are you?", convert: :float)
+    }.to raise_error(TTY::Prompt::ConversionError)
+  end
+
   it 'converts float' do
-    prompt = TTY::TestPrompt.new
     number = 6.666
     prompt.input << number
     prompt.input.rewind

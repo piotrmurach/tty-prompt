@@ -17,9 +17,15 @@ module TTY
         end
       end
 
+      def self.on_error
+        yield
+      rescue Necromancer::ConversionTypeError => e
+        raise ConversionError, e.message
+      end
+
       converter(:bool) do |input|
         converter = Necromancer.new
-        converter.convert(input).to(:boolean, strict: true)
+        on_error { converter.convert(input).to(:boolean, strict: true) }
       end
 
       converter(:string) do |input|
@@ -32,27 +38,27 @@ module TTY
 
       converter(:date) do |input|
         converter = Necromancer.new
-        converter.convert(input).to(:date)
+        on_error { converter.convert(input).to(:date, strict: true) }
       end
 
       converter(:datetime) do |input|
         converter = Necromancer.new
-        converter.convert(input).to(:datetime)
+        on_error { converter.convert(input).to(:datetime, strict: true) }
       end
 
       converter(:int) do |input|
         converter = Necromancer.new
-        converter.convert(input).to(:integer)
+        on_error { converter.convert(input).to(:integer, strict: true) }
       end
 
       converter(:float) do |input|
         converter = Necromancer.new
-        converter.convert(input).to(:float)
+        on_error { converter.convert(input).to(:float, strict: true) }
       end
 
       converter(:range) do |input|
         converter = Necromancer.new
-        converter.convert(input).to(:range, strict: true)
+        on_error { converter.convert(input).to(:range, strict: true) }
       end
 
       converter(:regexp) do |input|
