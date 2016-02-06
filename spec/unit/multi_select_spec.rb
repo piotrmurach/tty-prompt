@@ -153,7 +153,7 @@ RSpec.describe TTY::Prompt do
         menu.choice :whisky,  {score: 40}
         menu.choice :bourbon, {score: 50}
       end
-    }.to raise_error(TTY::PromptConfigurationError,
+    }.to raise_error(TTY::Prompt::ConfigurationError,
                      /default index `6` out of range \(1 - 5\)/)
   end
 

@@ -144,7 +144,7 @@ module TTY
       def validate_defaults
         @default.each do |d|
           if d < 1 || d > @choices.size
-            fail PromptConfigurationError,
+            fail ConfigurationError,
                  "default index `#{d}` out of range (1 - #{@choices.size})"
           end
         end
