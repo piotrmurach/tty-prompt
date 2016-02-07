@@ -42,6 +42,7 @@ module TTY
         @read       = options.fetch(:read) { UndefinedSetting }
         @convert    = options.fetch(:convert) { UndefinedSetting }
         @color      = options.fetch(:color) { :green }
+        @messages   = Utils.deep_copy(options.fetch(:messages) { { } })
         @done       = false
         @input      = nil
 
@@ -52,16 +53,6 @@ module TTY
         @evaluator << CheckRange
         @evaluator << CheckValidation
         @evaluator << CheckModifier
-
-        setup_messages
-      end
-
-      def setup_messages
-        @messages = {
-          range?: 'Value %{value} must be within the range %{in}',
-          valid?: 'Your answer is invalid (must match %{valid})',
-          required?: 'Value must be provided'
-        }
       end
 
       # Stores all the error messages displayed to user
@@ -84,10 +75,10 @@ module TTY
       # @api private
       def message_for(name, tokens = nil)
         template = @messages[name]
-        if !template.match(/\%\{/).nil?
+        if template && !template.match(/\%\{/).nil?
           [template % tokens]
         else
-          [template]
+          [template || '']
         end
       end
 

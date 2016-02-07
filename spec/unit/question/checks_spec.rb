@@ -14,7 +14,7 @@ RSpec.describe TTY::Prompt::Question do
   end
 
   it "fails range check" do
-    question = described_class.new(prompt)
+    question = described_class.new(prompt, messages: TTY::Prompt.messages)
     question.in 1..10
 
     result = TTY::Prompt::Question::Checks::CheckRange.call(question, 11)
@@ -41,7 +41,7 @@ RSpec.describe TTY::Prompt::Question do
   end
 
   it "fails validation check" do
-    question = described_class.new(prompt)
+    question = described_class.new(prompt, messages: TTY::Prompt.messages)
     question.validate(/\A\d{5}\Z/)
 
     result = TTY::Prompt::Question::Checks::CheckValidation.call(question, '123')
@@ -78,7 +78,7 @@ RSpec.describe TTY::Prompt::Question do
   end
 
   it "fails required check" do
-    question = described_class.new(prompt)
+    question = described_class.new(prompt, messages: TTY::Prompt.messages)
     question.required true
 
     result = TTY::Prompt::Question::Checks::CheckRequired.call(question, nil)

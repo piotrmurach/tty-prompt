@@ -44,6 +44,14 @@ module TTY
 
     def_delegators :@output, :print, :puts, :flush
 
+    def self.messages
+      {
+        range?: 'Value %{value} must be within the range %{in}',
+        valid?: 'Your answer is invalid (must match %{valid})',
+        required?: 'Value must be provided'
+      }
+    end
+
     # Initialize a Prompt
     #
     # @api public
@@ -77,7 +85,7 @@ module TTY
     # @api public
     def ask(message, *args, &block)
       options = Utils.extract_options!(args)
-
+      options.merge!(self.class.messages)
       question = Question.new(self, options)
       question.call(message, &block)
     end
