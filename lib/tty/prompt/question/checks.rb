@@ -40,7 +40,8 @@ module TTY
               (question.in? && question.in.include?(cast(value)))
               [value]
             else
-              [value, ["Value #{value} is not included in the range #{question.in}"]]
+              tokens = {value: value, in: question.in}
+              [value, question.message_for(:range?, tokens)]
             end
           end
         end
@@ -53,7 +54,8 @@ module TTY
                 Validation.new(question.validation).call(value))
               [value]
             else
-              [value, ["Your answer is invalid (must match #{question.validation.inspect})"]]
+              tokens = {valid: question.validation.inspect}
+              [value, question.message_for(:valid?, tokens)]
             end
           end
         end
@@ -73,7 +75,7 @@ module TTY
         class CheckRequired
           def self.call(question, value)
             if question.required? && !question.default? && value.nil?
-              [value, ['No value provided for required']]
+              [value, question.message_for(:required?)]
             else
               [value]
             end
