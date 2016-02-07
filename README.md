@@ -50,6 +50,7 @@ Or install it yourself as:
     * [2.2.5 modify](#225-modify)
     * [2.2.6 required](#226-required)
     * [2.2.7 validate](#227-validate)
+    * [2.2.8 messages-unreleased](#228-messages)
   * [2.3 keypress](#23-keypress)
   * [2.4 multiline](#24-multiline)
   * [2.5 mask](#25-mask)
@@ -261,7 +262,7 @@ To ensure that input is provided use `:required` option:
 ```ruby
 prompt.ask("What's your phone number?", required: true)
 # What's your phone number?
-# >> No value provided for required
+# >> Value must be provided
 ```
 
 #### 2.2.7 validate
@@ -278,6 +279,25 @@ The **TTY::Prompt** comes with bult-in validations for `:email` and you can use 
 
 ```prompt
 prompt.ask('What is your email?') { |q| q.validate :email }
+```
+
+### 2.2.8 messages
+
+By default `tty-prompt` comes with predefined error messages for `required`, `in`, `validate` options. You can change these and configure to your liking either by inling them with the option:
+
+```ruby
+prompt.ask('What is your email?') do |q|
+  question.validate(/\A\w+@\w+\.\w+\Z/, 'Invalid email address')
+end
+```
+
+or change the `messages` key entry out of `:required?`, `:valid?`, `:range?`:
+
+```ruby
+prompt.ask('What is your email?') do |q|
+  question.validate(/\A\w+@\w+\.\w+\Z/)
+  question.messages[:valid?] = 'Invalid email address'
+end
 ```
 
 ### 2.3 keypress
@@ -610,7 +630,7 @@ prompt.suggest('b', possible, indent: 4, single_text: 'Perhaps you meant?')
 
 ### 2.11 slider-unreleased
 
-If you have constrained range of numbers for user to choose from you may consider using `slider`. The slider provides easy visiaul way of picking a value marked by `O` marker.
+If you have constrained range of numbers for user to choose from you may consider using `slider`. The slider provides easy visual way of picking a value marked by `O` marker.
 
 ```ruby
 prompt.slider('What size?', min: 32, max: 54, step: 2)
