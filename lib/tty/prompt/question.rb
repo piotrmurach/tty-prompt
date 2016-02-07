@@ -52,6 +52,32 @@ module TTY
         @evaluator << CheckRange
         @evaluator << CheckValidation
         @evaluator << CheckModifier
+
+        setup_messages
+      end
+
+      def setup_messages
+        @messages = {
+          range?: "Value %{value} must be within the range %{in}",
+          valid?: "Your answer is invalid (must match %{valid})",
+          required?: 'Value must be provided'
+        }
+      end
+
+      # Stores all the error messages displayed to user
+      # The currently supported messages are:
+      #  * :range?
+      #  * :required?
+      #  * :valid?
+      attr_reader :messages
+
+      def message_for(name, tokens = nil)
+        template = @messages[name]
+        if tokens
+          [template % tokens]
+        else
+          [template]
+        end
       end
 
       # Call the question
