@@ -33,5 +33,12 @@ module TTY
       value.respond_to?(:empty?) && value.empty? ||
       BLANK_REGEX === value
     end
+
+    # Deep copy object
+    #
+    # @api public
+    def deep_copy(object)
+      Marshal.load(Marshal.dump(object))
+    end
   end # Utils
 end # TTY
