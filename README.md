@@ -18,7 +18,8 @@
 ## Features
 
 * Number of prompt types for gathering user input
-* A robust API for getting and validating complex inputs
+* A robust API for validating complex inputs
+* User friendly error feedback
 
 ## Installation
 
