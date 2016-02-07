@@ -8,6 +8,7 @@
 * Add #slider for picking values from range of numbers
 * Add #enum_select for selecting option from enumerated list
 * Add new ConversionError type
+* Add ability to configure error messages for #ask call
 
 ### Changed
 * Move #blank? to Utils
