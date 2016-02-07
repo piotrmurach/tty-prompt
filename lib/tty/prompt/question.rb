@@ -58,8 +58,8 @@ module TTY
 
       def setup_messages
         @messages = {
-          range?: "Value %{value} must be within the range %{in}",
-          valid?: "Your answer is invalid (must match %{valid})",
+          range?: 'Value %{value} must be within the range %{in}',
+          valid?: 'Your answer is invalid (must match %{valid})',
           required?: 'Value must be provided'
         }
       end
@@ -71,9 +71,20 @@ module TTY
       #  * :valid?
       attr_reader :messages
 
+      # Retrieve message based on the key
+      #
+      # @param [Symbol] name
+      #   the name of message key
+      #
+      # @param [Hash] tokens
+      #   the tokens to evaluate
+      #
+      # @return [Array[String]]
+      #
+      # @api private
       def message_for(name, tokens = nil)
         template = @messages[name]
-        if tokens
+        if !template.match(/\%\{/).nil?
           [template % tokens]
         else
           [template]
@@ -244,7 +255,8 @@ module TTY
       # @return [Boolean]
       #
       # @api public
-      def required(value = (not_set = true))
+      def required(value = (not_set = true), message = nil)
+        messages[:required?] = message if message
         return @required if not_set
         @required = value
       end
@@ -257,7 +269,8 @@ module TTY
       # @return [Question]
       #
       # @api public
-      def validate(value = nil, &block)
+      def validate(value = nil, message = nil, &block)
+        messages[:valid?] = message if message
         @validation = (value || block)
       end
 
@@ -298,7 +311,8 @@ module TTY
       # @param [String] value
       #
       # @api public
-      def in(value = (not_set = true))
+      def in(value = (not_set = true), message = nil)
+        messages[:range?] = message if message
         if in? && !@in.is_a?(Range)
           @in = converter_registry.(:range, @in)
         end
