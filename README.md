@@ -50,16 +50,16 @@ Or install it yourself as:
     * [2.2.5 modify](#225-modify)
     * [2.2.6 required](#226-required)
     * [2.2.7 validate](#227-validate)
-    * [2.2.8 messages-unreleased](#228-messages)
+    * [2.2.8 messages](#228-messages)
   * [2.3 keypress](#23-keypress)
   * [2.4 multiline](#24-multiline)
   * [2.5 mask](#25-mask)
   * [2.6 yes?/no?](#26-yesno)
   * [2.7 select](#27-select)
   * [2.8 multi_select](#28-multi_select)
-  * [2.9 enum_select-unreleased](#29-enum_select-unreleased)
+  * [2.9 enum_select](#29-enum_select)
   * [2.10 suggest](#210-suggest)
-  * [2.11 slider-unreleased](#211-slider-unreleased)
+  * [2.11 slider](#211-slider)
   * [2.12 say](#212-say)
   * [2.13 ok](#213-ok)
   * [2.14 warn](#214-warn)
@@ -547,7 +547,7 @@ And when you press enter you will see the following selected:
 # => [{score: 20}, {score: 50}]
 ```
 
-### 2.9 enum_select-unreleased
+### 2.9 enum_select
 
 In order to ask for standard selection from indexed list you can use `enum_select` and pass question together with possible choices:
 
@@ -628,7 +628,7 @@ prompt.suggest('b', possible, indent: 4, single_text: 'Perhaps you meant?')
 #     blame
 ```
 
-### 2.11 slider-unreleased
+### 2.11 slider
 
 If you have constrained range of numbers for user to choose from you may consider using `slider`. The slider provides easy visual way of picking a value marked by `O` marker.
 
