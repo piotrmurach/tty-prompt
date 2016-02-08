@@ -1,19 +1,18 @@
 # Change log
 
-## [v0.4.0] - 2016-x-x
+## [v0.4.0] - 2016-02-08
 
 ### Added
-* Add :enum option for #select & #multi_select to allow numerical selection by @rtoshiro
+* Add :enum option for #select & #multi_select to allow for numerical selection by @rtoshiro
 * Add new key event types to KeyEvent
 * Add #slider for picking values from range of numbers
 * Add #enum_select for selecting option from enumerated list
-* Add new ConversionError type
 * Add ability to configure error messages for #ask call
+* Add new ConversionError type
 
 ### Changed
 * Move #blank? to Utils
-
-### Changed
+* Update pastel dependency
 
 ## [v0.3.0] - 2015-12-28
 
