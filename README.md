@@ -124,7 +124,7 @@ To ask for a selection from enumerated list you can use `enum_select`:
 
 ```ruby
 choices = %w(emacs nano vim)
-prompt.enum_select("Select an editor?")
+prompt.enum_select("Select an editor?", choices)
 # =>
 #
 # Select an editor?
