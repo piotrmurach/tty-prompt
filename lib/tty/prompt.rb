@@ -229,10 +229,7 @@ module TTY
     #
     # @api public
     def yes?(question, *args, &block)
-      options = Utils.extract_options!(args)
-      options.merge!(convert: :bool)
-      args << options
-      ask(question, *args, &block)
+      yes_or_no?(question, true, *args, &block)
     end
 
     # Ask a question with a range slider
@@ -264,7 +261,7 @@ module TTY
     #
     # @api public
     def no?(question, *args, &block)
-      !yes?(question, *args, &block)
+      !yes_or_no?(question, false, *args, &block)
     end
 
     # Print statement out. If the supplied message ends with a space or
@@ -368,6 +365,16 @@ module TTY
     # @api public
     def tty?
       stdout.tty?
+    end
+
+    # Common for yes? or no?
+    #
+    # @api private
+    def yes_or_no?(question, default, *args, &block)
+      options = Utils.extract_options!(args)
+      options.merge!(convert: :bool, default: default)
+      args << options
+      ask(question, *args, &block)
     end
 
     # Return standard in
