@@ -116,14 +116,7 @@ module TTY
       # @api private
       def render_question
         header = "#{prompt.prefix}#{message} "
-        if @convert == :bool && !@done
-          if converted_default
-            suffix = '(Y/n)'
-          else
-            suffix = '(y/N)'
-          end
-          header += @prompt.decorate(suffix, :bright_black) + ' '
-        elsif !echo?
+        if !echo?
           header
         elsif @done
           header += @prompt.decorate("#{@input}", @color)
@@ -203,17 +196,6 @@ module TTY
           converter_registry.(@convert, value)
         else
           value
-        end
-      end
-
-      # Convert default value by convert
-      #
-      # @api private
-      def converted_default
-        if default?
-          convert_result(default)
-        else
-          default
         end
       end
 
