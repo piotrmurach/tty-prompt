@@ -223,13 +223,38 @@ module TTY
     #
     # @example
     #   prompt = TTY::Prompt.new
-    #   prompt.yes?('Are you human? (Y/n)') # => true
+    #   prompt.yes?('Are you human?')
+    #   # => Are you human? (Y/n)
     #
     # @return [Boolean]
     #
     # @api public
-    def yes?(question, *args, &block)
-      yes_or_no?(question, true, *args, &block)
+    def yes?(message, *args, &block)
+      options = Utils.extract_options!(args)
+      options.merge!(default: true)
+
+      question = ConfirmQuestion.new(self, options)
+      question.call(message, &block)
+    end
+
+    # A shortcut method to ask the user negative question and return
+    # true for 'no' reply.
+    #
+    # @example
+    #   prompt = TTY::Prompt.new
+    #   prompt.no?('Are you alien?') # => true
+    #   # => Are you human? (y/N)
+    #
+    # @return [Boolean]
+    #
+    # @api public
+    def no?(message, *args, &block)
+      defaults = {suffix: 'y/N', default: false}
+      options  = Utils.extract_options!(args)
+      options.merge!(defaults.reject { |k, _| options.key?(k) })
+
+      question = ConfirmQuestion.new(self, options)
+      !question.call(message, &block)
     end
 
     # Ask a question with a range slider
@@ -248,20 +273,6 @@ module TTY
       options = Utils.extract_options!(args)
       slider = Slider.new(self, options)
       slider.call(question, &block)
-    end
-
-    # A shortcut method to ask the user negative question and return
-    # true for 'no' reply.
-    #
-    # @example
-    #   prompt = TTY::Prompt.new
-    #   prompt.no?('Are you alien? (y/N)') # => true
-    #
-    # @return [Boolean]
-    #
-    # @api public
-    def no?(question, *args, &block)
-      !yes_or_no?(question, false, *args, &block)
     end
 
     # Print statement out. If the supplied message ends with a space or
@@ -365,16 +376,6 @@ module TTY
     # @api public
     def tty?
       stdout.tty?
-    end
-
-    # Common for yes? or no?
-    #
-    # @api private
-    def yes_or_no?(question, default, *args, &block)
-      options = Utils.extract_options!(args)
-      options.merge!(convert: :bool, default: default)
-      args << options
-      ask(question, *args, &block)
     end
 
     # Return standard in
