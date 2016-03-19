@@ -350,19 +350,28 @@ prompt.yes?('Do you like Ruby?')
 # Do you like Ruby? (Y/n)
 ```
 
-the same can be achieved by using plain `ask`:
+You can further customize question by passing `suffix`, `positive` and `negative` options. The `suffix` changes text of available options, the `positive` specifies display string for successful answer and `negative` changes display string for negative answer. The final value is a boolean provided the `convert` option evaluates to boolean. For example to ask custom question do:
 
 ```ruby
-prompt.ask('Do you like Ruby? (Y/n)', convert: :bool)
+prompt.yes?('Are you a human?') do |q|
+  q.suffix 'Agree/Disagree'
+  q.positive 'Agree'
+  q.negative 'Disagree'
+  q.convert -> (input) { !input.match(/^agree$/i).nil? }
+end
+# =>
+# Are you a human? (Agree/Disagree)
 ```
 
-There is also the opposite for asking confirmation of negative option:
+There is also the opposite for asking confirmation of negative question:
 
 ```ruby
 prompt.no?('Do you hate Ruby?')
 # =>
 # Do you hate Ruby? (y/N)
 ```
+
+Similarly to `yes?` method, you can supply the same options to customize the question.
 
 ### 2.7 select
 
