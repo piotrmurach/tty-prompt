@@ -58,12 +58,13 @@ Or install it yourself as:
   * [2.7 select](#27-select)
   * [2.8 multi_select](#28-multi_select)
   * [2.9 enum_select](#29-enum_select)
-  * [2.10 suggest](#210-suggest)
-  * [2.11 slider](#211-slider)
-  * [2.12 say](#212-say)
-  * [2.13 ok](#213-ok)
-  * [2.14 warn](#214-warn)
-  * [2.15 error](#215-warn)
+  * [2.10 gather](#210-gather)
+  * [2.11 suggest](#211-suggest)
+  * [2.12 slider](#212-slider)
+  * [2.13 say](#213-say)
+  * [2.14 ok](#214-ok)
+  * [2.15 warn](#215-warn)
+  * [2.16 error](#216-warn)
 
 ## 1. Usage
 
@@ -132,6 +133,24 @@ prompt.enum_select("Select an editor?", choices)
 #   2) /usr/bin/vim.basic
 #   3) /usr/bin/vim.tiny
 #   Choose 1-3 [2]:
+```
+
+If you wish to collect more than one answer use `gather`:
+
+```ruby
+result = prompt.gather do
+  key(:name).ask('Name?')
+
+  key(:age).ask('Age?', convert: :int)
+
+  key(:address) do
+    key(:street).ask('Street?', required: true)
+    key(:city).ask('City?')
+    key(:zip).ask('Zip?', validate: /\A\d{3}\Z/)
+  end
+end
+# =>
+# {:name => "Piotr", :age => 30, :address => {:street => "Street", :city => "City", :zip => "123"}}
 ```
 
 ## 2. Interface
@@ -613,6 +632,26 @@ end
 #   Choose 1-3 [2]:
 #
 # Select an editor? /usr/bin/vim
+```
+
+### 2.10 gather
+
+In order to collect more than one answer use `gather` method. Using the `key` you can describe the answers key name. All the methods for asking user input such as `ask`, `mask`, `select` can be directly invoked on the key. The key composition is very flexible by allowing nested keys:
+
+```
+prompt.gather do
+  key(:name).ask('Name?')
+
+  key(:age).ask('Age?', convert: :int)
+
+  key(:address) do
+    key(:street).ask('Street?', required: true)
+    key(:city).ask('City?')
+    key(:zip).ask('Zip?', validate: /\A\d{3}\Z/)
+  end
+end
+# =>
+# {:name => "Piotr", :age => 30, :address => {:street => "Street", :city => "City", :zip => "123"}}
 ```
 
 ### 2.10 suggest
