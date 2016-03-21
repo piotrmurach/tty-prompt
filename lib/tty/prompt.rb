@@ -249,7 +249,7 @@ module TTY
     #
     # @api public
     def no?(message, *args, &block)
-      defaults = {suffix: 'y/N', default: false}
+      defaults = { suffix: 'y/N', default: false }
       options  = Utils.extract_options!(args)
       options.merge!(defaults.reject { |k, _| options.key?(k) })
 
@@ -367,6 +367,22 @@ module TTY
     def suggest(message, possibilities, options = {})
       suggestion = Suggestion.new(options)
       say(suggestion.suggest(message, possibilities))
+    end
+
+    # Gathers more than one aswer
+    #
+    # @example
+    #   prompt.gather do
+    #     key(:name).ask('Name?')
+    #   end
+    #
+    # @return [Hash]
+    #   the collection of answers
+    #
+    # @api public
+    def gather(options = {}, &block)
+      collector = AnswersCollector.new(self, options)
+      collector.call(&block)
     end
 
     # Check if outputing to terminal
