@@ -58,7 +58,7 @@ Or install it yourself as:
   * [2.7 select](#27-select)
   * [2.8 multi_select](#28-multi_select)
   * [2.9 enum_select](#29-enum_select)
-  * [2.10 gather](#210-gather)
+  * [2.10 collect](#210-collect)
   * [2.11 suggest](#211-suggest)
   * [2.12 slider](#212-slider)
   * [2.13 say](#213-say)
@@ -135,10 +135,10 @@ prompt.enum_select("Select an editor?", choices)
 #   Choose 1-3 [2]:
 ```
 
-If you wish to collect more than one answer use `gather`:
+If you wish to collect more than one answer use `collect`:
 
 ```ruby
-result = prompt.gather do
+result = prompt.collect do
   key(:name).ask('Name?')
 
   key(:age).ask('Age?', convert: :int)
@@ -634,12 +634,12 @@ end
 # Select an editor? /usr/bin/vim
 ```
 
-### 2.10 gather
+### 2.10 collect
 
-In order to collect more than one answer use `gather` method. Using the `key` you can describe the answers key name. All the methods for asking user input such as `ask`, `mask`, `select` can be directly invoked on the key. The key composition is very flexible by allowing nested keys:
+In order to collect more than one answer use `collect` method. Using the `key` you can describe the answers key name. All the methods for asking user input such as `ask`, `mask`, `select` can be directly invoked on the key. The key composition is very flexible by allowing nested keys:
 
-```
-prompt.gather do
+```ruby
+prompt.collect do
   key(:name).ask('Name?')
 
   key(:age).ask('Age?', convert: :int)

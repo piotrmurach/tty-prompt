@@ -372,7 +372,7 @@ module TTY
     # Gathers more than one aswer
     #
     # @example
-    #   prompt.gather do
+    #   prompt.collect do
     #     key(:name).ask('Name?')
     #   end
     #
@@ -380,7 +380,7 @@ module TTY
     #   the collection of answers
     #
     # @api public
-    def gather(options = {}, &block)
+    def collect(options = {}, &block)
       collector = AnswersCollector.new(self, options)
       collector.call(&block)
     end

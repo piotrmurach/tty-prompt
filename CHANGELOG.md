@@ -4,7 +4,7 @@
 
 ### Added
 * Add ConfirmQuestion for #yes? & #no? calls
-* Add ability to gather more than one answer through #gather call
+* Add ability to collect more than one answer through #collect call
 
 ### Changed
 
