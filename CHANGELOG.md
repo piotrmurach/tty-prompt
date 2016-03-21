@@ -3,7 +3,8 @@
 ## [v0.5.0] - unreleased
 
 ### Added
-* Add ConfirmQuestion for yes/no input
+* Add ConfirmQuestion for #yes? & #no? calls
+* Add ability to gather more than one answer through #gather call
 
 ### Changed
 
