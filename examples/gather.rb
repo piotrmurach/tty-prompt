@@ -1,0 +1,19 @@
+# encoding: utf-8
+
+require 'tty-prompt'
+
+prompt = TTY::Prompt.new(prefix: '[?] ')
+
+result = prompt.gather do
+  key(:name).ask('Name?')
+
+  key(:age).ask('Age?', convert: :int)
+
+  key(:address) do
+    key(:street).ask('Street?', required: true)
+    key(:city).ask('City?')
+    key(:zip).ask('Zip?', validate: /\A\d{3}\Z/)
+  end
+end
+
+puts result
