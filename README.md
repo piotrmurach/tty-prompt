@@ -369,7 +369,31 @@ prompt.yes?('Do you like Ruby?')
 # Do you like Ruby? (Y/n)
 ```
 
-You can further customize question by passing `suffix`, `positive` and `negative` options. The `suffix` changes text of available options, the `positive` specifies display string for successful answer and `negative` changes display string for negative answer. The final value is a boolean provided the `convert` option evaluates to boolean. For example to ask custom question do:
+You can further customize question by passing `suffix`, `positive`, `negative` and `convert` options. The `suffix` changes text of available options, the `positive` specifies display string for successful answer and `negative` changes display string for negative answer. The final value is a boolean provided the `convert` option evaluates to boolean.
+
+It's enough to provide the `suffix` option for the prompt to accept matching answers with correct labels:
+
+```ruby
+prompt.yes?("Are you a human?") do |q|
+  q.suffix 'Yup/nope'
+end
+# =>
+# Are you a human? (Yup/nope)
+```
+
+Alternatively, instead of `suffix` option provide the `positive` and `negative` labels:
+
+```ruby
+prompt.yes?("Are you a human?") do |q|
+  q.default false
+  q.positive 'Yup'
+  q.negative 'Nope'
+end
+# =>
+# Are you a human? (yup/Nope)
+```
+
+Finally, providing all available options you can ask fully customized question:
 
 ```ruby
 prompt.yes?('Are you a human?') do |q|
