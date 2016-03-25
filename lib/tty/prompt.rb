@@ -230,8 +230,9 @@ module TTY
     #
     # @api public
     def yes?(message, *args, &block)
-      options = Utils.extract_options!(args)
-      options.merge!(default: true)
+      defaults = { suffix: 'Y/n', default: true }
+      options  = Utils.extract_options!(args)
+      options.merge!(defaults.reject { |k, _| options.key?(k) })
 
       question = ConfirmQuestion.new(self, options)
       question.call(message, &block)

@@ -41,6 +41,18 @@ RSpec.describe TTY::Prompt, 'confirmation' do
       ].join)
     end
 
+    it 'changes default' do
+      prompt.input << "\n"
+      prompt.input.rewind
+      expect(prompt.yes?("Are you a human?", default: false)).to eq(false)
+      expect(prompt.output.string).to eq([
+        "Are you a human? \e[90m(Y/n)\e[0m ",
+        "\e[1000D\e[K\e[1A",
+        "\e[1000D\e[K",
+        "Are you a human? \e[32mNo\e[0m\n"
+      ].join)
+    end
+
     it "customizes question through options" do
       prompt.input << "\r"
       prompt.input.rewind
@@ -109,6 +121,18 @@ RSpec.describe TTY::Prompt, 'confirmation' do
         "\e[1000D\e[K\e[1A",
         "\e[1000D\e[K",
         "Are you a human? \e[32mNo\e[0m\n"
+      ].join)
+    end
+
+    it 'changes default' do
+      prompt.input << "\r"
+      prompt.input.rewind
+      expect(prompt.no?("Are you a human?", default: true)).to eq(false)
+      expect(prompt.output.string).to eq([
+        "Are you a human? \e[90m(y/N)\e[0m ",
+        "\e[1000D\e[K\e[1A",
+        "\e[1000D\e[K",
+        "Are you a human? \e[32mYes\e[0m\n"
       ].join)
     end
 
