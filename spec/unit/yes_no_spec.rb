@@ -25,7 +25,7 @@ RSpec.describe TTY::Prompt, 'confirmation' do
         "Are you a human? \e[90m(Y/n)\e[0m ",
         "\e[1000D\e[K\e[1A",
         "\e[1000D\e[K",
-        "Are you a human? \e[32mNo\e[0m\n"
+        "Are you a human? \e[32mno\e[0m\n"
       ].join)
     end
 
@@ -49,7 +49,38 @@ RSpec.describe TTY::Prompt, 'confirmation' do
         "Are you a human? \e[90m(Y/n)\e[0m ",
         "\e[1000D\e[K\e[1A",
         "\e[1000D\e[K",
-        "Are you a human? \e[32mNo\e[0m\n"
+        "Are you a human? \e[32mno\e[0m\n"
+      ].join)
+    end
+
+    it "defaults suffix and converter" do
+      prompt.input << "Nope\n"
+      prompt.input.rewind
+      result = prompt.yes?("Are you a human?") do |q|
+        q.positive 'Yup'
+        q.negative 'nope'
+      end
+      expect(result).to eq(false)
+      expect(prompt.output.string).to eq([
+        "Are you a human? \e[90m(Yup/nope)\e[0m ",
+        "\e[1000D\e[K\e[1A",
+        "\e[1000D\e[K",
+        "Are you a human? \e[32mnope\e[0m\n"
+      ].join)
+    end
+
+    it "defaults positive and negative" do
+      prompt.input << "Nope\n"
+      prompt.input.rewind
+      result = prompt.yes?("Are you a human?") do |q|
+        q.suffix 'Yup/nope'
+      end
+      expect(result).to eq(false)
+      expect(prompt.output.string).to eq([
+        "Are you a human? \e[90m(Yup/nope)\e[0m ",
+        "\e[1000D\e[K\e[1A",
+        "\e[1000D\e[K",
+        "Are you a human? \e[32mnope\e[0m\n"
       ].join)
     end
 
@@ -133,6 +164,22 @@ RSpec.describe TTY::Prompt, 'confirmation' do
         "\e[1000D\e[K\e[1A",
         "\e[1000D\e[K",
         "Are you a human? \e[32mYes\e[0m\n"
+      ].join)
+    end
+
+    it "defaults suffix and converter" do
+      prompt.input << "Yup\n"
+      prompt.input.rewind
+      result = prompt.no?("Are you a human?") do |q|
+        q.positive 'yup'
+        q.negative 'Nope'
+      end
+      expect(result).to eq(false)
+      expect(prompt.output.string).to eq([
+        "Are you a human? \e[90m(yup/Nope)\e[0m ",
+        "\e[1000D\e[K\e[1A",
+        "\e[1000D\e[K",
+        "Are you a human? \e[32myup\e[0m\n"
       ].join)
     end
 

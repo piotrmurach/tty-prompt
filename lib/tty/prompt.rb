@@ -230,7 +230,7 @@ module TTY
     #
     # @api public
     def yes?(message, *args, &block)
-      defaults = { suffix: 'Y/n', default: true }
+      defaults = { default: true }
       options  = Utils.extract_options!(args)
       options.merge!(defaults.reject { |k, _| options.key?(k) })
 
@@ -250,7 +250,7 @@ module TTY
     #
     # @api public
     def no?(message, *args, &block)
-      defaults = { suffix: 'y/N', default: false }
+      defaults = { default: false, type: :no }
       options  = Utils.extract_options!(args)
       options.merge!(defaults.reject { |k, _| options.key?(k) })
 
