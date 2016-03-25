@@ -1,19 +1,19 @@
 # TTY::Prompt
 [![Gem Version](https://badge.fury.io/rb/tty-prompt.svg)][gem]
-[![Build Status](https://secure.travis-ci.org/peter-murach/tty-prompt.svg?branch=master)][travis]
-[![Code Climate](https://codeclimate.com/github/peter-murach/tty-prompt/badges/gpa.svg)][codeclimate]
-[![Coverage Status](https://coveralls.io/repos/peter-murach/tty-prompt/badge.svg)][coverage]
-[![Inline docs](http://inch-ci.org/github/peter-murach/tty-prompt.svg?branch=master)][inchpages]
+[![Build Status](https://secure.travis-ci.org/piotrmurach/tty-prompt.svg?branch=master)][travis]
+[![Code Climate](https://codeclimate.com/github/piotrmurach/tty-prompt/badges/gpa.svg)][codeclimate]
+[![Coverage Status](https://coveralls.io/repos/piotrmurach/tty-prompt/badge.svg)][coverage]
+[![Inline docs](http://inch-ci.org/github/piotrmurach/tty-prompt.svg?branch=master)][inchpages]
 
 [gem]: http://badge.fury.io/rb/tty-prompt
-[travis]: http://travis-ci.org/peter-murach/tty-prompt
-[codeclimate]: https://codeclimate.com/github/peter-murach/tty-prompt
-[coverage]: https://coveralls.io/r/peter-murach/tty-prompt
-[inchpages]: http://inch-ci.org/github/peter-murach/tty-prompt
+[travis]: http://travis-ci.org/piotrmurach/tty-prompt
+[codeclimate]: https://codeclimate.com/github/piotrmurach/tty-prompt
+[coverage]: https://coveralls.io/r/piotrmurach/tty-prompt
+[inchpages]: http://inch-ci.org/github/piotrmurach/tty-prompt
 
 > A beautiful and powerful interactive command line prompt.
 
-**TTY::Prompt** provides independent prompt component for [TTY](https://github.com/peter-murach/tty) toolkit.
+**TTY::Prompt** provides independent prompt component for [TTY](https://github.com/piotrmurach/tty) toolkit.
 
 ## Features
 
@@ -713,7 +713,7 @@ To simply print message out to stdout use `say` like so:
 prompt.say(...)
 ```
 
-The `say` method also accepts option `:color` which supports all the colors provided by [pastel](https://github.com/peter-murach/pastel#3-supported-colors)
+The `say` method also accepts option `:color` which supports all the colors provided by [pastel](https://github.com/piotrmurach/pastel#3-supported-colors)
 
 **TTY::Prompt** provides more specific versions of `say` method to better express intenation behind the message such as `ok`, `warn` and `error`.
 
@@ -743,7 +743,7 @@ prompt.error(...)
 
 ## Contributing
 
-1. Fork it ( https://github.com/peter-murach/tty-prompt/fork )
+1. Fork it ( https://github.com/piotrmurach/tty-prompt/fork )
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)

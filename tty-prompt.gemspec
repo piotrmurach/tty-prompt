@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = [""]
   spec.summary       = %q{A beautiful and powerful interactive command line prompt.}
   spec.description   = %q{A beautiful and powerful interactive command line prompt with a robust API for getting and validating complex inputs.}
-  spec.homepage      = "http://peter-murach.github.io/tty"
+  spec.homepage      = "https://piotrmurach.github.io/tty"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")
