@@ -85,7 +85,7 @@ module TTY
       #
       # @api public
       def pluck(name)
-        find { |choice| choice.name == name }
+        map { |choice| choice.public_send(name) }
       end
     end # Choices
   end # Prompt
