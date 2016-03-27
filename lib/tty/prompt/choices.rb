@@ -87,6 +87,22 @@ module TTY
       def pluck(name)
         map { |choice| choice.public_send(name) }
       end
+
+      # Find a matching choice
+      #
+      # @exmaple
+      #   choices.find_by(:name, 'small')
+      #
+      # @param [Symbol] attr
+      #   the attribute name
+      # @param [Object] value
+      #
+      # @return [Choice]
+      #
+      # @api public
+      def find_by(attr, value)
+        find { |choice| choice.public_send(attr) == value }
+      end
     end # Choices
   end # Prompt
 end # TTY
