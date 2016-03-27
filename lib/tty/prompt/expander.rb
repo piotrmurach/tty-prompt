@@ -1,0 +1,281 @@
+# encoding: utf-8
+
+require 'tty/prompt/question'
+
+module TTY
+  class Prompt
+    # A class responsible for rendering expanding options
+    # Used by {Prompt} to display key options question.
+    #
+    # @api private
+    class Expander
+      attr_reader :default
+
+      HELP_CHOICE = {
+        key: 'h',
+        name: 'print help',
+        value: :help
+      }
+
+      # Create instance of Expander
+      #
+      # @api public
+      def initialize(prompt, options = {})
+        @prompt      = prompt
+        @default     = 0
+        @choices     = Choices.new
+        @selected    = nil
+        @done        = false
+        @status      = :collapsed
+        @hint        = nil
+        @default_key = false
+        @color       = options.fetch(:color) { :green }
+
+        @prompt.subscribe(self)
+      end
+
+      def expanded?
+        @status == :expanded
+      end
+
+      def collapsed?
+        @status == :collapsed
+      end
+
+      def expand
+        @status = :expanded
+      end
+
+      # Respond to submit event
+      #
+      # @api public
+      def keyenter(_)
+        if @input.nil? || @input.empty?
+          @input = @choices[@default].key
+          @default_key = true
+        end
+
+        selected = select_choice(@input)
+
+        if selected && selected.key.to_s == 'h'
+          expand
+          @selected = nil
+          @input = ''
+        elsif selected
+          @done = true
+          @selected = selected
+        else
+          @input = ''
+        end
+      end
+      alias_method :keyreturn, :keyenter
+
+      # Respond to key press event
+      #
+      # @api public
+      def keypress(event)
+        if [:backspace, :delete].include?(event.key.name)
+          @input.chop! unless @input.empty?
+        elsif event.value =~ /^[^\e\n\r]/
+          @input += event.value
+        end
+        @selected = select_choice(@input)
+        if @selected && !@default_key && collapsed?
+          @hint = @selected.name
+        end
+      end
+
+      # Select choice by given key
+      #
+      # @return [Choice]
+      #
+      # @api private
+      def select_choice(key)
+        if !(/#{@choices[@default].key}/i).match(key).nil?
+          key = key.upcase
+        end
+        @choices.find_by(:key, key)
+      end
+
+      # Add a single choice
+      #
+      # @api public
+      def choice(value, &block)
+        if block
+          @choices << (value << block)
+        else
+          @choices << value
+        end
+      end
+
+      # Add multiple choices
+      #
+      # @param [Array[Object]] values
+      #   the values to add as choices
+      #
+      # @api public
+      def choices(values)
+        values.each { |val| choice(val) }
+      end
+
+      # Execute this prompt
+      #
+      # @api public
+      def call(message, possibilities, &block)
+        choices(possibilities)
+        @message = message
+        block.call(self) if block
+        setup_defaults
+        choice(HELP_CHOICE)
+        render
+      end
+
+      private
+
+      # Create possible keys
+      #
+      # @return [String]
+      #
+      # @api private
+      def possible_keys
+        keys = @choices.pluck(:key)
+        default_key = keys[default]
+        default_key.upcase! if default_key
+        keys.join(',')
+      end
+
+      # @api private
+      def render
+        @input = ''
+        until @done
+          render_question
+          read_input
+          refresh
+        end
+        render_question
+        render_answer
+      end
+
+      # @api private
+      def render_answer
+        @selected.value
+      end
+
+      def render_header
+        header = "#{@prompt.prefix}#{@message} "
+
+        if @done
+          selected_item = "#{@selected.name}"
+          header << @prompt.decorate(selected_item, @color)
+        elsif collapsed?
+          help = %[(enter "h" for help) ]
+          help << "[#{possible_keys}] "
+          header << @prompt.decorate(help, :bright_black)
+          header << @input
+        end
+
+        header
+      end
+
+      # @api private
+      def render_hint
+        hint = "\n"
+        hint << @prompt.decorate('>> ', @color)
+        hint << @hint
+        @prompt.print(hint)
+        @prompt.print(@prompt.cursor.prev_line)
+        @prompt.print(@prompt.cursor.forward(@prompt.strip(render_header).size))
+      end
+
+      # @api private
+      def render_question
+        header = render_header
+        @prompt.print(header)
+        render_hint if @hint
+        @prompt.print("\n") if @done
+
+        if !@done && expanded?
+          @prompt.print(render_menu)
+          @prompt.print(render_footer)
+        end
+      end
+
+      def render_footer
+        "Choice [#{@choices[@default].key}]: #{@input}"
+      end
+
+      def read_input
+        @prompt.read_keypress
+      end
+
+      # @api private
+      def count_lines
+        lines = render_header.scan("\n").length + 1
+        if @hint
+          lines += @hint.scan("\n").length + 1
+        elsif expanded?
+          lines += @choices.length
+          lines += render_footer.scan("\n").length + 1
+        end
+        lines
+      end
+
+      # Refresh the current input
+      #
+      # @api private
+      def refresh
+        lines = count_lines
+        if @hint && (!@selected || @done)
+          @hint = nil
+          @prompt.print(@prompt.clear_lines(lines, :down))
+          @prompt.print(@prompt.cursor.prev_line)
+        elsif expanded?
+          @prompt.print(@prompt.clear_lines(lines))
+        else
+          @prompt.print(@prompt.clear_line)
+        end
+      end
+
+      # Render help menu
+      #
+      # @api private
+      def render_menu
+        output = "\n"
+        @choices.each do |choice|
+          chosen = %(#{choice.key} - #{choice.name})
+          if @selected && @selected.key == choice.key
+            chosen = @prompt.decorate(chosen, @color)
+          end
+          output << chosen + "\n"
+        end
+        output
+      end
+
+      def setup_defaults
+        validate_choices
+      end
+
+      def validate_choices
+        errors = []
+        keys = []
+        @choices.each do |choice|
+          if choice.key.nil?
+            errors <<  "Choice #{choice.name} is missing a :key attribute"
+            next
+          end
+          if choice.key.length != 1
+            errors << "Choice key `#{choice.key}` is more than one character long."
+          end
+          if choice.key.to_s == 'h'
+            errors << "Choice key `#{choice.key}` is reserved for help menu."
+          end
+          if keys.include?(choice.key)
+            errors << "Choice key `#{choice.key}` is a duplicate."
+          end
+          keys << choice.key if choice.key
+        end
+        errors.each { |err| fail ConfigurationError, err }
+      end
+    end # Expander
+  end # Prompt
+end # TTY

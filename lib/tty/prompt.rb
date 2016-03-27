@@ -34,7 +34,7 @@ module TTY
     # @api private
     attr_reader :prefix
 
-    def_delegators :@pastel, :decorate
+    def_delegators :@pastel, :decorate, :strip
 
     def_delegators :@cursor, :clear_lines, :clear_line,
                    :show, :hide
@@ -256,6 +256,29 @@ module TTY
 
       question = ConfirmQuestion.new(self, options)
       !question.call(message, &block)
+    end
+
+    # Expand available options
+    #
+    # @example
+    #   prompt = TTY::Prompt.new
+    #   choices = [{
+    #     key: 'Y',
+    #     name: 'Overwrite',
+    #     value: :yes
+    #   }, {
+    #     key: 'n',
+    #     name: 'Skip',
+    #     value: :no
+    #   }]
+    #   prompt.expand('Overwirte Gemfile?', choices)
+    #
+    # @return [Object]
+    #   the user specified value
+    #
+    # @api public
+    def expand(message, *args, &block)
+      invoke_select(Expander, message, *args, &block)
     end
 
     # Ask a question with a range slider
