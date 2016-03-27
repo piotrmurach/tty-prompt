@@ -11,12 +11,15 @@ module TTY
       # @api public
       attr_reader :name
 
+      attr_reader :key
+
       # Create a Choice instance
       #
       # @api public
-      def initialize(name, value)
+      def initialize(name, value, key = nil)
         @name  = name
         @value = value
+        @key   = key
       end
 
       # Create choice from value
@@ -42,7 +45,11 @@ module TTY
         when Array
           new("#{val.first}", val.last)
         when Hash
-          new("#{val.keys.first}", val.values.first)
+          if val.key?(:name)
+            new("#{val[:name]}", val[:value], val[:key])
+          else
+            new("#{val.keys.first}", val.values.first)
+          end
         else
           raise ArgumentError, "#{val} cannot be coerced into Choice"
         end
