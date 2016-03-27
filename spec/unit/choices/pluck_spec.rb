@@ -1,9 +1,9 @@
 # encoding: utf-8
 
-RSpec.describe TTY::Prompt::Choices, '.pluck' do
-  it "plucks choice from collection by name" do
-    collection = %w(large medium small)
+RSpec.describe TTY::Prompt::Choices, '#pluck' do
+  it "plucks choice by key name" do
+    collection = [{name: 'large'},{name: 'medium'},{name: 'small'}]
     choices = described_class[*collection]
-    expect(choices.pluck('medium').name).to eq('medium')
+    expect(choices.pluck(:name)).to eq(['large', 'medium', 'small'])
   end
 end
