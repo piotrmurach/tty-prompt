@@ -5,8 +5,12 @@
 ### Added
 * Add ConfirmQuestion for #yes? & #no? calls
 * Add ability to collect more than one answer through #collect call
+* Add Choices#find_by for selecting choice based on attribute
+* Add Prompt#expand for expanding key options
 
 ### Changed
+* Change Choice#from to allow for coersion of complex objects with keys
+* Change Choices#pluck to search through object attributes
 
 ### Fixed
 * Fix #no? to correctly ask negative question by @ondra-m
