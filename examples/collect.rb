@@ -4,7 +4,7 @@ require 'tty-prompt'
 
 prompt = TTY::Prompt.new(prefix: '[?] ')
 
-result = prompt.gather do
+result = prompt.collect do
   key(:name).ask('Name?')
 
   key(:age).ask('Age?', convert: :int)
