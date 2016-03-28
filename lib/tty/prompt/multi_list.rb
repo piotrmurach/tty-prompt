@@ -47,16 +47,26 @@ module TTY
         @active = @default.last unless @selected.empty?
       end
 
+      # Generate selected items names
+      #
+      # @return [String]
+      #
+      # @api private
+      def selected_names
+        @selected.map(&:name).join(', ')
+      end
+
       # Render initial help text and then currently selected choices
       #
       # @api private
       def render_header
+        instructions = @prompt.decorate(help, :bright_black)
         if @done
-          @prompt.decorate(@selected.map(&:name).join(', '), :green)
+          @prompt.decorate(selected_names, @color)
         elsif @selected.size.nonzero?
-          @selected.map(&:name).join(', ')
+          selected_names + (@first_render ? " #{instructions}" : '')
         elsif @first_render
-          @prompt.decorate(help, :bright_black)
+          instructions
         end
       end
 
@@ -79,7 +89,7 @@ module TTY
           indicator = (index + 1 == @active) ?  @marker : Symbols::SPACE
           indicator += Symbols::SPACE
           message = if @selected.include?(choice)
-                      selected = @prompt.decorate(Symbols::RADIO_CHECKED, :green)
+                      selected = @prompt.decorate(Symbols::RADIO_CHECKED, @color)
                       selected + Symbols::SPACE + num + choice.name
                     else
                       Symbols::RADIO_UNCHECKED + Symbols::SPACE + num + choice.name

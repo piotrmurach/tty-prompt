@@ -116,7 +116,7 @@ RSpec.describe TTY::Prompt do
             end
     expect(value).to match_array([{score: 20}, {score: 50}])
     expect(prompt.output.string).to eq([
-      "\e[?25lSelect drinks? beer, bourbon\n",
+      "\e[?25lSelect drinks? beer, bourbon \e[90m(Use arrow keys, press Space to select and Enter to finish)\e[0m\n",
       "  ⬡ vodka\n",
       "  \e[32m⬢\e[0m beer\n",
       "  ⬡ wine\n",
@@ -172,6 +172,43 @@ RSpec.describe TTY::Prompt do
       "  ⬡ bourbon",
       "\e[1000D\e[K\e[1A" * 5, "\e[1000D\e[K",
       "[?] Select drinks? \n\e[?25h"
+    ].join)
+  end
+
+  it "changes selected item color & marker" do
+    prompt = TTY::TestPrompt.new
+    choices = %w(vodka beer wine whisky bourbon)
+    prompt.input << "\r"
+    prompt.input.rewind
+    options = {default: [1], color: :blue, marker: '>'}
+    expect(prompt.multi_select("Select drinks?", choices, options)). to eq(['vodka'])
+    expect(prompt.output.string).to eq([
+      "\e[?25lSelect drinks? vodka \e[90m(Use arrow keys, press Space to select and Enter to finish)\e[0m\n",
+      "> \e[34m⬢\e[0m vodka\n",
+      "  ⬡ beer\n",
+      "  ⬡ wine\n",
+      "  ⬡ whisky\n",
+      "  ⬡ bourbon",
+      "\e[1000D\e[K\e[1A" * 5, "\e[1000D\e[K",
+      "Select drinks? \e[34mvodka\e[0m\n\e[?25h"
+    ].join)
+  end
+
+  it "changes help text" do
+    prompt = TTY::TestPrompt.new
+    choices = %w(vodka beer wine whisky bourbon)
+    prompt.input << "\r"
+    prompt.input.rewind
+    expect(prompt.multi_select("Select drinks?", choices, help: '(Bash keyboard)')). to eq([])
+    expect(prompt.output.string).to eq([
+      "\e[?25lSelect drinks? \e[90m(Bash keyboard)\e[0m\n",
+      "‣ ⬡ vodka\n",
+      "  ⬡ beer\n",
+      "  ⬡ wine\n",
+      "  ⬡ whisky\n",
+      "  ⬡ bourbon",
+      "\e[1000D\e[K\e[1A" * 5, "\e[1000D\e[K",
+      "Select drinks? \n\e[?25h"
     ].join)
   end
 end
