@@ -193,4 +193,26 @@ RSpec.describe TTY::Prompt, '#select' do
       "[?] What size? \e[32mLarge\e[0m\n\e[?25h"
     ].join)
   end
+
+  it "verifies default index format" do
+    prompt = TTY::TestPrompt.new
+    choices = %w(Large Medium Small)
+    prompt.input << "\r"
+    prompt.input.rewind
+
+    expect {
+      prompt.select('What size?', choices, default: '')
+    }.to raise_error(TTY::Prompt::ConfigurationError, /in range \(1 - 3\)/)
+  end
+
+  it "verifies default index range" do
+    prompt = TTY::TestPrompt.new
+    choices = %w(Large Medium Small)
+    prompt.input << "\r"
+    prompt.input.rewind
+
+    expect {
+      prompt.select('What size?', choices, default: 10)
+    }.to raise_error(TTY::Prompt::ConfigurationError, /`10` out of range \(1 - 3\)/)
+  end
 end

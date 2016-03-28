@@ -143,6 +143,10 @@ module TTY
       # @api private
       def validate_defaults
         @default.each do |d|
+          if d.nil? || d.to_s.empty?
+            fail ConfigurationError,
+                 "default index must be an integer in range (1 - #{@choices.size})"
+          end
           if d < 1 || d > @choices.size
             fail ConfigurationError,
                  "default index `#{d}` out of range (1 - #{@choices.size})"
