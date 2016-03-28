@@ -58,13 +58,14 @@ Or install it yourself as:
   * [2.7 select](#27-select)
   * [2.8 multi_select](#28-multi_select)
   * [2.9 enum_select](#29-enum_select)
-  * [2.10 collect](#210-collect)
-  * [2.11 suggest](#211-suggest)
-  * [2.12 slider](#212-slider)
-  * [2.13 say](#213-say)
-  * [2.14 ok](#214-ok)
-  * [2.15 warn](#215-warn)
-  * [2.16 error](#216-warn)
+  * [2.10 expand](#210-expand)
+  * [2.11 collect](#211-collect)
+  * [2.12 suggest](#212-suggest)
+  * [2.13 slider](#213-slider)
+  * [2.14 say](#214-say)
+  * [2.15 ok](#215-ok)
+  * [2.16 warn](#216-warn)
+  * [2.17 error](#217-warn)
 
 ## 1. Usage
 
@@ -658,7 +659,59 @@ end
 # Select an editor? /usr/bin/vim
 ```
 
-### 2.10 collect
+### 2.10 expand
+
+The `expand` provides a compact way to ask a question with many options.
+
+As first argument `expand` takes the message to display and as a second an array of choices. Compared to the `select`, `multi_select` and `enum_select`, the choices need to be objects that include `:key`, `:name` and `:value` keys. The `:key` must be a single character. The help choice is added automatically as the last option and the key `h`.
+
+```ruby
+choices = [
+  {
+    key: 'Y',
+    name: 'overwrite this file',
+    value: :yes
+  }, {
+    key: 'n',
+    name: 'do not overwrite this file',
+    value: :no
+  }, {
+    key: 'q',
+    name: 'quit; do not overwrite this file ',
+    value: :quit
+  }
+]
+```
+
+The first element in the array will be the default choice, you can change that by passing `default` option.
+
+```ruby
+prompt.expand('Overwrite Gemfile?', choices)
+# =>
+# Overwrite Gemfile? (enter "h" for help) [Y,n,q,h]
+```
+
+Each time user types an option a hint will be displayed:
+
+```ruby
+# Overwrite Gemfile? (enter "h" for help) [Y,n,a,d,q,h] y
+# >> overwrite this file
+```
+
+If user types `h` and presses enter, an expanded view will be shown which further allows to refine the choice:
+
+```ruby
+# Overwrite Gemfile?
+# Y - overwrite this file
+# n - do not overwrite this file
+# q - quit; do not overwrite this file
+# h - print help
+# Choice [Y]:
+```
+
+Run `examples/expand.rb` to see the prompt in action.
+
+### 2.11 collect
 
 In order to collect more than one answer use `collect` method. Using the `key` you can describe the answers key name. All the methods for asking user input such as `ask`, `mask`, `select` can be directly invoked on the key. The key composition is very flexible by allowing nested keys. If you want the value to be automatically converted to required type use [convert](#221-convert).
 
@@ -680,7 +733,7 @@ end
 # {:name => "Piotr", :age => 30, :address => {:street => "Street", :city => "City", :zip => "123"}}
 ```
 
-### 2.10 suggest
+### 2.12 suggest
 
 To suggest possible matches for the user input use `suggest` method like so:
 
@@ -702,7 +755,7 @@ prompt.suggest('b', possible, indent: 4, single_text: 'Perhaps you meant?')
 #     blame
 ```
 
-### 2.11 slider
+### 2.13 slider
 
 If you have constrained range of numbers for user to choose from you may consider using `slider`. The slider provides easy visual way of picking a value marked by `O` marker.
 
@@ -729,7 +782,7 @@ end
 # |--O-------| 4
 ```
 
-### 2.12 say
+### 2.14 say
 
 To simply print message out to stdout use `say` like so:
 
@@ -741,7 +794,7 @@ The `say` method also accepts option `:color` which supports all the colors prov
 
 **TTY::Prompt** provides more specific versions of `say` method to better express intenation behind the message such as `ok`, `warn` and `error`.
 
-### 2.13 ok
+### 2.15 ok
 
 Print message(s) in green do:
 
@@ -749,7 +802,7 @@ Print message(s) in green do:
 prompt.ok(...)
 ```
 
-### 2.14 warn
+### 2.16 warn
 
 Print message(s) in yellow do:
 
@@ -757,7 +810,7 @@ Print message(s) in yellow do:
 prompt.warn(...)
 ```
 
-### 2.15 error
+### 2.17 error
 
 Print message(s) in red do:
 
