@@ -201,7 +201,7 @@ module TTY
       end
 
       def render_footer
-        "Choice [#{@choices[@default].key}]: #{@input}"
+        "  Choice [#{@choices[@default].key}]: #{@input}"
       end
 
       def read_input
@@ -246,7 +246,7 @@ module TTY
           if @selected && @selected.key == choice.key
             chosen = @prompt.decorate(chosen, @color)
           end
-          output << chosen + "\n"
+          output << '  ' + chosen + "\n"
         end
         output
       end
