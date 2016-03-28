@@ -136,6 +136,21 @@ prompt.enum_select("Select an editor?", choices)
 #   Choose 1-3 [2]:
 ```
 
+However, if you have a lot of options to choose from you may want to use `expand`:
+
+```ruby
+choices = [
+  { key: 'y', name: 'overwrite this file', value: :yes },
+  { key: 'n', name: 'do not overwrite this file', value: :no },
+  { key: 'a', name: 'overwrite this file and all later files', value: :all },
+  { key: 'd', name: 'show diff', value: :diff },
+  { key: 'q', name: 'quit; do not overwrite this file ', value: :quit }
+]
+prompt.expand('Overwrite Gemfile?', choices)
+# =>
+# Overwrite Gemfile? (enter "h" for help) [Y,n,a,d,q,h]
+```
+
 If you wish to collect more than one answer use `collect`:
 
 ```ruby
@@ -445,13 +460,13 @@ end
 #   Jax
 ```
 
-By default the choice name is used as return value, but you can provide your custom values:
+By default the choice name is used as return value, but you can provide your custom values including a `Proc` object:
 
 ```ruby
 prompt.select("Choose your destiny?") do |menu|
   menu.choice 'Scorpion', 1
   menu.choice 'Kano', 2
-  menu.choice 'Jax', 3
+  menu.choice 'Jax', -> { 'Nice choice captain!' }
 end
 # =>
 # Choose your destiny? (Use arrow keys, press Enter to select)
@@ -501,14 +516,14 @@ end
 # ‣ 3. Jax
 ```
 
-You can configure help message, marker like so
+You can configure help message and/or marker like so
 
 ```ruby
 choices = %w(Scorpion Kano Jax)
-prompt.select("Choose your destiny?", choices, help: "(Bash keyboard)")
+prompt.select("Choose your destiny?", choices, help: "(Bash keyboard)", marker: '>')
 # =>
 # Choose your destiny? (Bash keyboard)
-# ‣ Scorpion
+# > Scorpion
 #   Kano
 #   Jax
 ```
@@ -598,6 +613,20 @@ And when you press enter you will see the following selected:
 ```ruby
 # Select drinks? beer, bourbon
 # => [{score: 20}, {score: 50}]
+```
+
+You can configure help message and/or marker like so
+
+```ruby
+choices = {vodka: 1, beer: 2, wine: 3, whisky: 4, bourbon: 5}
+prompt.select("Select drinks?", choices, help: 'Press beer can against keyboard')
+# =>
+# Select drinks? (Press beer can against keyboard)"
+# ‣ ⬡ vodka
+#   ⬡ beer
+#   ⬡ wine
+#   ⬡ whisky
+#   ⬡ bourbon
 ```
 
 ### 2.9 enum_select
@@ -714,11 +743,11 @@ If user types `h` and presses enter, an expanded view will be shown which furthe
 
 ```ruby
 # Overwrite Gemfile?
-# Y - overwrite this file
-# n - do not overwrite this file
-# q - quit; do not overwrite this file
-# h - print help
-# Choice [Y]:
+#   Y - overwrite this file
+#   n - do not overwrite this file
+#   q - quit; do not overwrite this file
+#   h - print help
+#   Choice [Y]:
 ```
 
 Run `examples/expand.rb` to see the prompt in action.
