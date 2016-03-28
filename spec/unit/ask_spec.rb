@@ -1,6 +1,7 @@
 # encoding: utf-8
 
 RSpec.describe TTY::Prompt, '#ask' do
+
   subject(:prompt) { TTY::TestPrompt.new }
 
   it 'asks question' do
@@ -52,6 +53,34 @@ RSpec.describe TTY::Prompt, '#ask' do
       "\e[1000D\e[K\e[1A",
       "\e[1000D\e[K",
       "What is your name? \e[32mPiotr\e[0m\n"
+    ].join)
+  end
+
+  it "permits empty default parameter" do
+    prompt.input << "\r"
+    prompt.input.rewind
+
+    answer = prompt.ask("What is your name?", default: '')
+    expect(answer).to eq('')
+    expect(prompt.output.string).to eq([
+      "What is your name? ",
+      "\e[1000D\e[K\e[1A",
+      "\e[1000D\e[K",
+      "What is your name? \n"
+    ].join)
+  end
+
+  it "permits nil default parameter" do
+    prompt.input << "\r"
+    prompt.input.rewind
+
+    answer = prompt.ask("What is your name?", default: nil)
+    expect(answer).to eq(nil)
+    expect(prompt.output.string).to eq([
+      "What is your name? ",
+      "\e[1000D\e[K\e[1A",
+      "\e[1000D\e[K",
+      "What is your name? \n"
     ].join)
   end
 end

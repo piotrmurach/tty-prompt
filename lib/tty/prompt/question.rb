@@ -120,7 +120,7 @@ module TTY
           header
         elsif @done
           header += @prompt.decorate("#{@input}", @color)
-        elsif default?
+        elsif default? && !Utils.blank?(@default)
           header += @prompt.decorate("(#{default})", :bright_black) + ' '
         end
         @prompt.print(header)
