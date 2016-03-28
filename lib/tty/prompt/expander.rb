@@ -107,7 +107,7 @@ module TTY
       # @api public
       def choice(value, &block)
         if block
-          @choices << (value << block)
+          @choices << value.update(value: block)
         else
           @choices << value
         end

@@ -119,6 +119,50 @@ RSpec.describe TTY::Prompt, '#expand' do
     ].join)
   end
 
+  it "specifies options through DSL" do
+    prompt.input << "\n"
+    prompt.input.rewind
+
+    result = prompt.expand('Overwrite Gemfile?') do |q|
+      q.default 4
+
+      q.choice key: 'y', name: 'Overwrite',     value: :yes
+      q.choice key: 'n', name: 'Skip',          value: :no
+      q.choice key: 'a', name: 'Overwrite all', value: :all
+      q.choice key: 'd', name: 'Show diff',     value: :diff
+      q.choice key: 'q', name: 'Quit',          value: :quit
+    end
+
+    expect(result).to eq(:diff)
+
+    expect(prompt.output.string).to eq([
+      "Overwrite Gemfile? \e[90m(enter \"h\" for help) [y,n,a,D,q,h] \e[0m",
+      "\e[1000D\e[K",
+      "Overwrite Gemfile? \e[32mShow diff\e[0m\n"
+    ].join)
+  end
+
+  it "specifies options through DSL and executes value" do
+    prompt.input << "\n"
+    prompt.input.rewind
+
+    result = prompt.expand('Overwrite Gemfile?') do |q|
+      q.choice key: 'y', name: 'Overwrite'      do :ok end
+      q.choice key: 'n', name: 'Skip',          value: :no
+      q.choice key: 'a', name: 'Overwrite all', value: :all
+      q.choice key: 'd', name: 'Show diff',     value: :diff
+      q.choice key: 'q', name: 'Quit',          value: :quit
+    end
+
+    expect(result).to eq(:ok)
+
+    expect(prompt.output.string).to eq([
+      "Overwrite Gemfile? \e[90m(enter \"h\" for help) [Y,n,a,d,q,h] \e[0m",
+      "\e[1000D\e[K",
+      "Overwrite Gemfile? \e[32mOverwrite\e[0m\n"
+    ].join)
+  end
+
   it "fails to expand due to lack of key attribute" do
     choices = [{ name: 'Overwrite', value: :yes }]
 
