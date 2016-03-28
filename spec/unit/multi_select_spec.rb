@@ -83,7 +83,7 @@ RSpec.describe TTY::Prompt do
             end
     expect(value).to eq([{score: 1}])
     expect(prompt.output.string).to eq([
-      "\e[?25lSelect drinks? \e[90m(Use arrow or number (0-9) keys, press Space to select and Enter to finish)\e[0m\n",
+      "\e[?25lSelect drinks? \e[90m(Use arrow or number (1-5) keys, press Space to select and Enter to finish)\e[0m\n",
       "‣ ⬡ 1) vodka\n",
       "  ⬡ 2) beer\n",
       "  ⬡ 3) wine\n",

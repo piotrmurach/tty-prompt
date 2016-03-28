@@ -210,7 +210,7 @@ module TTY
       # @return [String]
       def help
         return @help unless @help.nil?
-        self.class::HELP % [enumerate? ? ' or number (0-9)' : '']
+        self.class::HELP % [enumerate? ? " or number (1-#{@choices.size})" : '']
       end
 
       # Render initial help and selected choice
