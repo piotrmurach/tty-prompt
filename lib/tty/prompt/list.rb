@@ -25,15 +25,17 @@ module TTY
       # @api public
       def initialize(prompt, options = {})
         @prompt       = prompt
-        @first_render = true
-        @done         = false
+        @prefix       = options.fetch(:prefix) { @prompt.prefix }
         @enum         = options.fetch(:enum) { nil }
         @default      = Array[options.fetch(:default) { 1 }]
         @active       = @default.first
         @choices      = Choices.new
-        @color        = options.fetch(:color) { :green }
+        @active_color = options.fetch(:active_color) { @prompt.active_color }
+        @help_color   = options.fetch(:help_color) { @prompt.help_color }
         @marker       = options.fetch(:marker) { Symbols::ITEM_SELECTED }
         @help         = options[:help]
+        @first_render = true
+        @done         = false
 
         @prompt.subscribe(self)
       end
@@ -197,7 +199,7 @@ module TTY
       #
       # @api private
       def render_question
-        header = "#{@prompt.prefix}#{@question} #{render_header}"
+        header = "#{@prefix}#{@question} #{render_header}"
         @prompt.puts(header)
         @first_render = false
         @prompt.print(render_menu) unless @done
@@ -219,9 +221,9 @@ module TTY
       def render_header
         if @done
           selected_item = "#{@choices[@active - 1].name}"
-          @prompt.decorate(selected_item, @color)
+          @prompt.decorate(selected_item, @active_color)
         elsif @first_render
-          @prompt.decorate(help, :bright_black)
+          @prompt.decorate(help, @help_color)
         end
       end
 
@@ -234,7 +236,7 @@ module TTY
           num = enumerate? ? (index + 1).to_s + @enum + Symbols::SPACE : ''
           message = if index + 1 == @active
                       selected = @marker + Symbols::SPACE + num + choice.name
-                      @prompt.decorate("#{selected}", @color)
+                      @prompt.decorate("#{selected}", @active_color)
                     else
                       Symbols::SPACE * 2 + num + choice.name
                     end

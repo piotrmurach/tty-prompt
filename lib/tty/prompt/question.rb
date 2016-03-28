@@ -24,8 +24,6 @@ module TTY
 
       attr_reader :modifier
 
-      attr_reader :prompt
-
       attr_reader :validation
 
       # Initialize a Question
@@ -33,6 +31,7 @@ module TTY
       # @api public
       def initialize(prompt, options = {})
         @prompt     = prompt
+        @prefix     = options.fetch(:prefix) { @prompt.prefix }
         @default    = options.fetch(:default) { UndefinedSetting }
         @required   = options.fetch(:required) { false }
         @echo       = options.fetch(:echo) { true }
@@ -41,7 +40,8 @@ module TTY
         @validation = options.fetch(:validation) { UndefinedSetting }
         @read       = options.fetch(:read) { UndefinedSetting }
         @convert    = options.fetch(:convert) { UndefinedSetting }
-        @color      = options.fetch(:color) { :green }
+        @active_color = options.fetch(:active_color) { @prompt.active_color }
+        @help_color = options.fetch(:help_color) { @prompt.help_color }
         @messages   = Utils.deep_copy(options.fetch(:messages) { { } })
         @done       = false
         @input      = nil
@@ -115,13 +115,13 @@ module TTY
       #
       # @api private
       def render_question
-        header = "#{prompt.prefix}#{message} "
+        header = "#{@prefix}#{message} "
         if !echo?
           header
         elsif @done
-          header += @prompt.decorate("#{@input}", @color)
+          header += @prompt.decorate("#{@input}", @active_color)
         elsif default? && !Utils.blank?(@default)
-          header += @prompt.decorate("(#{default})", :bright_black) + ' '
+          header += @prompt.decorate("(#{default})", @help_color) + ' '
         end
         @prompt.print(header)
         @prompt.print("\n") if @done

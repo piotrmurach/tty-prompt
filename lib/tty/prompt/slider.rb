@@ -14,13 +14,15 @@ module TTY
       # @api public
       def initialize(prompt, options = {})
         @prompt       = prompt
-        @first_render = true
-        @done         = false
-        @color        = options.fetch(:color) { :green }
+        @prefix       = options.fetch(:prefix) { @prompt.prefix }
         @min          = options.fetch(:min) { 0 }
         @max          = options.fetch(:max) { 10 }
         @step         = options.fetch(:step) { 1 }
         @default      = options[:default]
+        @active_color = options.fetch(:active_color) { @prompt.active_color }
+        @help_color   = options.fetch(:help_color) { @prompt.help_color }
+        @first_render = true
+        @done         = false
 
         @prompt.subscribe(self)
       end
@@ -133,7 +135,7 @@ module TTY
       #
       # @api private
       def render_question
-        header = "#{@prompt.prefix}#{@question} #{render_header}"
+        header = "#{@prefix}#{@question} #{render_header}"
         @prompt.puts(header)
         @first_render = false
         @prompt.print(render_slider) unless @done
@@ -144,9 +146,9 @@ module TTY
       # @api private
       def render_header
         if @done
-          @prompt.decorate(render_answer.to_s, @color)
+          @prompt.decorate(render_answer.to_s, @active_color)
         elsif @first_render
-          @prompt.decorate(HELP, :bright_black)
+          @prompt.decorate(HELP, @help_color)
         end
       end
 
@@ -159,7 +161,7 @@ module TTY
         output = ''
         output << Symbols::SLIDER_END
         output << '-' * @active
-        output << @prompt.decorate(Symbols::SLIDER_HANDLE, @color)
+        output << @prompt.decorate(Symbols::SLIDER_HANDLE, @active_color)
         output << '-' * (range.size - @active - 1)
         output << Symbols::SLIDER_END
         output << " #{range[@active]}"

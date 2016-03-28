@@ -9,8 +9,6 @@ module TTY
     #
     # @api private
     class Expander
-      attr_reader :default
-
       HELP_CHOICE = {
         key: 'h',
         name: 'print help',
@@ -21,15 +19,17 @@ module TTY
       #
       # @api public
       def initialize(prompt, options = {})
-        @prompt      = prompt
-        @default     = options.fetch(:default) { 1 }
-        @color       = options.fetch(:color) { :green }
-        @choices     = Choices.new
-        @selected    = nil
-        @done        = false
-        @status      = :collapsed
-        @hint        = nil
-        @default_key = false
+        @prompt       = prompt
+        @prefix       = options.fetch(:prefix) { @prompt.prefix }
+        @default      = options.fetch(:default) { 1 }
+        @active_color = options.fetch(:active_color) { @prompt.active_color }
+        @help_color   = options.fetch(:help_color) { @prompt.help_color }
+        @choices      = Choices.new
+        @selected     = nil
+        @done         = false
+        @status       = :collapsed
+        @hint         = nil
+        @default_key  = false
 
         @prompt.subscribe(self)
       end
@@ -167,15 +167,15 @@ module TTY
       end
 
       def render_header
-        header = "#{@prompt.prefix}#{@message} "
+        header = "#{@prefix}#{@message} "
 
         if @done
           selected_item = "#{@selected.name}"
-          header << @prompt.decorate(selected_item, @color)
+          header << @prompt.decorate(selected_item, @active_color)
         elsif collapsed?
           help = %[(enter "h" for help) ]
           help << "[#{possible_keys}] "
-          header << @prompt.decorate(help, :bright_black)
+          header << @prompt.decorate(help, @help_color)
           header << @input
         end
 
@@ -185,7 +185,7 @@ module TTY
       # @api private
       def render_hint
         hint = "\n"
-        hint << @prompt.decorate('>> ', @color)
+        hint << @prompt.decorate('>> ', @active_color)
         hint << @hint
         @prompt.print(hint)
         @prompt.print(@prompt.cursor.prev_line)
@@ -249,7 +249,7 @@ module TTY
         @choices.each do |choice|
           chosen = %(#{choice.key} - #{choice.name})
           if @selected && @selected.key == choice.key
-            chosen = @prompt.decorate(chosen, @color)
+            chosen = @prompt.decorate(chosen, @active_color)
           end
           output << '  ' + chosen + "\n"
         end

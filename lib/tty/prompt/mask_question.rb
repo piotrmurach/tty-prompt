@@ -49,11 +49,11 @@ module TTY
       #
       # @api private
       def render_question
-        header = "#{prompt.prefix}#{message} "
+        header = "#{@prefix}#{message} "
         if echo?
           masked = "#{@mask * "#{@input}".length}"
           if @done_masked && !@failure
-            masked = @prompt.decorate(masked, @color)
+            masked = @prompt.decorate(masked, @active_color)
           end
           header += masked
         end

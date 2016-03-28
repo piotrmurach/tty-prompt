@@ -31,8 +31,18 @@ module TTY
 
     # Prompt prefix
     #
+    # @example
+    #   prompt = TTY::Prompt.new(prefix: [?])
+    #
+    # @return [String]
+    #
     # @api private
     attr_reader :prefix
+
+    # Theme colors
+    #
+    # @api private
+    attr_reader :active_color, :help_color, :error_color
 
     def_delegators :@pastel, :decorate, :strip
 
@@ -60,6 +70,9 @@ module TTY
       @input  = options.fetch(:input) { $stdin }
       @output = options.fetch(:output) { $stdout }
       @prefix = options.fetch(:prefix) { '' }
+      @active_color = options.fetch(:active_color) { :green }
+      @help_color   = options.fetch(:help_color)   { :bright_black }
+      @error_color  = options.fetch(:error_color)  { :red }
 
       @cursor = TTY::Cursor
       @pastel = Pastel.new

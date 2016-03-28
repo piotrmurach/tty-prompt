@@ -180,7 +180,7 @@ RSpec.describe TTY::Prompt do
     choices = %w(vodka beer wine whisky bourbon)
     prompt.input << "\r"
     prompt.input.rewind
-    options = {default: [1], color: :blue, marker: '>'}
+    options = {default: [1], active_color: :blue, marker: '>'}
     expect(prompt.multi_select("Select drinks?", choices, options)). to eq(['vodka'])
     expect(prompt.output.string).to eq([
       "\e[?25lSelect drinks? vodka \e[90m(Use arrow keys, press Space to select and Enter to finish)\e[0m\n",

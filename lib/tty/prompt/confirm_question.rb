@@ -65,14 +65,14 @@ module TTY
       #
       # @api private
       def render_question
-        header = "#{prompt.prefix}#{message} "
+        header = "#{@prefix}#{message} "
 
         if !@done
-          header += @prompt.decorate("(#{@suffix})", :bright_black) + ' '
+          header += @prompt.decorate("(#{@suffix})", @help_color) + ' '
         else
           answer = convert_result(@input)
           label  = answer ? @positive : @negative
-          header += @prompt.decorate(label, @color)
+          header += @prompt.decorate(label, @active_color)
         end
         @prompt.print(header)
         @prompt.print("\n") if @done

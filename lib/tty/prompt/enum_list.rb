@@ -11,14 +11,17 @@ module TTY
       #
       # @api public
       def initialize(prompt, options = {})
-        @prompt  = prompt
-        @done    = false
-        @failure = false
-        @enum    = options.fetch(:enum) { ')' }
-        @default = options.fetch(:default) { 1 }
-        @active  = @default
-        @choices = Choices.new
-        @color   = options.fetch(:color) { :green }
+        @prompt       = prompt
+        @prefix       = options.fetch(:prefix) { @prompt.prefix }
+        @enum         = options.fetch(:enum) { ')' }
+        @default      = options.fetch(:default) { 1 }
+        @active_color = options.fetch(:active_color) { @prompt.active_color }
+        @help_color   = options.fetch(:help_color)   { @prompt.help_color }
+        @error_color  = options.fetch(:error_color)  { @prompt.error_color }
+        @done         = false
+        @failure      = false
+        @active       = @default
+        @choices      = Choices.new
 
         @prompt.subscribe(self)
       end
@@ -161,7 +164,7 @@ module TTY
       #
       # @api private
       def render_question
-        header = "#{@prompt.prefix}#{@question} #{render_header}"
+        header = "#{@prefix}#{@question} #{render_header}"
         @prompt.puts(header)
         return if @done
         @prompt.print(render_menu)
@@ -172,7 +175,7 @@ module TTY
       # @api private
       def render_error
         error = 'Please enter a valid index'
-        @prompt.print("\n" + @prompt.decorate('>>', :red) + ' ' + error)
+        @prompt.print("\n" + @prompt.decorate('>>', @error_color) + ' ' + error)
         @prompt.print(@prompt.cursor.prev_line)
         @prompt.print(@prompt.cursor.forward(render_footer.size))
       end
@@ -186,7 +189,7 @@ module TTY
         return '' unless @done
         return '' unless @active
         selected_item = "#{@choices[@active - 1].name}"
-        @prompt.decorate(selected_item, @color)
+        @prompt.decorate(selected_item, @active_color)
       end
 
       # Render footer for the indexed menu
@@ -209,7 +212,7 @@ module TTY
           num = (index + 1).to_s + @enum + Symbols::SPACE
           selected = Symbols::SPACE * 2 + num + choice.name
           output << if index + 1 == @active
-                      @prompt.decorate("#{selected}", @color)
+                      @prompt.decorate("#{selected}", @active_color)
                     else
                       selected
                     end

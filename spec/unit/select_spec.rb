@@ -150,10 +150,11 @@ RSpec.describe TTY::Prompt, '#select' do
     choices = %w(Large Medium Small)
     prompt.input << " "
     prompt.input.rewind
-    value = prompt.select('What size?', choices, color: :blue, marker: '>')
+    options = {active_color: :blue, help_color: :red, marker: '>'}
+    value = prompt.select('What size?', choices, options)
     expect(value).to eq('Large')
     expect(prompt.output.string).to eq([
-      "\e[?25lWhat size? \e[90m(Use arrow keys, press Enter to select)\e[0m\n",
+      "\e[?25lWhat size? \e[31m(Use arrow keys, press Enter to select)\e[0m\n",
       "\e[34m> Large\e[0m\n",
       "  Medium\n",
       "  Small",

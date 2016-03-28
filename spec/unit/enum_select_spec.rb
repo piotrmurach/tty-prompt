@@ -16,7 +16,8 @@ RSpec.describe TTY::Prompt do
       "  2) /usr/bin/vim.basic\n",
       "  3) /usr/bin/vim.tiny\n",
       "  Choose 1-3 [1]: ",
-      "\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[J",
+      "\e[1000D\e[K\e[1A" * 4,
+      "\e[1000D\e[K\e[J",
       "Select an editor? \e[32m/bin/nano\e[0m\n"
     ].join)
   end
@@ -88,6 +89,24 @@ RSpec.describe TTY::Prompt do
       "  Choose 1-3 [2]: ",
       "\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[J",
       "Select an editor? \e[32mvim\e[0m\n"
+    ].join)
+  end
+
+  it "changes colors for selection, hint and error" do
+    choices = %w(/bin/nano /usr/bin/vim.basic /usr/bin/vim.tiny)
+    prompt.input << "\n"
+    prompt.input.rewind
+    options = {active_color: :red, help_color: :blue, error_color: :green}
+    expect(prompt.enum_select("Select an editor?", choices, options)).to eq('/bin/nano')
+    expect(prompt.output.string).to eq([
+      "Select an editor? \n",
+      "\e[31m  1) /bin/nano\e[0m\n",
+      "  2) /usr/bin/vim.basic\n",
+      "  3) /usr/bin/vim.tiny\n",
+      "  Choose 1-3 [1]: ",
+      "\e[1000D\e[K\e[1A" * 4,
+      "\e[1000D\e[K\e[J",
+      "Select an editor? \e[31m/bin/nano\e[0m\n"
     ].join)
   end
 end

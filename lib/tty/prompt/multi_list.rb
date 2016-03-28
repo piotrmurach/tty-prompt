@@ -62,7 +62,7 @@ module TTY
       def render_header
         instructions = @prompt.decorate(help, :bright_black)
         if @done
-          @prompt.decorate(selected_names, @color)
+          @prompt.decorate(selected_names, @active_color)
         elsif @selected.size.nonzero?
           selected_names + (@first_render ? " #{instructions}" : '')
         elsif @first_render
@@ -89,7 +89,7 @@ module TTY
           indicator = (index + 1 == @active) ?  @marker : Symbols::SPACE
           indicator += Symbols::SPACE
           message = if @selected.include?(choice)
-                      selected = @prompt.decorate(Symbols::RADIO_CHECKED, @color)
+                      selected = @prompt.decorate(Symbols::RADIO_CHECKED, @active_color)
                       selected + Symbols::SPACE + num + choice.name
                     else
                       Symbols::RADIO_UNCHECKED + Symbols::SPACE + num + choice.name

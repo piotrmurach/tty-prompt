@@ -51,4 +51,19 @@ RSpec.describe TTY::Prompt, '#slider' do
       "What size? \e[32m6\e[0m\n\e[?25h"
     ].join)
   end
+
+  it "changes display colors" do
+    prompt.input << "\r"
+    prompt.input.rewind
+    options = {active_color: :red, help_color: :cyan}
+    expect(prompt.slider('What size?', options)).to eq(5)
+    expect(prompt.output.string).to eq([
+      "\e[?25lWhat size? \e[36m(Use arrow keys, press Enter to select)\e[0m\n",
+      "|-----",
+      "\e[31mO\e[0m",
+      "-----| 5",
+      "\e[1000D\e[K\e[1A\e[1000D\e[K",
+      "What size? \e[31m5\e[0m\n\e[?25h"
+    ].join)
+  end
 end
