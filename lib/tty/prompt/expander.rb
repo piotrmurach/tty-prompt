@@ -22,14 +22,14 @@ module TTY
       # @api public
       def initialize(prompt, options = {})
         @prompt      = prompt
-        @default     = 0
+        @default     = options.fetch(:default) { 1 }
+        @color       = options.fetch(:color) { :green }
         @choices     = Choices.new
         @selected    = nil
         @done        = false
         @status      = :collapsed
         @hint        = nil
         @default_key = false
-        @color       = options.fetch(:color) { :green }
 
         @prompt.subscribe(self)
       end
@@ -51,7 +51,7 @@ module TTY
       # @api public
       def keyenter(_)
         if @input.nil? || @input.empty?
-          @input = @choices[@default].key
+          @input = @choices[@default - 1].key
           @default_key = true
         end
 
@@ -91,10 +91,15 @@ module TTY
       #
       # @api private
       def select_choice(key)
-        if !(/#{@choices[@default].key}/i).match(key).nil?
-          key = key.upcase
-        end
         @choices.find_by(:key, key)
+      end
+
+      # Set default value.
+      #
+      # @api public
+      def default(value = (not_set = true))
+        return @default if not_set
+        @default = value
       end
 
       # Add a single choice
@@ -139,7 +144,7 @@ module TTY
       # @api private
       def possible_keys
         keys = @choices.pluck(:key)
-        default_key = keys[default]
+        default_key = keys[@default - 1]
         default_key.upcase! if default_key
         keys.join(',')
       end
@@ -201,7 +206,7 @@ module TTY
       end
 
       def render_footer
-        "  Choice [#{@choices[@default].key}]: #{@input}"
+        "  Choice [#{@choices[@default - 1].key}]: #{@input}"
       end
 
       def read_input
