@@ -1,12 +1,13 @@
 # Change log
 
-## [v0.5.0] - unreleased
+## [v0.5.0] - 2016-03-28
 
 ### Added
 * Add ConfirmQuestion for #yes? & #no? calls
 * Add ability to collect more than one answer through #collect call
 * Add Choices#find_by for selecting choice based on attribute
 * Add Prompt#expand for expanding key options
+* Add :active_color, :help_color, :prefix options for customizing prompts display
 
 ### Changed
 * Change Choice#from to allow for coersion of complex objects with keys
@@ -14,6 +15,8 @@
 
 ### Fixed
 * Fix #no? to correctly ask negative question by @ondra-m
+* Fix #ask :default option to handle nil or empty string
+* Fix #multi_select :default option and color changing
 
 ## [v0.4.0] - 2016-02-08
 
