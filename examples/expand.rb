@@ -3,7 +3,7 @@
 require 'tty-prompt'
 
 choices = [{
-  key: 'Y',
+  key: 'y',
   name: 'overwrite this file',
   value: :yes
 }, {
@@ -26,4 +26,4 @@ choices = [{
 
 prompt = TTY::Prompt.new
 
-prompt.expand('Overwrite Gemfile?', choices)
+prompt.expand('Overwrite Gemfile?', choices, default: 3)

@@ -668,7 +668,7 @@ As first argument `expand` takes the message to display and as a second an array
 ```ruby
 choices = [
   {
-    key: 'Y',
+    key: 'y',
     name: 'overwrite this file',
     value: :yes
   }, {
