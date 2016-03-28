@@ -97,4 +97,29 @@ RSpec.describe TTY::Prompt, '#ask' do
       "What is your name? \n"
     ].join)
   end
+
+  it "overwrites global settings" do
+    global_settings = {prefix: "[?] ", active_color: :cyan, help_color: :red}
+    prompt = TTY::TestPrompt.new(global_settings)
+
+    prompt.input << "Piotr\r"
+    prompt.input.rewind
+    prompt.ask('What is your name?')
+
+    prompt.input << "Piotr\r"
+    prompt.input.rewind
+    local_settings = {prefix: ':-) ', active_color: :blue, help_color: :magenta}
+    prompt.ask('What is your name?', local_settings)
+
+    expect(prompt.output.string).to eq([
+      "[?] What is your name? ",
+      "\e[1000D\e[K\e[1A",
+      "\e[1000D\e[K",
+      "[?] What is your name? \e[36mPiotr\e[0m\n",
+      ":-) What is your name? ",
+      "\e[1000D\e[K\e[1A",
+      "\e[1000D\e[K",
+      ":-) What is your name? \e[34mPiotr\e[0m\n"
+    ].join)
+  end
 end
