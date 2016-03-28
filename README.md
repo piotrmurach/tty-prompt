@@ -683,7 +683,19 @@ choices = [
 ]
 ```
 
-The first element in the array will be the default choice, you can change that by passing `default` option.
+The choices can also be provided through DSL using the `choice` method. The `:value` can be a primitive value or `Proc` instance that gets executed and whose value is used as returned type. For example:
+
+```ruby
+prompt.expand('Overwrite Gemfile?') do |q|
+  q.choice key: 'y', name: 'Overwrite'      do :ok end
+  q.choice key: 'n', name: 'Skip',          value: :no
+  q.choice key: 'a', name: 'Overwrite all', value: :all
+  q.choice key: 'd', name: 'Show diff',     value: :diff
+  q.choice key: 'q', name: 'Quit',          value: :quit
+end
+```
+
+The first element in the array of choices or provided via `choice` DSL will be the default choice, you can change that by passing `default` option.
 
 ```ruby
 prompt.expand('Overwrite Gemfile?', choices)
