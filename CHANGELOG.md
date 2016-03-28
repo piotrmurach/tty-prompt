@@ -12,6 +12,7 @@
 ### Changed
 * Change Choice#from to allow for coersion of complex objects with keys
 * Change Choices#pluck to search through object attributes
+* Change #select :enum option help text to display actual numbers range
 
 ### Fixed
 * Fix #no? to correctly ask negative question by @ondra-m
