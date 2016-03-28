@@ -137,7 +137,7 @@ module TTY
 
       private
 
-      # Create possible keys
+      # Create possible keys with current choice highlighted
       #
       # @return [String]
       #
@@ -145,7 +145,12 @@ module TTY
       def possible_keys
         keys = @choices.pluck(:key)
         default_key = keys[@default - 1]
-        default_key.upcase! if default_key
+        if @selected
+          index = keys.index(@selected.key)
+          keys[index] = @prompt.decorate(keys[index], @active_color)
+        elsif @input.to_s.empty? && default_key
+          keys[@default - 1] = @prompt.decorate(default_key, @active_color)
+        end
         keys.join(',')
       end
 
@@ -168,17 +173,14 @@ module TTY
 
       def render_header
         header = "#{@prefix}#{@message} "
-
         if @done
           selected_item = "#{@selected.name}"
           header << @prompt.decorate(selected_item, @active_color)
         elsif collapsed?
-          help = %[(enter "h" for help) ]
-          help << "[#{possible_keys}] "
-          header << @prompt.decorate(help, @help_color)
+          header << %[(enter "h" for help) ]
+          header << "[#{possible_keys}] "
           header << @input
         end
-
         header
       end
 
