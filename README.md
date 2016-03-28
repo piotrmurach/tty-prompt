@@ -151,7 +151,7 @@ choices = [
 ]
 prompt.expand('Overwrite Gemfile?', choices)
 # =>
-# Overwrite Gemfile? (enter "h" for help) [Y,n,a,d,q,h]
+# Overwrite Gemfile? (enter "h" for help) [y,n,a,d,q,h]
 ```
 
 If you wish to collect more than one answer use `collect`:
@@ -758,13 +758,13 @@ The first element in the array of choices or provided via `choice` DSL will be t
 ```ruby
 prompt.expand('Overwrite Gemfile?', choices)
 # =>
-# Overwrite Gemfile? (enter "h" for help) [Y,n,q,h]
+# Overwrite Gemfile? (enter "h" for help) [y,n,q,h]
 ```
 
 Each time user types an option a hint will be displayed:
 
 ```ruby
-# Overwrite Gemfile? (enter "h" for help) [Y,n,a,d,q,h] y
+# Overwrite Gemfile? (enter "h" for help) [y,n,a,d,q,h] y
 # >> overwrite this file
 ```
 
@@ -772,11 +772,11 @@ If user types `h` and presses enter, an expanded view will be shown which furthe
 
 ```ruby
 # Overwrite Gemfile?
-#   Y - overwrite this file
+#   y - overwrite this file
 #   n - do not overwrite this file
 #   q - quit; do not overwrite this file
 #   h - print help
-#   Choice [Y]:
+#   Choice [y]:
 ```
 
 Run `examples/expand.rb` to see the prompt in action.
