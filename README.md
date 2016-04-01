@@ -2,13 +2,13 @@
 [![Gem Version](https://badge.fury.io/rb/tty-prompt.svg)][gem]
 [![Build Status](https://secure.travis-ci.org/piotrmurach/tty-prompt.svg?branch=master)][travis]
 [![Code Climate](https://codeclimate.com/github/piotrmurach/tty-prompt/badges/gpa.svg)][codeclimate]
-[![Coverage Status](https://coveralls.io/repos/piotrmurach/tty-prompt/badge.svg)][coverage]
+[![Coverage Status](https://coveralls.io/repos/github/piotrmurach/tty-prompt/badge.svg)][coverage]
 [![Inline docs](http://inch-ci.org/github/piotrmurach/tty-prompt.svg?branch=master)][inchpages]
 
 [gem]: http://badge.fury.io/rb/tty-prompt
 [travis]: http://travis-ci.org/piotrmurach/tty-prompt
 [codeclimate]: https://codeclimate.com/github/piotrmurach/tty-prompt
-[coverage]: https://coveralls.io/r/piotrmurach/tty-prompt
+[coverage]: https://coveralls.io/github/piotrmurach/tty-prompt
 [inchpages]: http://inch-ci.org/github/piotrmurach/tty-prompt
 
 > A beautiful and powerful interactive command line prompt.
