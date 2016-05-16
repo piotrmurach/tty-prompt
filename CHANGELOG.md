@@ -1,5 +1,10 @@
 # Change log
 
+## [v0.5.1] - 2016-x-x
+
+### Fixed
+* Fix issue with reader trapping signals by @kylekyle
+
 ## [v0.5.0] - 2016-03-28
 
 ### Added
@@ -77,8 +82,8 @@
 
 * Initial implementation and release
 
-[v0.5.0]: https://github.com/peter-murach/tty-prompt/compare/v0.4.0...v0.5.0
-[v0.4.0]: https://github.com/peter-murach/tty-prompt/compare/v0.3.0...v0.4.0
-[v0.3.0]: https://github.com/peter-murach/tty-prompt/compare/v0.2.0...v0.3.0
-[v0.2.0]: https://github.com/peter-murach/tty-prompt/compare/v0.1.0...v0.2.0
-[v0.1.0]: https://github.com/peter-murach/tty-prompt/compare/v0.1.0
+[v0.5.0]: https://github.com/piotrmurach/tty-prompt/compare/v0.4.0...v0.5.0
+[v0.4.0]: https://github.com/piotrmurach/tty-prompt/compare/v0.3.0...v0.4.0
+[v0.3.0]: https://github.com/piotrmurach/tty-prompt/compare/v0.2.0...v0.3.0
+[v0.2.0]: https://github.com/piotrmurach/tty-prompt/compare/v0.1.0...v0.2.0
+[v0.1.0]: https://github.com/piotrmurach/tty-prompt/compare/v0.1.0
