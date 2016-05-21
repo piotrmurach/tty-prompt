@@ -1,9 +1,13 @@
 # Change log
 
-## [v0.5.1] - 2016-x-x
+## [v0.5.1] - 2016-05-21
+
+### Changed
+* Upgrade tty-cursor dependency
 
 ### Fixed
 * Fix issue with reader trapping signals by @kylekyle
+* Fix expand to use new prev_line implementation
 
 ## [v0.5.0] - 2016-03-28
 
