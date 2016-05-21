@@ -1,6 +1,6 @@
 # Change log
 
-## [v0.5.1] - 2016-05-21
+## [v0.6.0] - 2016-05-21
 
 ### Changed
 * Upgrade tty-cursor dependency
@@ -86,6 +86,7 @@
 
 * Initial implementation and release
 
+[v0.6.0]: https://github.com/piotrmurach/tty-prompt/compare/v0.5.0...v0.6.0
 [v0.5.0]: https://github.com/piotrmurach/tty-prompt/compare/v0.4.0...v0.5.0
 [v0.4.0]: https://github.com/piotrmurach/tty-prompt/compare/v0.3.0...v0.4.0
 [v0.3.0]: https://github.com/piotrmurach/tty-prompt/compare/v0.2.0...v0.3.0
