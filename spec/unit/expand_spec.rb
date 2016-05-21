@@ -69,11 +69,11 @@ RSpec.describe TTY::Prompt, '#expand' do
       "Overwrite Gemfile? (enter \"h\" for help) [y,n,\e[32ma\e[0m,d,q,h] ",
       "a\n",
       "\e[32m>> \e[0mOverwrite all",
-      "\e[F\e[55C",
+      "\e[A\e[1G\e[55C",
       "\e[1000D\e[K",
       "\e[1B",
       "\e[1000D\e[K",
-      "\e[F",
+      "\e[A\e[1G",
       "Overwrite Gemfile? \e[32mOverwrite all\e[0m\n"
     ].join)
   end
@@ -90,11 +90,11 @@ RSpec.describe TTY::Prompt, '#expand' do
       "\e[1000D\e[K",
       "Overwrite Gemfile? (enter \"h\" for help) [y,n,a,d,q,\e[32mh\e[0m] h\n",
       "\e[32m>> \e[0mprint help",
-      "\e[F\e[55C",
+      "\e[A\e[1G\e[55C",
       "\e[1000D\e[K",
       "\e[1B",
       "\e[1000D\e[K",
-      "\e[F",
+      "\e[A\e[1G",
       "Overwrite Gemfile? \n",
       "  y - Overwrite\n",
       "  n - Skip\n",
