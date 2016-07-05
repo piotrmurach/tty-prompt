@@ -111,7 +111,6 @@ module TTY
       end
 
       def keyescape(*)
-        exit 130
       end
 
       def keyspace(*)
