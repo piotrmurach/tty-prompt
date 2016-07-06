@@ -10,14 +10,14 @@ module TTY
           #
           # @api public
           def on
-            %x{stty echo} if TTY::Platform.unix?
+            %x{stty echo} rescue nil
           end
 
           # Turn echo off
           #
           # @api public
           def off
-            %x{stty -echo} if TTY::Platform.unix?
+            %x{stty -echo} rescue nil
           end
 
           # Wrap code block inside echo

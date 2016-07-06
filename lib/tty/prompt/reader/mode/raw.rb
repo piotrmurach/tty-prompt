@@ -10,14 +10,14 @@ module TTY
           #
           # @api public
           def on
-            %x{stty raw} if TTY::Platform.unix?
+            %x{stty raw} rescue nil
           end
 
           # Turn raw mode off
           #
           # @api public
           def off
-            %x{stty -raw} if TTY::Platform.unix?
+            %x{stty -raw} rescue nil
           end
 
           # Wrap code block inside raw mode
