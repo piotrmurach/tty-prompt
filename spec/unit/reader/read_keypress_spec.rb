@@ -15,8 +15,11 @@ RSpec.describe TTY::Prompt::Reader, '#read_keypress' do
   it "stops reading when ctrl-c pressed" do
     input << "\x03"
     input.rewind
-    expect {
-      reader.read_keypress
-    }.to raise_error(SystemExit)
+    allow(Process).to receive(:pid).and_return(666)
+    allow(Process).to receive(:kill)
+
+    reader.read_keypress
+
+    expect(Process).to have_received(:kill).with('SIGINT', 666)
   end
 end
