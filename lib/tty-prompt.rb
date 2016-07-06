@@ -3,7 +3,6 @@
 require 'necromancer'
 require 'pastel'
 require 'tty-cursor'
-require 'tty-platform'
 
 require 'tty/prompt'
 require 'tty/prompt/choice'
