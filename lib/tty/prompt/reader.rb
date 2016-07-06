@@ -72,7 +72,7 @@ module TTY
             mode.raw(true) do
               key = read_char
               emit_key_event(key) if key
-              exit 130 if key == Codes::CTRL_C
+              Process.kill('SIGINT', Process.pid) if key == Codes::CTRL_C
               key
             end
           end
