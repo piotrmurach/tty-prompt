@@ -110,9 +110,6 @@ module TTY
         @active = value
       end
 
-      def keyescape(*)
-      end
-
       def keyspace(*)
         @done = true
       end
