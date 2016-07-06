@@ -22,10 +22,10 @@ module TTY
       attr_reader :output
 
       # Key input constants for decimal codes
-      CARRIAGE_RETURN = 13.freeze
-      NEWLINE         = 10.freeze
-      BACKSPACE       = 127.freeze
-      DELETE          = 8.freeze
+      CARRIAGE_RETURN = 13
+      NEWLINE         = 10
+      BACKSPACE       = 127
+      DELETE          = 8
 
       CSI = "\e[".freeze
 
