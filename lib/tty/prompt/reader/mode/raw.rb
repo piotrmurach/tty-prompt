@@ -1,4 +1,5 @@
 # encoding: utf-8
+require "io/console"
 
 module TTY
   class Prompt
@@ -10,14 +11,14 @@ module TTY
           #
           # @api public
           def on
-            %x{stty raw} rescue nil
+            $stdin.raw = true
           end
 
           # Turn raw mode off
           #
           # @api public
           def off
-            %x{stty -raw} rescue nil
+            $stdin.raw = false
           end
 
           # Wrap code block inside raw mode

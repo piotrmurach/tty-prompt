@@ -1,4 +1,5 @@
 # encoding: utf-8
+require "io/console"
 
 module TTY
   class Prompt
@@ -10,14 +11,14 @@ module TTY
           #
           # @api public
           def on
-            %x{stty echo} rescue nil
+            $stdin.echo = true
           end
 
           # Turn echo off
           #
           # @api public
           def off
-            %x{stty -echo} rescue nil
+            $stdin.echo = false
           end
 
           # Wrap code block inside echo
