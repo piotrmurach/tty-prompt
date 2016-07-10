@@ -1,8 +1,5 @@
 # encoding: utf-8
 
-require 'tty/prompt/reader/mode/echo'
-require 'tty/prompt/reader/mode/raw'
-
 module TTY
   class Prompt
     class Reader
@@ -11,22 +8,7 @@ module TTY
         #
         # @api public
         def initialize(options = {})
-          @echo = Echo.new
-          @raw  = Raw.new
-        end
-
-        # Switch echo on
-        #
-        # @api public
-        def echo_on
-          @echo.on
-        end
-
-        # Switch echo off
-        #
-        # @api public
-        def echo_off
-          @echo.off
+          @input = $stdin
         end
 
         # Echo given block
@@ -35,21 +17,11 @@ module TTY
         #
         # @api public
         def echo(is_on = true, &block)
-          @echo.echo(is_on, &block)
-        end
-
-        # Switch raw mode on
-        #
-        # @api public
-        def raw_on
-          @raw.on
-        end
-
-        # Switch raw mode off
-        #
-        # @api public
-        def raw_off
-          @raw.off
+          previous = @input.echo?
+          @input.echo = is_on
+          yield
+        ensure
+          @input.echo = previous
         end
 
         # Use raw mode in the given block
@@ -58,7 +30,11 @@ module TTY
         #
         # @api public
         def raw(is_on = true, &block)
-          @raw.raw(is_on, &block)
+          if is_on
+            @input.raw(&block)
+          else
+            yield
+          end
         end
       end # Mode
     end # Reader
