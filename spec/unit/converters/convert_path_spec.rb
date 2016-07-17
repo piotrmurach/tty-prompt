@@ -5,11 +5,14 @@ RSpec.describe TTY::Prompt::Question, 'convert path' do
 
   it "converts pathname" do
     path = double(:path)
-    allow(Pathname).to receive(:new).and_return(path)
     prompt.input << "/path/to/file"
     prompt.input.rewind
+
+    allow(Pathname).to receive(:new).and_return(path)
+    expect(Pathname).to receive(:new).with(/path\/to\/file/)
+
     answer = prompt.ask('File location?', convert: :path)
+
     expect(answer).to eql(path)
-    expect(Pathname).to have_received(:new).with(/path\/to\/file/)
   end
 end
