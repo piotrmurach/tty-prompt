@@ -7,8 +7,8 @@ module TTY
         # Initialize a Terminal
         #
         # @api public
-        def initialize(options = {})
-          @input = $stdin
+        def initialize(input = $stdin)
+          @input = input
         end
 
         # Echo given block
