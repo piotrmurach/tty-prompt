@@ -1,4 +1,4 @@
-# encoding
+# encoding: utf-8
 
 RSpec.describe TTY::Prompt::Reader::KeyEvent, '::from' do
 

@@ -2,24 +2,68 @@
 
 RSpec.describe TTY::Prompt::Reader, '#read_keypress' do
   let(:input)  { StringIO.new }
-  let(:out) { StringIO.new }
-  let(:reader) { described_class.new(input, out) }
+  let(:out)    { StringIO.new }
 
   it "reads single key press" do
+    reader = described_class.new(input, out)
     input << "\e[Aaaaaaa\n"
     input.rewind
+
     answer = reader.read_keypress
+
     expect(answer).to eq("\e[A")
   end
 
-  it "stops reading when ctrl-c pressed" do
-    input << "\x03"
-    input.rewind
-    allow(Process).to receive(:pid).and_return(666)
-    allow(Process).to receive(:kill)
+  context 'when Ctrl+C pressed' do
+    it "defaults to raising InputInterrupt" do
+      reader = described_class.new(input, out)
+      input << "\x03"
+      input.rewind
 
-    reader.read_keypress
+      expect {
+        reader.read_keypress
+      }.to raise_error(TTY::Prompt::Reader::InputInterrupt)
+    end
 
-    expect(Process).to have_received(:kill).with('SIGINT', 666)
+    it "sends interrupt signal when :signal option is chosen" do
+      reader = described_class.new(input, out, interrupt_handler: :signal)
+      input << "\x03"
+      input.rewind
+
+      allow(Process).to receive(:pid).and_return(666)
+      allow(Process).to receive(:kill)
+      expect(Process).to receive(:kill).with('SIGINT', 666)
+
+      reader.read_keypress
+    end
+
+    it "exits with 130 code when :exit option is chosen" do
+      reader = described_class.new(input, out, interrupt_handler: :exit)
+      input << "\x03"
+      input.rewind
+
+      expect {
+        reader.read_keypress
+      }.to raise_error(SystemExit)
+    end
+
+    it "evaluates custom handler when proc object is provided" do
+      handler = proc { raise ArgumentError }
+      reader = described_class.new(input, out, interrupt_handler: handler)
+      input << "\x03"
+      input.rewind
+
+      expect {
+       reader.read_keypress
+      }.to raise_error(ArgumentError)
+    end
+
+    it "skips handler when handler is nil" do
+      reader = described_class.new(input, out, interrupt_handler: nil)
+      input << "\x03"
+      input.rewind
+
+      expect(reader.read_keypress).to eq("\x03")
+    end
   end
 end

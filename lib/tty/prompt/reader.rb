@@ -14,6 +14,10 @@ module TTY
     # @api private
     class Reader
       include Wisper::Publisher
+      # Raised when the user hits the interrupt key(Control-C)
+      #
+      # @api public
+      InputInterrupt = Class.new(StandardError)
 
       attr_reader :mode
 
@@ -32,10 +36,11 @@ module TTY
       # Initialize a Reader
       #
       # @api public
-      def initialize(input, output)
+      def initialize(input, output, options = {})
         @input  = input
         @output = output
         @mode   = Mode.new
+        @handler = options.fetch(:interrupt_handler) { :error }
       end
 
       # Get input in unbuffered mode.
@@ -72,7 +77,7 @@ module TTY
             mode.raw(true) do
               key = read_char
               emit_key_event(key) if key
-              Process.kill('SIGINT', Process.pid) if key == Codes::CTRL_C
+              handle_interrupt if key == Codes::CTRL_C
               key
             end
           end
@@ -177,6 +182,22 @@ module TTY
           line.empty? ? line : line.slice(-1, 1)
         else
           line << char
+        end
+      end
+
+      # Handle input interrupt based on provided value
+      #
+      # @api private
+      def handle_interrupt
+        case @handler
+        when :error
+          raise InputInterrupt
+        when :signal
+          Process.kill('SIGINT', Process.pid)
+        when :exit
+          exit(130)
+        when Proc
+          @handler.call
         end
       end
     end # Reader
