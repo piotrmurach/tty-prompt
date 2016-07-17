@@ -1,5 +1,17 @@
 # Change log
 
+## [v0.7.0] - 2016-07-17
+
+### Added
+* Add :interrupt_handler option to customise keyboard interrupt behaviour
+
+### Changed
+* Remove tty-platform dependency
+
+### Fixed
+* Fix Reader#read_keypress issue when handling interrupt signal by Ondrej Moravcik(@ondra-m)
+* Fix raw & echo modes to use standard library support by Kim Burgestrand(@Burgestrand)
+
 ## [v0.6.0] - 2016-05-21
 
 ### Changed
@@ -86,6 +98,7 @@
 
 * Initial implementation and release
 
+[v0.7.0]: https://github.com/piotrmurach/tty-prompt/compare/v0.6.0...v0.7.0
 [v0.6.0]: https://github.com/piotrmurach/tty-prompt/compare/v0.5.0...v0.6.0
 [v0.5.0]: https://github.com/piotrmurach/tty-prompt/compare/v0.4.0...v0.5.0
 [v0.4.0]: https://github.com/piotrmurach/tty-prompt/compare/v0.3.0...v0.4.0
