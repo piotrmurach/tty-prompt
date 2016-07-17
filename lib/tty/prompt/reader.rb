@@ -190,7 +190,7 @@ module TTY
       # @api private
       def handle_interrupt
         case @interrupt
-        when :error
+        when :error, nil
           raise InputInterrupt
         when :signal
           Process.kill('SIGINT', Process.pid)

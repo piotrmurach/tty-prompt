@@ -59,7 +59,7 @@ RSpec.describe TTY::Prompt::Reader, '#read_keypress' do
     end
 
     it "skips handler when handler is nil" do
-      reader = described_class.new(input, out, interrupt: nil)
+      reader = described_class.new(input, out, interrupt: :noop)
       input << "\x03"
       input.rewind
 
