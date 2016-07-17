@@ -76,7 +76,7 @@ module TTY
 
       @cursor = TTY::Cursor
       @pastel = Pastel.new
-      @reader = Reader.new(@input, @output)
+      @reader = Reader.new(@input, @output, interrupt: options[:interrupt])
     end
 
     # Ask a question.
