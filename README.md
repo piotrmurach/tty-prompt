@@ -322,7 +322,7 @@ The **TTY::Prompt** comes with bult-in validations for `:email` and you can use 
 prompt.ask('What is your email?') { |q| q.validate :email }
 ```
 
-### 2.2.8 messages
+#### 2.2.8 messages
 
 By default `tty-prompt` comes with predefined error messages for `required`, `in`, `validate` options. You can change these and configure to your liking either by inling them with the option:
 
@@ -341,7 +341,7 @@ prompt.ask('What is your email?') do |q|
 end
 ```
 
-### 2.2.9 prefix
+#### 2.2.9 prefix
 
 You can prefix each question asked using the `:prefix` option. This option can be applied either globally for all prompts or individual for each one:
 
@@ -349,7 +349,7 @@ You can prefix each question asked using the `:prefix` option. This option can b
 prompt = TTY::Prompt.new(prefix: '[?] ')
 ```
 
-### 2.2.10 active_color
+#### 2.2.10 active_color
 
 All prompt types support `:active_color` option. In case of `select`, `multi_select`, `enum_select` or `expand` this color is used to highlight the currently selected choice. All the resulted inputs provided by user that are read in by the prompt as answer are highlighted with this color. This option can be applied either globablly for all prompts or individually.
 
@@ -359,7 +359,7 @@ prompt.select('What size?', %w(Large Medium Small), active_color: :cyan)
 
 Please [see pastel](https://github.com/piotrmurach/pastel#3-supported-colors) for all supported colors.
 
-### 2.2.11 help_color
+#### 2.2.11 help_color
 
 Prompts such as `select`, `multi_select`, `expand` support `:help_color` which is used to customize the help text. This option can be applied either globablly for all prompts or individually.
 
@@ -367,7 +367,7 @@ Prompts such as `select`, `multi_select`, `expand` support `:help_color` which i
 prompt.select('What size?', %w(Large Medium Small), help_color: :cyan)
 ```
 
-### 2.2.12 interrupt
+#### 2.2.12 interrupt
 
 By default `InputInterrupt` error will be raised when the user hits the interrupt key(Control-C). However, you can customise this behaviour by passing the `:interrupt` option. The available options are:
 
