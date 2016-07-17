@@ -37,10 +37,10 @@ module TTY
       #
       # @api public
       def initialize(input, output, options = {})
-        @input  = input
-        @output = output
-        @mode   = Mode.new
-        @handler = options.fetch(:interrupt_handler) { :error }
+        @input     = input
+        @output    = output
+        @mode      = Mode.new
+        @interrupt = options.fetch(:interrupt) { :error }
       end
 
       # Get input in unbuffered mode.
@@ -189,7 +189,7 @@ module TTY
       #
       # @api private
       def handle_interrupt
-        case @handler
+        case @interrupt
         when :error
           raise InputInterrupt
         when :signal
@@ -197,7 +197,7 @@ module TTY
         when :exit
           exit(130)
         when Proc
-          @handler.call
+          @interrupt.call
         end
       end
     end # Reader

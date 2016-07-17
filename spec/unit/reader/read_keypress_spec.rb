@@ -26,7 +26,7 @@ RSpec.describe TTY::Prompt::Reader, '#read_keypress' do
     end
 
     it "sends interrupt signal when :signal option is chosen" do
-      reader = described_class.new(input, out, interrupt_handler: :signal)
+      reader = described_class.new(input, out, interrupt: :signal)
       input << "\x03"
       input.rewind
 
@@ -38,7 +38,7 @@ RSpec.describe TTY::Prompt::Reader, '#read_keypress' do
     end
 
     it "exits with 130 code when :exit option is chosen" do
-      reader = described_class.new(input, out, interrupt_handler: :exit)
+      reader = described_class.new(input, out, interrupt: :exit)
       input << "\x03"
       input.rewind
 
@@ -49,7 +49,7 @@ RSpec.describe TTY::Prompt::Reader, '#read_keypress' do
 
     it "evaluates custom handler when proc object is provided" do
       handler = proc { raise ArgumentError }
-      reader = described_class.new(input, out, interrupt_handler: handler)
+      reader = described_class.new(input, out, interrupt: handler)
       input << "\x03"
       input.rewind
 
@@ -59,7 +59,7 @@ RSpec.describe TTY::Prompt::Reader, '#read_keypress' do
     end
 
     it "skips handler when handler is nil" do
-      reader = described_class.new(input, out, interrupt_handler: nil)
+      reader = described_class.new(input, out, interrupt: nil)
       input << "\x03"
       input.rewind
 
