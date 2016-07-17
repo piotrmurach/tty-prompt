@@ -55,21 +55,23 @@ Or install it yourself as:
     * [2.2.9 prefix](#229-prefix)
     * [2.2.10 active_color](#2210-active_color)
     * [2.2.11 help_color](#2211-help_color)
+    * [2.2.12 interrupt](#2212-interrupt)
   * [2.3 keypress](#23-keypress)
   * [2.4 multiline](#24-multiline)
   * [2.5 mask](#25-mask)
   * [2.6 yes?/no?](#26-yesno)
   * [2.7 select](#27-select)
-  * [2.8 multi_select](#28-multi_select)
-  * [2.9 enum_select](#29-enum_select)
-  * [2.10 expand](#210-expand)
-  * [2.11 collect](#211-collect)
-  * [2.12 suggest](#212-suggest)
-  * [2.13 slider](#213-slider)
-  * [2.14 say](#214-say)
-  * [2.15 ok](#215-ok)
-  * [2.16 warn](#216-warn)
-  * [2.17 error](#217-warn)
+    * [2.7.1 multi_select](#271-multi_select)
+    * [2.7.2 enum_select](#272-enum_select)
+  * [2.8 expand](#28-expand)
+  * [2.9 collect](#29-collect)
+  * [2.10 suggest](#210-suggest)
+  * [2.11 slider](#211-slider)
+  * [2.12 say](#212-say)
+    * [2.12.1 ok](#2121-ok)
+    * [2.12.2 warn](#2122-warn)
+    * [2.12.3 error](#2123-error)
+
 
 ## 1. Usage
 
@@ -355,7 +357,7 @@ All prompt types support `:active_color` option. In case of `select`, `multi_sel
 prompt.select('What size?', %w(Large Medium Small), active_color: :cyan)
 ```
 
-Please (see pastel)[https://github.com/piotrmurach/pastel#3-supported-colors] for all supported colors.
+Please [see pastel](https://github.com/piotrmurach/pastel#3-supported-colors) for all supported colors.
 
 ### 2.2.11 help_color
 
@@ -363,6 +365,21 @@ Prompts such as `select`, `multi_select`, `expand` support `:help_color` which i
 
 ```ruby
 prompt.select('What size?', %w(Large Medium Small), help_color: :cyan)
+```
+
+### 2.2.12 interrupt
+
+By default `InputInterrupt` error will be raised when the user hits the interrupt key(Control-C). However, you can customise this behaviour by passing the `:interrupt` option. The available options are:
+
+* `:signal` - sends interrupt signal
+* `:exit` - exists with status code
+* `:noop` - skips handler
+* custom proc
+
+For example, to send interrupt signal do:
+
+```ruby
+prompt = TTY::Prompt.new(interrupt: :signal)
 ```
 
 ### 2.3 keypress
@@ -558,7 +575,7 @@ prompt.select("Choose your destiny?", choices, help: "(Bash keyboard)", marker: 
 #   Jax
 ```
 
-### 2.8 multi_select
+### 2.7.1 multi_select
 
 For asking questions involving multiple selection list use `multi_select` method by passing the question and possible choices:
 
@@ -659,7 +676,7 @@ prompt.select("Select drinks?", choices, help: 'Press beer can against keyboard'
 #   ⬡ bourbon
 ```
 
-### 2.9 enum_select
+### 2.7.2 enum_select
 
 In order to ask for standard selection from indexed list you can use `enum_select` and pass question together with possible choices:
 
@@ -718,7 +735,7 @@ end
 # Select an editor? /usr/bin/vim
 ```
 
-### 2.10 expand
+### 2.8 expand
 
 The `expand` provides a compact way to ask a question with many options.
 
@@ -782,7 +799,7 @@ If user types `h` and presses enter, an expanded view will be shown which furthe
 
 Run `examples/expand.rb` to see the prompt in action.
 
-### 2.11 collect
+### 2.9 collect
 
 In order to collect more than one answer use `collect` method. Using the `key` you can describe the answers key name. All the methods for asking user input such as `ask`, `mask`, `select` can be directly invoked on the key. The key composition is very flexible by allowing nested keys. If you want the value to be automatically converted to required type use [convert](#221-convert).
 
@@ -804,7 +821,7 @@ end
 # {:name => "Piotr", :age => 30, :address => {:street => "Street", :city => "City", :zip => "123"}}
 ```
 
-### 2.12 suggest
+### 2.10 suggest
 
 To suggest possible matches for the user input use `suggest` method like so:
 
@@ -826,7 +843,7 @@ prompt.suggest('b', possible, indent: 4, single_text: 'Perhaps you meant?')
 #     blame
 ```
 
-### 2.13 slider
+### 2.11 slider
 
 If you have constrained range of numbers for user to choose from you may consider using `slider`. The slider provides easy visual way of picking a value marked by `O` marker.
 
@@ -853,7 +870,7 @@ end
 # |--O-------| 4
 ```
 
-### 2.14 say
+### 2.12 say
 
 To simply print message out to stdout use `say` like so:
 
@@ -865,7 +882,7 @@ The `say` method also accepts option `:color` which supports all the colors prov
 
 **TTY::Prompt** provides more specific versions of `say` method to better express intenation behind the message such as `ok`, `warn` and `error`.
 
-### 2.15 ok
+#### 2.12.1 ok
 
 Print message(s) in green do:
 
@@ -873,7 +890,7 @@ Print message(s) in green do:
 prompt.ok(...)
 ```
 
-### 2.16 warn
+#### 2.12.2 warn
 
 Print message(s) in yellow do:
 
@@ -881,7 +898,7 @@ Print message(s) in yellow do:
 prompt.warn(...)
 ```
 
-### 2.17 error
+#### 2.12.3 error
 
 Print message(s) in red do:
 
