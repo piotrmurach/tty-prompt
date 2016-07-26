@@ -581,7 +581,7 @@ For asking questions involving multiple selection list use `multi_select` method
 
 ```ruby
 choices = %w(vodka beer wine whisky bourbon)
-prompt.select("Select drinks?", choices)
+prompt.multi_select("Select drinks?", choices)
 # =>
 #
 # Select drinks? (Use arrow keys, press Space to select and Enter to finish)"
@@ -596,7 +596,7 @@ As a return value, the `multi_select` will always return an array by default pop
 
 ```ruby
 choices = {vodka: 1, beer: 2, wine: 3, whisky: 4, bourbon: 5}
-prompt.select("Select drinks?", choices)
+prompt.multi_select("Select drinks?", choices)
 
 # Provided that vodka and beer have been selected, the function will return
 # => [1, 2]
@@ -666,7 +666,7 @@ You can configure help message and/or marker like so
 
 ```ruby
 choices = {vodka: 1, beer: 2, wine: 3, whisky: 4, bourbon: 5}
-prompt.select("Select drinks?", choices, help: 'Press beer can against keyboard')
+prompt.multi_select("Select drinks?", choices, help: 'Press beer can against keyboard')
 # =>
 # Select drinks? (Press beer can against keyboard)"
 # ‣ ⬡ vodka
