@@ -1,5 +1,7 @@
 # encoding: utf-8
 
+require 'io/console'
+
 module TTY
   class Prompt
     class Reader
