@@ -1,5 +1,10 @@
 # Change log
 
+## [v0.7.1] - 2016-08-07
+
+### Fixed
+* Fix Reader::Mode to include standard io library
+
 ## [v0.7.0] - 2016-07-17
 
 ### Added
@@ -98,6 +103,7 @@
 
 * Initial implementation and release
 
+[v0.7.1]: https://github.com/piotrmurach/tty-prompt/compare/v0.7.0...v0.7.1
 [v0.7.0]: https://github.com/piotrmurach/tty-prompt/compare/v0.6.0...v0.7.0
 [v0.6.0]: https://github.com/piotrmurach/tty-prompt/compare/v0.5.0...v0.6.0
 [v0.5.0]: https://github.com/piotrmurach/tty-prompt/compare/v0.4.0...v0.5.0
