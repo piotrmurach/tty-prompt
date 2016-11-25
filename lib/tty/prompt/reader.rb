@@ -90,7 +90,7 @@ module TTY
       #
       # @api public
       def read_char
-        chars = input.sysread(1)
+        chars = input.readpartial(1)
         while CSI.start_with?(chars) ||
               chars.start_with?(CSI) &&
               !(64..126).include?(chars.each_codepoint.to_a.last)
