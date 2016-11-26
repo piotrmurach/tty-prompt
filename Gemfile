@@ -6,6 +6,7 @@ group :test do
   gem 'benchmark-ips', '~> 2.0.0'
   gem 'simplecov', '~> 0.10.0'
   gem 'coveralls', '~> 0.8.2'
+  gem 'term-ansicolor', '=1.3.2'
 end
 
 group :tools do
