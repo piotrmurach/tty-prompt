@@ -1,11 +1,19 @@
 # encoding: utf-8
 
-RSpec.describe TTY::Prompt::Reader::KeyEvent, '::from' do
+require 'shellwords'
 
+RSpec.describe TTY::Prompt::Reader::KeyEvent, '#from' do
   it "parses ctrl+h" do
     event = described_class.from("\b")
     expect(event.key.name).to eq(:backspace)
     expect(event.value).to eq("\b")
+  end
+
+  it "parses backspace" do
+    event = described_class.from("\e\x7f")
+    expect(event.key.name).to eq(:backspace)
+    expect(event.key.meta).to eq(true)
+    expect(event.value).to eq("\e\x7f")
   end
 
   it "parses lowercase char" do
@@ -20,48 +28,51 @@ RSpec.describe TTY::Prompt::Reader::KeyEvent, '::from' do
     expect(event.value).to eq('A')
   end
 
-  it "parses f5 key" do
-    event = described_class.from("\e[15~")
-    expect(event.key.name).to eq(:f5)
+  # F1-F12 keys
+  {
+    f1:  ["\eOP", "\e[11~", "\e[[A"],
+    f2:  ["\eOQ", "\e[12~", "\e[[B"],
+    f3:  ["\eOR", "\e[13~", "\e[[C"],
+    f4:  ["\eOS", "\e[14~", "\e[[D"],
+    f5:  [        "\e[15~", "\e[[E"],
+    f6:  [        "\e[17~"         ],
+    f7:  [        "\e[18~"         ],
+    f8:  [        "\e[19~"         ],
+    f9:  [        "\e[20~"         ],
+    f10: [        "\e[21~"         ],
+    f11: [        "\e[23~"         ],
+    f12: [        "\e[24~"         ]
+  }.each do |name, codes|
+    codes.each do |code|
+      it "parses #{Shellwords.escape(code)} as #{name} key" do
+        event = described_class.from(code)
+        expect(event.key.name).to eq(name)
+        expect(event.key.meta).to eq(false)
+        expect(event.key.ctrl).to eq(false)
+        expect(event.key.shift).to eq(false)
+      end
+    end
   end
 
-  it "parses up key" do
-    event = described_class.from("\e[A")
-    expect(event.key.name).to eq(:up)
-  end
-
-  it "parses up key on gnome" do
-    event = described_class.from("\eOA")
-    expect(event.key.name).to eq(:up)
-  end
-
-  it "parses down key" do
-    event = described_class.from("\e[B")
-    expect(event.key.name).to eq(:down)
-  end
-
-  it "parses right key" do
-    event = described_class.from("\e[C")
-    expect(event.key.name).to eq(:right)
-  end
-
-  it "parses left key" do
-    event = described_class.from("\e[D")
-    expect(event.key.name).to eq(:left)
-  end
-
-  it "parses clear key" do
-    event = described_class.from("\e[E")
-    expect(event.key.name).to eq(:clear)
-  end
-
-  it "parses end key" do
-    event = described_class.from("\e[F")
-    expect(event.key.name).to eq(:end)
-  end
-
-  it "parses home key" do
-    event = described_class.from("\e[H")
-    expect(event.key.name).to eq(:home)
+  # arrow keys & page navigation
+  #
+  {
+    up:    ["\e[A", "\eOA", "\e[a"],
+    down:  ["\e[B", "\eOB", "\e[b"],
+    right: ["\e[C", "\eOC", "\e[c"],
+    left:  ["\e[D", "\eOD", "\e[d"],
+    clear: ["\e[E", "\eOE", "\e[e"],
+    end:   ["\e[F"],
+    home:  ["\e[H"]
+  }.each do |name, codes|
+    codes.each do |code|
+      it "parses #{Shellwords.escape(code)} as #{name} key" do
+        event = described_class.from(code)
+        expect(event.key.name).to eq(name)
+        expect(event.key.meta).to eq(false)
+        expect(event.key.ctrl).to eq(false)
+        expect(event.key.shift).to eq(false)
+      end
+    end
   end
 end
