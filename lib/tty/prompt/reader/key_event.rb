@@ -34,7 +34,7 @@ module TTY
               "#{Codes::ESCAPE}#{Codes::BACKSPACE}",
               "#{Codes::ESCAPE}#{Codes::CTRL_H}"
             key.name = :backspace
-            key.meta = (char.chars[0] == Codes::ESCAPE)
+            key.meta = (char.chars.to_a[0] == Codes::ESCAPE)
           when Codes::DELETE   then key.name = :delete
           when Codes::SPACE, "#{Codes::ESCAPE}#{Codes::SPACE}"
             key.name = :space
