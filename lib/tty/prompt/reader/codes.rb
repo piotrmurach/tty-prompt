@@ -36,6 +36,12 @@ module TTY
         KEY_LEFT_SHIFT  = "[d"
         KEY_CLEAR_SHIFT = "[e"
 
+        KEY_UP_CTRL    = "0a"
+        KEY_DOWN_CTRL  = "0b"
+        KEY_RIGHT_CTRL = "0c"
+        KEY_LEFT_CTRL  = "0d"
+        KEY_CLEAR_CTRL = "0e"
+
         CTRL_J = "\x0A"
         CTRL_N = "\x0E"
         CTRL_K = "\x0B"
