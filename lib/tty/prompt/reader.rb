@@ -86,15 +86,18 @@ module TTY
 
       # Reads single character including invisible multibyte codes
       #
+      # @params [Integer] bytes
+      #   the number of bytes to read
+      #
       # @return [String]
       #
       # @api public
-      def read_char
-        chars = input.readpartial(1)
+      def read_char(bytes = 1)
+        chars = input.readpartial(bytes)
         while CSI.start_with?(chars) ||
               chars.start_with?(CSI) &&
               !(64..126).include?(chars.each_codepoint.to_a.last)
-          next_char = read_char
+          next_char = read_char(bytes + 1)
           chars << next_char
         end
         chars
