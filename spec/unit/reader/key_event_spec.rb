@@ -57,11 +57,11 @@ RSpec.describe TTY::Prompt::Reader::KeyEvent, '#from' do
   # arrow keys & page navigation
   #
   {
-    up:    ["\e[A", "\eOA", "\e[a"],
-    down:  ["\e[B", "\eOB", "\e[b"],
-    right: ["\e[C", "\eOC", "\e[c"],
-    left:  ["\e[D", "\eOD", "\e[d"],
-    clear: ["\e[E", "\eOE", "\e[e"],
+    up:    ["\e[A", "\eOA"],
+    down:  ["\e[B", "\eOB"],
+    right: ["\e[C", "\eOC"],
+    left:  ["\e[D", "\eOD"],
+    clear: ["\e[E", "\eOE"],
     end:   ["\e[F"],
     home:  ["\e[H"]
   }.each do |name, codes|
@@ -72,6 +72,24 @@ RSpec.describe TTY::Prompt::Reader::KeyEvent, '#from' do
         expect(event.key.meta).to eq(false)
         expect(event.key.ctrl).to eq(false)
         expect(event.key.shift).to eq(false)
+      end
+    end
+  end
+
+  {
+    up:    ["\e[a"],
+    down:  ["\e[b"],
+    right: ["\e[c"],
+    left:  ["\e[d"],
+    clear: ["\e[e"],
+  }.each do |name, codes|
+    codes.each do |code|
+      it "parses #{Shellwords.escape(code)} as SHIFT + #{name} key" do
+        event = described_class.from(code)
+        expect(event.key.name).to eq(name)
+        expect(event.key.meta).to eq(false)
+        expect(event.key.ctrl).to eq(false)
+        expect(event.key.shift).to eq(true)
       end
     end
   end

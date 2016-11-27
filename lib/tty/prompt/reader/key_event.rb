@@ -73,23 +73,36 @@ module TTY
             when Codes::F11 then key.name = :f11
             when Codes::F12 then key.name = :f12
             # navigation
-            when Codes::KEY_UP, Codes::KEY_UP_XTERM, Codes::KEY_UP_SHIFT,
+            when Codes::KEY_UP, Codes::KEY_UP_XTERM,
                  Codes::CTRL_K, Codes::CTRL_P
               key.name = :up
-            when Codes::KEY_DOWN, Codes::KEY_DOWN_XTERM, Codes::KEY_DOWN_SHIFT,
+            when Codes::KEY_UP_SHIFT then key.name = :up; key.shift = true
+            when Codes::KEY_UP_CTRL  then key.name = :up; key.ctrl  = true
+
+            when Codes::KEY_DOWN, Codes::KEY_DOWN_XTERM,
                  Codes::CTRL_J, Codes::CTRL_N
               key.name = :down
-            when Codes::KEY_RIGHT, Codes::KEY_RIGHT_XTERM,
-                Codes::KEY_RIGHT_SHIFT, Codes::CTRL_L
+            when Codes::KEY_DOWN_SHIFT then key.name = :down; key.shift = true
+            when Codes::KEY_DOWN_CTRL  then key.name = :down; key.ctrl = true
+
+            when Codes::KEY_RIGHT, Codes::KEY_RIGHT_XTERM, Codes::CTRL_L
               key.name = :right
-            when Codes::KEY_LEFT, Codes::KEY_LEFT_XTERM,
-                 Codes::KEY_LEFT_SHIFT, Codes::CTRL_H
+            when Codes::KEY_RIGHT_SHIFT then key.name = :right; key.shift = true
+            when Codes::KEY_RIGHT_CTRL  then key.name = :right; key.ctrl = true
+
+            when Codes::KEY_LEFT, Codes::KEY_LEFT_XTERM, Codes::CTRL_H
               key.name = :left
-            when Codes::KEY_CLEAR, Codes::KEY_CLEAR_XTERM,
-                 Codes::KEY_CLEAR_SHIFT
+            when Codes::KEY_LEFT_SHIFT then key.name = :left; key.shift = true
+            when Codes::KEY_LEFT_CTRL  then key.name = :left; key.ctrl = true
+
+            when Codes::KEY_CLEAR, Codes::KEY_CLEAR_XTERM
               key.name = :clear
+            when Codes::KEY_CLEAR_SHIFT then key.name = :clear; key.shift = true
+            when Codes::KEY_CLEAR_CTRL  then key.name = :clear; key.ctrl = true
+
             when Codes::KEY_END, Codes::KEY_END_XTERM
               key.name = :end
+
             when Codes::KEY_HOME, Codes::KEY_HOME_XTERM
               key.name = :home
             end
