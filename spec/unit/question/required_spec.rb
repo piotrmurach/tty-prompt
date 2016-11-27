@@ -34,4 +34,30 @@ RSpec.describe TTY::Prompt::Question, '#required' do
     answer = prompt.ask('What is your name?') { |q| q.required(false) }
     expect(answer).to be_nil
   end
+
+  it "uses required in validation check" do
+    prompt.input << "  \n#{__FILE__}\ntest\n"
+    prompt.input.rewind
+    answer = prompt.ask('File name?') do |q|
+      q.required(true)
+      q.validate { |v| !File.exist?(v) }
+      q.messages[:required?] = 'File name must not be empty!'
+      q.messages[:valid?]   = 'File already exists!'
+    end
+    expect(prompt.output.string).to eq([
+      "File name? ",
+       "\e[1000D\e[K",
+       "\e[31m>>\e[0m File name must not be empty!",
+       "\e[1A\e[1000D\e[K",
+      "File name? ",
+      "\e[1000D\e[K",
+      "\e[31m>>\e[0m File already exists!",
+      "\e[1A\e[1000D\e[K",
+      "File name? ",
+      "\e[1000D\e[K",
+      "\e[1A\e[1000D\e[K",
+      "File name? \e[32mtest\e[0m\n",
+    ].join)
+    expect(answer).to eq('test')
+  end
 end
