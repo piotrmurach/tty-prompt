@@ -51,7 +51,7 @@ Or install it yourself as:
     * [2.2.5 modify](#225-modify)
     * [2.2.6 required](#226-required)
     * [2.2.7 validate](#227-validate)
-    * [2.2.8 messages](#228-messages)
+    * [2.2.8 error messages](#228-error-messages)
     * [2.2.9 prefix](#229-prefix)
     * [2.2.10 active_color](#2210-active_color)
     * [2.2.11 help_color](#2211-help_color)
@@ -322,7 +322,7 @@ The **TTY::Prompt** comes with bult-in validations for `:email` and you can use 
 prompt.ask('What is your email?') { |q| q.validate :email }
 ```
 
-#### 2.2.8 messages
+#### 2.2.8 error messages
 
 By default `tty-prompt` comes with predefined error messages for `required`, `in`, `validate` options. You can change these and configure to your liking either by inling them with the option:
 
@@ -338,6 +338,15 @@ or change the `messages` key entry out of `:required?`, `:valid?`, `:range?`:
 prompt.ask('What is your email?') do |q|
   question.validate(/\A\w+@\w+\.\w+\Z/)
   question.messages[:valid?] = 'Invalid email address'
+end
+```
+
+to change default range validation error message do:
+
+```ruby
+prompt.ask('How spicy on scale (1-5)? ') do |q|
+  q.in '1-5'
+  q.messages[:range?] = '%{value} out of expected range #{in}'
 end
 ```
 
