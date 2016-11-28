@@ -17,10 +17,14 @@ RSpec.describe TTY::Prompt::Question, '#required' do
   end
 
   it 'requires value to be present with option' do
-    prompt.input << "Piotr"
+    prompt.input << "  \nPiotr"
     prompt.input.rewind
-    prompt.ask('What is your name?') { |q| q.required(true) }
+    prompt.ask('What is your name?', required: true)
     expect(prompt.output.string).to eq([
+      "What is your name? ",
+      "\e[1000D\e[K",
+      "\e[31m>>\e[0m Value must be provided\e[1A",
+      "\e[1000D\e[K",
       "What is your name? ",
       "\e[1000D\e[K\e[1A",
       "\e[1000D\e[K",
