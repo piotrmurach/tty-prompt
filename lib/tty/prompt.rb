@@ -98,7 +98,7 @@ module TTY
     # @api public
     def ask(message, *args, &block)
       options = Utils.extract_options!(args)
-      options.merge!(self.class.messages)
+      options.merge!({messages: self.class.messages})
       question = Question.new(self, options)
       question.call(message, &block)
     end

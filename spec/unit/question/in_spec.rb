@@ -55,4 +55,45 @@ RSpec.describe TTY::Prompt::Question, '#in' do
       "Your favourite vitamin? (A-K) \e[32mE\e[0m\n"
     ].join)
   end
+
+  it "provides default error explanaation when wrong input" do
+    prompt.input << "A\n2\n"
+    prompt.input.rewind
+
+    answer = prompt.ask("How spicy on scale? (1-5)", in: '1-5')
+
+    expect(answer).to eq('2')
+    expect(prompt.output.string).to eq([
+      "How spicy on scale? (1-5) ",
+      "\e[1000D\e[K",
+      "\e[31m>>\e[0m Value A must be within the range 1..5\e[1A",
+      "\e[1000D\e[K",
+      "How spicy on scale? (1-5) ",
+      "\e[1000D\e[K\e[1A",
+      "\e[1000D\e[K",
+      "How spicy on scale? (1-5) \e[32m2\e[0m\n"
+    ].join)
+  end
+
+  it "overwrites default error message when wrong input" do
+    prompt.input << "A\n2\n"
+    prompt.input.rewind
+
+    answer = prompt.ask("How spicy on scale? (1-5)") do |q|
+      q.in '1-5'
+      q.messages[:range?] = 'Ohh dear what is this %{value} doing in %{in}?'
+    end
+
+    expect(answer).to eq('2')
+    expect(prompt.output.string).to eq([
+      "How spicy on scale? (1-5) ",
+      "\e[1000D\e[K",
+      "\e[31m>>\e[0m Ohh dear what is this A doing in 1..5?\e[1A",
+      "\e[1000D\e[K",
+      "How spicy on scale? (1-5) ",
+      "\e[1000D\e[K\e[1A",
+      "\e[1000D\e[K",
+      "How spicy on scale? (1-5) \e[32m2\e[0m\n"
+    ].join)
+  end
 end
