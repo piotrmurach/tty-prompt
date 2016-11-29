@@ -71,7 +71,7 @@ Or install it yourself as:
     * [2.12.1 ok](#2121-ok)
     * [2.12.2 warn](#2122-warn)
     * [2.12.3 error](#2123-error)
-  * [2.13 keyboard-events](#213-keyboard-events)
+  * [2.13 keyboard events](#213-keyboard-events)
 
 ## 1. Usage
 
@@ -925,10 +925,10 @@ prompt.on(:keypress) { |event| ... }
 
 The event object is yielded to a block whenever particular event fires. The event has `key` and `value` methods. Further, the `key` responds to following messages:
 
-* `name`  # name of the event such as :up, :down, letter or digit
-* `meta`  # true if event is non-standard key associated
-* `shift` # true if shift has been pressed with the key
-* `ctrl`  # true if ctrl has been pressed with the key
+* `name`  - the name of the event such as :up, :down, letter or digit
+* `meta`  - true if event is non-standard key associated
+* `shift` - true if shift has been pressed with the key
+* `ctrl`  - true if ctrl has been pressed with the key
 
 For example, to add vim like key navigation to `select` prompt one would do the following:
 
@@ -953,19 +953,19 @@ prompt.on(:keypress) { |key| ... }
 
 The available events are:
 
-* :keypress
-* :keydown
-* :keyup
-* :keyleft
-* :keyright
-* :keynum
-* :keytab
-* :keyenter
-* :keyreturn
-* :keyspace
-* :keyescape
-* :keydelete
-* :keybackspace
+* `:keypress`
+* `:keydown`
+* `:keyup`
+* `:keyleft`
+* `:keyright`
+* `:keynum`
+* `:keytab`
+* `:keyenter`
+* `:keyreturn`
+* `:keyspace`
+* `:keyescape`
+* `:keydelete`
+* `:keybackspace`
 
 ## Contributing
 
