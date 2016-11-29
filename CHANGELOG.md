@@ -1,5 +1,16 @@
 # Change log
 
+## [v0.8.0] - 2016-11-29
+
+### Added
+* Add ability to publish custom key events for VIM keybindings customisations etc...
+
+### Fixed
+* Fix Reader#read_char to use Ruby internal buffers instead of direct system call by @kke(Kimmo Lehto)
+* Fix issue with #ask required & validate checks to take into account required when validating values
+* Fix bug with #read_keypress to handle function keys and meta navigation keys
+* Fix issue with default messages not displaying for `range`, `required` and `validate`
+
 ## [v0.7.1] - 2016-08-07
 
 ### Fixed
