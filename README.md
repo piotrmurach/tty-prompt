@@ -71,7 +71,7 @@ Or install it yourself as:
     * [2.12.1 ok](#2121-ok)
     * [2.12.2 warn](#2122-warn)
     * [2.12.3 error](#2123-error)
-  * [2.13](#213-keyboard-events)
+  * [2.13 keyboard-events](#213-keyboard-events)
 
 ## 1. Usage
 
