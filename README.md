@@ -71,7 +71,7 @@ Or install it yourself as:
     * [2.12.1 ok](#2121-ok)
     * [2.12.2 warn](#2122-warn)
     * [2.12.3 error](#2123-error)
-
+  * [2.13](#213-keyboard-events)
 
 ## 1. Usage
 
@@ -914,6 +914,58 @@ Print message(s) in red do:
 ```ruby
 prompt.error(...)
 ```
+
+#### 2.13 keyboard events
+
+All the prompt types, when a key is pressed, fire key press events. You can subscribe to listen to this events by calling `on` with type of event name.
+
+```ruby
+prompt.on(:keypress) { |event| ... }
+```
+
+The event object is yielded to a block whenever particular event fires. The event has `key` and `value` methods. Further, the `key` responds to following messages:
+
+* `name`  # name of the event such as :up, :down, letter or digit
+* `meta`  # true if event is non-standard key associated
+* `shift` # true if shift has been pressed with the key
+* `ctrl`  # true if ctrl has been pressed with the key
+
+For example, to add vim like key navigation to `select` prompt one would do the following:
+
+```ruby
+prompt.on(:keypress) do |event|
+  if event.key.name == 'j'
+    prompt.publish(:keydown)
+  end
+
+  if event.key.name == 'k'
+    prompt.publish(:keyup)
+  end
+end
+```
+
+You can subscribe to more than one event:
+
+```ruby
+prompt.on(:keypress) { |key| ... }
+      .on(:keydown)  { |key| ... }
+```
+
+The available events are:
+
+* :keypress
+* :keydown
+* :keyup
+* :keyleft
+* :keyright
+* :keynum
+* :keytab
+* :keyenter
+* :keyreturn
+* :keyspace
+* :keyescape
+* :keydelete
+* :keybackspace
 
 ## Contributing
 
