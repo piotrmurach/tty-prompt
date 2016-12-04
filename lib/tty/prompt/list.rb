@@ -36,6 +36,8 @@ module TTY
         @help         = options[:help]
         @first_render = true
         @done         = false
+        @paginator    = Paginator.new({per_page: options[:per_page],
+                                       default: @active})
 
         @prompt.subscribe(self)
       end
@@ -163,9 +165,9 @@ module TTY
       def render
         @prompt.print(@prompt.hide)
         until @done
-          render_question
+          lines = render_question
           @prompt.read_keypress
-          refresh
+          refresh(lines)
         end
         render_question
         answer = render_answer
@@ -183,22 +185,29 @@ module TTY
         @choices[@active - 1].value
       end
 
-      # Determine area of the screen to clear
+      # Clear screen lines
+      #
+      # @param [Integer] lines
+      #   the lines to clear
       #
       # @api private
-      def refresh
-        lines = @question.scan("\n").length + @choices.length + 1
+      def refresh(lines)
         @prompt.print(@prompt.clear_lines(lines))
       end
 
       # Render question with instructions and menu
+      #
+      # @return [Integer] The number of lines for menu
       #
       # @api private
       def render_question
         header = "#{@prefix}#{@question} #{render_header}"
         @prompt.puts(header)
         @first_render = false
-        @prompt.print(render_menu) unless @done
+        rendered_menu = render_menu
+        @prompt.print(rendered_menu) unless @done
+
+        header.lines.count + rendered_menu.lines.count
       end
 
       # Provide help information
@@ -228,7 +237,7 @@ module TTY
       # @api private
       def render_menu
         output = ''
-        @choices.each_with_index do |choice, index|
+        @paginator.paginate(@choices, @active) do |choice, index|
           num = enumerate? ? (index + 1).to_s + @enum + Symbols::SPACE : ''
           message = if index + 1 == @active
                       selected = @marker + Symbols::SPACE + num + choice.name
@@ -236,7 +245,7 @@ module TTY
                     else
                       Symbols::SPACE * 2 + num + choice.name
                     end
-          newline = (index == @choices.length - 1) ? '' : "\n"
+          newline = (index == @paginator.max_index) ? '' : "\n"
           output << (message + newline)
         end
         output
