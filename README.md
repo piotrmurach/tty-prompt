@@ -491,7 +491,7 @@ Similarly to `yes?` method, you can supply the same options to customize the que
 
 ### 2.7 menu
 
-#### 2.7.1 select
+### 2.7.1 select
 
 For asking questions involving list of options use `select` method by passing the question and possible choices:
 
