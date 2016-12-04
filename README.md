@@ -587,6 +587,24 @@ prompt.select("Choose your destiny?", choices, help: "(Bash keyboard)", marker: 
 #   Jax
 ```
 
+By default the menu is paginated if selection grows beyond `6` items. To change this setting use `:per_page` configuration.
+
+```ruby
+letters = ('A'..'Z').to_a
+prompt.select("Choose your letter?", letters, per_page: 8)
+#
+#
+# Which letter? (Use arrow keys, press Enter to select)
+# ‣ A
+#   B
+#   C
+#   D
+#   E
+#   F
+#   G
+#   H
+```
+
 ### 2.7.2 multi_select
 
 For asking questions involving multiple selection list use `multi_select` method by passing the question and possible choices:
