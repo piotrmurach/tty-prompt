@@ -3,7 +3,7 @@
 RSpec.describe TTY::Prompt::Paginator, '#paginate' do
   it "paginates items matching per_page count" do
     list = %w(a b c d e f)
-    paginator = described_class.new(per_page: 3)
+    paginator = described_class.new({per_page: 3})
 
     expect(paginator.paginate(list, 1).to_a).to eq([['a',0], ['b',1], ['c',2]])
     expect(paginator.paginate(list, 2).to_a).to eq([['a',0], ['b',1], ['c',2]])
@@ -16,7 +16,7 @@ RSpec.describe TTY::Prompt::Paginator, '#paginate' do
 
   it "paginates items not matching per_page count" do
     list = %w(a b c d e f g)
-    paginator = described_class.new(per_page: 3)
+    paginator = described_class.new({per_page: 3})
 
     expect(paginator.paginate(list, 1).to_a).to eq([['a',0], ['b',1], ['c',2]])
     expect(paginator.paginate(list, 2).to_a).to eq([['a',0], ['b',1], ['c',2]])
@@ -30,9 +30,8 @@ RSpec.describe TTY::Prompt::Paginator, '#paginate' do
 
   it "finds maximum index for current selection" do
     list = %w(a b c d e f g)
-    paginator = described_class.new(per_page: 3)
+    paginator = described_class.new({per_page: 3, default: 0})
 
-    expect(paginator.max_index).to eq(2)
     paginator.paginate(list, 4)
     expect(paginator.max_index).to eq(3)
     paginator.paginate(list, 5)
@@ -41,7 +40,7 @@ RSpec.describe TTY::Prompt::Paginator, '#paginate' do
 
   it "starts with default selection" do
     list = %w(a b c d e f g)
-    paginator = described_class.new(per_page: 3, default: 3)
+    paginator = described_class.new({per_page: 3, default: 3})
 
     expect(paginator.paginate(list, 4).to_a).to eq([['d',3], ['e',4], ['f',5]])
   end
