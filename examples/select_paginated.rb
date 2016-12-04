@@ -6,4 +6,4 @@ prompt = TTY::Prompt.new
 
 alfabet = ('A'..'Z').to_a
 
-prompt.select('Choose your destiny?', alfabet, per_page: 8)
+prompt.select('Which letter?', alfabet, per_page: 8)
