@@ -45,6 +45,7 @@ module TTY
         @messages   = Utils.deep_copy(options.fetch(:messages) { { } })
         @done       = false
         @input      = nil
+        @input_encoding = options.fetch(:input_encoding) { UndefinedSetting }
 
         @evaluator = Evaluator.new(self)
 
@@ -135,7 +136,34 @@ module TTY
         if Utils.blank?(@input)
           @input = default? ? default : nil
         end
+
+        if @input && encode_input?
+          if @input.is_a? String
+            @input = encode_input(@input)
+          elsif @input.is_a? Array
+            @input = @input.map { |input| encode_input(input) }
+          end
+        end
+
         @evaluator.(@input)
+      end
+
+      # Encod input
+      #
+      # @return [Boolean]
+      #
+      # @api private
+      def encode_input(line)
+        line.codepoints.to_a.pack('C*').force_encoding(@input_encoding)
+      end
+
+      # Check if input needs encoding
+      #
+      # @return [Boolean]
+      #
+      # @api private
+      def encode_input?
+        @input_encoding != UndefinedSetting
       end
 
       # Process input

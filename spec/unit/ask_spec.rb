@@ -41,6 +41,18 @@ RSpec.describe TTY::Prompt, '#ask' do
     ].join)
   end
 
+  it "asks a question with a input encoding" do
+    prompt.input << "한글"
+    prompt.input.rewind
+    answer = prompt.ask("UTF-8 charater?")
+    expect(answer).not_to eql("한글")
+
+    prompt.input << "한글"
+    prompt.input.rewind
+    answer = prompt.ask("Need encoding?", input_encoding: "utf-8")
+    expect(answer).not_to eql("한글")
+  end
+
   it 'asks a question with block' do
     prompt.input << ''
     prompt.input.rewind
