@@ -60,9 +60,10 @@ Or install it yourself as:
   * [2.4 multiline](#24-multiline)
   * [2.5 mask](#25-mask)
   * [2.6 yes?/no?](#26-yesno)
-  * [2.7 select](#27-select)
-    * [2.7.1 multi_select](#271-multi_select)
-    * [2.7.2 enum_select](#272-enum_select)
+  * [2.7 menu](#27-menu)
+    * [2.7.1 select](#271-select)
+    * [2.7.2 multi_select](#272-multi_select)
+    * [2.7.3 enum_select](#273-enum_select)
   * [2.8 expand](#28-expand)
   * [2.9 collect](#29-collect)
   * [2.10 suggest](#210-suggest)
@@ -488,7 +489,9 @@ prompt.no?('Do you hate Ruby?')
 
 Similarly to `yes?` method, you can supply the same options to customize the question.
 
-### 2.7 select
+### 2.7 menu
+
+#### 2.7.1 select
 
 For asking questions involving list of options use `select` method by passing the question and possible choices:
 
@@ -584,7 +587,7 @@ prompt.select("Choose your destiny?", choices, help: "(Bash keyboard)", marker: 
 #   Jax
 ```
 
-### 2.7.1 multi_select
+### 2.7.2 multi_select
 
 For asking questions involving multiple selection list use `multi_select` method by passing the question and possible choices:
 
@@ -685,7 +688,7 @@ prompt.multi_select("Select drinks?", choices, help: 'Press beer can against key
 #   ⬡ bourbon
 ```
 
-### 2.7.2 enum_select
+### 2.7.3 enum_select
 
 In order to ask for standard selection from indexed list you can use `enum_select` and pass question together with possible choices:
 
