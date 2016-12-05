@@ -211,4 +211,21 @@ RSpec.describe TTY::Prompt do
       "Select drinks? \n\e[?25h"
     ].join)
   end
+
+  it "paginates long selections" do
+    prompt = TTY::TestPrompt.new
+    choices = %w(A B C D E F G H)
+    prompt.input << "\r"
+    prompt.input.rewind
+    value = prompt.multi_select("What letter?", choices, per_page: 3, default: 4)
+    expect(value).to eq(['D'])
+    expect(prompt.output.string).to eq([
+      "\e[?25lWhat letter? D \e[90m(Use arrow keys, press Space to select and Enter to finish)\e[0m\n",
+      "‣ \e[32m⬢\e[0m D\n",
+      "  ⬡ E\n",
+      "  ⬡ F",
+      "\e[1000D\e[K\e[1A" * 3 + "\e[1000D\e[K",
+      "What letter? \e[32mD\e[0m\n\e[?25h",
+    ].join)
+  end
 end

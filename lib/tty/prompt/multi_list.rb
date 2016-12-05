@@ -21,7 +21,7 @@ module TTY
         super
         @selected = []
         @help    = options[:help]
-        @default = options.fetch(:default) { [] }
+        @default = Array(options[:default])
       end
 
       # Callback fired when space key is pressed
@@ -84,7 +84,7 @@ module TTY
       # @api private
       def render_menu
         output = ''
-        @choices.each_with_index do |choice, index|
+        @paginator.paginate(@choices, @active) do |choice, index|
           num = enumerate? ? (index + 1).to_s + @enum + Symbols::SPACE : ''
           indicator = (index + 1 == @active) ?  @marker : Symbols::SPACE
           indicator += Symbols::SPACE
@@ -94,7 +94,7 @@ module TTY
                     else
                       Symbols::RADIO_UNCHECKED + Symbols::SPACE + num + choice.name
                     end
-          newline = (index == @choices.length - 1) ? '' : "\n"
+          newline = (index == @paginator.max_index) ? '' : "\n"
           output << indicator + message + newline
         end
         output
