@@ -36,8 +36,8 @@ module TTY
         @help         = options[:help]
         @first_render = true
         @done         = false
-        @paginator    = Paginator.new({per_page: options[:per_page],
-                                       default: @active})
+        @per_page     = options[:per_page]
+        @paginator    = Paginator.new
 
         @prompt.subscribe(self)
       end
@@ -54,6 +54,13 @@ module TTY
       # @api public
       def default(*default_values)
         @default = default_values
+      end
+
+      # Set number of items per page
+      #
+      # @api public
+      def per_page(value)
+        @per_page = value
       end
 
       # Set selecting active index using number pad
@@ -237,7 +244,7 @@ module TTY
       # @api private
       def render_menu
         output = ''
-        @paginator.paginate(@choices, @active) do |choice, index|
+        @paginator.paginate(@choices, @active, @per_page) do |choice, index|
           num = enumerate? ? (index + 1).to_s + @enum + Symbols::SPACE : ''
           message = if index + 1 == @active
                       selected = @marker + Symbols::SPACE + num + choice.name

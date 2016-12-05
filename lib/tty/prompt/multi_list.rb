@@ -84,7 +84,7 @@ module TTY
       # @api private
       def render_menu
         output = ''
-        @paginator.paginate(@choices, @active) do |choice, index|
+        @paginator.paginate(@choices, @active, @per_page) do |choice, index|
           num = enumerate? ? (index + 1).to_s + @enum + Symbols::SPACE : ''
           indicator = (index + 1 == @active) ?  @marker : Symbols::SPACE
           indicator += Symbols::SPACE

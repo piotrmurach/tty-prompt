@@ -30,13 +30,16 @@ module TTY
       #   a collection of choice items
       # @param [Integer] active
       #   current choice active index
+      # @param [Integer] per_page
+      #   number of choice items per page
       #
       # @return [Enumerable]
       #
       # @api public
-      def paginate(list, active, &block)
+      def paginate(list, active, per_page = nil, &block)
         current_index = active - 1
-        @per_page ||= (list.size <= DEFAULT_PAGE_SIZE ? list.size : DEFAULT_PAGE_SIZE)
+        default_size = (list.size <= DEFAULT_PAGE_SIZE ? list.size : DEFAULT_PAGE_SIZE)
+        @per_page = @per_page || per_page || default_size
         @lower_index ||= current_index
         @upper_index ||= max_index
 
