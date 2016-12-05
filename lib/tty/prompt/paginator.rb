@@ -9,9 +9,9 @@ module TTY
       #
       # @api private
       def initialize(options = {})
-        @last_index  = options.fetch(:default) { 0 }
+        @last_index  = Array(options[:default]).flatten.first || 0
         @per_page    = options[:per_page]
-        @lower_index = options[:default]
+        @lower_index = Array(options[:default]).flatten.first
       end
 
       # Maximum index for current pagination
