@@ -34,4 +34,12 @@ RSpec.describe TTY::Prompt::Reader, '#read_multiline' do
     reader.read_multiline { |line| lines << line }
     expect(lines).to eq(['First line', 'Second line', 'Third line'])
   end
+
+  it 'reads multibyte lines' do
+    input << "국경의 긴 터널을 빠져나오자\n설국이었다."
+    input.rewind
+    lines = []
+    reader.read_multiline { |line| lines << line }
+    expect(lines).to eq(["국경의 긴 터널을 빠져나오자", '설국이었다.'])
+  end
 end

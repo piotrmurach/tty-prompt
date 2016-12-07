@@ -14,6 +14,16 @@ RSpec.describe TTY::Prompt::Reader, '#read_keypress' do
     expect(answer).to eq("\e[A")
   end
 
+  it 'reads multibyte key press' do
+    reader = described_class.new(input, out)
+    input << "ㄱ"
+    input.rewind
+
+    answer = reader.read_keypress
+
+    expect(answer).to eq("ㄱ")
+  end
+
   context 'when Ctrl+C pressed' do
     it "defaults to raising InputInterrupt" do
       reader = described_class.new(input, out)
