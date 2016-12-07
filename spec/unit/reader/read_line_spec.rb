@@ -28,4 +28,11 @@ RSpec.describe TTY::Prompt::Reader, '#read_line' do
     answer = reader.read_line
     expect(answer).to eq('acc')
   end
+
+  it 'reads multibyte line' do
+    input << "한글"
+    input.rewind
+    answer = reader.read_line
+    expect(answer).to eq("한글")
+  end
 end
