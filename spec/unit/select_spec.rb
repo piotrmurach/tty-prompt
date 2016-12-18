@@ -174,7 +174,7 @@ RSpec.describe TTY::Prompt, '#select' do
       "\e[32m‣ Large\e[0m\n",
       "  Medium\n",
       "  Small",
-      "\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K",
+      "\e[1000D\e[K\e[1A" * 3 + "\e[1000D\e[K",
       "What size? \e[32mLarge\e[0m\n\e[?25h"
     ].join)
   end
@@ -190,7 +190,7 @@ RSpec.describe TTY::Prompt, '#select' do
       "\e[32m‣ Large\e[0m\n",
       "  Medium\n",
       "  Small",
-      "\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K",
+      "\e[1000D\e[K\e[1A" * 3 + "\e[1000D\e[K",
       "[?] What size? \e[32mLarge\e[0m\n\e[?25h"
     ].join)
   end
@@ -205,8 +205,9 @@ RSpec.describe TTY::Prompt, '#select' do
       "\e[?25lWhat letter? \e[90m(Use arrow keys, press Enter to select)\e[0m\n",
       "\e[32m‣ D\e[0m\n",
       "  E\n",
-      "  F",
-      "\e[1000D\e[K\e[1A" * 3 + "\e[1000D\e[K",
+      "  F\n",
+      "\e[90m(Move up or down to reveal more choices)\e[0m",
+      "\e[1000D\e[K\e[1A" * 4 + "\e[1000D\e[K",
       "What letter? \e[32mD\e[0m\n\e[?25h",
     ].join)
   end
@@ -218,6 +219,7 @@ RSpec.describe TTY::Prompt, '#select' do
     prompt.input.rewind
     value = prompt.select('What letter?') do |menu|
               menu.per_page 3
+              menu.page_help '(Wiggle thy finger up or down to see more)'
               menu.default 4
 
               menu.choices choices
@@ -227,8 +229,9 @@ RSpec.describe TTY::Prompt, '#select' do
       "\e[?25lWhat letter? \e[90m(Use arrow keys, press Enter to select)\e[0m\n",
       "\e[32m‣ D\e[0m\n",
       "  E\n",
-      "  F",
-      "\e[1000D\e[K\e[1A" * 3 + "\e[1000D\e[K",
+      "  F\n",
+      "\e[90m(Wiggle thy finger up or down to see more)\e[0m",
+      "\e[1000D\e[K\e[1A" * 4 + "\e[1000D\e[K",
       "What letter? \e[32mD\e[0m\n\e[?25h",
     ].join)
   end

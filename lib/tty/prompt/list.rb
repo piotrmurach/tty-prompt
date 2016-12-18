@@ -7,7 +7,9 @@ module TTY
     #
     # @api private
     class List
-      HELP = '(Use arrow%s keys, press Enter to select)'.freeze
+      HELP = '(Use arrow%s keys, press Enter to select)'
+
+      PAGE_HELP = '(Move up or down to reveal more choices)'
 
       # Create instance of TTY::Prompt::List menu.
       #
@@ -37,6 +39,7 @@ module TTY
         @first_render = true
         @done         = false
         @per_page     = options[:per_page]
+        @page_help    = options[:page_help] || PAGE_HELP
         @paginator    = Paginator.new
 
         @prompt.subscribe(self)
@@ -61,6 +64,22 @@ module TTY
       # @api public
       def per_page(value)
         @per_page = value
+      end
+
+      # Check if list is paginated
+      #
+      # @return [Boolean]
+      #
+      # @api private
+      def paginated?
+        @choices.size >= (@per_page || Paginator::DEFAULT_PAGE_SIZE)
+      end
+
+      # @param [String] text
+      #   the help text to display per page
+      # @api pbulic
+      def page_help(text)
+        @page_help = text
       end
 
       # Set selecting active index using number pad
@@ -134,6 +153,7 @@ module TTY
       def keydown(*)
         @active = (@active == @choices.length) ? 1 : @active + 1
       end
+      alias keytab keydown
 
       private
 
@@ -212,6 +232,7 @@ module TTY
         @prompt.puts(header)
         @first_render = false
         rendered_menu = render_menu
+        rendered_menu << render_footer
         @prompt.print(rendered_menu) unless @done
 
         header.lines.count + rendered_menu.lines.count
@@ -256,6 +277,15 @@ module TTY
           output << (message + newline)
         end
         output
+      end
+
+      # Render page info footer
+      #
+      # @api private
+      def render_footer
+        return '' unless paginated?
+        colored_footer = @prompt.decorate(@page_help, @help_color)
+        "\n" << colored_footer
       end
     end # List
   end # Prompt
