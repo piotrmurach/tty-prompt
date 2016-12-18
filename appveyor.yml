@@ -4,6 +4,7 @@ install:
   - ruby --version
   - gem --version
   - bundle install
+build: off
 test_script:
   - bundle exec rake ci
 environment:
