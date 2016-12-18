@@ -1,5 +1,16 @@
 # Change log
 
+## [v0.9.0] - 2016-12-xx
+
+### Added
+* Add ability to paginate choices list for #select, #multi_select & #enum_select
+  with :per_page, :page_info and :default options
+* Add ability to switch through options in #select & #multi_select using the tab key
+* Add ability to use Array objects with :in question checks
+
+### Fixed
+* Fix readers to accept multibyte characters reported by Jaehyun Shin(@keepcosmos)
+
 ## [v0.8.0] - 2016-11-29
 
 ### Added
@@ -114,6 +125,8 @@
 
 * Initial implementation and release
 
+[v0.9.0]: https://github.com/piotrmurach/tty-prompt/compare/v0.8.0...v0.9.0
+[v0.8.0]: https://github.com/piotrmurach/tty-prompt/compare/v0.7.1...v0.8.0
 [v0.7.1]: https://github.com/piotrmurach/tty-prompt/compare/v0.7.0...v0.7.1
 [v0.7.0]: https://github.com/piotrmurach/tty-prompt/compare/v0.6.0...v0.7.0
 [v0.6.0]: https://github.com/piotrmurach/tty-prompt/compare/v0.5.0...v0.6.0
