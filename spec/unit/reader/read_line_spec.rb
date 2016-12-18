@@ -8,14 +8,14 @@ RSpec.describe TTY::Prompt::Reader, '#read_line' do
 
   it 'masks characters' do
     mask = '*'
-    input << "password\n"
+    input << "password"
     input.rewind
     answer = reader.read_line(mask)
     expect(answer).to eq("password")
   end
 
   it "echoes characters back" do
-    input << "password\n"
+    input << "password"
     input.rewind
     answer = reader.read_line
     expect(answer).to eq("password")

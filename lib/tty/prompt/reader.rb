@@ -93,22 +93,18 @@ module TTY
       #
       # @api public
       def read_char(bytes = 1)
-        chars = input.readpartial(bytes)
-        while CSI.start_with?(chars) ||
-              chars.start_with?(CSI) &&
+        chars = input.getc
+        return if chars.nil?
+        while CSI.start_with?(chars) || chars.start_with?(CSI) &&
               !(64..126).include?(chars.each_codepoint.to_a.last)
-          next_char = read_char(bytes + 1)
-          chars << next_char
+          chars << read_char(bytes + 1)
         end
-        chars
-      rescue EOFError
-        # Finished processing
         chars
       end
 
-      # Get a single line from STDIN
-      # Each key pressed is echoed back  to the shell.
-      # The input terminates when enter or return key is pressed.
+      # Get a single line from STDIN. Each key pressed is echoed
+      # back to the shell. The input terminates when enter or
+      # return key is pressed.
       #
       # @param [Boolean] echo
       #   if true echo back characters, output nothing otherwise
@@ -120,10 +116,14 @@ module TTY
         line = ''
         buffer do
           mode.echo(echo) do
-            while (char = input.getbyte) &&
-                !(char == CARRIAGE_RETURN || char == NEWLINE)
-              emit_key_event(convert_byte(char))
-              line = handle_char(line, char)
+            while (char = read_char) && (char_byte = char.unpack('c*')[0]) &&
+                !(char_byte == CARRIAGE_RETURN || char_byte == NEWLINE)
+              emit_key_event(char)
+              if char_byte == BACKSPACE || char_byte == DELETE
+                line = line.slice(-1, 1) unless line.empty?
+              else
+                line << char
+              end
             end
           end
         end
@@ -167,26 +167,6 @@ module TTY
       end
 
       private
-
-      # Convert byte to unicode character
-      #
-      # @return [String]
-      #
-      # @api private
-      def convert_byte(byte)
-        Array(byte).pack('U*')
-      end
-
-      # Handle single character by appending to or removing from output
-      #
-      # @api private
-      def handle_char(line, char)
-        if char == BACKSPACE || char == DELETE
-          line.empty? ? line : line.slice(-1, 1)
-        else
-          line << char
-        end
-      end
 
       # Handle input interrupt based on provided value
       #
