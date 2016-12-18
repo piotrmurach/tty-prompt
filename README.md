@@ -1,6 +1,7 @@
 # TTY::Prompt [![Gitter](https://badges.gitter.im/Join%20Chat.svg)][gitter]
 [![Gem Version](https://badge.fury.io/rb/tty-prompt.svg)][gem]
 [![Build Status](https://secure.travis-ci.org/piotrmurach/tty-prompt.svg?branch=master)][travis]
+[![Build status](https://ci.appveyor.com/api/projects/status/4cguoiah5dprbq7n?svg=true)][appveyor]
 [![Code Climate](https://codeclimate.com/github/piotrmurach/tty-prompt/badges/gpa.svg)][codeclimate]
 [![Coverage Status](https://coveralls.io/repos/github/piotrmurach/tty-prompt/badge.svg)][coverage]
 [![Inline docs](http://inch-ci.org/github/piotrmurach/tty-prompt.svg?branch=master)][inchpages]
@@ -8,6 +9,7 @@
 [gitter]: https://gitter.im/piotrmurach/tty
 [gem]: http://badge.fury.io/rb/tty-prompt
 [travis]: http://travis-ci.org/piotrmurach/tty-prompt
+[appveyor]: https://ci.appveyor.com/project/piotrmurach/tty-prompt
 [codeclimate]: https://codeclimate.com/github/piotrmurach/tty-prompt
 [coverage]: https://coveralls.io/github/piotrmurach/tty-prompt
 [inchpages]: http://inch-ci.org/github/piotrmurach/tty-prompt
