@@ -787,6 +787,21 @@ end
 # Select an editor? /usr/bin/vim
 ```
 
+By default the menu is paginated if selection grows beyond `6` items. To change this setting use `:per_page` configuration.
+
+```ruby
+letters = ('A'..'Z').to_a
+prompt.enum_select("Choose your letter?", letters, per_page: 4)
+# =>
+# Which letter?
+#   1) A
+#   2) B
+#   3) C
+#   4) D
+#   Choose 1-26 [1]:
+# (Press tab/right or left to reveal more choices)
+```
+
 ### 2.8 expand
 
 The `expand` provides a compact way to ask a question with many options.
