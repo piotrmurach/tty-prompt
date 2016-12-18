@@ -23,6 +23,8 @@
 * Number of prompt types for gathering user input
 * A robust API for validating complex inputs
 * User friendly error feedback
+* Intuitive DSL for creating complex menus
+* Ability to page long menus
 
 ## Installation
 
