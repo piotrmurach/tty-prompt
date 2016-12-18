@@ -591,18 +591,24 @@ By default the menu is paginated if selection grows beyond `6` items. To change 
 
 ```ruby
 letters = ('A'..'Z').to_a
-prompt.select("Choose your letter?", letters, per_page: 8)
-#
-#
+prompt.select("Choose your letter?", letters, per_page: 4)
+# =>
 # Which letter? (Use arrow keys, press Enter to select)
 # ‣ A
 #   B
 #   C
 #   D
-#   E
-#   F
-#   G
-#   H
+# (Move up or down to reveal more choices)
+```
+
+You can also customise page navigation text using `:page_help` option:
+```ruby
+letters = ('A'..'Z').to_a
+prompt.select("Choose your letter?") do |menu|
+  menu.per_page 4
+  menu.page_help '(Wiggle thy finger up or down to see more)'
+  menu.choices letters, per_page: 4)
+end
 ```
 
 ### 2.7.2 multi_select
@@ -704,6 +710,20 @@ prompt.multi_select("Select drinks?", choices, help: 'Press beer can against key
 #   ⬡ wine
 #   ⬡ whisky
 #   ⬡ bourbon
+```
+
+By default the menu is paginated if selection grows beyond `6` items. To change this setting use `:per_page` configuration.
+
+```ruby
+letters = ('A'..'Z').to_a
+prompt.multi_select("Choose your letter?", letters, per_page: 4)
+# =>
+# Which letter? (Use arrow keys, press Space to select and Enter to finish)
+# ‣ ⬡ A
+#   ⬡ B
+#   ⬡ C
+#   ⬡ D
+# (Move up or down to reveal more choices)
 ```
 
 ### 2.7.3 enum_select
