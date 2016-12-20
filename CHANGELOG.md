@@ -1,12 +1,11 @@
 # Change log
 
-## [v0.9.0] - 2016-12-xx
+## [v0.9.0] - 2016-12-20
 
 ### Added
 * Add ability to paginate choices list for #select, #multi_select & #enum_select
   with :per_page, :page_info and :default options
 * Add ability to switch through options in #select & #multi_select using the tab key
-* Add ability to use Array objects with :in question checks
 
 ### Fixed
 * Fix readers to accept multibyte characters reported by Jaehyun Shin(@keepcosmos)
