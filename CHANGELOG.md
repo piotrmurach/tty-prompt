@@ -1,5 +1,13 @@
 # Change log
 
+## [v0.10.0] - 2017-01-01
+
+### Added
+* Add :enable_color option for toggling colors support
+
+### Changed
+* Update pastel dependency version
+
 ## [v0.9.0] - 2016-12-20
 
 ### Added
