@@ -47,36 +47,37 @@ Or install it yourself as:
 * [1. Usage](#1-usage)
 * [2. Interface](#2-interface)
   * [2.1 ask](#21-ask)
-  * [2.2 settings](#22-settings)
-    * [2.2.1 convert](#221-convert)
-    * [2.2.2 default](#222-default)
-    * [2.2.3 echo](#223-echo)
-    * [2.2.4 in](#224-in)
-    * [2.2.5 modify](#225-modify)
-    * [2.2.6 required](#226-required)
-    * [2.2.7 validate](#227-validate)
-    * [2.2.8 error messages](#228-error-messages)
-    * [2.2.9 prefix](#229-prefix)
-    * [2.2.10 active_color](#2210-active_color)
-    * [2.2.11 help_color](#2211-help_color)
-    * [2.2.12 interrupt](#2212-interrupt)
-  * [2.3 keypress](#23-keypress)
-  * [2.4 multiline](#24-multiline)
-  * [2.5 mask](#25-mask)
-  * [2.6 yes?/no?](#26-yesno)
-  * [2.7 menu](#27-menu)
-    * [2.7.1 select](#271-select)
-    * [2.7.2 multi_select](#272-multi_select)
-    * [2.7.3 enum_select](#273-enum_select)
-  * [2.8 expand](#28-expand)
-  * [2.9 collect](#29-collect)
-  * [2.10 suggest](#210-suggest)
-  * [2.11 slider](#211-slider)
-  * [2.12 say](#212-say)
-    * [2.12.1 ok](#2121-ok)
-    * [2.12.2 warn](#2122-warn)
-    * [2.12.3 error](#2123-error)
-  * [2.13 keyboard events](#213-keyboard-events)
+    * [2.1.1 convert](#211-convert)
+    * [2.1.2 default](#212-default)
+    * [2.1.3 echo](#213-echo)
+    * [2.1.4 error messages](#214-error-messages)
+    * [2.1.5 in](#215-in)
+    * [2.1.6 modify](#216-modify)
+    * [2.1.7 required](#217-required)
+    * [2.1.8 validate](#218-validate)
+  * [2.2 keypress](#22-keypress)
+  * [2.3 multiline](#23-multiline)
+  * [2.4 mask](#24-mask)
+  * [2.5 yes?/no?](#25-yesno)
+  * [2.6 menu](#26-menu)
+    * [2.6.1 select](#261-select)
+    * [2.6.2 multi_select](#262-multi_select)
+    * [2.6.3 enum_select](#263-enum_select)
+  * [2.7 expand](#27-expand)
+  * [2.8 collect](#28-collect)
+  * [2.9 suggest](#29-suggest)
+  * [2.10 slider](#210-slider)
+  * [2.11 say](#211-say)
+    * [2.11.1 ok](#2111-ok)
+    * [2.11.2 warn](#2112-warn)
+    * [2.11.3 error](#2113-error)
+  * [2.12 keyboard events](#212-keyboard-events)
+* [3. settings](#3-settings)
+  * [3.1 active_color](#31-active_color)
+  * [3.2 enable_color](#32-enable-color)
+  * [3.3 help_color](#33-help_color)
+  * [3.4 interrupt](#34-interrupt)
+  * [3.5 prefix](#35-prefix)
 
 ## 1. Usage
 
@@ -200,23 +201,11 @@ prompt.ask("What is your name?") do |q|
 end
 ```
 
-### 2.2 settings
+#### 2.1.1 convert
 
-Below is a list of the settings that may be used for customizing `ask`, `mask`, `multiline`, `keypress` methods behaviour:
+The `convert` property is used to convert input to a required type.
 
-```ruby
-:convert    # conversion applied to input such as :bool or proc
-:default    # default value used if none is provided
-:echo       # turn echo on and off (default: true)
-:in         # specify range '0-9', '0..9', '0...9' or negative '-1..-9'
-:modify     # apply answer modification :upcase, :downcase, :trim, :chomp etc..
-:required   # If true, value entered must be non-empty (default: false)
-:validate   # regex, proc against which input is checked
-```
-
-#### 2.2.1 convert
-
- The `convert` property is used to convert input to a required type. By default no conversion is performed. The following conversions are provided:
+By default no conversion is performed. The following conversions are provided:
 
 ```ruby
 :bool       # true or false for strings such as "Yes", "No"
@@ -250,7 +239,7 @@ end
 # => ['milk', 'eggs', 'flour']
 ```
 
-#### 2.2.2 default
+#### 2.1.2 default
 
 The `:default` option is used if the user presses return key:
 
@@ -260,7 +249,7 @@ prompt.ask('What is your name?', default: 'Anonymous')
 # What is your name? (Anonymous)
 ```
 
-#### 2.2.3 echo
+#### 2.1.3 echo
 
 To control whether the input is shown back in terminal or not use `:echo` option like so:
 
@@ -268,68 +257,11 @@ To control whether the input is shown back in terminal or not use `:echo` option
 prompt.ask('password:', echo: false)
 ```
 
-#### 2.2.4 in
+#### 2.1.4 error messages
 
-In order to check that provided input falls inside a range of inputs use the `in` option. For example, if we wanted to ask a user for a single digit in given range we may do following:
+By default `tty-prompt` comes with predefined error messages for `required`, `in`, `validate` options.
 
-```ruby
-ask("Provide number in range: 0-9?") { |q| q.in('0-9') }
-```
-
-#### 2.2.5 modify
-
-Set the `:modify` option if you want to handle whitespace or letter capitalization.
-
-```ruby
-prompt.ask('Enter text:') do |q|
-  q.modify :strip, :collapse
-end
-```
-
-Available letter casing settings are:
-```ruby
-:up         # change to upper case
-:down       # change to small case
-:capitalize # capitalize each word
-```
-
-Available whitespace settings are:
-```ruby
-:trim     # remove whitespace from both ends of the input
-:chomp    # remove whitespace at the end of input
-:collapse # reduce all whitespace to single character
-:remove   # remove all whitespace
-```
-
-#### 2.2.6 required
-
-To ensure that input is provided use `:required` option:
-
-```ruby
-prompt.ask("What's your phone number?", required: true)
-# What's your phone number?
-# >> Value must be provided
-```
-
-#### 2.2.7 validate
-
-In order to validate that input matches a given patter you can pass the `validate` option. Validate setting accepts `Regex`, `Proc` or `Symbol`.
-
-```ruby
-prompt.ask('What is your username?') do |q|
-  q.validate /^[^\.]+\.[^\.]+/
-end
-```
-
-The **TTY::Prompt** comes with bult-in validations for `:email` and you can use them directly like so:
-
-```prompt
-prompt.ask('What is your email?') { |q| q.validate :email }
-```
-
-#### 2.2.8 error messages
-
-By default `tty-prompt` comes with predefined error messages for `required`, `in`, `validate` options. You can change these and configure to your liking either by inling them with the option:
+You can change these and configure to your liking either by inling them with the option:
 
 ```ruby
 prompt.ask('What is your email?') do |q|
@@ -355,48 +287,66 @@ prompt.ask('How spicy on scale (1-5)? ') do |q|
 end
 ```
 
-#### 2.2.9 prefix
+#### 2.1.5 in
 
-You can prefix each question asked using the `:prefix` option. This option can be applied either globally for all prompts or individual for each one:
-
-```ruby
-prompt = TTY::Prompt.new(prefix: '[?] ')
-```
-
-#### 2.2.10 active_color
-
-All prompt types support `:active_color` option. In case of `select`, `multi_select`, `enum_select` or `expand` this color is used to highlight the currently selected choice. All the resulted inputs provided by user that are read in by the prompt as answer are highlighted with this color. This option can be applied either globablly for all prompts or individually.
+In order to check that provided input falls inside a range of inputs use the `in` option. For example, if we wanted to ask a user for a single digit in given range we may do following:
 
 ```ruby
-prompt.select('What size?', %w(Large Medium Small), active_color: :cyan)
+ask("Provide number in range: 0-9?") { |q| q.in('0-9') }
 ```
 
-Please [see pastel](https://github.com/piotrmurach/pastel#3-supported-colors) for all supported colors.
+#### 2.1.6 modify
 
-#### 2.2.11 help_color
-
-Prompts such as `select`, `multi_select`, `expand` support `:help_color` which is used to customize the help text. This option can be applied either globablly for all prompts or individually.
+Set the `:modify` option if you want to handle whitespace or letter capitalization.
 
 ```ruby
-prompt.select('What size?', %w(Large Medium Small), help_color: :cyan)
+prompt.ask('Enter text:') do |q|
+  q.modify :strip, :collapse
+end
 ```
 
-#### 2.2.12 interrupt
+Available letter casing settings are:
+```ruby
+:up         # change to upper case
+:down       # change to small case
+:capitalize # capitalize each word
+```
 
-By default `InputInterrupt` error will be raised when the user hits the interrupt key(Control-C). However, you can customise this behaviour by passing the `:interrupt` option. The available options are:
+Available whitespace settings are:
+```ruby
+:trim     # remove whitespace from both ends of the input
+:chomp    # remove whitespace at the end of input
+:collapse # reduce all whitespace to single character
+:remove   # remove all whitespace
+```
 
-* `:signal` - sends interrupt signal
-* `:exit` - exists with status code
-* `:noop` - skips handler
-* custom proc
+#### 2.1.7 required
 
-For example, to send interrupt signal do:
+To ensure that input is provided use `:required` option:
 
 ```ruby
-prompt = TTY::Prompt.new(interrupt: :signal)
+prompt.ask("What's your phone number?", required: true)
+# What's your phone number?
+# >> Value must be provided
 ```
 
-### 2.3 keypress
+#### 2.1.8 validate
+
+In order to validate that input matches a given patter you can pass the `validate` option. Validate setting accepts `Regex`, `Proc` or `Symbol`.
+
+```ruby
+prompt.ask('What is your username?') do |q|
+  q.validate /^[^\.]+\.[^\.]+/
+end
+```
+
+The **TTY::Prompt** comes with bult-in validations for `:email` and you can use them directly like so:
+
+```prompt
+prompt.ask('What is your email?') { |q| q.validate :email }
+```
+
+### 2.2. keypress
 
 In order to ask question with a single character or keypress answer use `keypress`:
 
@@ -404,7 +354,7 @@ In order to ask question with a single character or keypress answer use `keypres
 prompt.keypress("Which one do you prefer a, b, c or d ?")
 ```
 
-### 2.4 multiline
+### 2.3 multiline
 
 Asking for multiline input can be done with `multiline` method.
 
@@ -414,7 +364,7 @@ prompt.multiline("Provide description?")
 
 The reading of input will terminate when empty line is submitted.
 
-### 2.5 mask
+### 2.4 mask
 
 If you require input of confidential information use `mask` method. By default each character that is printed is replaced by `•` symbol. All configuration options applicable to `ask` method can be used with `mask` as well.
 
@@ -436,7 +386,7 @@ If you don't wish to show any output use `:echo` option like so:
 prompt.mask('What is your secret?', echo: false)
 ```
 
-### 2.6 yes?/no?
+### 2.5 yes?/no?
 
 In order to display a query asking for boolean input from user use `yes?` like so:
 
@@ -493,9 +443,9 @@ prompt.no?('Do you hate Ruby?')
 
 Similarly to `yes?` method, you can supply the same options to customize the question.
 
-### 2.7 menu
+### 2.6 menu
 
-### 2.7.1 select
+### 2.6.1 select
 
 For asking questions involving list of options use `select` method by passing the question and possible choices:
 
@@ -615,7 +565,7 @@ prompt.select("Choose your letter?") do |menu|
 end
 ```
 
-### 2.7.2 multi_select
+### 2.6.2 multi_select
 
 For asking questions involving multiple selection list use `multi_select` method by passing the question and possible choices:
 
@@ -730,7 +680,7 @@ prompt.multi_select("Choose your letter?", letters, per_page: 4)
 # (Move up or down to reveal more choices)
 ```
 
-### 2.7.3 enum_select
+### 2.6.3 enum_select
 
 In order to ask for standard selection from indexed list you can use `enum_select` and pass question together with possible choices:
 
@@ -804,7 +754,7 @@ prompt.enum_select("Choose your letter?", letters, per_page: 4)
 # (Press tab/right or left to reveal more choices)
 ```
 
-### 2.8 expand
+### 2.7 expand
 
 The `expand` provides a compact way to ask a question with many options.
 
@@ -868,7 +818,7 @@ If user types `h` and presses enter, an expanded view will be shown which furthe
 
 Run `examples/expand.rb` to see the prompt in action.
 
-### 2.9 collect
+### 2.8 collect
 
 In order to collect more than one answer use `collect` method. Using the `key` you can describe the answers key name. All the methods for asking user input such as `ask`, `mask`, `select` can be directly invoked on the key. The key composition is very flexible by allowing nested keys. If you want the value to be automatically converted to required type use [convert](#221-convert).
 
@@ -890,7 +840,7 @@ end
 # {:name => "Piotr", :age => 30, :address => {:street => "Street", :city => "City", :zip => "123"}}
 ```
 
-### 2.10 suggest
+### 2.9 suggest
 
 To suggest possible matches for the user input use `suggest` method like so:
 
@@ -912,7 +862,7 @@ prompt.suggest('b', possible, indent: 4, single_text: 'Perhaps you meant?')
 #     blame
 ```
 
-### 2.11 slider
+### 2.10 slider
 
 If you have constrained range of numbers for user to choose from you may consider using `slider`. The slider provides easy visual way of picking a value marked by `O` marker.
 
@@ -939,7 +889,7 @@ end
 # |--O-------| 4
 ```
 
-### 2.12 say
+### 2.11 say
 
 To simply print message out to stdout use `say` like so:
 
@@ -951,7 +901,7 @@ The `say` method also accepts option `:color` which supports all the colors prov
 
 **TTY::Prompt** provides more specific versions of `say` method to better express intenation behind the message such as `ok`, `warn` and `error`.
 
-#### 2.12.1 ok
+#### 2.11.1 ok
 
 Print message(s) in green do:
 
@@ -967,7 +917,7 @@ Print message(s) in yellow do:
 prompt.warn(...)
 ```
 
-#### 2.12.3 error
+#### 2.11.3 error
 
 Print message(s) in red do:
 
@@ -975,7 +925,7 @@ Print message(s) in red do:
 prompt.error(...)
 ```
 
-#### 2.13 keyboard events
+#### 2.12 keyboard events
 
 All the prompt types, when a key is pressed, fire key press events. You can subscribe to listen to this events by calling `on` with type of event name.
 
@@ -1027,6 +977,57 @@ The available events are:
 * `:keydelete`
 * `:keybackspace`
 
+## 3 settings
+
+### 3.1 active_color
+
+All prompt types support `:active_color` option. In case of `select`, `multi_select`, `enum_select` or `expand` this color is used to highlight the currently selected choice. All the resulted inputs provided by user that are read in by the prompt as answer are highlighted with this color. This option can be applied either globablly for all prompts or individually.
+
+```ruby
+prompt.select('What size?', %w(Large Medium Small), active_color: :cyan)
+```
+
+Please [see pastel](https://github.com/piotrmurach/pastel#3-supported-colors) for all supported colors.
+
+### 3.2 enable_color
+
+If you wish to disable coloring for a prompt simply pass `:enable_color` option
+
+```
+prompt = TTY::Prompt.new(enable_color: true)
+```
+
+### 3.3 help_color
+
+Prompts such as `select`, `multi_select`, `expand` support `:help_color` which is used to customize the help text. This option can be applied either globablly for all prompts or individually.
+
+```ruby
+prompt.select('What size?', %w(Large Medium Small), help_color: :cyan)
+```
+
+### 3.4 interrupt
+
+By default `InputInterrupt` error will be raised when the user hits the interrupt key(Control-C). However, you can customise this behaviour by passing the `:interrupt` option. The available options are:
+
+* `:signal` - sends interrupt signal
+* `:exit` - exists with status code
+* `:noop` - skips handler
+* custom proc
+
+For example, to send interrupt signal do:
+
+```ruby
+prompt = TTY::Prompt.new(interrupt: :signal)
+```
+
+### 3.5 prefix
+
+You can prefix each question asked using the `:prefix` option. This option can be applied either globally for all prompts or individual for each one:
+
+```ruby
+prompt = TTY::Prompt.new(prefix: '[?] ')
+```
+
 ## Contributing
 
 1. Fork it ( https://github.com/piotrmurach/tty-prompt/fork )
@@ -1039,4 +1040,4 @@ This project is intended to be a safe, welcoming space for collaboration, and co
 
 ## Copyright
 
-Copyright (c) 2015-2016 Piotr Murach. See LICENSE for further details.
+Copyright (c) 2015-2017 Piotr Murach. See LICENSE for further details.
