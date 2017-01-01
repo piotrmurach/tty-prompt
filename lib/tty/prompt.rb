@@ -70,12 +70,13 @@ module TTY
       @input  = options.fetch(:input) { $stdin }
       @output = options.fetch(:output) { $stdout }
       @prefix = options.fetch(:prefix) { '' }
-      @active_color = options.fetch(:active_color) { :green }
-      @help_color   = options.fetch(:help_color)   { :bright_black }
-      @error_color  = options.fetch(:error_color)  { :red }
+      @enabled_color = options[:enable_color]
+      @active_color  = options.fetch(:active_color) { :green }
+      @help_color    = options.fetch(:help_color)   { :bright_black }
+      @error_color   = options.fetch(:error_color)  { :red }
 
       @cursor = TTY::Cursor
-      @pastel = Pastel.new
+      @pastel = Pastel.new(@enabled_color.nil? ? {} : { enabled: @enabled_color })
       @reader = Reader.new(@input, @output, interrupt: options[:interrupt])
     end
 

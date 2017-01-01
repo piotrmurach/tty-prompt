@@ -54,4 +54,14 @@ RSpec.describe TTY::Prompt, '#say' do
       expect(prompt.output.string).to eq("\e[32mHell yeah! \e[0m")
     end
   end
+
+  context 'without color' do
+    it 'prints message without ansi' do
+      prompt = TTY::TestPrompt.new(enable_color: false)
+
+      prompt.say('Hell yeah!', color: :green)
+
+      expect(prompt.output.string).to eq("Hell yeah!\n")
+    end
+  end
 end

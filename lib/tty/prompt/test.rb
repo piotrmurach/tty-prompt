@@ -8,9 +8,12 @@ module TTY
     def initialize(options = {})
       @input  = StringIO.new
       @output = StringIO.new
-      options.merge!({input: @input, output: @output})
+      options.merge!({
+        input: @input,
+        output: @output,
+        enable_color: options.fetch(:enable_color) { true }
+      })
       super(options)
-      @pastel = Pastel.new(enabled: true)
     end
   end # TestPrompt
 end # TTY
