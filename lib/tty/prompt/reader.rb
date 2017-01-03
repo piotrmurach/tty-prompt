@@ -85,7 +85,11 @@ module TTY
       #
       # @api private
       def get_char(echo = true)
-        mode.echo(echo) { input.getc }
+        if windows?
+          echo ? WindowsAPI._getche : WindowsAPI._getch(nil)
+        else
+          mode.echo(echo) { input.getc }
+        end
       end
 
       # Reads single character including invisible multibyte codes
@@ -188,6 +192,15 @@ module TTY
         else
           raise InputInterrupt
         end
+      end
+
+      # Check if Windowz
+      #
+      # @return [Boolean]
+      #
+      # @api public
+      def windows?
+        File::ALT_SEPARATOR == "\\"
       end
     end # Reader
   end # Prompt
