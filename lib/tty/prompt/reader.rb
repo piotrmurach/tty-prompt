@@ -25,7 +25,7 @@ module TTY
 
       attr_reader :output
 
-      # Key input constants for decimal codes
+      # Key codes
       CARRIAGE_RETURN = 13
       NEWLINE         = 10
       BACKSPACE       = 127
@@ -75,7 +75,7 @@ module TTY
         buffer do
           mode.echo(echo) do
             mode.raw(true) do
-              key = read_char
+              key = read_char.pack('U*')
               emit_key_event(key) if key
               handle_interrupt if key == Codes::CTRL_C
               key
@@ -92,14 +92,15 @@ module TTY
       # @return [String]
       #
       # @api public
-      def read_char(bytes = 1)
-        chars = input.getc
-        return if chars.nil?
-        while CSI.start_with?(chars) || chars.start_with?(CSI) &&
-              !(64..126).include?(chars.each_codepoint.to_a.last)
-          chars << read_char(bytes + 1)
+      def read_char(codes = [])
+        code = input.getc.ord rescue nil
+        codes << code
+        while (codes - "\e[".codepoints.to_a).empty? ||
+              ("\e[".codepoints.to_a - codes).empty? &&
+              !(64..126).include?(codes.last)
+          read_char(codes)
         end
-        chars
+        codes.compact
       end
 
       # Get a single line from STDIN. Each key pressed is echoed
@@ -116,10 +117,12 @@ module TTY
         line = ''
         buffer do
           mode.echo(echo) do
-            while (char = read_char) && (char_byte = char.unpack('c*')[0]) &&
-                !(char_byte == CARRIAGE_RETURN || char_byte == NEWLINE)
+            while (codes = read_char) && (code = codes[0]) &&
+                !(code == CARRIAGE_RETURN || code == NEWLINE)
+
+              char = codes.pack('U*')
               emit_key_event(char)
-              if char_byte == BACKSPACE || char_byte == DELETE
+              if code == BACKSPACE || code == DELETE
                 line = line.slice(-1, 1) unless line.empty?
               else
                 line << char
