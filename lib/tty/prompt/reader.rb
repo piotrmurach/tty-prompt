@@ -62,8 +62,9 @@ module TTY
         value
       end
 
-      # Read a single keypress that may include
-      # 2 or 3 escape characters.
+      # Read a keypress and return a character as a string.
+      # Nothing is echoed to the console. This call will block for a
+      # single keypress, but will not wait for Enter to be pressed.
       #
       # @param [Boolean] echo
       #   whether to echo chars back or not, defaults to false
@@ -72,33 +73,37 @@ module TTY
       #
       # @api public
       def read_keypress(echo = false)
-        buffer do
-          mode.echo(echo) do
-            mode.raw(true) do
-              key = read_char.pack('U*')
-              emit_key_event(key) if key
-              handle_interrupt if key == Codes::CTRL_C
-              key
-            end
-          end
+        mode.raw(true) do
+          key = read_char(echo).pack('U*')
+          emit_key_event(key) if key
+          handle_interrupt if key == Codes::CTRL_C
+          key
         end
+      end
+
+      # Get a character from console with echo
+      #
+      # @api private
+      def get_char(echo = true)
+        mode.echo(echo) { input.getc }
       end
 
       # Reads single character including invisible multibyte codes
       #
-      # @params [Integer] bytes
+      # @params [Array[Integer]] codes
       #   the number of bytes to read
       #
-      # @return [String]
+      # @return [Array[Integer]]
+      #   the character codepoints
       #
       # @api public
-      def read_char(codes = [])
-        code = input.getc.ord rescue nil
+      def read_char(echo, codes = [])
+        code = get_char(echo).ord rescue nil
         codes << code
         while (codes - "\e[".codepoints.to_a).empty? ||
               ("\e[".codepoints.to_a - codes).empty? &&
               !(64..126).include?(codes.last)
-          read_char(codes)
+          read_char(echo, codes)
         end
         codes.compact
       end
@@ -115,19 +120,15 @@ module TTY
       # @api public
       def read_line(echo = true)
         line = ''
-        buffer do
-          mode.echo(echo) do
-            while (codes = read_char) && (code = codes[0]) &&
-                !(code == CARRIAGE_RETURN || code == NEWLINE)
+        while (codes = read_char(echo)) && (code = codes[0]) &&
+              !(code == CARRIAGE_RETURN || code == NEWLINE)
 
-              char = codes.pack('U*')
-              emit_key_event(char)
-              if code == BACKSPACE || code == DELETE
-                line = line.slice(-1, 1) unless line.empty?
-              else
-                line << char
-              end
-            end
+          char = codes.pack('U*')
+          emit_key_event(char)
+          if code == BACKSPACE || code == DELETE
+            line = line.slice(-1, 1) unless line.empty?
+          else
+            line << char
           end
         end
         line
