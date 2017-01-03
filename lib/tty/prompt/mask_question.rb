@@ -73,7 +73,7 @@ module TTY
         @done_masked = false
         @input = ''
         until @done_masked
-          @prompt.read_keypress(echo?)
+          @prompt.read_keypress(echo: echo?)
           @prompt.print(@prompt.clear_line)
           render_question
         end

@@ -148,7 +148,7 @@ module TTY
         when :multiline
           @prompt.read_multiline
         else
-          @prompt.read_line(echo)
+          @prompt.read_line(echo: echo)
         end
       end
 

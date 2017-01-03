@@ -7,10 +7,9 @@ RSpec.describe TTY::Prompt::Reader, '#read_line' do
   subject(:reader) { described_class.new(input, output) }
 
   it 'masks characters' do
-    mask = '*'
     input << "password\n"
     input.rewind
-    answer = reader.read_line(mask)
+    answer = reader.read_line(echo: false)
     expect(answer).to eq("password")
   end
 

@@ -72,23 +72,26 @@ module TTY
       # @return [String]
       #
       # @api public
-      def read_keypress(echo = false)
-        mode.raw(true) do
-          key = read_char(echo).pack('U*')
-          emit_key_event(key) if key
-          handle_interrupt if key == Codes::CTRL_C
-          key
-        end
+      def read_keypress(options = {})
+        opts = {echo: false, raw: true}.merge(options)
+        key = read_char(opts).pack('U*')
+        emit_key_event(key) if key
+        handle_interrupt if key == Codes::CTRL_C
+        key
       end
 
       # Get a character from console with echo
       #
+      # @return [String]
+      #
       # @api private
-      def get_char(echo = true)
+      def get_char(options)
         if windows?
-          echo ? WindowsAPI._getche : WindowsAPI._getch(nil)
+          options[:echo] ? WindowsAPI._getche(nil) : WindowsAPI._getch(nil)
         else
-          mode.echo(echo) { input.getc }
+          mode.raw(options[:raw]) do
+            mode.echo(options[:echo]) { input.getc }
+          end
         end
       end
 
@@ -101,13 +104,13 @@ module TTY
       #   the character codepoints
       #
       # @api public
-      def read_char(echo, codes = [])
-        code = get_char(echo).ord rescue nil
+      def read_char(options = {}, codes = [])
+        code = get_char(options).ord rescue nil
         codes << code
         while (codes - "\e[".codepoints.to_a).empty? ||
               ("\e[".codepoints.to_a - codes).empty? &&
               !(64..126).include?(codes.last)
-          read_char(echo, codes)
+          read_char(options, codes)
         end
         codes.compact
       end
@@ -122,9 +125,10 @@ module TTY
       # @return [String]
       #
       # @api public
-      def read_line(echo = true)
+      def read_line(options = {})
+        opts = {echo: true, raw: true}.merge(options)
         line = ''
-        while (codes = read_char(echo)) && (code = codes[0]) &&
+        while (codes = read_char(opts)) && (code = codes[0]) &&
               !(code == CARRIAGE_RETURN || code == NEWLINE)
 
           char = codes.pack('U*')
