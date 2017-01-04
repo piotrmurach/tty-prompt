@@ -2,7 +2,8 @@
 
 require 'wisper'
 require 'tty/prompt/reader/key_event'
-require 'tty/prompt/reader/mode'
+require 'tty/prompt/reader/console'
+require 'tty/prompt/reader/win_console'
 
 module TTY
   # A class responsible for shell prompt interactions.
@@ -14,12 +15,11 @@ module TTY
     # @api private
     class Reader
       include Wisper::Publisher
+
       # Raised when the user hits the interrupt key(Control-C)
       #
       # @api public
       InputInterrupt = Class.new(StandardError)
-
-      attr_reader :mode
 
       attr_reader :input
 
@@ -39,7 +39,7 @@ module TTY
       def initialize(input, output, options = {})
         @input     = input
         @output    = output
-        @mode      = Mode.new
+        @console   = windows? ? WinConsole.new : Console.new(input)
         @interrupt = options.fetch(:interrupt) { :error }
       end
 
@@ -80,22 +80,6 @@ module TTY
         key
       end
 
-      # Get a character from console with echo
-      #
-      # @return [String]
-      #
-      # @api private
-      def get_char(options)
-        if windows?
-          require 'tty/prompt/reader/windows_api'
-          options[:echo] ? WindowsAPI.getche : WindowsAPI.getch
-        else
-          mode.raw(options[:raw]) do
-            mode.echo(options[:echo]) { input.getc }
-          end
-        end
-      end
-
       # Reads single character including invisible multibyte codes
       #
       # @params [Array[Integer]] codes
@@ -106,8 +90,9 @@ module TTY
       #
       # @api public
       def read_char(options = {}, codes = [])
-        code = get_char(options).ord rescue nil
-        codes << code
+        char = @console.get_char(options)
+        return if char.nil?
+        codes << char.ord
         while (codes - "\e[".codepoints.to_a).empty? ||
               ("\e[".codepoints.to_a - codes).empty? &&
               !(64..126).include?(codes.last)
