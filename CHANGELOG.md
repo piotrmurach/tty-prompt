@@ -1,5 +1,10 @@
 # Change log
 
+## [v0.11.0] - 2017-01-x
+
+### Fixed
+* Fix `modify` throwing exception, when user enters empty input by (Igor Rzegocki)@ajgon
+
 ## [v0.10.0] - 2017-01-01
 
 ### Added
