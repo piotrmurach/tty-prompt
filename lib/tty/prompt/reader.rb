@@ -93,8 +93,8 @@ module TTY
         char = @console.get_char(options)
         return if char.nil?
         codes << char.ord
-        while (codes - "\e[".codepoints.to_a).empty? ||
-              ("\e[".codepoints.to_a - codes).empty? &&
+        while (codes - "\e[".bytes.to_a).empty? ||
+              ("\e[".bytes.to_a - codes).empty? &&
               !(64..126).include?(codes.last)
           read_char(options, codes)
         end
