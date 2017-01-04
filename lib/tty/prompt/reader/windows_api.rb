@@ -1,17 +1,26 @@
 # encoding: utf-8
 
-require 'fiddle/importer'
+require 'fiddle'
 
 module TTY
   class Prompt
     class Reader
       module WindowsAPI
-        extend Fiddle::Importer
+        include Fiddle
 
-        dlload 'crtdll'
+        CRT_HANDLE = Handle.new("msvcrt") rescue Handle.new("crtdll")
 
-        extern 'int _getch(void)'
-        extern 'int _getche(void)'
+        def getch
+          @@getch ||= Function.new(CRT_HANDLE["_getch"], [], TYPE_INT)
+          @@getch.call
+        end
+        module_function :getch
+
+        def getche
+          @@getche ||= Function.new(CRT_HANDLE["_getche"], [], TYPE_INT)
+          @@getche.call
+        end
+        module_function :getche
       end # WindowsAPI
     end # Reader
   end # Prompt

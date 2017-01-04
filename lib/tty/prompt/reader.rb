@@ -87,7 +87,8 @@ module TTY
       # @api private
       def get_char(options)
         if windows?
-          options[:echo] ? WindowsAPI._getche(nil) : WindowsAPI._getch(nil)
+          require 'tty/prompt/reader/windows_api'
+          options[:echo] ? WindowsAPI.getche : WindowsAPI.getch
         else
           mode.raw(options[:raw]) do
             mode.echo(options[:echo]) { input.getc }
