@@ -4,6 +4,7 @@ require 'wisper'
 require 'tty/prompt/reader/key_event'
 require 'tty/prompt/reader/console'
 require 'tty/prompt/reader/win_console'
+require 'tty/prompt/reader/codes'
 
 module TTY
   # A class responsible for shell prompt interactions.
@@ -30,8 +31,6 @@ module TTY
       NEWLINE         = 10
       BACKSPACE       = 127
       DELETE          = 8
-
-      CSI = "\e[".freeze
 
       # Initialize a Reader
       #
@@ -73,11 +72,11 @@ module TTY
       #
       # @api public
       def read_keypress(options = {})
-        opts = {echo: false, raw: true}.merge(options)
-        key = read_char(opts).pack('U*')
-        emit_key_event(key) if key
-        handle_interrupt if key == Codes::CTRL_C
-        key
+        opts = { echo: false, raw: true }.merge(options)
+        codes = read_char(opts)
+        emit_key_event(codes) if codes
+        handle_interrupt if codes == Codes.keys[:ctrl_c]
+        codes.pack('U*')
       end
 
       # Reads single character including invisible multibyte codes
@@ -112,13 +111,13 @@ module TTY
       #
       # @api public
       def read_line(options = {})
-        opts = {echo: true, raw: true}.merge(options)
+        opts = { echo: true, raw: true }.merge(options)
         line = ''
         while (codes = read_char(opts)) && (code = codes[0]) &&
               !(code == CARRIAGE_RETURN || code == NEWLINE)
 
           char = codes.pack('U*')
-          emit_key_event(char)
+          emit_key_event(codes)
           if code == BACKSPACE || code == DELETE
             line = line.slice(-1, 1) unless line.empty?
           else
@@ -158,8 +157,8 @@ module TTY
       # @return [nil]
       #
       # @api public
-      def emit_key_event(key)
-        event = KeyEvent.from(key)
+      def emit_key_event(codes)
+        event = KeyEvent.from(Codes.keys, codes)
         publish(:"key#{event.key.name}", event) if event.emit?
         publish(:keypress, event)
       end
