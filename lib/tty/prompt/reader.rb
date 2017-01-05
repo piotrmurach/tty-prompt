@@ -73,7 +73,7 @@ module TTY
       # @api public
       def read_keypress(options = {})
         opts = { echo: false, raw: true }.merge(options)
-        codes = read_char(opts)
+        codes = get_codes(opts)
         emit_key_event(codes) if codes
         handle_interrupt if codes == Codes.keys[:ctrl_c]
         codes.pack('U*')
@@ -88,14 +88,26 @@ module TTY
       #   the character codepoints
       #
       # @api public
-      def read_char(options = {}, codes = [])
+      def read_char(options = {})
+        codes = get_codes(options)
+        emit_key_event(codes) if codes
+        codes.pack('U*')
+      end
+
+      # Get input bytes
+      #
+      # @param [Hash[Symbol]] options
+      # @param [Array[Integer]] codes
+      #
+      # @api private
+      def get_codes(options = {}, codes = [])
         char = @console.get_char(options)
         return if char.nil?
         codes << char.ord
         while (codes - "\e[".bytes.to_a).empty? ||
               ("\e[".bytes.to_a - codes).empty? &&
               !(64..126).include?(codes.last)
-          read_char(options, codes)
+          get_codes(options, codes)
         end
         codes.compact
       end
@@ -113,15 +125,14 @@ module TTY
       def read_line(options = {})
         opts = { echo: true, raw: true }.merge(options)
         line = ''
-        while (codes = read_char(opts)) && (code = codes[0]) &&
+        while (codes = get_codes(opts)) && (code = codes[0]) &&
               !(code == CARRIAGE_RETURN || code == NEWLINE)
 
-          char = codes.pack('U*')
           emit_key_event(codes)
           if code == BACKSPACE || code == DELETE
             line = line.slice(-1, 1) unless line.empty?
           else
-            line << char
+            line << codes.pack('U*')
           end
         end
         line
