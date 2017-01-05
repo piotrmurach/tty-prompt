@@ -561,7 +561,7 @@ letters = ('A'..'Z').to_a
 prompt.select("Choose your letter?") do |menu|
   menu.per_page 4
   menu.page_help '(Wiggle thy finger up or down to see more)'
-  menu.choices letters, per_page: 4)
+  menu.choices letters
 end
 ```
 
