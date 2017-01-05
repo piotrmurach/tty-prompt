@@ -1,51 +1,56 @@
 # encoding: utf-8
 
 require 'shellwords'
+require 'tty/prompt/reader/codes'
 
 RSpec.describe TTY::Prompt::Reader::KeyEvent, '#from' do
-  it "parses ctrl+h" do
-    event = described_class.from("\b")
-    expect(event.key.name).to eq(:backspace)
-    expect(event.value).to eq("\b")
-  end
+  let(:keys) { TTY::Prompt::Reader::Codes.keys }
 
   it "parses backspace" do
-    event = described_class.from("\e\x7f")
+    event = described_class.from(keys, [127])
     expect(event.key.name).to eq(:backspace)
-    expect(event.key.meta).to eq(true)
-    expect(event.value).to eq("\e\x7f")
+    expect(event.value).to eq("\x7f")
   end
 
   it "parses lowercase char" do
-    event = described_class.from('a')
-    expect(event.key.name).to eq('a')
+    event = described_class.from(keys, [97])
+    expect(event.key.name).to eq(:alpha)
     expect(event.value).to eq('a')
   end
 
   it "parses uppercase char" do
-    event = described_class.from('A')
-    expect(event.key.name).to eq('a')
+    event = described_class.from(keys, [65])
+    expect(event.key.name).to eq(:alpha)
     expect(event.value).to eq('A')
+  end
+
+  it "parses ctrl-a to ctrl-z inputs" do
+    (1..26).zip('a'..'z').each do |code, char|
+      next if ['i', 'j', 'm'].include?(char)
+      event = described_class.from(keys, [code])
+      expect(event.key.name).to eq(:"ctrl_#{char}")
+      expect(event.value).to eq([code].pack('U*'))
+    end
   end
 
   # F1-F12 keys
   {
-    f1:  ["\eOP", "\e[11~", "\e[[A"],
-    f2:  ["\eOQ", "\e[12~", "\e[[B"],
-    f3:  ["\eOR", "\e[13~", "\e[[C"],
-    f4:  ["\eOS", "\e[14~", "\e[[D"],
-    f5:  [        "\e[15~", "\e[[E"],
-    f6:  [        "\e[17~"         ],
-    f7:  [        "\e[18~"         ],
-    f8:  [        "\e[19~"         ],
-    f9:  [        "\e[20~"         ],
-    f10: [        "\e[21~"         ],
-    f11: [        "\e[23~"         ],
-    f12: [        "\e[24~"         ]
+    f1:  ["\eOP".bytes.to_a, "\e[11~".bytes.to_a],
+    f2:  ["\eOQ".bytes.to_a, "\e[12~".bytes.to_a],
+    f3:  ["\eOR".bytes.to_a, "\e[13~".bytes.to_a],
+    f4:  ["\eOS".bytes.to_a, "\e[14~".bytes.to_a],
+    f5:  [                   "\e[15~".bytes.to_a],
+    f6:  [                   "\e[17~".bytes.to_a],
+    f7:  [                   "\e[18~".bytes.to_a],
+    f8:  [                   "\e[19~".bytes.to_a],
+    f9:  [                   "\e[20~".bytes.to_a],
+    f10: [                   "\e[21~".bytes.to_a],
+    f11: [                   "\e[23~".bytes.to_a],
+    f12: [                   "\e[24~".bytes.to_a]
   }.each do |name, codes|
     codes.each do |code|
       it "parses #{Shellwords.escape(code)} as #{name} key" do
-        event = described_class.from(code)
+        event = described_class.from(keys, code)
         expect(event.key.name).to eq(name)
         expect(event.key.meta).to eq(false)
         expect(event.key.ctrl).to eq(false)
@@ -55,41 +60,22 @@ RSpec.describe TTY::Prompt::Reader::KeyEvent, '#from' do
   end
 
   # arrow keys & page navigation
-  #
   {
-    up:    ["\e[A", "\eOA"],
-    down:  ["\e[B", "\eOB"],
-    right: ["\e[C", "\eOC"],
-    left:  ["\e[D", "\eOD"],
-    clear: ["\e[E", "\eOE"],
-    end:   ["\e[F"],
-    home:  ["\e[H"]
+    up:    ["\e[A".bytes.to_a],
+    down:  ["\e[B".bytes.to_a],
+    right: ["\e[C".bytes.to_a],
+    left:  ["\e[D".bytes.to_a],
+    clear: ["\e[E".bytes.to_a],
+    end:   ["\e[F".bytes.to_a],
+    home:  ["\e[H".bytes.to_a]
   }.each do |name, codes|
     codes.each do |code|
       it "parses #{Shellwords.escape(code)} as #{name} key" do
-        event = described_class.from(code)
+        event = described_class.from(keys, code)
         expect(event.key.name).to eq(name)
         expect(event.key.meta).to eq(false)
         expect(event.key.ctrl).to eq(false)
         expect(event.key.shift).to eq(false)
-      end
-    end
-  end
-
-  {
-    up:    ["\e[a"],
-    down:  ["\e[b"],
-    right: ["\e[c"],
-    left:  ["\e[d"],
-    clear: ["\e[e"],
-  }.each do |name, codes|
-    codes.each do |code|
-      it "parses #{Shellwords.escape(code)} as SHIFT + #{name} key" do
-        event = described_class.from(code)
-        expect(event.key.name).to eq(name)
-        expect(event.key.meta).to eq(false)
-        expect(event.key.ctrl).to eq(false)
-        expect(event.key.shift).to eq(true)
       end
     end
   end
