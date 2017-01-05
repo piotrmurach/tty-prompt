@@ -11,13 +11,13 @@ module TTY
         CRT_HANDLE = Fiddle::Handle.new("msvcrt") rescue Fiddle::Handle.new("crtdll")
 
         def getch
-          @@getch ||= ::Function.new(CRT_HANDLE["_getch"], [], TYPE_INT)
+          @@getch ||= Fiddle::Function.new(CRT_HANDLE["_getch"], [], TYPE_INT)
           @@getch.call
         end
         module_function :getch
 
         def getche
-          @@getche ||= ::Function.new(CRT_HANDLE["_getche"], [], TYPE_INT)
+          @@getche ||= Fiddle::Function.new(CRT_HANDLE["_getche"], [], TYPE_INT)
           @@getche.call
         end
         module_function :getche
