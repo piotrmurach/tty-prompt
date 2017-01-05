@@ -49,7 +49,7 @@ RSpec.describe TTY::Prompt::Reader::KeyEvent, '#from' do
     f12: [                   "\e[24~".bytes.to_a]
   }.each do |name, codes|
     codes.each do |code|
-      it "parses #{Shellwords.escape(code)} as #{name} key" do
+      it "parses #{Shellwords.escape(code.pack('U*'))} as #{name} key" do
         event = described_class.from(keys, code)
         expect(event.key.name).to eq(name)
         expect(event.key.meta).to eq(false)
@@ -70,7 +70,7 @@ RSpec.describe TTY::Prompt::Reader::KeyEvent, '#from' do
     home:  ["\e[H".bytes.to_a]
   }.each do |name, codes|
     codes.each do |code|
-      it "parses #{Shellwords.escape(code)} as #{name} key" do
+      it "parses #{Shellwords.escape(code.pack('U*'))} as #{name} key" do
         event = described_class.from(keys, code)
         expect(event.key.name).to eq(name)
         expect(event.key.meta).to eq(false)
