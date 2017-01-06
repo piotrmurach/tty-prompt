@@ -76,7 +76,7 @@ module TTY
         codes = get_codes(opts)
         emit_key_event(codes) if codes
         handle_interrupt if codes == Codes.keys[:ctrl_c]
-        codes.pack('U*')
+        codes.pack('U*') if codes
       end
 
       # Reads single character including invisible multibyte codes
@@ -91,7 +91,7 @@ module TTY
       def read_char(options = {})
         codes = get_codes(options)
         emit_key_event(codes) if codes
-        codes.pack('U*')
+        codes.pack('U*')  if codes
       end
 
       # Get input bytes
@@ -123,7 +123,7 @@ module TTY
       #
       # @api public
       def read_line(options = {})
-        opts = { echo: true, raw: true }.merge(options)
+        opts = { echo: true, raw: false }.merge(options)
         line = ''
         while (codes = get_codes(opts)) && (code = codes[0]) &&
               !(code == CARRIAGE_RETURN || code == NEWLINE)
