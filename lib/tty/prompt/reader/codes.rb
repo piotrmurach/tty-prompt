@@ -11,9 +11,11 @@ module TTY
             return:    ["\r".ord],
             escape:    ["\e".ord],
             space:     [" ".ord],
-            backspace: ["\x7f".ord],
+            backspace: [?\C-?.ord],
             insert:    "\e[2~".bytes.to_a,
             delete:    "\e[3~".bytes.to_a,
+            page_up:   "\e[5~".bytes.to_a,
+            page_down: "\e[6~".bytes.to_a,
 
             up:     "\e[A".bytes.to_a,
             down:   "\e[B".bytes.to_a,
@@ -31,11 +33,11 @@ module TTY
             ctrl_f: [?\C-f.ord],
             ctrl_g: [?\C-g.ord],
             ctrl_h: [?\C-h.ord],
-            ctrl_i: [?\C-i.ord],
-            ctrl_j: [?\C-j.ord],
+            # ctrl_i: [?\C-i.ord],
+            # ctrl_j: [?\C-j.ord],
             ctrl_k: [?\C-k.ord],
             ctrl_l: [?\C-l.ord],
-            ctrl_m: [?\C-m.ord],
+            # ctrl_m: [?\C-m.ord],
             ctrl_n: [?\C-n.ord],
             ctrl_o: [?\C-o.ord],
             ctrl_p: [?\C-p.ord],
@@ -71,37 +73,41 @@ module TTY
         end
         module_function :keys
 
-        # KEY_UP_XTERM     = "OA"
-        # KEY_DOWN_XTERM   = "OB"
-        # KEY_RIGHT_XTERM  = "OC"
-        # KEY_LEFT_XTERM   = "OD"
-        # KEY_CLEAR_XTERM  = "OE"
-        # KEY_END_XTERM    = "OF"
-        # KEY_HOME_XTERM   = "OH"
-        # KEY_DELETE_XTERM = "O3"
+        def win_keys
+          {
+            tab:       ["\t".ord],
+            enter:     ["\r".ord],
+            return:    ["\r".ord],
+            escape:    ["\e".ord],
+            space:     [" ".ord],
+            backspace: ["\b".ord],
+            insert:    [224, 82],
+            delete:    [224, 83],
 
-        # KEY_UP_SHIFT    = "[a"
-        # KEY_DOWN_SHIFT  = "[b"
-        # KEY_RIGHT_SHIFT = "[c"
-        # KEY_LEFT_SHIFT  = "[d"
-        # KEY_CLEAR_SHIFT = "[e"
+            up:     [224, 72],
+            down:   [224, 80],
+            right:  [224, 77],
+            left:   [224, 75],
+            clear:  "\e[E".bytes.to_a,
+            end:    "\e[F".bytes.to_a,
+            home:   "\e[H".bytes.to_a,
 
-        # KEY_UP_CTRL    = "0a"
-        # KEY_DOWN_CTRL  = "0b"
-        # KEY_RIGHT_CTRL = "0c"
-        # KEY_LEFT_CTRL  = "0d"
-        # KEY_CLEAR_CTRL = "0e"
+            f1:  "\eOP".bytes.to_a,
+            f2:  "\eOQ".bytes.to_a,
+            f3:  "\eOR".bytes.to_a,
+            f4:  "\eOS".bytes.to_a,
+            f5:  "\e[15~".bytes.to_a,
+            f6:  "\e[17~".bytes.to_a,
+            f7:  "\e[18~".bytes.to_a,
+            f8:  "\e[19~".bytes.to_a,
+            f9:  "\e[20~".bytes.to_a,
+            f10: "\e[21~".bytes.to_a,
+            f11: "\e[23~".bytes.to_a,
+            f12: "\e[24~".bytes.to_a
+          }
+        end
+        module_function :win_keys
 
-        # F1_XTERM = "OP"
-        # F2_XTERM = "OQ"
-        # F3_XTERM = "OR"
-        # F4_XTERM = "OS"
-
-        # F1_WIN = "[[A"
-        # F2_WIN = "[[B"
-        # F3_WIN = "[[C"
-        # F4_WIN = "[[D"
-        # F5_WIN = "[[E"
       end # Codes
     end # Reader
   end # Prompt
