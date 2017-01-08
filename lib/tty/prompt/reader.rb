@@ -185,7 +185,7 @@ module TTY
       #
       # @api public
       def emit_key_event(codes)
-        event = KeyEvent.from(Codes.keys, codes)
+        event = KeyEvent.from(@console.keys, codes)
         publish(:"key#{event.key.name}", event) if event.emit?
         publish(:keypress, event)
       end
