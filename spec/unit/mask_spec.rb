@@ -4,6 +4,8 @@ RSpec.describe TTY::Prompt, '#mask' do
 
   subject(:prompt) { TTY::TestPrompt.new }
 
+  let(:symbols) { TTY::Prompt::Symbols.symbols }
+
   it "masks output by default" do
     prompt.input << "pass\r"
     prompt.input.rewind
@@ -12,17 +14,17 @@ RSpec.describe TTY::Prompt, '#mask' do
     expect(prompt.output.string).to eq([
       "What is your password? ",
       "\e[2K\e[1G",
-      "What is your password? •",
+      "What is your password? #{symbols[:dot]}",
       "\e[2K\e[1G",
-      "What is your password? ••",
+      "What is your password? #{symbols[:dot] * 2}",
       "\e[2K\e[1G",
-      "What is your password? •••",
+      "What is your password? #{symbols[:dot] * 3}",
       "\e[2K\e[1G",
-      "What is your password? ••••",
+      "What is your password? #{symbols[:dot] * 4}",
       "\e[2K\e[1G",
-      "What is your password? \e[32m••••\e[0m\n",
+      "What is your password? \e[32m#{symbols[:dot] * 4}\e[0m\n",
       "\e[2K\e[1G\e[1A\e[2K\e[1G",
-      "What is your password? \e[32m••••\e[0m\n"
+      "What is your password? \e[32m#{symbols[:dot] * 4}\e[0m\n"
     ].join)
   end
 

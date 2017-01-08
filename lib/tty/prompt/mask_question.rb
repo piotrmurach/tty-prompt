@@ -1,5 +1,7 @@
 # encoding: utf-8
 
+require 'tty/prompt/symbols'
+
 module TTY
   class Prompt
     class MaskQuestion < Question
@@ -11,7 +13,7 @@ module TTY
       # @api public
       def initialize(prompt, options = {})
         super
-        @mask        = options.fetch(:mask) { Symbols::ITEM_SECURE }
+        @mask        = options.fetch(:mask) { Symbols.symbols[:dot] }
         @done_masked = false
         @failure     = false
         @prompt.subscribe(self)
