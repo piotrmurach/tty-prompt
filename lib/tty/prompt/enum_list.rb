@@ -308,8 +308,8 @@ module TTY
       def render_menu
         output = ''
         @paginator.paginate(@choices, @page_active, @per_page) do |choice, index|
-          num = (index + 1).to_s + @enum + Symbols::SPACE
-          selected = Symbols::SPACE * 2 + num + choice.name
+          num = (index + 1).to_s + @enum + ' '
+          selected = ' ' * 2 + num + choice.name
           output << if index + 1 == @active
                       @prompt.decorate(selected.to_s, @active_color)
                     else
