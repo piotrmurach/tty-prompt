@@ -25,9 +25,8 @@ module TTY
         # @return [KeyEvent]
         #
         # @api public
-        def self.from(keys, codes)
+        def self.from(keys, char)
           key = Key.new
-          char = codes.pack('U*')
           ctrls = keys.keys.grep(/ctrl/)
 
           case char
@@ -71,7 +70,7 @@ module TTY
           when keys[:f12] then key.name = :f12
           end
 
-          new(codes.pack('U*'), key)
+          new(char, key)
         end
 
         # Check if key event can be emitted

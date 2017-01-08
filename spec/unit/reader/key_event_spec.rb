@@ -7,19 +7,19 @@ RSpec.describe TTY::Prompt::Reader::KeyEvent, '#from' do
   let(:keys) { TTY::Prompt::Reader::Codes.keys }
 
   it "parses backspace" do
-    event = described_class.from(keys, [127])
+    event = described_class.from(keys, "\x7f")
     expect(event.key.name).to eq(:backspace)
     expect(event.value).to eq("\x7f")
   end
 
   it "parses lowercase char" do
-    event = described_class.from(keys, [97])
+    event = described_class.from(keys, 'a')
     expect(event.key.name).to eq(:alpha)
     expect(event.value).to eq('a')
   end
 
   it "parses uppercase char" do
-    event = described_class.from(keys, [65])
+    event = described_class.from(keys, 'A')
     expect(event.key.name).to eq(:alpha)
     expect(event.value).to eq('A')
   end
@@ -27,29 +27,29 @@ RSpec.describe TTY::Prompt::Reader::KeyEvent, '#from' do
   it "parses ctrl-a to ctrl-z inputs" do
     (1..26).zip('a'..'z').each do |code, char|
       next if ['i', 'j', 'm'].include?(char)
-      event = described_class.from(keys, [code])
+      event = described_class.from(keys, code.chr)
       expect(event.key.name).to eq(:"ctrl_#{char}")
-      expect(event.value).to eq([code].pack('U*'))
+      expect(event.value).to eq(code.chr)
     end
   end
 
   # F1-F12 keys
   {
-    f1:  ["\eOP".bytes.to_a, "\e[11~".bytes.to_a],
-    f2:  ["\eOQ".bytes.to_a, "\e[12~".bytes.to_a],
-    f3:  ["\eOR".bytes.to_a, "\e[13~".bytes.to_a],
-    f4:  ["\eOS".bytes.to_a, "\e[14~".bytes.to_a],
-    f5:  [                   "\e[15~".bytes.to_a],
-    f6:  [                   "\e[17~".bytes.to_a],
-    f7:  [                   "\e[18~".bytes.to_a],
-    f8:  [                   "\e[19~".bytes.to_a],
-    f9:  [                   "\e[20~".bytes.to_a],
-    f10: [                   "\e[21~".bytes.to_a],
-    f11: [                   "\e[23~".bytes.to_a],
-    f12: [                   "\e[24~".bytes.to_a]
+    f1:  ["\eOP", "\e[11~"],
+    f2:  ["\eOQ", "\e[12~"],
+    f3:  ["\eOR", "\e[13~"],
+    f4:  ["\eOS", "\e[14~"],
+    f5:  [        "\e[15~"],
+    f6:  [        "\e[17~"],
+    f7:  [        "\e[18~"],
+    f8:  [        "\e[19~"],
+    f9:  [        "\e[20~"],
+    f10: [        "\e[21~"],
+    f11: [        "\e[23~"],
+    f12: [        "\e[24~"]
   }.each do |name, codes|
     codes.each do |code|
-      it "parses #{Shellwords.escape(code.pack('U*'))} as #{name} key" do
+      it "parses #{Shellwords.escape(code)} as #{name} key" do
         event = described_class.from(keys, code)
         expect(event.key.name).to eq(name)
         expect(event.key.meta).to eq(false)
@@ -61,16 +61,16 @@ RSpec.describe TTY::Prompt::Reader::KeyEvent, '#from' do
 
   # arrow keys & page navigation
   {
-    up:    ["\e[A".bytes.to_a],
-    down:  ["\e[B".bytes.to_a],
-    right: ["\e[C".bytes.to_a],
-    left:  ["\e[D".bytes.to_a],
-    clear: ["\e[E".bytes.to_a],
-    end:   ["\e[F".bytes.to_a],
-    home:  ["\e[H".bytes.to_a]
+    up:    ["\e[A"],
+    down:  ["\e[B"],
+    right: ["\e[C"],
+    left:  ["\e[D"],
+    clear: ["\e[E"],
+    end:   ["\e[F"],
+    home:  ["\e[H"]
   }.each do |name, codes|
     codes.each do |code|
-      it "parses #{Shellwords.escape(code.pack('U*'))} as #{name} key" do
+      it "parses #{Shellwords.escape(code)} as #{name} key" do
         event = described_class.from(keys, code)
         expect(event.key.name).to eq(name)
         expect(event.key.meta).to eq(false)
