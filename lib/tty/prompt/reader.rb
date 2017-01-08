@@ -73,11 +73,13 @@ module TTY
       #
       # @api public
       def read_keypress(options = {})
-        opts = { echo: false, raw: true }.merge(options)
+        opts  = { echo: false, raw: true }.merge(options)
         codes = get_codes(opts)
-        emit_key_event(codes) if codes
-        handle_interrupt if codes.pack('C*') == @console.keys[:ctrl_c]
-        codes.pack('U*') if codes
+        char  = codes ? codes.pack('U*') : nil
+
+        emit_key_event(char) if char
+        handle_interrupt if char == @console.keys[:ctrl_c]
+        char
       end
 
       # Reads single character including invisible multibyte codes
@@ -91,8 +93,9 @@ module TTY
       # @api public
       def read_char(options = {})
         codes = get_codes(options)
-        emit_key_event(codes) if codes
-        codes.pack('U*')  if codes
+        char  = codes ? codes.pack('U*') : nil
+        emit_key_event(char) if char
+        char
       end
 
       # Get input bytes
@@ -133,14 +136,15 @@ module TTY
         line = ''
         while (codes = get_codes(opts)) && (code = codes[0])
 
-          emit_key_event(codes)
+          char = codes.pack('U*')
+          emit_key_event(char)
           delete_char = proc { |c| c == BACKSPACE || c == DELETE }
 
           if delete_char[code]
             line = line.slice(-1, 1) unless line.empty?
             backspaces = line.size
           else
-            line << codes.pack('U*')
+            line << char
           end
 
           break if (code == CARRIAGE_RETURN || code == NEWLINE)
@@ -178,14 +182,14 @@ module TTY
 
       # Publish event
       #
-      # @param [String] key
+      # @param [String] char
       #   the key pressed
       #
       # @return [nil]
       #
       # @api public
-      def emit_key_event(codes)
-        event = KeyEvent.from(@console.keys, codes)
+      def emit_key_event(char)
+        event = KeyEvent.from(@console.keys, char)
         publish(:"key#{event.key.name}", event) if event.emit?
         publish(:keypress, event)
       end
