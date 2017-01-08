@@ -32,6 +32,7 @@ module TTY
         pointer: '>',
         line: '─',
         pipe: '|',
+        handle: 'O',
         ellipsis: '...',
         radio_on: '(*)',
         radio_off: '( )',
