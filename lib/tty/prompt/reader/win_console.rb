@@ -6,7 +6,9 @@ module TTY
   class Prompt
     class Reader
       class WinConsole
-        ESC = "\e".freeze
+        ESC     = "\e".freeze
+        NUL_HEX = "\x00".freeze
+        EXT_HEX = "\xE0".freeze
 
         # Key codes
         #
@@ -25,7 +27,7 @@ module TTY
         def initialize
           require 'tty/prompt/reader/windows_api'
           @keys = Codes.win_keys
-          @escape_codes = [[0], [ESC.ord], [224]]
+          @escape_codes = [[NUL_HEX.ord], [ESC.ord], [EXT_HEX.ord]]
         end
 
         # Get a character from console with echo
