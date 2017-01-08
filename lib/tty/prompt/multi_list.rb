@@ -85,14 +85,14 @@ module TTY
       def render_menu
         output = ''
         @paginator.paginate(@choices, @active, @per_page) do |choice, index|
-          num = enumerate? ? (index + 1).to_s + @enum + Symbols::SPACE : ''
-          indicator = (index + 1 == @active) ?  @marker : Symbols::SPACE
-          indicator += Symbols::SPACE
+          num = enumerate? ? (index + 1).to_s + @enum + ' ' : ''
+          indicator = (index + 1 == @active) ?  @marker : ' '
+          indicator += ' '
           message = if @selected.include?(choice)
-                      selected = @prompt.decorate(Symbols::RADIO_CHECKED, @active_color)
-                      selected + Symbols::SPACE + num + choice.name
+                      selected = @prompt.decorate(symbols[:radio_on], @active_color)
+                      selected + ' ' + num + choice.name
                     else
-                      Symbols::RADIO_UNCHECKED + Symbols::SPACE + num + choice.name
+                      symbols[:radio_off] + ' ' + num + choice.name
                     end
           newline = (index == @paginator.max_index) ? '' : "\n"
           output << indicator + message + newline

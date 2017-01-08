@@ -1,6 +1,8 @@
 # encoding: utf-8
 
 RSpec.describe TTY::Prompt do
+  let(:symbols) { TTY::Prompt::Symbols.symbols }
+
   it "selects nothing when return pressed immediately" do
     prompt = TTY::TestPrompt.new
     choices = %w(vodka beer wine whisky bourbon)
@@ -9,11 +11,11 @@ RSpec.describe TTY::Prompt do
     expect(prompt.multi_select("Select drinks?", choices)). to eq([])
     expect(prompt.output.string).to eq([
       "\e[?25lSelect drinks? \e[90m(Use arrow keys, press Space to select and Enter to finish)\e[0m\n",
-      "‣ ⬡ vodka\n",
-      "  ⬡ beer\n",
-      "  ⬡ wine\n",
-      "  ⬡ whisky\n",
-      "  ⬡ bourbon",
+      "#{symbols[:pointer]} #{symbols[:radio_off]} vodka\n",
+      "  #{symbols[:radio_off]} beer\n",
+      "  #{symbols[:radio_off]} wine\n",
+      "  #{symbols[:radio_off]} whisky\n",
+      "  #{symbols[:radio_off]} bourbon",
       "\e[2K\e[1G\e[1A" * 5, "\e[2K\e[1G",
       "Select drinks? \n\e[?25h"
     ].join)
@@ -27,18 +29,18 @@ RSpec.describe TTY::Prompt do
     expect(prompt.multi_select("Select drinks?", choices)). to eq(['vodka'])
     expect(prompt.output.string).to eq([
       "\e[?25lSelect drinks? \e[90m(Use arrow keys, press Space to select and Enter to finish)\e[0m\n",
-      "‣ ⬡ vodka\n",
-      "  ⬡ beer\n",
-      "  ⬡ wine\n",
-      "  ⬡ whisky\n",
-      "  ⬡ bourbon",
+      "#{symbols[:pointer]} #{symbols[:radio_off]} vodka\n",
+      "  #{symbols[:radio_off]} beer\n",
+      "  #{symbols[:radio_off]} wine\n",
+      "  #{symbols[:radio_off]} whisky\n",
+      "  #{symbols[:radio_off]} bourbon",
       "\e[2K\e[1G\e[1A" * 5, "\e[2K\e[1G",
       "Select drinks? vodka\n",
-      "‣ \e[32m⬢\e[0m vodka\n",
-      "  ⬡ beer\n",
-      "  ⬡ wine\n",
-      "  ⬡ whisky\n",
-      "  ⬡ bourbon",
+      "‣ \e[32m#{symbols[:radio_on]}\e[0m vodka\n",
+      "  #{symbols[:radio_off]} beer\n",
+      "  #{symbols[:radio_off]} wine\n",
+      "  #{symbols[:radio_off]} whisky\n",
+      "  #{symbols[:radio_off]} bourbon",
       "\e[2K\e[1G\e[1A" * 5, "\e[2K\e[1G",
       "Select drinks? \e[32mvodka\e[0m\n\e[?25h"
     ].join)
@@ -52,18 +54,18 @@ RSpec.describe TTY::Prompt do
     expect(prompt.multi_select("Select drinks?", choices)).to eq([1])
     expect(prompt.output.string).to eq([
       "\e[?25lSelect drinks? \e[90m(Use arrow keys, press Space to select and Enter to finish)\e[0m\n",
-      "‣ ⬡ vodka\n",
+      "#{symbols[:pointer]} #{symbols[:radio_off]} vodka\n",
       "  ⬡ beer\n",
       "  ⬡ wine\n",
       "  ⬡ whisky\n",
       "  ⬡ bourbon",
       "\e[2K\e[1G\e[1A" * 5, "\e[2K\e[1G",
       "Select drinks? vodka\n",
-      "‣ \e[32m⬢\e[0m vodka\n",
-      "  ⬡ beer\n",
-      "  ⬡ wine\n",
-      "  ⬡ whisky\n",
-      "  ⬡ bourbon",
+      "‣ \e[32m#{symbols[:radio_on]}\e[0m vodka\n",
+      "  #{symbols[:radio_off]} beer\n",
+      "  #{symbols[:radio_off]} wine\n",
+      "  #{symbols[:radio_off]} whisky\n",
+      "  #{symbols[:radio_off]} bourbon",
       "\e[2K\e[1G\e[1A" * 5, "\e[2K\e[1G",
       "Select drinks? \e[32mvodka\e[0m\n\e[?25h"
     ].join)
@@ -84,18 +86,18 @@ RSpec.describe TTY::Prompt do
     expect(value).to eq([{score: 1}])
     expect(prompt.output.string).to eq([
       "\e[?25lSelect drinks? \e[90m(Use arrow or number (1-5) keys, press Space to select and Enter to finish)\e[0m\n",
-      "‣ ⬡ 1) vodka\n",
-      "  ⬡ 2) beer\n",
-      "  ⬡ 3) wine\n",
-      "  ⬡ 4) whisky\n",
-      "  ⬡ 5) bourbon",
+      "#{symbols[:pointer]} #{symbols[:radio_off]} 1) vodka\n",
+      "  #{symbols[:radio_off]} 2) beer\n",
+      "  #{symbols[:radio_off]} 3) wine\n",
+      "  #{symbols[:radio_off]} 4) whisky\n",
+      "  #{symbols[:radio_off]} 5) bourbon",
       "\e[2K\e[1G\e[1A" * 5, "\e[2K\e[1G",
       "Select drinks? vodka\n",
-      "‣ \e[32m⬢\e[0m 1) vodka\n",
-      "  ⬡ 2) beer\n",
-      "  ⬡ 3) wine\n",
-      "  ⬡ 4) whisky\n",
-      "  ⬡ 5) bourbon",
+      "‣ \e[32m#{symbols[:radio_on]}\e[0m 1) vodka\n",
+      "  #{symbols[:radio_off]} 2) beer\n",
+      "  #{symbols[:radio_off]} 3) wine\n",
+      "  #{symbols[:radio_off]} 4) whisky\n",
+      "  #{symbols[:radio_off]} 5) bourbon",
       "\e[2K\e[1G\e[1A" * 5, "\e[2K\e[1G",
       "Select drinks? \e[32mvodka\e[0m\n\e[?25h"
     ].join)
@@ -117,11 +119,11 @@ RSpec.describe TTY::Prompt do
     expect(value).to match_array([{score: 20}, {score: 50}])
     expect(prompt.output.string).to eq([
       "\e[?25lSelect drinks? beer, bourbon \e[90m(Use arrow keys, press Space to select and Enter to finish)\e[0m\n",
-      "  ⬡ vodka\n",
-      "  \e[32m⬢\e[0m beer\n",
-      "  ⬡ wine\n",
-      "  ⬡ whisky\n",
-      "‣ \e[32m⬢\e[0m bourbon",
+      "  #{symbols[:radio_off]} vodka\n",
+      "  \e[32m#{symbols[:radio_on]}\e[0m beer\n",
+      "  #{symbols[:radio_off]} wine\n",
+      "  #{symbols[:radio_off]} whisky\n",
+      "‣ \e[32m#{symbols[:radio_on]}\e[0m bourbon",
       "\e[2K\e[1G\e[1A" * 5, "\e[2K\e[1G",
       "Select drinks? \e[32mbeer, bourbon\e[0m\n\e[?25h",
     ].join)
@@ -165,11 +167,11 @@ RSpec.describe TTY::Prompt do
     expect(prompt.multi_select("Select drinks?", choices)). to eq([])
     expect(prompt.output.string).to eq([
       "\e[?25l[?] Select drinks? \e[90m(Use arrow keys, press Space to select and Enter to finish)\e[0m\n",
-      "‣ ⬡ vodka\n",
-      "  ⬡ beer\n",
-      "  ⬡ wine\n",
-      "  ⬡ whisky\n",
-      "  ⬡ bourbon",
+      "#{symbols[:pointer]} #{symbols[:radio_off]} vodka\n",
+      "  #{symbols[:radio_off]} beer\n",
+      "  #{symbols[:radio_off]} wine\n",
+      "  #{symbols[:radio_off]} whisky\n",
+      "  #{symbols[:radio_off]} bourbon",
       "\e[2K\e[1G\e[1A" * 5, "\e[2K\e[1G",
       "[?] Select drinks? \n\e[?25h"
     ].join)
@@ -184,11 +186,11 @@ RSpec.describe TTY::Prompt do
     expect(prompt.multi_select("Select drinks?", choices, options)). to eq(['vodka'])
     expect(prompt.output.string).to eq([
       "\e[?25lSelect drinks? vodka \e[90m(Use arrow keys, press Space to select and Enter to finish)\e[0m\n",
-      "> \e[34m⬢\e[0m vodka\n",
-      "  ⬡ beer\n",
-      "  ⬡ wine\n",
-      "  ⬡ whisky\n",
-      "  ⬡ bourbon",
+      "> \e[34m#{symbols[:radio_on]}\e[0m vodka\n",
+      "  #{symbols[:radio_off]} beer\n",
+      "  #{symbols[:radio_off]} wine\n",
+      "  #{symbols[:radio_off]} whisky\n",
+      "  #{symbols[:radio_off]} bourbon",
       "\e[2K\e[1G\e[1A" * 5, "\e[2K\e[1G",
       "Select drinks? \e[34mvodka\e[0m\n\e[?25h"
     ].join)
@@ -202,11 +204,11 @@ RSpec.describe TTY::Prompt do
     expect(prompt.multi_select("Select drinks?", choices, help: '(Bash keyboard)')). to eq([])
     expect(prompt.output.string).to eq([
       "\e[?25lSelect drinks? \e[90m(Bash keyboard)\e[0m\n",
-      "‣ ⬡ vodka\n",
-      "  ⬡ beer\n",
-      "  ⬡ wine\n",
-      "  ⬡ whisky\n",
-      "  ⬡ bourbon",
+      "#{symbols[:pointer]} #{symbols[:radio_off]} vodka\n",
+      "  #{symbols[:radio_off]} beer\n",
+      "  #{symbols[:radio_off]} wine\n",
+      "  #{symbols[:radio_off]} whisky\n",
+      "  #{symbols[:radio_off]} bourbon",
       "\e[2K\e[1G\e[1A" * 5, "\e[2K\e[1G",
       "Select drinks? \n\e[?25h"
     ].join)
@@ -221,9 +223,9 @@ RSpec.describe TTY::Prompt do
     expect(value).to eq(['D'])
     expect(prompt.output.string).to eq([
       "\e[?25lWhat letter? D \e[90m(Use arrow keys, press Space to select and Enter to finish)\e[0m\n",
-      "‣ \e[32m⬢\e[0m D\n",
-      "  ⬡ E\n",
-      "  ⬡ F\n",
+      "#{symbols[:pointer]} \e[32m#{symbols[:radio_on]}\e[0m D\n",
+      "  #{symbols[:radio_off]} E\n",
+      "  #{symbols[:radio_off]} F\n",
       "\e[90m(Move up or down to reveal more choices)\e[0m",
       "\e[2K\e[1G\e[1A" * 4, "\e[2K\e[1G",
       "What letter? \e[32mD\e[0m\n\e[?25h",
@@ -244,9 +246,9 @@ RSpec.describe TTY::Prompt do
     expect(value).to eq(['D'])
     expect(prompt.output.string).to eq([
       "\e[?25lWhat letter? D \e[90m(Use arrow keys, press Space to select and Enter to finish)\e[0m\n",
-      "‣ \e[32m⬢\e[0m D\n",
-      "  ⬡ E\n",
-      "  ⬡ F\n",
+      "#{symbols[:pointer]} \e[32m#{symbols[:radio_on]}\e[0m D\n",
+      "  #{symbols[:radio_off]} E\n",
+      "  #{symbols[:radio_off]} F\n",
       "\e[90m(Wiggle thy finger up or down to see more)\e[0m",
       "\e[2K\e[1G\e[1A" * 4, "\e[2K\e[1G",
       "What letter? \e[32mD\e[0m\n\e[?25h",
