@@ -9,7 +9,7 @@ module TTY
     #
     # @api public
     class Slider
-      include TTY::Prompt::Symbols
+      include Symbols
 
       HELP = '(Use arrow keys, press Enter to select)'.freeze
 
