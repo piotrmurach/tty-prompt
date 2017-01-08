@@ -27,7 +27,7 @@ module TTY
         def initialize
           require 'tty/prompt/reader/windows_api'
           @keys = Codes.win_keys
-          @escape_codes = [[NUL_HEX.ord], [ESC.ord], [EXT_HEX.ord]]
+          @escape_codes = [[NUL_HEX.ord], [ESC.ord], EXT_HEX.bytes.to_a]
         end
 
         # Get a character from console with echo
