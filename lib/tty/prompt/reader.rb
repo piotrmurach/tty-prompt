@@ -105,12 +105,17 @@ module TTY
         char = @console.get_char(options)
         return if char.nil?
         codes << char.ord
-        while (codes - "\e[".bytes.to_a).empty? ||
-              ("\e[".bytes.to_a - codes).empty? &&
-              !(64..126).include?(codes.last)
+
+        condition = proc { |escape|
+          (codes - escape).empty? ||
+          (escape - codes).empty? &&
+          !(64..126).include?(codes.last)
+        }
+
+        while @console.escape_codes.any?(&condition)
           get_codes(options, codes)
         end
-        codes.compact
+        codes
       end
 
       # Get a single line from STDIN. Each key pressed is echoed
