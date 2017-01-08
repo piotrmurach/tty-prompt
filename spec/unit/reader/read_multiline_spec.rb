@@ -14,17 +14,17 @@ RSpec.describe TTY::Prompt::Reader, '#read_multiline' do
   end
 
   it "reads a line" do
-    input << "Single line"
+    input << "Single line\n"
     input.rewind
     answer = reader.read_multiline
-    expect(answer).to eq(['Single line'])
+    expect(answer).to eq(["Single line\n"])
   end
 
   it 'reads few lines' do
-    input << "First line\nSecond line\nThird line"
+    input << "First line\nSecond line\nThird line\n"
     input.rewind
     answer = reader.read_multiline
-    expect(answer).to eq(['First line', 'Second line', 'Third line'])
+    expect(answer).to eq(["First line\n", "Second line\n", "Third line\n"])
   end
 
   it 'reads and yiels every line' do
@@ -32,7 +32,7 @@ RSpec.describe TTY::Prompt::Reader, '#read_multiline' do
     input.rewind
     lines = []
     reader.read_multiline { |line| lines << line }
-    expect(lines).to eq(['First line', 'Second line', 'Third line'])
+    expect(lines).to eq(["First line\n", "Second line\n", "Third line"])
   end
 
   it 'reads multibyte lines' do
@@ -40,6 +40,6 @@ RSpec.describe TTY::Prompt::Reader, '#read_multiline' do
     input.rewind
     lines = []
     reader.read_multiline { |line| lines << line }
-    expect(lines).to eq(["국경의 긴 터널을 빠져나오자", '설국이었다.'])
+    expect(lines).to eq(["국경의 긴 터널을 빠져나오자\n", '설국이었다.'])
   end
 end

@@ -10,14 +10,14 @@ RSpec.describe TTY::Prompt::Reader, '#read_line' do
     input << "password\n"
     input.rewind
     answer = reader.read_line(echo: false)
-    expect(answer).to eq("password")
+    expect(answer).to eq("password\n")
   end
 
   it "echoes characters back" do
     input << "password\n"
     input.rewind
     answer = reader.read_line
-    expect(answer).to eq("password")
+    expect(answer).to eq("password\n")
     expect(output.string).to eq("")
   end
 
@@ -25,7 +25,7 @@ RSpec.describe TTY::Prompt::Reader, '#read_line' do
     input << "aa\ba\bcc\n"
     input.rewind
     answer = reader.read_line
-    expect(answer).to eq('acc')
+    expect(answer).to eq("acc\n")
   end
 
   it 'reads multibyte line' do

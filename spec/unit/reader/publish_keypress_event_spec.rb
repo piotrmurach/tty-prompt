@@ -11,8 +11,8 @@ RSpec.describe TTY::Prompt::Reader, '#publish_keypress_event' do
     chars = []
     reader.on(:keypress) { |event| chars << event.value }
     answer = reader.read_line
-    expect(chars).to eq(%w(a b c))
-    expect(answer).to eq("abc")
+    expect(chars).to eq(%W(a b c \n))
+    expect(answer).to eq("abc\n")
   end
 
   it "publishes :keyup for read_keypress" do
