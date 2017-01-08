@@ -1,5 +1,7 @@
 # encoding: utf-8
 
+require 'tty/prompt/symbols'
+
 module TTY
   class Prompt
     # A class responsible for rendering select list menu
@@ -7,6 +9,8 @@ module TTY
     #
     # @api private
     class List
+      include Symbols
+
       HELP = '(Use arrow%s keys, press Enter to select)'
 
       PAGE_HELP = '(Move up or down to reveal more choices)'
@@ -34,7 +38,7 @@ module TTY
         @choices      = Choices.new
         @active_color = options.fetch(:active_color) { @prompt.active_color }
         @help_color   = options.fetch(:help_color) { @prompt.help_color }
-        @marker       = options.fetch(:marker) { Symbols::ITEM_SELECTED }
+        @marker       = options.fetch(:marker) { symbols[:pointer] }
         @help         = options[:help]
         @first_render = true
         @done         = false
@@ -266,12 +270,12 @@ module TTY
       def render_menu
         output = ''
         @paginator.paginate(@choices, @active, @per_page) do |choice, index|
-          num = enumerate? ? (index + 1).to_s + @enum + Symbols::SPACE : ''
+          num = enumerate? ? (index + 1).to_s + @enum + ' ' : ''
           message = if index + 1 == @active
-                      selected = @marker + Symbols::SPACE + num + choice.name
+                      selected = @marker + ' ' + num + choice.name
                       @prompt.decorate("#{selected}", @active_color)
                     else
-                      Symbols::SPACE * 2 + num + choice.name
+                      ' ' * 2 + num + choice.name
                     end
           newline = (index == @paginator.max_index) ? '' : "\n"
           output << (message + newline)
