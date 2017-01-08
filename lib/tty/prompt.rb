@@ -42,7 +42,7 @@ module TTY
     # Theme colors
     #
     # @api private
-    attr_reader :active_color, :help_color, :error_color
+    attr_reader :active_color, :help_color, :error_color, :enabled_color
 
     def_delegators :@pastel, :decorate, :strip
 
@@ -451,6 +451,23 @@ module TTY
     # @api private
     def stderr
       $stderr
+    end
+
+    # Inspect class name and public attributes
+    # @return [String]
+    #
+    # @api public
+    def inspect
+      attributes = {
+        input: input,
+        output: output,
+        prefix: prefix,
+        active_color: active_color,
+        error_color: error_color,
+        enabled_color: enabled_color,
+        help_color: help_color
+      }
+      "#<#{self.class}: #{attributes.each { |name, val| "@#{name}=#{val}" } }"
     end
   end # Prompt
 end # TTY

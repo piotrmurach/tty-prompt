@@ -190,6 +190,14 @@ module TTY
         publish(:keypress, event)
       end
 
+      # Inspect class name and public attributes
+      # @return [String]
+      #
+      # @api public
+      def inspect
+        "#<#{self.class}: @input=#{input}, @output=#{output}>"
+      end
+
       private
 
       # Handle input interrupt based on provided value
