@@ -4,27 +4,8 @@ module TTY
   class Prompt
     class Reader
       module Codes
-        def keys
+        def ctrl_keys
           {
-            tab:       ["\t".ord],
-            enter:     ["\n".ord],
-            return:    ["\r".ord],
-            escape:    ["\e".ord],
-            space:     [" ".ord],
-            backspace: [?\C-?.ord],
-            insert:    "\e[2~".bytes.to_a,
-            delete:    "\e[3~".bytes.to_a,
-            page_up:   "\e[5~".bytes.to_a,
-            page_down: "\e[6~".bytes.to_a,
-
-            up:     "\e[A".bytes.to_a,
-            down:   "\e[B".bytes.to_a,
-            right:  "\e[C".bytes.to_a,
-            left:   "\e[D".bytes.to_a,
-            clear:  "\e[E".bytes.to_a,
-            end:    "\e[F".bytes.to_a,
-            home:   "\e[H".bytes.to_a,
-
             ctrl_a: [?\C-a.ord],
             ctrl_b: [?\C-b.ord],
             ctrl_c: [?\C-c.ord],
@@ -51,6 +32,30 @@ module TTY
             ctrl_x: [?\C-x.ord],
             ctrl_y: [?\C-y.ord],
             ctrl_z: [?\C-z.ord],
+          }
+        end
+        module_function :ctrl_keys
+
+        def keys
+          {
+            tab:       ["\t".ord],
+            enter:     ["\n".ord],
+            return:    ["\r".ord],
+            escape:    ["\e".ord],
+            space:     [" ".ord],
+            backspace: [?\C-?.ord],
+            insert:    "\e[2~".bytes.to_a,
+            delete:    "\e[3~".bytes.to_a,
+            page_up:   "\e[5~".bytes.to_a,
+            page_down: "\e[6~".bytes.to_a,
+
+            up:     "\e[A".bytes.to_a,
+            down:   "\e[B".bytes.to_a,
+            right:  "\e[C".bytes.to_a,
+            left:   "\e[D".bytes.to_a,
+            clear:  "\e[E".bytes.to_a,
+            end:    "\e[F".bytes.to_a,
+            home:   "\e[H".bytes.to_a,
 
             f1_xterm: "\eOP".bytes.to_a,
             f2_xterm: "\eOQ".bytes.to_a,
@@ -69,7 +74,7 @@ module TTY
             f10: "\e[21~".bytes.to_a,
             f11: "\e[23~".bytes.to_a,
             f12: "\e[24~".bytes.to_a
-          }
+          }.merge(ctrl_keys)
         end
         module_function :keys
 
@@ -104,7 +109,7 @@ module TTY
             f10: "\e[21~".bytes.to_a,
             f11: "\e[23~".bytes.to_a,
             f12: "\e[24~".bytes.to_a
-          }
+          }.merge(ctrl_keys)
         end
         module_function :win_keys
 
