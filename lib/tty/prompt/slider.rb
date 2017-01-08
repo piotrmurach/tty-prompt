@@ -1,4 +1,6 @@
 # encoding: utf-8
+#
+require 'tty/prompt/symbols'
 
 module TTY
   # A class responsible for shell prompt interactions.
@@ -7,6 +9,8 @@ module TTY
     #
     # @api public
     class Slider
+      include TTY::Prompt::Symbols
+
       HELP = '(Use arrow keys, press Enter to select)'.freeze
 
       # Initailize a Slider
@@ -159,11 +163,11 @@ module TTY
       # @api private
       def render_slider
         output = ''
-        output << Symbols::SLIDER_END
-        output << '-' * @active
-        output << @prompt.decorate(Symbols::SLIDER_HANDLE, @active_color)
-        output << '-' * (range.size - @active - 1)
-        output << Symbols::SLIDER_END
+        output << symbols[:pipe]
+        output << symbols[:line] * @active
+        output << @prompt.decorate(symbols[:handle], @active_color)
+        output << symbols[:line] * (range.size - @active - 1)
+        output << symbols[:pipe]
         output << " #{range[@active]}"
         output
       end
