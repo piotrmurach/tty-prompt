@@ -27,23 +27,23 @@ module TTY
         # @api public
         def self.from(keys, codes)
           key = Key.new
-          char = codes.pack('U*')
+          char = codes.pack('C*')
           ctrls = keys.keys.grep(/ctrl/)
 
-          case codes
-          when keys[:return] then key.name = :return
+          case char
           when keys[:enter]  then key.name = :enter
+          when keys[:return] then key.name = :return
           when keys[:tab]    then key.name = :tab
           when keys[:backspace] then key.name = :backspace
           when keys[:delete] then key.name = :delete
           when keys[:space]  then key.name = :space
           when keys[:escape] then key.name = :escape
-          when proc { |cs| cs.pack('U*') =~ /^[a-z]{1}$/ }
+          when proc { |c| c =~ /^[a-z]{1}$/ }
             key.name = :alpha
-          when proc { |cs| cs.pack('U*') =~ /^[A-Z]{1}$/ }
+          when proc { |c| c =~ /^[A-Z]{1}$/ }
             key.name = :alpha
             key.shift = true
-          when proc { |cs| cs.pack('U*') =~ /^\d+$/ }
+          when proc { |c| c =~ /^\d+$/ }
             key.name = :num
           # arrows
           when keys[:up]    then key.name = :up
@@ -54,7 +54,7 @@ module TTY
           when keys[:end]   then key.name = :end
           when keys[:home]  then key.name = :home
           when proc { |cs| ctrls.any? { |name| keys[name] == cs } }
-            key.name = keys.key(codes)
+            key.name = keys.key(char)
             key.ctrl = true
           # f1 - f12
           when keys[:f1], keys[:f1_xterm] then key.name = :f1
@@ -71,7 +71,7 @@ module TTY
           when keys[:f12] then key.name = :f12
           end
 
-          new(char, key)
+          new(codes.pack('U*'), key)
         end
 
         # Check if key event can be emitted
