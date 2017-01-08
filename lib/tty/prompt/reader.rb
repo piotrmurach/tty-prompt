@@ -76,7 +76,7 @@ module TTY
         opts = { echo: false, raw: true }.merge(options)
         codes = get_codes(opts)
         emit_key_event(codes) if codes
-        handle_interrupt if codes == Codes.keys[:ctrl_c]
+        handle_interrupt if codes.pack('C*') == @console.keys[:ctrl_c]
         codes.pack('U*') if codes
       end
 
