@@ -27,12 +27,12 @@ module TTY
         # @api public
         def self.from(keys, codes)
           key = Key.new
-          char = codes.pack('C*')
+          char = codes.pack('U*')
           ctrls = keys.keys.grep(/ctrl/)
 
           case char
-          when keys[:enter]  then key.name = :enter
           when keys[:return] then key.name = :return
+          when keys[:enter]  then key.name = :enter
           when keys[:tab]    then key.name = :tab
           when keys[:backspace] then key.name = :backspace
           when keys[:delete] then key.name = :delete
