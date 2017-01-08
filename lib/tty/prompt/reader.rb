@@ -1,6 +1,7 @@
 # encoding: utf-8
 
 require 'wisper'
+require 'rbconfig'
 require 'tty/prompt/reader/key_event'
 require 'tty/prompt/reader/console'
 require 'tty/prompt/reader/win_console'
@@ -200,7 +201,7 @@ module TTY
       #
       # @api public
       def windows?
-        File::ALT_SEPARATOR == "\\"
+        !/mswin|mingw/.match(RbConfig::CONFIG["arch"]).nil?
       end
     end # Reader
   end # Prompt
