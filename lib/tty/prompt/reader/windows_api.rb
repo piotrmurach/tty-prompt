@@ -8,7 +8,9 @@ module TTY
       module WindowsAPI
         include Fiddle
 
-        CRT_HANDLE = Fiddle::Handle.new("msvcrt") rescue Fiddle::Handle.new("crtdll")
+        Handle = RUBY_VERSION >= "2.0.0" ? Fiddle::Handle : DL::Handle
+
+        CRT_HANDLE = Handle.new("msvcrt") rescue Handle.new("crtdll")
 
         def getch
           @@getch ||= Fiddle::Function.new(CRT_HANDLE["_getch"], [], TYPE_INT)
