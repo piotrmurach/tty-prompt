@@ -14,27 +14,25 @@ module TTY
 
         attr_reader :input
 
-        def initialize(input)
-          @input = input
-          @mode  = Mode.new
-        end
+        # Key codes
+        #
+        # @return [Hash[Symbol]]
+        #
+        # @api public
+        attr_reader :keys
 
         # Escape codes
         #
         # @return [Array[Integer]]
         #
         # @api public
-        def escape_codes
-          [[ESC.ord], CSI.bytes.to_a]
-        end
+        attr_reader :escape_codes
 
-        # Key codes
-        #
-        # @return [Hash[Symbol]]
-        #
-        # @api public
-        def keys
-          Codes.keys
+        def initialize(input)
+          @input = input
+          @mode  = Mode.new
+          @keys  = Codes.keys
+          @escape_codes = [[ESC.ord], CSI.bytes.to_a]
         end
 
         # Get a character from console with echo

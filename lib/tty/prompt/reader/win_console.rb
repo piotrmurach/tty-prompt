@@ -8,26 +8,24 @@ module TTY
       class WinConsole
         ESC = "\e".freeze
 
-        def initialize
-          require 'tty/prompt/reader/windows_api'
-        end
+        # Key codes
+        #
+        # @return [Hash[Symbol]]
+        #
+        # @api public
+        attr_reader :keys
 
         # Escape codes
         #
         # @return [Array[Integer]]
         #
         # @api public
-        def escape_codes
-          [[0], [ESC.ord], [224]]
-        end
+        attr_reader :escape_codes
 
-        # Key codes
-        #
-        # @return [Hash[Symbol]]
-        #
-        # @api public
-        def keys
-          Codes.win_keys
+        def initialize
+          require 'tty/prompt/reader/windows_api'
+          @keys = Codes.win_keys
+          @escape_codes = [[0], [ESC.ord], [224]]
         end
 
         # Get a character from console with echo
