@@ -2,6 +2,8 @@ source 'https://rubygems.org'
 
 gemspec
 
+gem 'tty-cursor', git: 'https://github.com/piotrmurach/tty-cursor.git'
+
 group :test do
   gem 'benchmark-ips', '~> 2.0.0'
   gem 'simplecov', '~> 0.10.0'
