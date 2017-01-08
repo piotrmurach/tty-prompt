@@ -15,8 +15,8 @@ RSpec.describe TTY::Prompt::Question, '#validate' do
     expect(answer).to eq('piotr.murach')
     expect(prompt.output.string).to eq([
       "What is your username? ",
-      "\e[1000D\e[K\e[1A",
-      "\e[1000D\e[K",
+      "\e[2K\e[1G\e[1A",
+      "\e[2K\e[1G",
       "What is your username? \e[32mpiotr.murach\e[0m\n"
     ].join)
   end
@@ -54,12 +54,12 @@ RSpec.describe TTY::Prompt::Question, '#validate' do
     expect(answer).to eq('piotr@example.com')
     expect(prompt.output.string).to eq([
       "What is your email? ",
-      "\e[1000D\e[K",
+      "\e[2K\e[1G",
       "\e[31m>>\e[0m Your answer is invalid (must match :email)\e[1A",
-      "\e[1000D\e[K",
+      "\e[2K\e[1G",
       "What is your email? ",
-      "\e[1000D\e[K\e[1A",
-      "\e[1000D\e[K",
+      "\e[2K\e[1G\e[1A",
+      "\e[2K\e[1G",
       "What is your email? \e[32mpiotr@example.com\e[0m\n"
     ].join)
   end
@@ -76,12 +76,12 @@ RSpec.describe TTY::Prompt::Question, '#validate' do
     expect(answer).to eq('piotr@example.com')
     expect(prompt.output.string).to eq([
       "What is your email? ",
-      "\e[1000D\e[K",
+      "\e[2K\e[1G",
       "\e[31m>>\e[0m Not an email!\e[1A",
-      "\e[1000D\e[K",
+      "\e[2K\e[1G",
       "What is your email? ",
-      "\e[1000D\e[K\e[1A",
-      "\e[1000D\e[K",
+      "\e[2K\e[1G\e[1A",
+      "\e[2K\e[1G",
       "What is your email? \e[32mpiotr@example.com\e[0m\n"
     ].join)
   end

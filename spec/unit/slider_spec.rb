@@ -13,7 +13,7 @@ RSpec.describe TTY::Prompt, '#slider' do
       "|------",
       "\e[32mO\e[0m",
       "-----| 44",
-      "\e[1000D\e[K\e[1A\e[1000D\e[K",
+      "\e[2K\e[1G\e[1A\e[2K\e[1G",
       "What size? \e[32m44\e[0m\n\e[?25h"
     ].join)
   end
@@ -27,7 +27,7 @@ RSpec.describe TTY::Prompt, '#slider' do
       "|---",
       "\e[32mO\e[0m",
       "--------| 38",
-      "\e[1000D\e[K\e[1A\e[1000D\e[K",
+      "\e[2K\e[1G\e[1A\e[2K\e[1G",
       "What size? \e[32m38\e[0m\n\e[?25h"
     ].join)
   end
@@ -47,7 +47,7 @@ RSpec.describe TTY::Prompt, '#slider' do
       "|---",
       "\e[32mO\e[0m",
       "-------| 6",
-      "\e[1000D\e[K\e[1A\e[1000D\e[K",
+      "\e[2K\e[1G\e[1A\e[2K\e[1G",
       "What size? \e[32m6\e[0m\n\e[?25h"
     ].join)
   end
@@ -62,7 +62,7 @@ RSpec.describe TTY::Prompt, '#slider' do
       "|-----",
       "\e[31mO\e[0m",
       "-----| 5",
-      "\e[1000D\e[K\e[1A\e[1000D\e[K",
+      "\e[2K\e[1G\e[1A\e[2K\e[1G",
       "What size? \e[31m5\e[0m\n\e[?25h"
     ].join)
   end

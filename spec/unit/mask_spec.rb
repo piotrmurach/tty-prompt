@@ -11,17 +11,17 @@ RSpec.describe TTY::Prompt, '#mask' do
     expect(answer).to eql("pass")
     expect(prompt.output.string).to eq([
       "What is your password? ",
-      "\e[1000D\e[K",
+      "\e[2K\e[1G",
       "What is your password? •",
-      "\e[1000D\e[K",
+      "\e[2K\e[1G",
       "What is your password? ••",
-      "\e[1000D\e[K",
+      "\e[2K\e[1G",
       "What is your password? •••",
-      "\e[1000D\e[K",
+      "\e[2K\e[1G",
       "What is your password? ••••",
-      "\e[1000D\e[K",
+      "\e[2K\e[1G",
       "What is your password? \e[32m••••\e[0m\n",
-      "\e[1000D\e[K\e[1A\e[1000D\e[K",
+      "\e[2K\e[1G\e[1A\e[2K\e[1G",
       "What is your password? \e[32m••••\e[0m\n"
     ].join)
   end
@@ -33,17 +33,17 @@ RSpec.describe TTY::Prompt, '#mask' do
     expect(answer).to eql("pass")
     expect(prompt.output.string).to eq([
       "What is your password? ",
-      "\e[1000D\e[K",
+      "\e[2K\e[1G",
       "What is your password? *",
-      "\e[1000D\e[K",
+      "\e[2K\e[1G",
       "What is your password? **",
-      "\e[1000D\e[K",
+      "\e[2K\e[1G",
       "What is your password? ***",
-      "\e[1000D\e[K",
+      "\e[2K\e[1G",
       "What is your password? ****",
-      "\e[1000D\e[K",
+      "\e[2K\e[1G",
       "What is your password? \e[32m****\e[0m\n",
-      "\e[1000D\e[K\e[1A\e[1000D\e[K",
+      "\e[2K\e[1G\e[1A\e[2K\e[1G",
       "What is your password? \e[32m****\e[0m\n",
     ].join)
   end
@@ -55,15 +55,15 @@ RSpec.describe TTY::Prompt, '#mask' do
     expect(answer).to eql("lov")
     expect(prompt.output.string).to eq([
       "What is your password? ",
-      "\e[1000D\e[K",
+      "\e[2K\e[1G",
       "What is your password? ♥",
-      "\e[1000D\e[K",
+      "\e[2K\e[1G",
       "What is your password? ♥♥",
-      "\e[1000D\e[K",
+      "\e[2K\e[1G",
       "What is your password? ♥♥♥",
-      "\e[1000D\e[K",
+      "\e[2K\e[1G",
       "What is your password? \e[32m♥♥♥\e[0m\n",
-      "\e[1000D\e[K\e[1A\e[1000D\e[K",
+      "\e[2K\e[1G\e[1A\e[2K\e[1G",
       "What is your password? \e[32m♥♥♥\e[0m\n",
     ].join)
   end
@@ -78,17 +78,17 @@ RSpec.describe TTY::Prompt, '#mask' do
     expect(answer).to eql("pass")
     expect(prompt.output.string).to eq([
       "What is your password? ",
-      "\e[1000D\e[K",
+      "\e[2K\e[1G",
       "What is your password? ",
-      "\e[1000D\e[K",
+      "\e[2K\e[1G",
       "What is your password? ",
-      "\e[1000D\e[K",
+      "\e[2K\e[1G",
       "What is your password? ",
-      "\e[1000D\e[K",
+      "\e[2K\e[1G",
       "What is your password? ",
-      "\e[1000D\e[K",
+      "\e[2K\e[1G",
       "What is your password? \n",
-      "\e[1000D\e[K",
+      "\e[2K\e[1G",
       "What is your password? \n",
     ].join)
   end

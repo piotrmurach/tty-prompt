@@ -11,8 +11,8 @@ RSpec.describe TTY::Prompt, 'confirmation' do
       expect(prompt.yes?("Are you a human?")).to eq(true)
       expect(prompt.output.string).to eq([
         "Are you a human? \e[90m(Y/n)\e[0m ",
-        "\e[1000D\e[K\e[1A",
-        "\e[1000D\e[K",
+        "\e[2K\e[1G\e[1A",
+        "\e[2K\e[1G",
         "Are you a human? \e[32mYes\e[0m\n"
       ].join)
     end
@@ -23,8 +23,8 @@ RSpec.describe TTY::Prompt, 'confirmation' do
       expect(prompt.yes?("Are you a human?")).to eq(false)
       expect(prompt.output.string).to eq([
         "Are you a human? \e[90m(Y/n)\e[0m ",
-        "\e[1000D\e[K\e[1A",
-        "\e[1000D\e[K",
+        "\e[2K\e[1G\e[1A",
+        "\e[2K\e[1G",
         "Are you a human? \e[32mno\e[0m\n"
       ].join)
     end
@@ -35,8 +35,8 @@ RSpec.describe TTY::Prompt, 'confirmation' do
       expect(prompt.yes?("Are you a human?")).to eq(true)
       expect(prompt.output.string).to eq([
         "Are you a human? \e[90m(Y/n)\e[0m ",
-        "\e[1000D\e[K\e[1A",
-        "\e[1000D\e[K",
+        "\e[2K\e[1G\e[1A",
+        "\e[2K\e[1G",
         "Are you a human? \e[32mYes\e[0m\n"
       ].join)
     end
@@ -47,8 +47,8 @@ RSpec.describe TTY::Prompt, 'confirmation' do
       expect(prompt.yes?("Are you a human?", default: false)).to eq(false)
       expect(prompt.output.string).to eq([
         "Are you a human? \e[90m(Y/n)\e[0m ",
-        "\e[1000D\e[K\e[1A",
-        "\e[1000D\e[K",
+        "\e[2K\e[1G\e[1A",
+        "\e[2K\e[1G",
         "Are you a human? \e[32mno\e[0m\n"
       ].join)
     end
@@ -63,8 +63,8 @@ RSpec.describe TTY::Prompt, 'confirmation' do
       expect(result).to eq(false)
       expect(prompt.output.string).to eq([
         "Are you a human? \e[90m(Yup/nope)\e[0m ",
-        "\e[1000D\e[K\e[1A",
-        "\e[1000D\e[K",
+        "\e[2K\e[1G\e[1A",
+        "\e[2K\e[1G",
         "Are you a human? \e[32mnope\e[0m\n"
       ].join)
     end
@@ -78,8 +78,8 @@ RSpec.describe TTY::Prompt, 'confirmation' do
       expect(result).to eq(false)
       expect(prompt.output.string).to eq([
         "Are you a human? \e[90m(Yup/nope)\e[0m ",
-        "\e[1000D\e[K\e[1A",
-        "\e[1000D\e[K",
+        "\e[2K\e[1G\e[1A",
+        "\e[2K\e[1G",
         "Are you a human? \e[32mnope\e[0m\n"
       ].join)
     end
@@ -92,8 +92,8 @@ RSpec.describe TTY::Prompt, 'confirmation' do
       expect(result).to eq(true)
       expect(prompt.output.string).to eq([
         "Are you a human? \e[90m(Agree/Disagree)\e[0m ",
-        "\e[1000D\e[K\e[1A",
-        "\e[1000D\e[K",
+        "\e[2K\e[1G\e[1A",
+        "\e[2K\e[1G",
         "Are you a human? \e[32mAgree\e[0m\n"
       ].join)
     end
@@ -111,8 +111,8 @@ RSpec.describe TTY::Prompt, 'confirmation' do
       expect(result).to eq(false)
       expect(prompt.output.string).to eq([
         "Are you a human? \e[90m(Agree/Disagree)\e[0m ",
-        "\e[1000D\e[K\e[1A",
-        "\e[1000D\e[K",
+        "\e[2K\e[1G\e[1A",
+        "\e[2K\e[1G",
         "Are you a human? \e[32mDisagree\e[0m\n"
       ].join)
     end
@@ -125,8 +125,8 @@ RSpec.describe TTY::Prompt, 'confirmation' do
       expect(prompt.no?("Are you a human?")).to eq(true)
       expect(prompt.output.string).to eq([
         "Are you a human? \e[90m(y/N)\e[0m ",
-        "\e[1000D\e[K\e[1A",
-        "\e[1000D\e[K",
+        "\e[2K\e[1G\e[1A",
+        "\e[2K\e[1G",
         "Are you a human? \e[32mNo\e[0m\n"
       ].join)
     end
@@ -137,8 +137,8 @@ RSpec.describe TTY::Prompt, 'confirmation' do
       expect(prompt.no?("Are you a human?")).to eq(false)
       expect(prompt.output.string).to eq([
         "Are you a human? \e[90m(y/N)\e[0m ",
-        "\e[1000D\e[K\e[1A",
-        "\e[1000D\e[K",
+        "\e[2K\e[1G\e[1A",
+        "\e[2K\e[1G",
         "Are you a human? \e[32mYes\e[0m\n"
       ].join)
     end
@@ -149,8 +149,8 @@ RSpec.describe TTY::Prompt, 'confirmation' do
       expect(prompt.no?("Are you a human?")).to eq(true)
       expect(prompt.output.string).to eq([
         "Are you a human? \e[90m(y/N)\e[0m ",
-        "\e[1000D\e[K\e[1A",
-        "\e[1000D\e[K",
+        "\e[2K\e[1G\e[1A",
+        "\e[2K\e[1G",
         "Are you a human? \e[32mNo\e[0m\n"
       ].join)
     end
@@ -161,8 +161,8 @@ RSpec.describe TTY::Prompt, 'confirmation' do
       expect(prompt.no?("Are you a human?", default: true)).to eq(false)
       expect(prompt.output.string).to eq([
         "Are you a human? \e[90m(y/N)\e[0m ",
-        "\e[1000D\e[K\e[1A",
-        "\e[1000D\e[K",
+        "\e[2K\e[1G\e[1A",
+        "\e[2K\e[1G",
         "Are you a human? \e[32mYes\e[0m\n"
       ].join)
     end
@@ -177,8 +177,8 @@ RSpec.describe TTY::Prompt, 'confirmation' do
       expect(result).to eq(false)
       expect(prompt.output.string).to eq([
         "Are you a human? \e[90m(yup/Nope)\e[0m ",
-        "\e[1000D\e[K\e[1A",
-        "\e[1000D\e[K",
+        "\e[2K\e[1G\e[1A",
+        "\e[2K\e[1G",
         "Are you a human? \e[32myup\e[0m\n"
       ].join)
     end
@@ -196,8 +196,8 @@ RSpec.describe TTY::Prompt, 'confirmation' do
       expect(result).to eq(false)
       expect(prompt.output.string).to eq([
         "Are you a human? \e[90m(Agree/Disagree)\e[0m ",
-        "\e[1000D\e[K\e[1A",
-        "\e[1000D\e[K",
+        "\e[2K\e[1G\e[1A",
+        "\e[2K\e[1G",
         "Are you a human? \e[32mAgree\e[0m\n"
       ].join)
     end

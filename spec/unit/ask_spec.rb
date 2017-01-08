@@ -8,8 +8,8 @@ RSpec.describe TTY::Prompt, '#ask' do
     prompt.ask('What is your name?')
     expect(prompt.output.string).to eq([
       "What is your name? ",
-      "\e[1000D\e[K\e[1A",
-      "\e[1000D\e[K",
+      "\e[2K\e[1G\e[1A",
+      "\e[2K\e[1G",
       "What is your name? \n"
     ].join)
   end
@@ -35,8 +35,8 @@ RSpec.describe TTY::Prompt, '#ask' do
     expect(answer).to eq(nil)
     expect(prompt.output.string).to eq([
       "[?] Are you Polish? ",
-      "\e[1000D\e[K\e[1A",
-      "\e[1000D\e[K",
+      "\e[2K\e[1G\e[1A",
+      "\e[2K\e[1G",
       "[?] Are you Polish? \n"
     ].join)
   end
@@ -50,8 +50,8 @@ RSpec.describe TTY::Prompt, '#ask' do
     expect(answer).to eq('Piotr')
     expect(prompt.output.string).to eq([
       "What is your name? \e[90m(Piotr)\e[0m ",
-      "\e[1000D\e[K\e[1A",
-      "\e[1000D\e[K",
+      "\e[2K\e[1G\e[1A",
+      "\e[2K\e[1G",
       "What is your name? \e[32mPiotr\e[0m\n"
     ].join)
   end
@@ -64,8 +64,8 @@ RSpec.describe TTY::Prompt, '#ask' do
     expect(answer).to eq('Piotr')
     expect(prompt.output.string).to eq([
       "What is your name? \e[31m(Piotr)\e[0m ",
-      "\e[1000D\e[K\e[1A",
-      "\e[1000D\e[K",
+      "\e[2K\e[1G\e[1A",
+      "\e[2K\e[1G",
       "What is your name? \e[36mPiotr\e[0m\n"
     ].join)
   end
@@ -78,8 +78,8 @@ RSpec.describe TTY::Prompt, '#ask' do
     expect(answer).to eq('')
     expect(prompt.output.string).to eq([
       "What is your name? ",
-      "\e[1000D\e[K\e[1A",
-      "\e[1000D\e[K",
+      "\e[2K\e[1G\e[1A",
+      "\e[2K\e[1G",
       "What is your name? \n"
     ].join)
   end
@@ -92,8 +92,8 @@ RSpec.describe TTY::Prompt, '#ask' do
     expect(answer).to eq(nil)
     expect(prompt.output.string).to eq([
       "What is your name? ",
-      "\e[1000D\e[K\e[1A",
-      "\e[1000D\e[K",
+      "\e[2K\e[1G\e[1A",
+      "\e[2K\e[1G",
       "What is your name? \n"
     ].join)
   end
@@ -113,12 +113,12 @@ RSpec.describe TTY::Prompt, '#ask' do
 
     expect(prompt.output.string).to eq([
       "[?] What is your name? ",
-      "\e[1000D\e[K\e[1A",
-      "\e[1000D\e[K",
+      "\e[2K\e[1G\e[1A",
+      "\e[2K\e[1G",
       "[?] What is your name? \e[36mPiotr\e[0m\n",
       ":-) What is your name? ",
-      "\e[1000D\e[K\e[1A",
-      "\e[1000D\e[K",
+      "\e[2K\e[1G\e[1A",
+      "\e[2K\e[1G",
       ":-) What is your name? \e[34mPiotr\e[0m\n"
     ].join)
   end

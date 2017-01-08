@@ -14,7 +14,7 @@ RSpec.describe TTY::Prompt do
       "  ⬡ wine\n",
       "  ⬡ whisky\n",
       "  ⬡ bourbon",
-      "\e[1000D\e[K\e[1A" * 5, "\e[1000D\e[K",
+      "\e[2K\e[1G\e[1A" * 5, "\e[2K\e[1G",
       "Select drinks? \n\e[?25h"
     ].join)
   end
@@ -32,14 +32,14 @@ RSpec.describe TTY::Prompt do
       "  ⬡ wine\n",
       "  ⬡ whisky\n",
       "  ⬡ bourbon",
-      "\e[1000D\e[K\e[1A" * 5, "\e[1000D\e[K",
+      "\e[2K\e[1G\e[1A" * 5, "\e[2K\e[1G",
       "Select drinks? vodka\n",
       "‣ \e[32m⬢\e[0m vodka\n",
       "  ⬡ beer\n",
       "  ⬡ wine\n",
       "  ⬡ whisky\n",
       "  ⬡ bourbon",
-      "\e[1000D\e[K\e[1A" * 5, "\e[1000D\e[K",
+      "\e[2K\e[1G\e[1A" * 5, "\e[2K\e[1G",
       "Select drinks? \e[32mvodka\e[0m\n\e[?25h"
     ].join)
   end
@@ -57,14 +57,14 @@ RSpec.describe TTY::Prompt do
       "  ⬡ wine\n",
       "  ⬡ whisky\n",
       "  ⬡ bourbon",
-      "\e[1000D\e[K\e[1A" * 5, "\e[1000D\e[K",
+      "\e[2K\e[1G\e[1A" * 5, "\e[2K\e[1G",
       "Select drinks? vodka\n",
       "‣ \e[32m⬢\e[0m vodka\n",
       "  ⬡ beer\n",
       "  ⬡ wine\n",
       "  ⬡ whisky\n",
       "  ⬡ bourbon",
-      "\e[1000D\e[K\e[1A" * 5, "\e[1000D\e[K",
+      "\e[2K\e[1G\e[1A" * 5, "\e[2K\e[1G",
       "Select drinks? \e[32mvodka\e[0m\n\e[?25h"
     ].join)
   end
@@ -89,14 +89,14 @@ RSpec.describe TTY::Prompt do
       "  ⬡ 3) wine\n",
       "  ⬡ 4) whisky\n",
       "  ⬡ 5) bourbon",
-      "\e[1000D\e[K\e[1A" * 5, "\e[1000D\e[K",
+      "\e[2K\e[1G\e[1A" * 5, "\e[2K\e[1G",
       "Select drinks? vodka\n",
       "‣ \e[32m⬢\e[0m 1) vodka\n",
       "  ⬡ 2) beer\n",
       "  ⬡ 3) wine\n",
       "  ⬡ 4) whisky\n",
       "  ⬡ 5) bourbon",
-      "\e[1000D\e[K\e[1A" * 5, "\e[1000D\e[K",
+      "\e[2K\e[1G\e[1A" * 5, "\e[2K\e[1G",
       "Select drinks? \e[32mvodka\e[0m\n\e[?25h"
     ].join)
   end
@@ -122,7 +122,7 @@ RSpec.describe TTY::Prompt do
       "  ⬡ wine\n",
       "  ⬡ whisky\n",
       "‣ \e[32m⬢\e[0m bourbon",
-      "\e[1000D\e[K\e[1A" * 5, "\e[1000D\e[K",
+      "\e[2K\e[1G\e[1A" * 5, "\e[2K\e[1G",
       "Select drinks? \e[32mbeer, bourbon\e[0m\n\e[?25h",
     ].join)
   end
@@ -170,7 +170,7 @@ RSpec.describe TTY::Prompt do
       "  ⬡ wine\n",
       "  ⬡ whisky\n",
       "  ⬡ bourbon",
-      "\e[1000D\e[K\e[1A" * 5, "\e[1000D\e[K",
+      "\e[2K\e[1G\e[1A" * 5, "\e[2K\e[1G",
       "[?] Select drinks? \n\e[?25h"
     ].join)
   end
@@ -189,7 +189,7 @@ RSpec.describe TTY::Prompt do
       "  ⬡ wine\n",
       "  ⬡ whisky\n",
       "  ⬡ bourbon",
-      "\e[1000D\e[K\e[1A" * 5, "\e[1000D\e[K",
+      "\e[2K\e[1G\e[1A" * 5, "\e[2K\e[1G",
       "Select drinks? \e[34mvodka\e[0m\n\e[?25h"
     ].join)
   end
@@ -207,7 +207,7 @@ RSpec.describe TTY::Prompt do
       "  ⬡ wine\n",
       "  ⬡ whisky\n",
       "  ⬡ bourbon",
-      "\e[1000D\e[K\e[1A" * 5, "\e[1000D\e[K",
+      "\e[2K\e[1G\e[1A" * 5, "\e[2K\e[1G",
       "Select drinks? \n\e[?25h"
     ].join)
   end
@@ -225,7 +225,7 @@ RSpec.describe TTY::Prompt do
       "  ⬡ E\n",
       "  ⬡ F\n",
       "\e[90m(Move up or down to reveal more choices)\e[0m",
-      "\e[1000D\e[K\e[1A" * 4 + "\e[1000D\e[K",
+      "\e[2K\e[1G\e[1A" * 4, "\e[2K\e[1G",
       "What letter? \e[32mD\e[0m\n\e[?25h",
     ].join)
   end
@@ -248,7 +248,7 @@ RSpec.describe TTY::Prompt do
       "  ⬡ E\n",
       "  ⬡ F\n",
       "\e[90m(Wiggle thy finger up or down to see more)\e[0m",
-      "\e[1000D\e[K\e[1A" * 4 + "\e[1000D\e[K",
+      "\e[2K\e[1G\e[1A" * 4, "\e[2K\e[1G",
       "What letter? \e[32mD\e[0m\n\e[?25h",
     ].join)
   end

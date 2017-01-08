@@ -14,7 +14,8 @@ RSpec.describe TTY::Prompt, '#select' do
       "\e[32m‣ Large\e[0m\n",
       "  Medium\n",
       "  Small",
-      "\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K",
+      "\e[2K\e[1G\e[1A" * 3,
+      "\e[2K\e[1G",
       "What size? \e[32mLarge\e[0m\n\e[?25h"
     ].join)
   end
@@ -29,7 +30,8 @@ RSpec.describe TTY::Prompt, '#select' do
       "\e[32m‣ large\e[0m\n",
       "  medium\n",
       "  small",
-      "\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K",
+      "\e[2K\e[1G\e[1A" * 3,
+      "\e[2K\e[1G",
       "What size? \e[32mlarge\e[0m\n\e[?25h"
     ].join)
   end
@@ -48,7 +50,8 @@ RSpec.describe TTY::Prompt, '#select' do
       "\e[32m‣ Large\e[0m\n",
       "  Medium\n",
       "  Small",
-      "\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K",
+      "\e[2K\e[1G\e[1A" * 3,
+      "\e[2K\e[1G",
       "What size? \e[32mLarge\e[0m\n\e[?25h"
     ].join)
   end
@@ -67,7 +70,8 @@ RSpec.describe TTY::Prompt, '#select' do
       "\e[32m‣ large\e[0m\n",
       "  medium\n",
       "  small",
-      "\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K",
+      "\e[2K\e[1G\e[1A" * 3,
+      "\e[2K\e[1G",
       "What size? \e[32mlarge\e[0m\n\e[?25h"
     ].join)
   end
@@ -85,7 +89,8 @@ RSpec.describe TTY::Prompt, '#select' do
       "\e[32m‣ Large\e[0m\n",
       "  Medium\n",
       "  Small",
-      "\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K",
+      "\e[2K\e[1G\e[1A" * 3,
+      "\e[2K\e[1G",
       "What size? \e[32mLarge\e[0m\n\e[?25h"
     ].join)
   end
@@ -107,7 +112,8 @@ RSpec.describe TTY::Prompt, '#select' do
       "  1. large\n",
       "\e[32m‣ 2. medium\e[0m\n",
       "  3. small",
-      "\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K",
+      "\e[2K\e[1G\e[1A" * 3,
+      "\e[2K\e[1G",
       "What size? \e[32mmedium\e[0m\n\e[?25h"
     ].join)
   end
@@ -126,7 +132,8 @@ RSpec.describe TTY::Prompt, '#select' do
       "  1) large\n",
       "\e[32m‣ 2) medium\e[0m\n",
       "  3) small",
-      "\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K",
+      "\e[2K\e[1G\e[1A" * 3,
+      "\e[2K\e[1G",
       "What size? \e[32mmedium\e[0m\n\e[?25h"
     ].join)
   end
@@ -141,7 +148,8 @@ RSpec.describe TTY::Prompt, '#select' do
       "  1. Large\n",
       "\e[32m‣ 2. Medium\e[0m\n",
       "  3. Small",
-      "\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K",
+      "\e[2K\e[1G\e[1A" * 3,
+      "\e[2K\e[1G",
       "What size? \e[32mMedium\e[0m\n\e[?25h"
     ].join)
   end
@@ -158,7 +166,8 @@ RSpec.describe TTY::Prompt, '#select' do
       "\e[34m> Large\e[0m\n",
       "  Medium\n",
       "  Small",
-      "\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K",
+      "\e[2K\e[1G\e[1A" * 3,
+      "\e[2K\e[1G",
       "What size? \e[34mLarge\e[0m\n\e[?25h"
     ].join)
   end
@@ -174,7 +183,8 @@ RSpec.describe TTY::Prompt, '#select' do
       "\e[32m‣ Large\e[0m\n",
       "  Medium\n",
       "  Small",
-      "\e[1000D\e[K\e[1A" * 3 + "\e[1000D\e[K",
+      "\e[2K\e[1G\e[1A" * 3,
+      "\e[2K\e[1G",
       "What size? \e[32mLarge\e[0m\n\e[?25h"
     ].join)
   end
@@ -190,7 +200,8 @@ RSpec.describe TTY::Prompt, '#select' do
       "\e[32m‣ Large\e[0m\n",
       "  Medium\n",
       "  Small",
-      "\e[1000D\e[K\e[1A" * 3 + "\e[1000D\e[K",
+      "\e[2K\e[1G\e[1A" * 3,
+      "\e[2K\e[1G",
       "[?] What size? \e[32mLarge\e[0m\n\e[?25h"
     ].join)
   end
@@ -207,7 +218,8 @@ RSpec.describe TTY::Prompt, '#select' do
       "  E\n",
       "  F\n",
       "\e[90m(Move up or down to reveal more choices)\e[0m",
-      "\e[1000D\e[K\e[1A" * 4 + "\e[1000D\e[K",
+      "\e[2K\e[1G\e[1A" * 4,
+      "\e[2K\e[1G",
       "What letter? \e[32mD\e[0m\n\e[?25h",
     ].join)
   end
@@ -231,7 +243,8 @@ RSpec.describe TTY::Prompt, '#select' do
       "  E\n",
       "  F\n",
       "\e[90m(Wiggle thy finger up or down to see more)\e[0m",
-      "\e[1000D\e[K\e[1A" * 4 + "\e[1000D\e[K",
+      "\e[2K\e[1G\e[1A" * 4,
+      "\e[2K\e[1G",
       "What letter? \e[32mD\e[0m\n\e[?25h",
     ].join)
   end

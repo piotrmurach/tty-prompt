@@ -37,7 +37,7 @@ RSpec.describe TTY::Prompt, '#expand' do
 
     expect(prompt.output.string).to eq([
       "Overwrite Gemfile? (enter \"h\" for help) [\e[32my\e[0m,n,a,d,q,h] ",
-      "\e[1000D\e[K",
+      "\e[2K\e[1G",
       "Overwrite Gemfile? \e[32mOverwrite\e[0m\n"
     ].join)
   end
@@ -51,7 +51,7 @@ RSpec.describe TTY::Prompt, '#expand' do
 
     expect(prompt.output.string).to eq([
       "Overwrite Gemfile? (enter \"h\" for help) [y,n,\e[32ma\e[0m,d,q,h] ",
-      "\e[1000D\e[K",
+      "\e[2K\e[1G",
       "Overwrite Gemfile? \e[32mOverwrite all\e[0m\n"
     ].join)
   end
@@ -65,14 +65,14 @@ RSpec.describe TTY::Prompt, '#expand' do
 
     expect(prompt.output.string).to eq([
       "Overwrite Gemfile? (enter \"h\" for help) [\e[32my\e[0m,n,a,d,q,h] ",
-      "\e[1000D\e[K",
+      "\e[2K\e[1G",
       "Overwrite Gemfile? (enter \"h\" for help) [y,n,\e[32ma\e[0m,d,q,h] ",
       "a\n",
       "\e[32m>> \e[0mOverwrite all",
       "\e[A\e[1G\e[55C",
-      "\e[1000D\e[K",
+      "\e[2K\e[1G",
       "\e[1B",
-      "\e[1000D\e[K",
+      "\e[2K\e[1G",
       "\e[A\e[1G",
       "Overwrite Gemfile? \e[32mOverwrite all\e[0m\n"
     ].join)
@@ -87,13 +87,13 @@ RSpec.describe TTY::Prompt, '#expand' do
 
     expect(prompt.output.string).to eq([
       "Overwrite Gemfile? (enter \"h\" for help) [\e[32my\e[0m,n,a,d,q,h] ",
-      "\e[1000D\e[K",
+      "\e[2K\e[1G",
       "Overwrite Gemfile? (enter \"h\" for help) [y,n,a,d,q,\e[32mh\e[0m] h\n",
       "\e[32m>> \e[0mprint help",
       "\e[A\e[1G\e[55C",
-      "\e[1000D\e[K",
+      "\e[2K\e[1G",
       "\e[1B",
-      "\e[1000D\e[K",
+      "\e[2K\e[1G",
       "\e[A\e[1G",
       "Overwrite Gemfile? \n",
       "  y - Overwrite\n",
@@ -103,8 +103,8 @@ RSpec.describe TTY::Prompt, '#expand' do
       "  q - Quit\n",
       "  h - print help\n",
       "  Choice [y]: ",
-      "\e[1000D\e[K\e[1A" * 7,
-      "\e[1000D\e[K",
+      "\e[2K\e[1G\e[1A" * 7,
+      "\e[2K\e[1G",
       "Overwrite Gemfile? \n",
       "  y - Overwrite\n",
       "  n - Skip\n",
@@ -113,8 +113,8 @@ RSpec.describe TTY::Prompt, '#expand' do
       "  q - Quit\n",
       "  h - print help\n",
       "  Choice [y]: d",
-      "\e[1000D\e[K\e[1A" * 7,
-      "\e[1000D\e[K",
+      "\e[2K\e[1G\e[1A" * 7,
+      "\e[2K\e[1G",
       "Overwrite Gemfile? \e[32mShow diff\e[0m\n",
     ].join)
   end
@@ -137,7 +137,7 @@ RSpec.describe TTY::Prompt, '#expand' do
 
     expect(prompt.output.string).to eq([
       "Overwrite Gemfile? (enter \"h\" for help) [y,n,a,\e[32md\e[0m,q,h] ",
-      "\e[1000D\e[K",
+      "\e[2K\e[1G",
       "Overwrite Gemfile? \e[32mShow diff\e[0m\n"
     ].join)
   end
@@ -158,7 +158,7 @@ RSpec.describe TTY::Prompt, '#expand' do
 
     expect(prompt.output.string).to eq([
       "Overwrite Gemfile? (enter \"h\" for help) [\e[32my\e[0m,n,a,d,q,h] ",
-      "\e[1000D\e[K",
+      "\e[2K\e[1G",
       "Overwrite Gemfile? \e[32mOverwrite\e[0m\n"
     ].join)
   end

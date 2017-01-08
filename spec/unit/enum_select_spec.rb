@@ -16,7 +16,8 @@ RSpec.describe TTY::Prompt do
       "  2) /usr/bin/vim.basic\n",
       "  3) /usr/bin/vim.tiny\n",
       "  Choose 1-3 [1]: ",
-      "\e[1000D\e[K\e[1A" * 4 + "\e[1000D\e[K\e[J",
+      "\e[2K\e[1G\e[1A" * 4,
+      "\e[2K\e[1G\e[J",
       "Select an editor? \e[32m/bin/nano\e[0m\n"
     ].join)
   end
@@ -34,13 +35,15 @@ RSpec.describe TTY::Prompt do
       "\e[32m  2) /usr/bin/vim.basic\e[0m\n",
       "  3) /usr/bin/vim.tiny\n",
       "  Choose 1-3 [2]: ",
-      "\e[1000D\e[K\e[1A" * 4 + "\e[1000D\e[K\e[J",
+      "\e[2K\e[1G\e[1A" * 4,
+      "\e[2K\e[1G\e[J",
       "Select an editor? \n",
       "  1) /bin/nano\n",
       "  2) /usr/bin/vim.basic\n",
       "\e[32m  3) /usr/bin/vim.tiny\e[0m\n",
       "  Choose 1-3 [2]: 3",
-      "\e[1000D\e[K\e[1A" * 4 + "\e[1000D\e[K\e[J",
+      "\e[2K\e[1G\e[1A" * 4,
+      "\e[2K\e[1G\e[J",
       "Select an editor? \e[32m/usr/bin/vim.tiny\e[0m\n"
     ].join)
   end
@@ -65,7 +68,8 @@ RSpec.describe TTY::Prompt do
       "\e[32m  2. /usr/bin/vim.basic\e[0m\n",
       "  3. /usr/bin/vim.tiny\n",
       "  Choose 1-3 [2]: ",
-      "\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[J",
+      "\e[2K\e[1G\e[1A" * 4,
+      "\e[2K\e[1G\e[J",
       "Select an editor? \e[32m/usr/bin/vim.basic\e[0m\n"
     ].join)
   end
@@ -89,7 +93,8 @@ RSpec.describe TTY::Prompt do
       "\e[32m  2) vim\e[0m\n",
       "  3) emacs\n",
       "  Choose 1-3 [2]: ",
-      "\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[1A\e[1000D\e[K\e[J",
+      "\e[2K\e[1G\e[1A" * 4,
+      "\e[2K\e[1G\e[J",
       "Select an editor? \e[32mvim\e[0m\n"
     ].join)
   end
@@ -107,8 +112,8 @@ RSpec.describe TTY::Prompt do
       "  2) /usr/bin/vim.basic\n",
       "  3) /usr/bin/vim.tiny\n",
       "  Choose 1-3 [1]: ",
-      "\e[1000D\e[K\e[1A" * 4,
-      "\e[1000D\e[K\e[J",
+      "\e[2K\e[1G\e[1A" * 4,
+      "\e[2K\e[1G\e[J",
       "Select an editor? \e[31m/bin/nano\e[0m\n"
     ].join)
   end
@@ -126,19 +131,22 @@ RSpec.describe TTY::Prompt do
       "  2) /usr/bin/vim.basic\n",
       "  3) /usr/bin/vim.tiny\n",
       "  Choose 1-3 [1]: ",
-      "\e[1000D\e[K\e[1A" * 4 + "\e[1000D\e[K\e[J",
+      "\e[2K\e[1G\e[1A" * 4,
+      "\e[2K\e[1G\e[J",
       "Select an editor? \n",
       "\e[32m  1) /bin/nano\e[0m\n",
       "  2) /usr/bin/vim.basic\n",
       "  3) /usr/bin/vim.tiny\n",
       "  Choose 1-3 [1]: 1",
-      "\e[1000D\e[K\e[1A" * 4 + "\e[1000D\e[K\e[J",
+      "\e[2K\e[1G\e[1A" * 4,
+      "\e[2K\e[1G\e[J",
       "Select an editor? \n",
       "\e[32m  1) /bin/nano\e[0m\n",
       "  2) /usr/bin/vim.basic\n",
       "  3) /usr/bin/vim.tiny\n",
       "  Choose 1-3 [1]: 11",
-      "\e[1000D\e[K\e[1A" * 4 + "\e[1000D\e[K\e[J",
+      "\e[2K\e[1G\e[1A" * 4,
+      "\e[2K\e[1G\e[J",
       "Select an editor? \n",
       "\e[32m  1) /bin/nano\e[0m\n",
       "  2) /usr/bin/vim.basic\n",
@@ -146,7 +154,8 @@ RSpec.describe TTY::Prompt do
       "  Choose 1-3 [1]: \n",
       "\e[31m>>\e[0m Please enter a valid number",
       "\e[A\e[1G\e[18C",
-      "\e[1000D\e[K\e[1A" * 4 + "\e[1000D\e[K\e[J",
+      "\e[2K\e[1G\e[1A" * 4,
+      "\e[2K\e[1G\e[J",
       "Select an editor? \n",
       "  1) /bin/nano\n",
       "\e[32m  2) /usr/bin/vim.basic\e[0m\n",
@@ -154,7 +163,8 @@ RSpec.describe TTY::Prompt do
       "  Choose 1-3 [1]: 2\n",
       "\e[31m>>\e[0m Please enter a valid number",
       "\e[A\e[1G\e[19C",
-      "\e[1000D\e[K\e[1A" * 4 + "\e[1000D\e[K\e[J",
+      "\e[2K\e[1G\e[1A" * 4,
+      "\e[2K\e[1G\e[J",
       "Select an editor? \e[32m/usr/bin/vim.basic\e[0m\n"
     ].join)
   end
@@ -174,7 +184,8 @@ RSpec.describe TTY::Prompt do
       "  Choose 1-8 [4]: ",
       "\n\e[90m(Press tab/right or left to reveal more choices)\e[0m",
       "\e[A\e[1G\e[18C",
-      "\e[1000D\e[K\e[1A" * 4 + "\e[1000D\e[K\e[J",
+      "\e[2K\e[1G\e[1A" * 4,
+      "\e[2K\e[1G\e[J",
       "What letter? \e[32mD\e[0m\n"
     ].join)
   end
@@ -194,7 +205,8 @@ RSpec.describe TTY::Prompt do
       "  Choose 1-8 [1]: ",
       "\n\e[90m(Press tab/right or left to reveal more choices)\e[0m",
       "\e[A\e[1G\e[18C",
-      "\e[1000D\e[K\e[1A" * 4 + "\e[1000D\e[K\e[J",
+      "\e[2K\e[1G\e[1A" * 4,
+      "\e[2K\e[1G\e[J",
       "What letter? \n",
       "\e[32m  1) A\e[0m\n",
       "  2) B\n",
@@ -202,7 +214,8 @@ RSpec.describe TTY::Prompt do
       "  Choose 1-8 [1]: 1",
       "\n\e[90m(Press tab/right or left to reveal more choices)\e[0m",
       "\e[A\e[1G\e[19C",
-      "\e[1000D\e[K\e[1A" * 4 + "\e[1000D\e[K\e[J",
+      "\e[2K\e[1G\e[1A" * 4,
+      "\e[2K\e[1G\e[J",
       "What letter? \n",
       "\e[32m  1) A\e[0m\n",
       "  2) B\n",
@@ -210,7 +223,8 @@ RSpec.describe TTY::Prompt do
       "  Choose 1-8 [1]: 11",
       "\n\e[90m(Press tab/right or left to reveal more choices)\e[0m",
       "\e[A\e[1G\e[20C",
-      "\e[1000D\e[K\e[1A" * 4 + "\e[1000D\e[K\e[J",
+      "\e[2K\e[1G\e[1A" * 4,
+      "\e[2K\e[1G\e[J",
       "What letter? \n",
       "\e[32m  1) A\e[0m\n",
       "  2) B\n",
@@ -219,7 +233,8 @@ RSpec.describe TTY::Prompt do
       "\e[31m>>\e[0m Please enter a valid number",
       "\n\e[90m(Press tab/right or left to reveal more choices)\e[0m",
       "\e[A\e[1G\e[A\e[1G\e[18C",
-      "\e[1000D\e[K\e[1A" * 4 + "\e[1000D\e[K\e[J",
+      "\e[2K\e[1G\e[1A" * 4,
+      "\e[2K\e[1G\e[J",
       "What letter? \n",
       "\e[32m  1) A\e[0m\n",
       "  2) B\n",
@@ -228,7 +243,8 @@ RSpec.describe TTY::Prompt do
       "\e[31m>>\e[0m Please enter a valid number",
       "\n\e[90m(Press tab/right or left to reveal more choices)\e[0m",
       "\e[A\e[1G\e[A\e[1G\e[18C",
-      "\e[1000D\e[K\e[1A" * 4 + "\e[1000D\e[K\e[J",
+      "\e[2K\e[1G\e[1A" * 4,
+      "\e[2K\e[1G\e[J",
       "What letter? \e[32mA\e[0m\n"
     ].join)
   end
@@ -252,14 +268,16 @@ RSpec.describe TTY::Prompt do
       "  Choose 1-8 [4]: ",
       "\n\e[90m(Press tab/right or left to reveal more choices)\e[0m",
       "\e[A\e[1G\e[18C",
-      "\e[1000D\e[K\e[1A" * 4 + "\e[1000D\e[K\e[J",
+      "\e[2K\e[1G\e[1A" * 4,
+      "\e[2K\e[1G\e[J",
       "What letter? \n",
       "  7) G\n",
       "  8) H\n",
       "  Choose 1-8 [4]: ",
       "\n\e[90m(Press tab/right or left to reveal more choices)\e[0m",
       "\e[A\e[1G\e[18C",
-      "\e[1000D\e[K\e[1A" * 3 + "\e[1000D\e[K\e[J",
+      "\e[2K\e[1G\e[1A" * 3,
+      "\e[2K\e[1G\e[J",
       "What letter? \e[32mD\e[0m\n"
     ].join)
   end
