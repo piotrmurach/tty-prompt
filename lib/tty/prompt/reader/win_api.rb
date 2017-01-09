@@ -5,7 +5,7 @@ require 'fiddle'
 module TTY
   class Prompt
     class Reader
-      module WindowsAPI
+      module WinAPI
         include Fiddle
 
         Handle = RUBY_VERSION >= "2.0.0" ? Fiddle::Handle : DL::Handle
@@ -23,7 +23,7 @@ module TTY
           @@getche.call
         end
         module_function :getche
-      end # WindowsAPI
+      end # WinAPI
     end # Reader
   end # Prompt
 end # TTY

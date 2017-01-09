@@ -25,7 +25,7 @@ module TTY
         attr_reader :escape_codes
 
         def initialize
-          require 'tty/prompt/reader/windows_api'
+          require 'tty/prompt/reader/win_api'
           @keys = Codes.win_keys
           @escape_codes = [[NUL_HEX.ord], [ESC.ord], EXT_HEX.bytes.to_a]
         end
@@ -40,7 +40,7 @@ module TTY
         #
         # @api private
         def get_char(options)
-          options[:echo] ? WindowsAPI.getche : WindowsAPI.getch
+          options[:echo] ? WinAPI.getche : WinAPI.getch
         end
       end # Console
     end # Reader
