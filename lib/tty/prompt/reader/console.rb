@@ -10,10 +10,6 @@ module TTY
         ESC = "\e".freeze
         CSI = "\e[".freeze
 
-        attr_reader :mode
-
-        attr_reader :input
-
         # Key codes
         #
         # @return [Hash[Symbol]]
@@ -49,6 +45,12 @@ module TTY
             mode.echo(options[:echo]) { input.getc }
           end
         end
+
+        protected
+
+        attr_reader :mode
+
+        attr_reader :input
       end # Console
     end # Reader
   end # Prompt
