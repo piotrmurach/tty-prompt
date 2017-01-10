@@ -62,12 +62,16 @@ module TTY
         value
       end
 
-      # Read a keypress and return a character as a string.
+      # Read a keypress  including invisible multibyte codes
+      # and return a character as a string.
       # Nothing is echoed to the console. This call will block for a
       # single keypress, but will not wait for Enter to be pressed.
       #
-      # @param [Boolean] echo
+      # @param [Hash[Symbol]] options
+      # @option options [Boolean] echo
       #   whether to echo chars back or not, defaults to false
+      # @option options [Boolean] raw
+      #   whenther raw mode enabled, defaults to true
       #
       # @return [String]
       #
@@ -81,27 +85,14 @@ module TTY
         handle_interrupt if char == @console.keys[:ctrl_c]
         char
       end
+      alias read_char read_keypress
 
-      # Reads single character including invisible multibyte codes
-      #
-      # @params [Array[Integer]] codes
-      #   the number of bytes to read
-      #
-      # @return [Array[Integer]]
-      #   the character codepoints
-      #
-      # @api public
-      def read_char(options = {})
-        codes = get_codes(options)
-        char  = codes ? codes.pack('U*') : nil
-        emit_key_event(char) if char
-        char
-      end
-
-      # Get input bytes
+      # Get input code points
       #
       # @param [Hash[Symbol]] options
       # @param [Array[Integer]] codes
+      #
+      # @return [Array[Integer]]
       #
       # @api private
       def get_codes(options = {}, codes = [])
