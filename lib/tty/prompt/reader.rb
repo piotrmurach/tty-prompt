@@ -46,20 +46,18 @@ module TTY
       # Get input in unbuffered mode.
       #
       # @example
-      #   buffer do
+      #   unbufferred do
       #     ...
       #   end
       #
-      # @return [String]
-      #
       # @api public
-      def buffer(&block)
+      def unbufferred(&block)
         bufferring = output.sync
         # Immediately flush output
         output.sync = true
-        value = block.call if block_given?
+        block[] if block_given?
+      ensure
         output.sync = bufferring
-        value
       end
 
       # Read a keypress  including invisible multibyte codes
@@ -78,7 +76,7 @@ module TTY
       # @api public
       def read_keypress(options = {})
         opts  = { echo: false, raw: true }.merge(options)
-        codes = get_codes(opts)
+        codes = unbufferred { get_codes(opts) }
         char  = codes ? codes.pack('U*') : nil
 
         emit_key_event(char) if char
