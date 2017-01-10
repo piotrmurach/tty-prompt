@@ -151,7 +151,7 @@ module TTY
 
           break if (code == CARRIAGE_RETURN || code == NEWLINE)
 
-          if delete_char[code]
+          if delete_char[code] && opts[:echo]
             output.print(' ' + (backspaces >= 0 ? "\b" : ''))
           end
         end
