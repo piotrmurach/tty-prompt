@@ -1,5 +1,6 @@
 # encoding: utf-8
 
+require 'tty/prompt/question'
 require 'tty/prompt/symbols'
 
 module TTY

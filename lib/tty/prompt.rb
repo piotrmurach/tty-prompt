@@ -4,6 +4,19 @@ require 'forwardable'
 require 'pastel'
 require 'tty-cursor'
 
+require 'tty/prompt/answers_collector'
+require 'tty/prompt/confirm_question'
+require 'tty/prompt/expander'
+require 'tty/prompt/enum_list'
+require 'tty/prompt/list'
+require 'tty/prompt/multi_list'
+require 'tty/prompt/mask_question'
+require 'tty/prompt/question'
+require 'tty/prompt/reader'
+require 'tty/prompt/slider'
+require 'tty/prompt/statement'
+require 'tty/prompt/suggestion'
+require 'tty/prompt/utils'
 
 module TTY
   # A main entry for asking prompt questions.

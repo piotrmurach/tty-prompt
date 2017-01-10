@@ -1,9 +1,9 @@
 # encoding: utf-8
 
+require 'tty/prompt/evaluator'
 require 'tty/prompt/question/modifier'
 require 'tty/prompt/question/validation'
 require 'tty/prompt/question/checks'
-require 'tty/prompt/converter_dsl'
 require 'tty/prompt/converters'
 
 module TTY

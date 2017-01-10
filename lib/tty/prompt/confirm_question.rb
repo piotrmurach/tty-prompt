@@ -1,5 +1,7 @@
 # encoding: utf-8
 
+require 'tty/prompt/question'
+
 module TTY
   class Prompt
     class ConfirmQuestion < Question

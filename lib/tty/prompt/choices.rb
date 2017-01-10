@@ -1,6 +1,7 @@
 # encoding: utf-8
 
 require 'forwardable'
+require 'tty/prompt/choice'
 
 module TTY
   class Prompt
