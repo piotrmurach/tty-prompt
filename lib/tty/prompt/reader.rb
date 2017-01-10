@@ -134,6 +134,7 @@ module TTY
       def read_line(options = {})
         opts = { echo: true, raw: false }.merge(options)
         line = ''
+        backspaces = 0
         while (codes = get_codes(opts)) && (code = codes[0])
 
           char = codes.pack('U*')
@@ -141,18 +142,17 @@ module TTY
           delete_char = proc { |c| c == BACKSPACE || c == DELETE }
 
           if delete_char[code]
-            line = line.slice(-1, 1) unless line.empty?
-            backspaces = line.size
+            line.slice!(-1, 1)
+            backspaces -= 1
           else
             line << char
+            backspaces = line.size
           end
 
           break if (code == CARRIAGE_RETURN || code == NEWLINE)
 
           if delete_char[code]
-            if backspaces >= 0
-              output.print("\e[#{backspaces}X")
-            end
+            output.print(' ' + (backspaces >= 0 ? "\b" : ''))
           end
         end
         line
