@@ -1,9 +1,5 @@
 # encoding: utf-8
 
-require 'necromancer'
-require 'pastel'
-require 'tty-cursor'
-
 require 'tty/prompt'
 require 'tty/prompt/choice'
 require 'tty/prompt/choices'
@@ -20,8 +16,6 @@ require 'tty/prompt/slider'
 require 'tty/prompt/statement'
 require 'tty/prompt/suggestion'
 require 'tty/prompt/answers_collector'
-require 'tty/prompt/paginator'
-require 'tty/prompt/enum_paginator'
 require 'tty/prompt/test'
 require 'tty/prompt/utils'
 require 'tty/prompt/version'

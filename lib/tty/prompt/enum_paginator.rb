@@ -1,5 +1,7 @@
 # encoding: utf-8
 
+require 'tty/prompt/paginator'
+
 module TTY
   class Prompt
     class EnumPaginator < Paginator

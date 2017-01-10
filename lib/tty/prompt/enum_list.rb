@@ -1,5 +1,7 @@
 # encoding: utf-8
 
+require 'tty/prompt/enum_paginator'
+
 module TTY
   class Prompt
     # A class reponsible for rendering enumerated list menu.

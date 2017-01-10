@@ -1,6 +1,9 @@
 # encoding: utf-8
 
 require 'forwardable'
+require 'pastel'
+require 'tty-cursor'
+
 
 module TTY
   # A main entry for asking prompt questions.
