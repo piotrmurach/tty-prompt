@@ -203,10 +203,9 @@ module TTY
           refresh(lines)
         end
         render_question
-        answer = render_answer
+        render_answer
       ensure
         @prompt.print(@prompt.show)
-        answer
       end
 
       # Find value for the choice selected
