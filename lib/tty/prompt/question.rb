@@ -103,9 +103,12 @@ module TTY
         until @done
           render_question
           result = process_input
-          errors = result.errors
-          render_error_or_finish(result)
-          refresh(errors.count)
+          if result.failure?
+            render_error(result.errors)
+          else
+            @done = true
+          end
+          refresh(result.errors)
         end
         render_question
         convert_result(result.value)
@@ -124,7 +127,7 @@ module TTY
           header += @prompt.decorate("(#{default})", @help_color) + ' '
         end
         @prompt.print(header)
-        @prompt.print("\n") if @done
+        @prompt.puts if @done
       end
 
       # Decide how to handle input from user
@@ -155,35 +158,25 @@ module TTY
       # Handle error condition
       #
       # @api private
-      def render_error_or_finish(result)
-        if result.failure?
-          result.errors.each do |err|
-            @prompt.print(@prompt.clear_line)
-            @prompt.print(@prompt.decorate('>>', :red) + ' ' + err)
-          end
-          @prompt.print(@prompt.cursor.up(result.errors.count))
-        else
-          @done = true
-          if result.errors.count.nonzero?
-            @prompt.print(@prompt.cursor.down(result.errors.count))
-          end
+      def render_error(errors)
+        errors.each do |err|
+          @prompt.print(@prompt.decorate('>>', :red) + ' ' + err)
         end
       end
 
       # Determine area of the screen to clear
       #
-      # @param [Integer] errors
+      # @param [Array[String]] errors
       #
       # @api private
       def refresh(errors = nil)
-        lines = @message.scan("\n").length
-        lines += ((!echo? || errors.nonzero?) ? 1 : 2) # clear user enter
+        lines = @message.lines.count
 
-        if errors.nonzero? && @done
-          lines += errors
+        if errors.count.nonzero?
+          lines += errors.count - 1
         end
-
-        @prompt.print(@prompt.clear_lines(lines))
+        @prompt.print(@prompt.cursor.up(lines))
+        @prompt.print(@prompt.clear_lines(lines, :down))
       end
 
       # Convert value to expected type
