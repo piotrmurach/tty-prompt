@@ -7,10 +7,10 @@ prompt = TTY::Prompt.new
 warriors = %w(Scorpion Kano Jax)
 
 prompt.on(:keypress) do |event|
-  if event.key.name == 'j'
+  if event.value == 'j'
     prompt.publish(:keydown)
   end
-  if event.key.name == 'k'
+  if event.value == 'k'
     prompt.publish(:keyup)
   end
 end
