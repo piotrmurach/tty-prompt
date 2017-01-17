@@ -944,11 +944,11 @@ For example, to add vim like key navigation to `select` prompt one would do the 
 
 ```ruby
 prompt.on(:keypress) do |event|
-  if event.key.name == 'j'
+  if event.value == 'j'
     prompt.publish(:keydown)
   end
 
-  if event.key.name == 'k'
+  if event.value == 'k'
     prompt.publish(:keyup)
   end
 end
