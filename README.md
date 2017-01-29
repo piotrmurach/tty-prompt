@@ -142,10 +142,10 @@ prompt.enum_select("Select an editor?", choices)
 # =>
 #
 # Select an editor?
-#   1) /bin/nano
-#   2) /usr/bin/vim.basic
-#   3) /usr/bin/vim.tiny
-#   Choose 1-3 [2]:
+#   1) emacs
+#   2) nano
+#   3) vim
+#   Choose 1-3 [1]:
 ```
 
 However, if you have a lot of options to choose from you may want to use `expand`:
