@@ -44,7 +44,7 @@ RSpec.describe TTY::Prompt::Question, '#required' do
     prompt.input.rewind
     answer = prompt.ask('File name?') do |q|
       q.required(true)
-      q.validate { |v| !File.exist?(v) }
+      q.validate { |v| !::File.exist?(v) }
       q.messages[:required?] = 'File name must not be empty!'
       q.messages[:valid?]   = 'File already exists!'
     end
