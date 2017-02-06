@@ -1,9 +1,22 @@
 # Change log
 
-## [v0.11.0] - 2017-01-x
+## [v0.11.0] - 2017-02-x
+
+### Added
+* Add Console for reading input characters on Unix systems
+* Add WinConsole for reading input characters on Windows systems
+* Add WindowsApi to allow for calls to external api
+
+### Changed
+* Change Reader to use Console
+* Change Codes to use codepoints instead of strings
+* Change Reader#read_line to match #gets behaviour
+* Change Symbols to provide Unicode support on windows
+* Change Slider to display Unicode when possible
 
 ### Fixed
 * Fix `modify` throwing exception, when user enters empty input by (Igor Rzegocki)@ajgon
+* Fix #clear_line behaviour by using tty-cursor 0.4.0 to work in all terminals
 
 ## [v0.10.0] - 2017-01-01
 
