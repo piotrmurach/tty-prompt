@@ -22,6 +22,7 @@ module TTY
         @selected = []
         @help    = options[:help]
         @default = Array(options[:default])
+        @echo = options.fetch(:echo, true)
       end
 
       # Callback fired when space key is pressed
@@ -61,9 +62,9 @@ module TTY
       # @api private
       def render_header
         instructions = @prompt.decorate(help, :bright_black)
-        if @done
+        if @done && @echo
           @prompt.decorate(selected_names, @active_color)
-        elsif @selected.size.nonzero?
+        elsif @selected.size.nonzero? && @echo
           selected_names + (@first_render ? " #{instructions}" : '')
         elsif @first_render
           instructions
