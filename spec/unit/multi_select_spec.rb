@@ -46,6 +46,31 @@ RSpec.describe TTY::Prompt do
     ].join)
   end
 
+  it "selects item when space pressed but doesn't echo item if echo: false" do
+    prompt = TTY::TestPrompt.new
+    choices = %w(vodka beer wine whisky bourbon)
+    prompt.input << " \r"
+    prompt.input.rewind
+    expect(prompt.multi_select("Select drinks?", choices, echo: false)). to eq(['vodka'])
+    expect(prompt.output.string).to eq([
+      "\e[?25lSelect drinks? \e[90m(Use arrow keys, press Space to select and Enter to finish)\e[0m\n",
+      "#{symbols[:pointer]} #{symbols[:radio_off]} vodka\n",
+      "  #{symbols[:radio_off]} beer\n",
+      "  #{symbols[:radio_off]} wine\n",
+      "  #{symbols[:radio_off]} whisky\n",
+      "  #{symbols[:radio_off]} bourbon",
+      "\e[2K\e[1G\e[1A" * 5, "\e[2K\e[1G",
+      "Select drinks? \n",
+      "‣ \e[32m#{symbols[:radio_on]}\e[0m vodka\n",
+      "  #{symbols[:radio_off]} beer\n",
+      "  #{symbols[:radio_off]} wine\n",
+      "  #{symbols[:radio_off]} whisky\n",
+      "  #{symbols[:radio_off]} bourbon",
+      "\e[2K\e[1G\e[1A" * 5, "\e[2K\e[1G",
+      "Select drinks? \n\e[?25h"
+    ].join)
+  end
+
   it "sets choice custom values" do
     prompt = TTY::TestPrompt.new
     choices = {vodka: 1, beer: 2, wine: 3, whisky: 4, bourbon: 5}
