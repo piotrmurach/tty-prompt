@@ -62,6 +62,7 @@ Or install it yourself as:
   * [2.6 menu](#26-menu)
     * [2.6.1 select](#261-select)
     * [2.6.2 multi_select](#262-multi_select)
+    * [2.6.2.1 echo](#2621-echo)
     * [2.6.3 enum_select](#263-enum_select)
   * [2.7 expand](#27-expand)
   * [2.8 collect](#28-collect)
@@ -678,6 +679,23 @@ prompt.multi_select("Choose your letter?", letters, per_page: 4)
 #   ⬡ C
 #   ⬡ D
 # (Move up or down to reveal more choices)
+```
+
+### 2.6.2.1 echo
+
+To control whether the selected items are shown on the question
+header use the :echo option:
+
+```ruby
+choices = %w(vodka beer wine whisky bourbon)
+prompt.multi_select("Select drinks?", choices, echo: false)
+# =>
+# Select drinks?
+#   ⬡ vodka
+#   ⬢ 2) beer
+#   ⬡ 3) wine
+#   ⬡ 4) whisky
+# ‣ ⬢ 5) bourbon
 ```
 
 ### 2.6.3 enum_select
