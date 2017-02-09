@@ -68,7 +68,7 @@ RSpec.describe TTY::Prompt do
       "  #{symbols[:radio_off]} bourbon",
       "\e[2K\e[1G\e[1A" * 5, "\e[2K\e[1G",
       "Select drinks? \n\e[?25h"
-      ].join)
+    ].join)
   end
 
   it "sets choice custom values" do
