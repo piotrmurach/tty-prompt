@@ -36,7 +36,7 @@ module TTY
       # Initialize a Reader
       #
       # @api public
-      def initialize(input, output, options = {})
+      def initialize(input = $stdin, output = $stdout, options = {})
         @input     = input
         @output    = output
         @console   = windows? ? WinConsole.new : Console.new(input)
