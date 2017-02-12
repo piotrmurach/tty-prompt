@@ -140,7 +140,7 @@ module TTY
       def keynum(event)
         return unless enumerate?
         value = event.value.to_i
-        return unless (1..@choices.count).include?(value)
+        return unless (1..@choices.count).cover?(value)
         @active = value
       end
 
@@ -177,11 +177,11 @@ module TTY
       def validate_defaults
         @default.each do |d|
           if d.nil? || d.to_s.empty?
-            fail ConfigurationError,
+            raise ConfigurationError,
                  "default index must be an integer in range (1 - #{@choices.size})"
           end
           if d < 1 || d > @choices.size
-            fail ConfigurationError,
+            raise ConfigurationError,
                  "default index `#{d}` out of range (1 - #{@choices.size})"
           end
         end
