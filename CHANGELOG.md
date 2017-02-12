@@ -6,6 +6,7 @@
 * Add Console for reading input characters on Unix systems
 * Add WinConsole for reading input characters on Windows systems
 * Add WindowsApi to allow for calls to external api
+* Add echo support to multilist by Keith (@ktgeek)
 
 ### Changed
 * Change Reader to use Console
