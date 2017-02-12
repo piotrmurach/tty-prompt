@@ -4,24 +4,30 @@ require 'forwardable'
 require 'pastel'
 require 'tty-cursor'
 
-require 'tty/prompt/answers_collector'
-require 'tty/prompt/confirm_question'
-require 'tty/prompt/expander'
-require 'tty/prompt/enum_list'
-require 'tty/prompt/list'
-require 'tty/prompt/multi_list'
-require 'tty/prompt/mask_question'
-require 'tty/prompt/question'
-require 'tty/prompt/reader'
-require 'tty/prompt/slider'
-require 'tty/prompt/statement'
-require 'tty/prompt/suggestion'
-require 'tty/prompt/utils'
+require_relative 'prompt/answers_collector'
+require_relative 'prompt/confirm_question'
+require_relative 'prompt/expander'
+require_relative 'prompt/enum_list'
+require_relative 'prompt/list'
+require_relative 'prompt/multi_list'
+require_relative 'prompt/mask_question'
+require_relative 'prompt/question'
+require_relative 'prompt/reader'
+require_relative 'prompt/slider'
+require_relative 'prompt/statement'
+require_relative 'prompt/suggestion'
+require_relative 'prompt/utils'
+require_relative 'prompt/version'
 
 module TTY
   # A main entry for asking prompt questions.
   class Prompt
     extend Forwardable
+
+    # Raised when 
+    ConfigurationError = Class.new(StandardError)
+
+    ConversionError = Class.new(StandardError)
 
     # Raised when the passed in validation argument is of wrong type
     class ValidationCoercion < TypeError; end

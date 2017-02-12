@@ -1,7 +1,7 @@
 # encoding: utf-8
 
-require 'tty/prompt/reader/codes'
-require 'tty/prompt/reader/mode'
+require_relative 'codes'
+require_relative 'mode'
 
 module TTY
   class Prompt

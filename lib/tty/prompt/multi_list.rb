@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-require 'tty/prompt/list'
+require_relative 'list'
 
 module TTY
   class Prompt

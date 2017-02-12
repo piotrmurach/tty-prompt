@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-require 'tty/prompt/question'
+require_relative 'question'
 
 module TTY
   class Prompt

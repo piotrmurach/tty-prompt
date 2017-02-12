@@ -1,6 +1,6 @@
 # encoding: utf-8
-#
-require 'tty/prompt/symbols'
+
+require_relative 'symbols'
 
 module TTY
   # A class responsible for shell prompt interactions.

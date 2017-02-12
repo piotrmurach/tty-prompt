@@ -1,8 +1,8 @@
 # encoding: utf-8
 
-require 'tty/prompt/choices'
-require 'tty/prompt/paginator'
-require 'tty/prompt/symbols'
+require_relative 'choices'
+require_relative 'paginator'
+require_relative 'symbols'
 
 module TTY
   class Prompt

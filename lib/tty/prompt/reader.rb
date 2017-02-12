@@ -2,10 +2,10 @@
 
 require 'wisper'
 require 'rbconfig'
-require 'tty/prompt/reader/key_event'
-require 'tty/prompt/reader/console'
-require 'tty/prompt/reader/win_console'
-require 'tty/prompt/reader/codes'
+
+require_relative 'reader/key_event'
+require_relative 'reader/console'
+require_relative 'reader/win_console'
 
 module TTY
   # A class responsible for shell prompt interactions.

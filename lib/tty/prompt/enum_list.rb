@@ -1,7 +1,7 @@
 # encoding: utf-8
 
-require 'tty/prompt/choices'
-require 'tty/prompt/enum_paginator'
+require_relative 'choices'
+require_relative 'enum_paginator'
 
 module TTY
   class Prompt

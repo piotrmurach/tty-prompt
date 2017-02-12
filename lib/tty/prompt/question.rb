@@ -1,10 +1,10 @@
 # encoding: utf-8
 
-require 'tty/prompt/evaluator'
-require 'tty/prompt/question/modifier'
-require 'tty/prompt/question/validation'
-require 'tty/prompt/question/checks'
-require 'tty/prompt/converters'
+require_relative 'converters'
+require_relative 'evaluator'
+require_relative 'question/modifier'
+require_relative 'question/validation'
+require_relative 'question/checks'
 
 module TTY
   # A class responsible for shell prompt interactions.

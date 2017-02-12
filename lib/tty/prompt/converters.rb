@@ -2,7 +2,8 @@
 
 require 'pathname'
 require 'necromancer'
-require 'tty/prompt/converter_dsl'
+
+require_relative 'converter_dsl'
 
 module TTY
   class Prompt

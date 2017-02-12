@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-require 'tty/prompt/paginator'
+require_relative 'paginator'
 
 module TTY
   class Prompt

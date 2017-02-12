@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-require 'tty/prompt/distance'
+require_relative 'distance'
 
 module TTY
   # A class responsible for terminal prompt interactions.

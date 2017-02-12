@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-require 'tty/prompt'
+require_relative 'prompt'
 
 module TTY
   # Used for initializing test cases

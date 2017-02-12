@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-require 'tty/prompt/converter_registry'
+require_relative 'converter_registry'
 
 module TTY
   class Prompt

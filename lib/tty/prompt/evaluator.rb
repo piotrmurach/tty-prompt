@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-require 'tty/prompt/result'
+require_relative 'result'
 
 module TTY
   class Prompt

@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-require 'tty/prompt/choices'
+require_relative 'choices'
 
 module TTY
   class Prompt
