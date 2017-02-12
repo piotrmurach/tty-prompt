@@ -26,6 +26,7 @@ module TTY
 
         def initialize(input)
           require 'tty/prompt/reader/win_api'
+          @input = input
           @keys = Codes.win_keys
           @escape_codes = [[NUL_HEX.ord], [ESC.ord], EXT_HEX.bytes.to_a]
         end
