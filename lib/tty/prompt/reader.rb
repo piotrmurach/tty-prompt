@@ -94,7 +94,8 @@ module TTY
       #
       # @api private
       def get_codes(options = {}, codes = [])
-        char = @console.get_char(options)
+        opts = { echo: true, raw: false }.merge(options)
+        char = @console.get_char(opts)
         return if char.nil?
         codes << char.ord
 
