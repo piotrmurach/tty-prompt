@@ -1,6 +1,7 @@
 # encoding: utf-8
 
 require_relative 'question'
+require_relative 'utils'
 
 module TTY
   class Prompt

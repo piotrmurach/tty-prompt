@@ -2,6 +2,7 @@
 
 require_relative 'choices'
 require_relative 'enum_paginator'
+require_relative 'paginator'
 
 module TTY
   class Prompt

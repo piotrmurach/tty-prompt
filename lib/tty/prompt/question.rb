@@ -5,6 +5,7 @@ require_relative 'evaluator'
 require_relative 'question/modifier'
 require_relative 'question/validation'
 require_relative 'question/checks'
+require_relative 'utils'
 
 module TTY
   # A class responsible for shell prompt interactions.
