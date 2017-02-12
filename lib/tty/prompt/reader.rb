@@ -39,7 +39,7 @@ module TTY
       def initialize(input = $stdin, output = $stdout, options = {})
         @input     = input
         @output    = output
-        @console   = windows? ? WinConsole.new : Console.new(input)
+        @console   = windows? ? WinConsole.new(input) : Console.new(input)
         @interrupt = options.fetch(:interrupt) { :error }
       end
 
