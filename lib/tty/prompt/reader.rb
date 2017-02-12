@@ -125,11 +125,11 @@ module TTY
         opts = { echo: true, raw: false }.merge(options)
         line = ''
         backspaces = 0
-        while (codes = get_codes(opts)) && (code = codes[0])
+        delete_char = proc { |c| c == BACKSPACE || c == DELETE }
 
+        while (codes = get_codes(opts)) && (code = codes[0])
           char = codes.pack('U*')
           emit_key_event(char)
-          delete_char = proc { |c| c == BACKSPACE || c == DELETE }
 
           if delete_char[code]
             line.slice!(-1, 1)
