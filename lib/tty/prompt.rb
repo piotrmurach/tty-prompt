@@ -24,22 +24,23 @@ module TTY
   class Prompt
     extend Forwardable
 
-    # Raised when 
+    # Raised when wrong parameter is used to configure prompt
     ConfigurationError = Class.new(StandardError)
 
+    # Raised when type conversion cannot be performed
     ConversionError = Class.new(StandardError)
 
     # Raised when the passed in validation argument is of wrong type
-    class ValidationCoercion < TypeError; end
+    ValidationCoercion = Class.new(TypeError)
 
     # Raised when the required argument is not supplied
-    class ArgumentRequired < ArgumentError; end
+    ArgumentRequired = Class.new(ArgumentError)
 
     # Raised when the argument validation fails
-    class ArgumentValidation < ArgumentError; end
+    ArgumentValidation = Class.new(ArgumentError)
 
     # Raised when the argument is not expected
-    class InvalidArgument < ArgumentError; end
+    InvalidArgument = Class.new(ArgumentError)
 
     # @api private
     attr_reader :input
