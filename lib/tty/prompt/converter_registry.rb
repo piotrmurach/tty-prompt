@@ -11,17 +11,12 @@ module TTY
       #
       # @api public
       def register(key, contents = nil, &block)
-        if block_given?
-          item = block
-        else
-          item = contents
-        end
+        item = block_given? ? block : contents
 
         if key?(key)
-          fail ArgumentError, "Converter for #{key.inspect} already registered"
-        else
-          @_registry[key] = item
+          raise ArgumentError, "Converter for #{key.inspect} already registered"
         end
+        @_registry[key] = item
         self
       end
 
@@ -42,7 +37,7 @@ module TTY
           converter = key
         else
           converter = @_registry.fetch(key) do
-            fail ArgumentError, "#{key.inspect} is not registered"
+            raise ArgumentError, "#{key.inspect} is not registered"
           end
         end
         converter.call(input)
