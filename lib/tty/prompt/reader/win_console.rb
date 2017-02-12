@@ -1,7 +1,6 @@
 # encoding: utf-8
 
 require_relative 'codes'
-require_relative 'win_api'
 
 module TTY
   class Prompt
