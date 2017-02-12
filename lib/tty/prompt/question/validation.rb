@@ -5,11 +5,12 @@ module TTY
     class Question
       # A class representing question validation.
       class Validation
-        attr_reader :pattern
-
+       # Available validator names
         VALIDATORS = {
           email: /^[a-z0-9._%+-]+@([a-z0-9-]+\.)+[a-z]{2,6}$/i
-        }
+        }.freeze
+
+        attr_reader :pattern
 
         # Initialize a Validation
         #
@@ -37,7 +38,7 @@ module TTY
           when Regexp
             Regexp.new(pattern.to_s)
           else
-            fail ValidationCoercion, "Wrong type, got #{pattern.class}"
+            raise ValidationCoercion, "Wrong type, got #{pattern.class}"
           end
         end
 
