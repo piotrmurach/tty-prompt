@@ -5,8 +5,8 @@
 ### Added
 * Add Console for reading input characters on Unix systems
 * Add WinConsole for reading input characters on Windows systems
-* Add WindowsApi to allow for calls to external api
-* Add echo support to multilist by Keith (@ktgeek)
+* Add WindowsApi to allow for calls to external Windows api
+* Add echo support to multilist by Keith Keith T. Garner(@ktgeek)
 
 ### Changed
 * Change Reader to use Console
@@ -16,8 +16,9 @@
 * Change Slider to display Unicode when possible
 
 ### Fixed
-* Fix `modify` throwing exception, when user enters empty input by (Igor Rzegocki)@ajgon
+* Fix `modify` throwing exception, when user enters empty input by Igor Rzegocki(@ajgon)
 * Fix #clear_line behaviour by using tty-cursor 0.4.0 to work in all terminals
+* Fix paging issue for lists shorter than :per_page value repeating title
 
 ## [v0.10.1] - 2017-02-06
 
