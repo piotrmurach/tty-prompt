@@ -19,6 +19,9 @@
 * Fix `modify` throwing exception, when user enters empty input by Igor Rzegocki(@ajgon)
 * Fix #clear_line behaviour by using tty-cursor 0.4.0 to work in all terminals
 * Fix paging issue for lists shorter than :per_page value repeating title
+* Fix #mask prompt to correctly match input on Windows
+* Fix @mask to use default error messages
+* Fix #select & #multi_select prompts to allow changing options with arrow keys on Windows
 
 ## [v0.10.1] - 2017-02-06
 
