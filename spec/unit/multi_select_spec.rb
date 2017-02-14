@@ -279,4 +279,23 @@ RSpec.describe TTY::Prompt do
       "What letter? \e[32mD\e[0m\n\e[?25h",
     ].join)
   end
+
+  it "doesn't paginate short selections" do
+    prompt = TTY::TestPrompt.new
+    choices = %w(A B C D)
+    prompt.input << "\r"
+    prompt.input.rewind
+    value = prompt.multi_select("What letter?", choices, per_page: 4, default: 1)
+    expect(value).to eq(['A'])
+
+    expect(prompt.output.string).to eq([
+      "\e[?25lWhat letter? A \e[90m(Use arrow keys, press Space to select and Enter to finish)\e[0m\n",
+      "#{symbols[:pointer]} \e[32m#{symbols[:radio_on]}\e[0m A\n",
+      "  #{symbols[:radio_off]} B\n",
+      "  #{symbols[:radio_off]} C\n",
+      "  #{symbols[:radio_off]} D",
+      "\e[2K\e[1G\e[1A" * 4, "\e[2K\e[1G",
+      "What letter? \e[32mA\e[0m\n\e[?25h",
+    ].join)
+  end
 end

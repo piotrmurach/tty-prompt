@@ -262,6 +262,26 @@ RSpec.describe TTY::Prompt, '#select' do
     }.to raise_error(TTY::Prompt::ConfigurationError, /in range \(1 - 3\)/)
   end
 
+  it "doesn't paginate short selections" do
+    prompt = TTY::TestPrompt.new
+    choices = %w(A B C D)
+    prompt.input << "\r"
+    prompt.input.rewind
+    value = prompt.select("What letter?", choices, per_page: 4, default: 1)
+    expect(value).to eq('A')
+
+    expect(prompt.output.string).to eq([
+      "\e[?25lWhat letter? \e[90m(Use arrow keys, press Enter to select)\e[0m\n",
+      "\e[32m#{symbols[:pointer]} A\e[0m\n",
+      "  B\n",
+      "  C\n",
+      "  D",
+      "\e[2K\e[1G\e[1A" * 4,
+      "\e[2K\e[1G",
+      "What letter? \e[32mA\e[0m\n\e[?25h",
+    ].join)
+  end
+
   it "verifies default index range" do
     prompt = TTY::TestPrompt.new
     choices = %w(Large Medium Small)

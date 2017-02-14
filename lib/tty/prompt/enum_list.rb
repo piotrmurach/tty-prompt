@@ -62,7 +62,7 @@ module TTY
       #
       # @api private
       def paginated?
-        @choices.size >= page_size
+        @choices.size > page_size
       end
 
       # @param [String] text

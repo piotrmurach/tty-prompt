@@ -1,6 +1,22 @@
 # encoding: utf-8
 
 RSpec.describe TTY::Prompt::EnumPaginator, '#paginate' do
+  it "ignores per_page when equal items " do
+    list = %w(a b c d)
+    paginator = described_class.new({per_page: 4})
+
+    expect(paginator.paginate(list, 1).to_a).to eq([
+      ['a',0],['b',1],['c',2],['d',3]])
+  end
+
+  it "ignores per_page when less items " do
+    list = %w(a b c d)
+    paginator = described_class.new({per_page: 5})
+
+    expect(paginator.paginate(list, 1).to_a).to eq([
+      ['a',0],['b',1],['c',2],['d',3]])
+  end
+
   it "paginates items matching per_page count" do
     list = %w(a b c d e f)
     paginator = described_class.new({per_page: 3})

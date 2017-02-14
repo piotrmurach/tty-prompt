@@ -72,13 +72,17 @@ module TTY
         @per_page = value
       end
 
+      def page_size
+        (@per_page || Paginator::DEFAULT_PAGE_SIZE)
+      end
+
       # Check if list is paginated
       #
       # @return [Boolean]
       #
       # @api private
       def paginated?
-        @choices.size >= (@per_page || Paginator::DEFAULT_PAGE_SIZE)
+        @choices.size > page_size
       end
 
       # @param [String] text
@@ -278,7 +282,8 @@ module TTY
                     else
                       ' ' * 2 + num + choice.name
                     end
-          newline = (index == @paginator.max_index) ? '' : "\n"
+          max_index = paginated? ? @paginator.max_index : @choices.size - 1
+          newline = (index == max_index) ? '' : "\n"
           output << (message + newline)
         end
         output
