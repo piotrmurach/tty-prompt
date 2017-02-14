@@ -57,15 +57,17 @@ module TTY
           masked = "#{@mask * "#{@input}".length}"
           if @done_masked && !@failure
             masked = @prompt.decorate(masked, @active_color)
+          elsif @done_masked && @failure
+            masked = @prompt.decorate(masked, @error_color)
           end
           header += masked
         end
         @prompt.print(header)
-        @prompt.print("\n") if @done
+        @prompt.puts if @done
       end
 
-      def render_error_or_finish(result)
-        @failure = result.failure?
+      def render_error(errors)
+        @failure = !errors.empty?
         super
       end
 
@@ -74,13 +76,15 @@ module TTY
       # @private
       def read_input
         @done_masked = false
+        @failure = false
         @input = ''
+
         until @done_masked
-          @prompt.read_keypress(echo: echo?)
+          @prompt.read_keypress
           @prompt.print(@prompt.clear_line)
           render_question
         end
-        @prompt.print("\n")
+        @prompt.puts
         @input
       end
     end # MaskQuestion

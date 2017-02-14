@@ -94,4 +94,38 @@ RSpec.describe TTY::Prompt, '#mask' do
       "What is your password? \n",
     ].join)
   end
+
+  it "validates input" do
+    prompt.input << "no\nyes\n"
+    prompt.input.rewind
+    answer = prompt.mask('What is your password?') do |q|
+      q.echo true
+      q.mask '*'
+      q.validate(/[a-z]{3,4}/)
+      q.messages[:valid?] = 'Not valid'
+    end
+    expect(answer).to eq('yes')
+    expect(prompt.output.string).to eq([
+      "What is your password? ",
+      "\e[2K\e[1G",
+      "What is your password? *",
+      "\e[2K\e[1G",
+      "What is your password? **",
+      "\e[2K\e[1G",
+      "What is your password? \e[32m**\e[0m\n",
+      "\e[31m>>\e[0m Not valid",
+      "\e[1A\e[2K\e[1G",
+      "What is your password? \e[31m**\e[0m",
+      "\e[2K\e[1G",
+      "What is your password? *",
+      "\e[2K\e[1G",
+      "What is your password? **",
+      "\e[2K\e[1G",
+      "What is your password? ***",
+      "\e[2K\e[1G",
+      "What is your password? \e[32m***\e[0m\n",
+      "\e[1A\e[2K\e[1G",
+      "What is your password? \e[32m***\e[0m\n"
+    ].join)
+  end
 end

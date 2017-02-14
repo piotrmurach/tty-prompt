@@ -43,6 +43,7 @@ module TTY
         @convert    = options.fetch(:convert) { UndefinedSetting }
         @active_color = options.fetch(:active_color) { @prompt.active_color }
         @help_color = options.fetch(:help_color) { @prompt.help_color }
+        @error_color = options.fetch(:error_color)  { :red }
         @messages   = Utils.deep_copy(options.fetch(:messages) { { } })
         @done       = false
         @input      = nil

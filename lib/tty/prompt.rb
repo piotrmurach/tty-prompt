@@ -162,7 +162,7 @@ module TTY
     # @api public
     def mask(message, *args, &block)
       options = Utils.extract_options!(args)
-
+      options.merge!({messages: self.class.messages})
       question = MaskQuestion.new(self, options)
       question.call(message, &block)
     end
