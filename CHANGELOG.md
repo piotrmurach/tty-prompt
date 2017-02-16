@@ -22,6 +22,7 @@
 * Fix #mask prompt to correctly match input on Windows
 * Fix @mask to use default error messages
 * Fix #select & #multi_select prompts to allow changing options with arrow keys on Windows
+* Fix #echo to work correctly in zsh shell by štef(@d4be4st)
 
 ## [v0.10.1] - 2017-02-06
 
