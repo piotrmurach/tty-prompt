@@ -22,6 +22,16 @@ RSpec.describe TTY::Prompt, '#select' do
     ].join)
   end
 
+  it "allows navigation using events without errors" do
+    choices = %w(Large Medium Small)
+    prompt.input << "j" << "\r"
+    prompt.input.rewind
+    prompt.on(:keypress) do |event|
+      prompt.publish(:keydown) if event.value == "j"
+    end
+    expect { prompt.select('What size?', choices) }.not_to output.to_stderr
+  end
+
   it "sets choice name and value" do
     choices = {large: 1, medium: 2, small: 3}
     prompt.input << " "
