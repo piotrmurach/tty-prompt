@@ -19,11 +19,11 @@ module TTY
         #
         # @api public
         def echo(is_on = true, &block)
-          previous = @input.echo?
-          @input.echo = is_on
-          yield
-        ensure
-          @input.echo = previous
+          if is_on
+            yield
+          else
+            @input.noecho(&block)
+          end
         end
 
         # Use raw mode in the given block
