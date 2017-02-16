@@ -27,9 +27,24 @@ RSpec.describe TTY::Prompt, '#select' do
     prompt.input << "j" << "\r"
     prompt.input.rewind
     prompt.on(:keypress) do |event|
-      prompt.publish(:keydown) if event.value == "j"
+      prompt.emit(:keydown) if event.value == "j"
     end
     expect { prompt.select('What size?', choices) }.not_to output.to_stderr
+    expect(prompt.output.string).to eq([
+      "\e[?25lWhat size? \e[90m(Use arrow keys, press Enter to select)\e[0m\n",
+      "\e[32m#{symbols[:pointer]} Large\e[0m\n",
+      "  Medium\n",
+      "  Small",
+      "\e[2K\e[1G\e[1A" * 3,
+      "\e[2K\e[1G",
+      "What size? \n",
+      "  Large\n",
+      "\e[32m#{symbols[:pointer]} Medium\e[0m\n",
+      "  Small",
+      "\e[2K\e[1G\e[1A" * 3,
+      "\e[2K\e[1G",
+      "What size? \e[32mMedium\e[0m\n\e[?25h"
+    ].join)
   end
 
   it "sets choice name and value" do

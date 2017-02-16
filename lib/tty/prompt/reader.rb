@@ -170,6 +170,13 @@ module TTY
         response
       end
 
+      # Expose event broadcasting
+      #
+      # @api public
+      def emit(event, *args)
+        publish(event, *args)
+      end
+
       # Publish event
       #
       # @param [String] char
@@ -180,8 +187,8 @@ module TTY
       # @api public
       def emit_key_event(char)
         event = KeyEvent.from(@console.keys, char)
-        publish(:"key#{event.key.name}", event) if event.emit?
-        publish(:keypress, event)
+        emit(:"key#{event.key.name}", event) if event.emit?
+        emit(:keypress, event)
       end
 
       # Inspect class name and public attributes
