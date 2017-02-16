@@ -963,11 +963,11 @@ For example, to add vim like key navigation to `select` prompt one would do the 
 ```ruby
 prompt.on(:keypress) do |event|
   if event.value == 'j'
-    prompt.publish(:keydown)
+    prompt.emit(:keydown)
   end
 
   if event.value == 'k'
-    prompt.publish(:keyup)
+    prompt.emit(:keyup)
   end
 end
 ```
@@ -1002,6 +1002,12 @@ The available events are:
 All prompt types support `:active_color` option. In case of `select`, `multi_select`, `enum_select` or `expand` this color is used to highlight the currently selected choice. All the resulted inputs provided by user that are read in by the prompt as answer are highlighted with this color. This option can be applied either globablly for all prompts or individually.
 
 ```ruby
+prompt = TTY::Prompt.new(active_color: :cyan)
+```
+
+or per individual input do:
+
+```ruby
 prompt.select('What size?', %w(Large Medium Small), active_color: :cyan)
 ```
 
@@ -1018,6 +1024,12 @@ prompt = TTY::Prompt.new(enable_color: true)
 ### 3.3 help_color
 
 Prompts such as `select`, `multi_select`, `expand` support `:help_color` which is used to customize the help text. This option can be applied either globablly for all prompts or individually.
+
+```ruby
+prompt = TTY::Prompt.new(help_color: :cyan)
+```
+
+or per individual input do:
 
 ```ruby
 prompt.select('What size?', %w(Large Medium Small), help_color: :cyan)
