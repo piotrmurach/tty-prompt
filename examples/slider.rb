@@ -3,4 +3,4 @@
 require 'tty-prompt'
 
 prompt = TTY::Prompt.new
-prompt.slider("What size?", min: 32, max: 54, step: 2)
+prompt.slider("What size?", min: 0, max: 40, step: 1)
