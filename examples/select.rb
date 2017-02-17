@@ -4,14 +4,14 @@ require 'tty-prompt'
 
 prompt = TTY::Prompt.new
 
-warriors = %w(Scorpion Kano Jax)
+warriors = %w(Scorpion Kano Jax Kitana Raiden)
 
 prompt.on(:keypress) do |event|
   if event.value == 'j'
-    prompt.publish(:keydown)
+    prompt.emit(:keydown)
   end
   if event.value == 'k'
-    prompt.publish(:keyup)
+    prompt.emit(:keyup)
   end
 end
 
