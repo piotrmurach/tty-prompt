@@ -13,7 +13,7 @@ RSpec.describe TTY::Prompt, '#slider' do
     expect(prompt.output.string).to eq([
       "\e[?25lWhat size? \e[90m(Use arrow keys, press Enter to select)\e[0m\n",
       symbols[:pipe] + symbols[:line] * 6,
-      "\e[32mO\e[0m",
+      "\e[32m#{symbols[:handle]}\e[0m",
       "#{symbols[:line] * 5 + symbols[:pipe]} 44",
       "\e[2K\e[1G\e[1A\e[2K\e[1G",
       "What size? \e[32m44\e[0m\n\e[?25h"
@@ -27,7 +27,7 @@ RSpec.describe TTY::Prompt, '#slider' do
     expect(prompt.output.string).to eq([
       "\e[?25lWhat size? \e[90m(Use arrow keys, press Enter to select)\e[0m\n",
       symbols[:pipe] + symbols[:line] * 3,
-      "\e[32mO\e[0m",
+      "\e[32m#{symbols[:handle]}\e[0m",
       "#{symbols[:line] * 8 + symbols[:pipe]} 38",
       "\e[2K\e[1G\e[1A\e[2K\e[1G",
       "What size? \e[32m38\e[0m\n\e[?25h"
@@ -47,7 +47,7 @@ RSpec.describe TTY::Prompt, '#slider' do
     expect(prompt.output.string).to eq([
       "\e[?25lWhat size? \e[90m(Use arrow keys, press Enter to select)\e[0m\n",
       symbols[:pipe] + symbols[:line] * 3,
-      "\e[32mO\e[0m",
+      "\e[32m#{symbols[:handle]}\e[0m",
       "#{symbols[:line] * 7 + symbols[:pipe]} 6",
       "\e[2K\e[1G\e[1A\e[2K\e[1G",
       "What size? \e[32m6\e[0m\n\e[?25h"
@@ -62,10 +62,35 @@ RSpec.describe TTY::Prompt, '#slider' do
     expect(prompt.output.string).to eq([
       "\e[?25lWhat size? \e[36m(Use arrow keys, press Enter to select)\e[0m\n",
       symbols[:pipe] + symbols[:line] * 5,
-      "\e[31mO\e[0m",
+      "\e[31m#{symbols[:handle]}\e[0m",
       "#{symbols[:line] * 5 + symbols[:pipe]} 5",
       "\e[2K\e[1G\e[1A\e[2K\e[1G",
       "What size? \e[31m5\e[0m\n\e[?25h"
+    ].join)
+  end
+
+  it "doesn't allow values outside of range" do
+    prompt.input << "l\r"
+    prompt.input.rewind
+    prompt.on(:keypress) do |event|
+      if event.value = 'l'
+        prompt.emit(:keyright)
+      end
+    end
+    res = prompt.slider('What size?', min: 0, max: 10, step: 1, default: 10)
+    expect(res).to eq(10)
+    expect(prompt.output.string).to eq([
+      "\e[?25lWhat size? \e[90m(Use arrow keys, press Enter to select)\e[0m\n",
+      symbols[:pipe] + symbols[:line] * 10,
+      "\e[32m#{symbols[:handle]}\e[0m",
+      "#{symbols[:pipe]} 10",
+      "\e[2K\e[1G\e[1A\e[2K\e[1G",
+      "What size? \n",
+      symbols[:pipe] + symbols[:line] * 10,
+      "\e[32m#{symbols[:handle]}\e[0m",
+      "#{symbols[:pipe]} 10",
+      "\e[2K\e[1G\e[1A\e[2K\e[1G",
+      "What size? \e[32m10\e[0m\n\e[?25h"
     ].join)
   end
 end
