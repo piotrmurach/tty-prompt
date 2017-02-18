@@ -2,22 +2,34 @@
 
 module TTY
   class Prompt
+    # Immutable collection of converters for type transformation
+    #
+    # @api private
     class ConverterRegistry
-      def initialize
-        @_registry = {}
+      # Create a registry of conversions
+      #
+      # @param [Hash] registry
+      #
+      # @api private
+      def initialize(registry = {})
+        @_registry = registry.dup.freeze
+        freeze
       end
 
       # Register converter
       #
+      # @param [Symbol] name
+      #   the converter name
+      #
       # @api public
-      def register(key, contents = nil, &block)
+      def register(name, contents = nil, &block)
         item = block_given? ? block : contents
 
-        if key?(key)
-          raise ArgumentError, "Converter for #{key.inspect} already registered"
+        if key?(name)
+          raise ArgumentError,
+                "Converter for #{name.inspect} already registered"
         end
-        @_registry[key] = item
-        self
+        self.class.new(@_registry.merge(name => item))
       end
 
       # Check if converter is registered
