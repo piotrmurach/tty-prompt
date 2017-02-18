@@ -15,7 +15,6 @@ module TTY
     # @api public
     class Question
       include Checks
-      include Converters
 
       UndefinedSetting = Module.new
 
@@ -188,7 +187,7 @@ module TTY
       # @api private
       def convert_result(value)
         if convert? & !Utils.blank?(value)
-          converter_registry.(@convert, value)
+          Converters.convert(@convert, value)
         else
           value
         end
@@ -298,10 +297,10 @@ module TTY
       def in(value = (not_set = true), message = nil)
         messages[:range?] = message if message
         if in? && !@in.is_a?(Range)
-          @in = converter_registry.(:range, @in)
+          @in = Converters.convert(:range, @in)
         end
         return @in if not_set
-        @in = converter_registry.(:range, value)
+        @in = Converters.convert(:range, value)
       end
 
       # Check if range is set

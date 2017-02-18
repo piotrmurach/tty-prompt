@@ -44,16 +44,17 @@ module TTY
       # Execute converter
       #
       # @api public
-      def call(key, input)
-        if key.respond_to?(:call)
-          converter = key
+      def call(name, input)
+        if name.respond_to?(:call)
+          converter = name
         else
-          converter = @_registry.fetch(key) do
-            raise ArgumentError, "#{key.inspect} is not registered"
+          converter = @_registry.fetch(name) do
+            raise ArgumentError, "#{name.inspect} is not registered"
           end
         end
-        converter.call(input)
+        converter[input]
       end
+      alias [] call
 
       def inspect
         @_registry.inspect

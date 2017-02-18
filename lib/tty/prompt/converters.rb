@@ -10,14 +10,6 @@ module TTY
     module Converters
       extend ConverterDSL
 
-      def self.included(base)
-        base.class_eval do
-          def converter_registry
-            Converters.converter_registry
-          end
-        end
-      end
-
       # Delegate Necromancer errors
       #
       # @api private

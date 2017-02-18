@@ -13,6 +13,10 @@ module TTY
         @converter_registry = converter_registry.register(name, &block)
         self
       end
+
+      def convert(name, data)
+        @converter_registry[name, data]
+      end
     end # ConverterDSL
   end # Prompt
 end # TTY
