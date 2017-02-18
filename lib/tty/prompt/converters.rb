@@ -18,15 +18,21 @@ module TTY
         end
       end
 
+      # Delegate Necromancer errors
+      #
+      # @api private
       def self.on_error
-        yield
+        if block_given?
+          yield
+        else
+          raise ArgumentError, 'You need to provide a block argument.'
+        end
       rescue Necromancer::ConversionTypeError => e
         raise ConversionError, e.message
       end
 
       converter(:bool) do |input|
-        converter = Necromancer.new
-        on_error { converter.convert(input).to(:boolean, strict: true) }
+        on_error { Necromancer.convert(input).to(:boolean, strict: true) }
       end
 
       converter(:string) do |input|
@@ -38,28 +44,23 @@ module TTY
       end
 
       converter(:date) do |input|
-        converter = Necromancer.new
-        on_error { converter.convert(input).to(:date, strict: true) }
+        on_error { Necromancer.convert(input).to(:date, strict: true) }
       end
 
       converter(:datetime) do |input|
-        converter = Necromancer.new
-        on_error { converter.convert(input).to(:datetime, strict: true) }
+        on_error { Necromancer.convert(input).to(:datetime, strict: true) }
       end
 
       converter(:int) do |input|
-        converter = Necromancer.new
-        on_error { converter.convert(input).to(:integer, strict: true) }
+        on_error { Necromancer.convert(input).to(:integer, strict: true) }
       end
 
       converter(:float) do |input|
-        converter = Necromancer.new
-        on_error { converter.convert(input).to(:float, strict: true) }
+        on_error { Necromancer.convert(input).to(:float, strict: true) }
       end
 
       converter(:range) do |input|
-        converter = Necromancer.new
-        on_error { converter.convert(input).to(:range, strict: true) }
+        on_error { Necromancer.convert(input).to(:range, strict: true) }
       end
 
       converter(:regexp) do |input|
