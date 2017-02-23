@@ -64,6 +64,8 @@ module TTY
         end
         @prompt.print(header)
         @prompt.puts if @done
+
+        header.lines.count + (@done ? 1 : 0)
       end
 
       def render_error(errors)

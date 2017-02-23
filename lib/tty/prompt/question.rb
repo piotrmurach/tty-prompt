@@ -103,7 +103,7 @@ module TTY
       def render
         @errors = []
         until @done
-          render_question
+          lines = render_question
           result = process_input
           if result.failure?
             @errors = result.errors
@@ -111,7 +111,7 @@ module TTY
           else
             @done = true
           end
-          refresh
+          refresh(lines)
         end
         render_question
         convert_result(result.value)
@@ -131,6 +131,8 @@ module TTY
         end
         @prompt.print(header)
         @prompt.puts if @done
+
+        header.lines.count + (@done ? 1 : 0)
       end
 
       # Decide how to handle input from user
@@ -163,7 +165,8 @@ module TTY
       # @api private
       def render_error(errors)
         errors.each do |err|
-          @prompt.print(@prompt.decorate('>>', :red) + ' ' + err)
+          newline = (@echo ? '' : "\n")
+          @prompt.print(newline + @prompt.decorate('>>', :red) + ' ' + err)
         end
       end
 
@@ -172,9 +175,7 @@ module TTY
       # @param [Array[String]] errors
       #
       # @api private
-      def refresh(errors = nil)
-        lines = @message.lines.count
-
+      def refresh(lines)
         if @done
           if @errors.count.zero? && @echo
             @prompt.print(@prompt.cursor.up(lines))

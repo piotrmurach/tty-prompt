@@ -78,7 +78,9 @@ module TTY
           header += @prompt.decorate(label, @active_color)
         end
         @prompt.print(header)
-        @prompt.print("\n") if @done
+        @prompt.puts if @done
+
+        header.lines.count + (@done ? 1 : 0)
       end
 
       protected
