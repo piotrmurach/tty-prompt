@@ -50,7 +50,7 @@ RSpec.describe TTY::Prompt do
 
   it "selects option through DSL" do
     prompt = TTY::TestPrompt.new
-    prompt.input << "\n"
+    prompt.input << "1\n"
     prompt.input.rewind
     value = prompt.enum_select("Select an editor?") do |menu|
       menu.default 2
@@ -61,7 +61,7 @@ RSpec.describe TTY::Prompt do
       menu.choice "/usr/bin/vim.tiny"
     end
 
-    expect(value).to eq('/usr/bin/vim.basic')
+    expect(value).to eq('/bin/nano')
     expect(prompt.output.string).to eq([
       "Select an editor? \n",
       "  1. /bin/nano\n",
@@ -70,7 +70,14 @@ RSpec.describe TTY::Prompt do
       "  Choose 1-3 [2]: ",
       "\e[2K\e[1G\e[1A" * 4,
       "\e[2K\e[1G\e[J",
-      "Select an editor? \e[32m/usr/bin/vim.basic\e[0m\n"
+      "Select an editor? \n",
+      "\e[32m  1. /bin/nano\e[0m\n",
+      "  2. /usr/bin/vim.basic\n",
+      "  3. /usr/bin/vim.tiny\n",
+      "  Choose 1-3 [2]: 1",
+      "\e[2K\e[1G\e[1A" * 4,
+      "\e[2K\e[1G\e[J",
+      "Select an editor? \e[32m/bin/nano\e[0m\n"
     ].join)
   end
 

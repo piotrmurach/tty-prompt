@@ -161,7 +161,7 @@ module TTY
       #
       # @api private
       def mark_choice_as_active
-        if (@input.to_i > 1) && !@choices[@input.to_i - 1].nil?
+        if (@input.to_i > 0) && !@choices[@input.to_i - 1].nil?
           @active = @input.to_i
         else
           @active = @default
