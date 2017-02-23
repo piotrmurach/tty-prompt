@@ -26,6 +26,7 @@
 * Fix #echo to work correctly in zsh shell by štef(@d4be4st)
 * Fix Slider#keyright event accepting max value outside of range
 * Fix 2.4.0 conversion errors by using necromancer 0.4.0
+* Fix #enum_select preventing selection of first item
 
 ## [v0.10.1] - 2017-02-06
 
