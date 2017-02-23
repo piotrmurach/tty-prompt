@@ -14,6 +14,7 @@
 * Change Reader#read_line to match #gets behaviour
 * Change Symbols to provide Unicode support on windows
 * Change Slider to display Unicode when possible
+* Change ConverterRegistry to be immutable
 
 ### Fixed
 * Fix `modify` throwing exception, when user enters empty input by Igor Rzegocki(@ajgon)
