@@ -101,15 +101,17 @@ module TTY
       #
       # @api private
       def render
+        @errors = []
         until @done
           render_question
           result = process_input
           if result.failure?
+            @errors = result.errors
             render_error(result.errors)
           else
             @done = true
           end
-          refresh(result.errors)
+          refresh
         end
         render_question
         convert_result(result.value)
@@ -173,11 +175,16 @@ module TTY
       def refresh(errors = nil)
         lines = @message.lines.count
 
-        if errors.count.nonzero?
-          lines += errors.count - 1
+        if @done
+          if @errors.count.zero? && @echo
+            @prompt.print(@prompt.cursor.up(lines))
+          else
+            lines += @errors.count
+          end
+        else
+          @prompt.print(@prompt.cursor.up(lines))
         end
-        @prompt.print(@prompt.cursor.up(lines))
-        @prompt.print(@prompt.clear_lines(lines, :down))
+        @prompt.print(@prompt.clear_lines(lines))
       end
 
       # Convert value to expected type

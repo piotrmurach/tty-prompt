@@ -24,6 +24,7 @@ RSpec.describe TTY::Prompt::Question, '#required' do
       "\e[31m>>\e[0m Value must be provided\e[1A",
       "\e[2K\e[1G",
       "What is your name? ",
+      "\e[2K\e[1G",
       "\e[1A\e[2K\e[1G",
       "What is your name? \e[32mPiotr\e[0m\n"
     ].join)
@@ -53,6 +54,7 @@ RSpec.describe TTY::Prompt::Question, '#required' do
       "\e[31m>>\e[0m File already exists!",
       "\e[1A\e[2K\e[1G",
       "File name? ",
+      "\e[2K\e[1G",
       "\e[1A\e[2K\e[1G",
       "File name? \e[32mtest\e[0m\n",
     ].join)

@@ -56,6 +56,7 @@ RSpec.describe TTY::Prompt::Question, '#validate' do
       "\e[31m>>\e[0m Your answer is invalid (must match :email)\e[1A",
       "\e[2K\e[1G",
       "What is your email? ",
+      "\e[2K\e[1G",
       "\e[1A\e[2K\e[1G",
       "What is your email? \e[32mpiotr@example.com\e[0m\n"
     ].join)
@@ -76,6 +77,7 @@ RSpec.describe TTY::Prompt::Question, '#validate' do
       "\e[31m>>\e[0m Not an email!\e[1A",
       "\e[2K\e[1G",
       "What is your email? ",
+      "\e[2K\e[1G",
       "\e[1A\e[2K\e[1G",
       "What is your email? \e[32mpiotr@example.com\e[0m\n"
     ].join)

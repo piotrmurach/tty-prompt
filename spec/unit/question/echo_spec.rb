@@ -23,7 +23,7 @@ RSpec.describe TTY::Prompt::Question, '#echo' do
     expect(answer).to eql("password")
     expect(prompt.output.string).to eq([
       "What is your password? ",
-      "\e[1A\e[2K\e[1G",
+      "\e[2K\e[1G",
       "What is your password? \n"
     ].join)
   end

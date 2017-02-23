@@ -73,6 +73,7 @@ RSpec.describe TTY::Prompt::Question, '#in' do
       "\e[31m>>\e[0m Value A must be within the range 1..5\e[1A",
       "\e[2K\e[1G",
       "How spicy on scale? (1-5) ",
+      "\e[2K\e[1G",
       "\e[1A\e[2K\e[1G",
       "How spicy on scale? (1-5) \e[32m2\e[0m\n"
     ].join)
@@ -93,6 +94,7 @@ RSpec.describe TTY::Prompt::Question, '#in' do
       "\e[31m>>\e[0m Ohh dear what is this A doing in 1..5?\e[1A",
       "\e[2K\e[1G",
       "How spicy on scale? (1-5) ",
+      "\e[2K\e[1G",
       "\e[1A\e[2K\e[1G",
       "How spicy on scale? (1-5) \e[32m2\e[0m\n"
     ].join)
