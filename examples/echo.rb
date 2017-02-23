@@ -4,4 +4,8 @@ require 'tty-prompt'
 
 prompt = TTY::Prompt.new
 
-puts prompt.ask('Password?', echo: false)
+answer = prompt.ask('Password?', echo: false) do |q|
+  q.validate(/^[^\.]+\.[^\.]+/)
+end
+
+#puts answer
