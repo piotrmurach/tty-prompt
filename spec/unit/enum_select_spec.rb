@@ -1,8 +1,6 @@
 # encoding: utf-8
 
 RSpec.describe TTY::Prompt do
-  let(:page_help) {
-  }
   it "selects default option when return pressed immediately" do
     prompt = TTY::TestPrompt.new
     choices = %w(/bin/nano /usr/bin/vim.basic /usr/bin/vim.tiny)
