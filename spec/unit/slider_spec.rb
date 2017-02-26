@@ -74,7 +74,7 @@ RSpec.describe TTY::Prompt, '#slider' do
     prompt.input.rewind
     prompt.on(:keypress) do |event|
       if event.value = 'l'
-        prompt.emit(:keyright)
+        prompt.trigger(:keyright)
       end
     end
     res = prompt.slider('What size?', min: 0, max: 10, step: 1, default: 10)

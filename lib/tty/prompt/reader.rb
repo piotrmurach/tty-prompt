@@ -82,7 +82,7 @@ module TTY
         codes = unbufferred { get_codes(opts) }
         char  = codes ? codes.pack('U*') : nil
 
-        emit_key_event(char) if char
+        trigger_key_event(char) if char
         handle_interrupt if char == @console.keys[:ctrl_c]
         char
       end
@@ -132,7 +132,7 @@ module TTY
 
         while (codes = get_codes(opts)) && (code = codes[0])
           char = codes.pack('U*')
-          emit_key_event(char)
+          trigger_key_event(char)
 
           if delete_char[code]
             line.slice!(-1, 1)
@@ -176,7 +176,7 @@ module TTY
       # Expose event broadcasting
       #
       # @api public
-      def emit(event, *args)
+      def trigger(event, *args)
         publish(event, *args)
       end
 
@@ -188,10 +188,10 @@ module TTY
       # @return [nil]
       #
       # @api public
-      def emit_key_event(char)
+      def trigger_key_event(char)
         event = KeyEvent.from(@console.keys, char)
-        emit(:"key#{event.key.name}", event) if event.emit?
-        emit(:keypress, event)
+        trigger(:"key#{event.key.name}", event) if event.trigger?
+        trigger(:keypress, event)
       end
 
       # Inspect class name and public attributes

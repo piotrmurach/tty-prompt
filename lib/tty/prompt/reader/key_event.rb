@@ -73,12 +73,12 @@ module TTY
           new(char, key)
         end
 
-        # Check if key event can be emitted
+        # Check if key event can be triggered
         #
         # @return [Boolean]
         #
         # @api public
-        def emit?
+        def trigger?
           !key.nil? && !key.name.nil?
         end
       end # KeyEvent
