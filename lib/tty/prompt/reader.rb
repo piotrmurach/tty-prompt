@@ -27,6 +27,8 @@ module TTY
 
       attr_reader :output
 
+      attr_reader :env
+
       # Key codes
       CARRIAGE_RETURN = 13
       NEWLINE         = 10
@@ -39,8 +41,9 @@ module TTY
       def initialize(input = $stdin, output = $stdout, options = {})
         @input     = input
         @output    = output
-        @console   = windows? ? WinConsole.new(input) : Console.new(input)
         @interrupt = options.fetch(:interrupt) { :error }
+        @env       = options.fetch(:env) { ENV }
+        @console   = windows? ? WinConsole.new(input) : Console.new(input)
       end
 
       # Get input in unbuffered mode.
@@ -219,12 +222,13 @@ module TTY
         end
       end
 
-      # Check if Windowz
+      # Check if Windowz mode
       #
       # @return [Boolean]
       #
       # @api public
       def windows?
+        return false if env["TTY_TEST"] = "true"
         ::File::ALT_SEPARATOR == "\\"
       end
     end # Reader

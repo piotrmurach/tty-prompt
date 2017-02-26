@@ -92,6 +92,7 @@ module TTY
       options = Utils.extract_options!(args)
       @input  = options.fetch(:input) { $stdin }
       @output = options.fetch(:output) { $stdout }
+      @env    = options.fetch(:env) { ENV }
       @prefix = options.fetch(:prefix) { '' }
       @enabled_color = options[:enable_color]
       @active_color  = options.fetch(:active_color) { :green }
@@ -100,7 +101,7 @@ module TTY
 
       @cursor = TTY::Cursor
       @pastel = Pastel.new(@enabled_color.nil? ? {} : { enabled: @enabled_color })
-      @reader = Reader.new(@input, @output, interrupt: options[:interrupt])
+      @reader = Reader.new(@input, @output, interrupt: options[:interrupt], env: @env)
     end
 
     # Ask a question.

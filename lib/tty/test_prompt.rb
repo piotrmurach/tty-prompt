@@ -11,6 +11,7 @@ module TTY
       options.merge!({
         input: @input,
         output: @output,
+        env: {"TTY_PROMPT_TEST" => "true"},
         enable_color: options.fetch(:enable_color) { true }
       })
       super(options)
