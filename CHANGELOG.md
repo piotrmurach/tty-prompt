@@ -9,12 +9,13 @@
 * Add echo support to multilist by Keith Keith T. Garner(@ktgeek)
 
 ### Changed
-* Change Reader to use Console
+* Change Reader to use Console for input reading
 * Change Codes to use codepoints instead of strings
 * Change Reader#read_line to match #gets behaviour
 * Change Symbols to provide Unicode support on windows
 * Change Slider to display Unicode when possible
 * Change ConverterRegistry to be immutable
+* Change Reader to expose #trigger in place of #publish for events firing
 
 ### Fixed
 * Fix `modify` throwing exception, when user enters empty input by Igor Rzegocki(@ajgon)
