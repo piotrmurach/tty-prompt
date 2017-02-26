@@ -3,8 +3,9 @@
 RSpec.describe TTY::Prompt::Reader, '#read_multiline' do
   let(:input)  { StringIO.new }
   let(:output) { StringIO.new }
+  let(:env)    { { "TTY_TEST" => true } }
 
-  subject(:reader) { described_class.new(input, output) }
+  subject(:reader) { described_class.new(input, output, env: env) }
 
   it 'reads no lines' do
     input << ''

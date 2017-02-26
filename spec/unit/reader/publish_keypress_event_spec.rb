@@ -3,7 +3,9 @@
 RSpec.describe TTY::Prompt::Reader, '#publish_keypress_event' do
   let(:input)  { StringIO.new }
   let(:out) { StringIO.new }
-  let(:reader) { described_class.new(input, out) }
+  let(:env)    { { "TTY_TEST" => true } }
+
+  let(:reader) { described_class.new(input, out, env: env) }
 
   it "publishes :keypress events" do
     input << "abc\n"
