@@ -8,10 +8,10 @@ warriors = %w(Scorpion Kano Jax Kitana Raiden)
 
 prompt.on(:keypress) do |event|
   if event.value == 'j'
-    prompt.emit(:keydown)
+    prompt.trigger(:keydown)
   end
   if event.value == 'k'
-    prompt.emit(:keyup)
+    prompt.trigger(:keyup)
   end
 end
 
