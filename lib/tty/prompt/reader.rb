@@ -225,7 +225,7 @@ module TTY
       #
       # @api public
       def windows?
-        !/mswin|mingw/.match(RbConfig::CONFIG["arch"]).nil?
+        ::File::ALT_SEPARATOR == "\\"
       end
     end # Reader
   end # Prompt
