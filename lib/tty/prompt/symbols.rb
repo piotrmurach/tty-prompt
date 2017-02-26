@@ -30,7 +30,7 @@ module TTY
         star: '*',
         dot: '.',
         pointer: '>',
-        line: '─',
+        line: '-',
         pipe: '|',
         handle: 'O',
         ellipsis: '...',
