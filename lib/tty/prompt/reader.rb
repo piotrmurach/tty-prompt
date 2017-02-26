@@ -228,7 +228,7 @@ module TTY
       #
       # @api public
       def windows?
-        return false if env["TTY_TEST"] = "true"
+        return false if env["TTY_TEST"] == true
         ::File::ALT_SEPARATOR == "\\"
       end
     end # Reader
