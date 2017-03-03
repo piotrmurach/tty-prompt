@@ -161,7 +161,7 @@ module TTY
           question = render_question
           @prompt.print(question)
           read_input
-          refresh
+          @prompt.print(refresh(question.lines.count))
         end
         @prompt.print(render_question)
         answer
@@ -228,31 +228,22 @@ module TTY
         @prompt.read_keypress
       end
 
-      # @api private
-      def count_lines
-        lines = render_header.scan("\n").length + 1
-        if @hint
-          lines += @hint.scan("\n").length + 1
-        elsif expanded?
-          lines += @choices.length
-          lines += render_footer.scan("\n").length + 1
-        end
-        lines
-      end
-
       # Refresh the current input
       #
+      # @param [Integer] lines
+      #
+      # @return [String]
+      #
       # @api private
-      def refresh
-        lines = count_lines
+      def refresh(lines)
         if @hint && (!@selected || @done)
           @hint = nil
-          @prompt.print(@prompt.clear_lines(lines, :down))
-          @prompt.print(@prompt.cursor.prev_line)
+          @prompt.clear_lines(lines, :down) +
+            @prompt.cursor.prev_line
         elsif expanded?
-          @prompt.print(@prompt.clear_lines(lines))
+          @prompt.clear_lines(lines)
         else
-          @prompt.print(@prompt.clear_line)
+          @prompt.clear_line
         end
       end
 
