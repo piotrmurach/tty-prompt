@@ -207,7 +207,7 @@ module TTY
           @prompt.print(refresh(question.lines.count))
         end
         @prompt.print(render_question)
-        render_answer
+        answer
       end
 
       # Find value for the choice selected
@@ -215,7 +215,7 @@ module TTY
       # @return [nil, Object]
       #
       # @api private
-      def render_answer
+      def answer
         @choices[@active - 1].value
       end
 
