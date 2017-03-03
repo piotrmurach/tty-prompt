@@ -38,7 +38,6 @@ module TTY
         @in         = options.fetch(:in) { UndefinedSetting }
         @modifier   = options.fetch(:modifier) { [] }
         @validation = options.fetch(:validation) { UndefinedSetting }
-        @read       = options.fetch(:read) { UndefinedSetting }
         @convert    = options.fetch(:convert) { UndefinedSetting }
         @active_color = options.fetch(:active_color) { @prompt.active_color }
         @help_color = options.fetch(:help_color) { @prompt.help_color }
@@ -200,13 +199,6 @@ module TTY
         else
           value
         end
-      end
-
-      # Set reader type
-      #
-      # @api public
-      def read(value)
-        @read = value
       end
 
       # Specify answer conversion
