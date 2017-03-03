@@ -197,11 +197,16 @@ module TTY
       def render
         @input = ''
         until @done
-          lines = render_question
+          question = render_question
+          @prompt.print(question)
+          @prompt.print(render_error) if @failure
+          if paginated? && !@done
+            @prompt.print(render_page_help)
+          end
           @prompt.read_keypress
-          refresh(lines)
+          @prompt.print(refresh(question.lines.count))
         end
-        render_question
+        @prompt.print(render_question)
         render_answer
       end
 
@@ -219,27 +224,26 @@ module TTY
       # @param [Integer] lines
       #   the lines to clear
       #
+      # @return [String]
+      #
       # @api private
       def refresh(lines)
-        @prompt.print(@prompt.clear_lines(lines))
-        @prompt.print(@prompt.cursor.clear_screen_down)
+        @prompt.clear_lines(lines) +
+          @prompt.cursor.clear_screen_down
       end
 
       # Render question with the menu options
       #
+      # @return [String]
+      #
       # @api private
       def render_question
-        header = "#{@prefix}#{@question} #{render_header}"
-        @prompt.puts(header)
-        lines = header.lines.count
+        header = "#{@prefix}#{@question} #{render_header}\n"
         unless @done
-          menu = render_menu + render_footer
-          lines += menu.lines.count
-          @prompt.print(menu)
+          header << render_menu
+          header << render_footer
         end
-        render_error if @failure
-        render_page_help if paginated? && !@done
-        lines
+        header
       end
 
       # Error message when incorrect index chosen
@@ -252,13 +256,16 @@ module TTY
 
       # Render error message and return cursor to position of input
       #
+      # @return [String]
+      #
       # @api private
       def render_error
-        @prompt.print(error_message)
+        error = error_message.dup
         if !paginated?
-          @prompt.print(@prompt.cursor.prev_line)
-          @prompt.print(@prompt.cursor.forward(render_footer.size))
+          error << @prompt.cursor.prev_line
+          error << @prompt.cursor.forward(render_footer.size)
         end
+        error
       end
 
       # Render chosen option
@@ -294,14 +301,16 @@ module TTY
 
       # Render page help
       #
+      # @return [String]
+      #
       # @api private
       def render_page_help
-        @prompt.print(page_help_message)
+        help = page_help_message.dup
         if @failure
-          @prompt.print(@prompt.cursor.prev_line)
+          help << @prompt.cursor.prev_line
         end
-        @prompt.print(@prompt.cursor.prev_line)
-        @prompt.print(@prompt.cursor.forward(render_footer.size))
+        help << @prompt.cursor.prev_line
+        help << @prompt.cursor.forward(render_footer.size)
       end
 
       # Render menu with indexed choices to select from
