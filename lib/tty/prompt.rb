@@ -10,6 +10,7 @@ require_relative 'prompt/expander'
 require_relative 'prompt/enum_list'
 require_relative 'prompt/list'
 require_relative 'prompt/multi_list'
+require_relative 'prompt/multiline'
 require_relative 'prompt/mask_question'
 require_relative 'prompt/question'
 require_relative 'prompt/reader'
@@ -147,9 +148,9 @@ module TTY
     # @api public
     def multiline(message, *args, &block)
       options = Utils.extract_options!(args)
-      options.merge!(read: :multiline)
-      args << options
-      ask(message, *args, &block)
+      options.merge!({messages: self.class.messages})
+      question = Multiline.new(self, options)
+      question.call(message, &block)
     end
 
     # Ask masked question
