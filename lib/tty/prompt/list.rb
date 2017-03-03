@@ -205,7 +205,7 @@ module TTY
           question = render_question
           @prompt.print(question)
           @prompt.read_keypress
-          refresh(question.lines.count)
+          @prompt.print(refresh(question.lines.count))
         end
         @prompt.print(render_question)
         render_answer
@@ -224,17 +224,16 @@ module TTY
 
       # Clear screen lines
       #
-      # @param [Integer] lines
-      #   the lines to clear
+      # @param [String]
       #
       # @api private
       def refresh(lines)
-        @prompt.print(@prompt.clear_lines(lines))
+        @prompt.clear_lines(lines)
       end
 
       # Render question with instructions and menu
       #
-      # @return [Integer] The number of lines for menu
+      # @return [String]
       #
       # @api private
       def render_question
@@ -270,6 +269,8 @@ module TTY
 
       # Render menu with choices to select from
       #
+      # @return [String]
+      #
       # @api private
       def render_menu
         output = ''
@@ -289,6 +290,8 @@ module TTY
       end
 
       # Render page info footer
+      #
+      # @return [String]
       #
       # @api private
       def render_footer
