@@ -80,4 +80,15 @@ RSpec.describe TTY::Prompt::Reader, '#publish_keypress_event' do
     expect(keys).to eq(["keyenter", "keypress"])
     expect(answer).to eq("\n")
   end
+
+  it "subscribes to ctrl+X type of event event" do
+    input << ?\C-z
+    input.rewind
+    keys = []
+    reader.on(:keyctrl_z) { |event| keys << "ctrl_z" }
+
+    answer = reader.read_keypress
+    expect(keys).to eq(['ctrl_z'])
+    expect(answer).to eq(?\C-z)
+  end
 end
