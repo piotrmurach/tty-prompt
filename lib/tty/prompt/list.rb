@@ -202,11 +202,12 @@ module TTY
       def render
         @prompt.print(@prompt.hide)
         until @done
-          lines = render_question
+          question = render_question
+          @prompt.print(question)
           @prompt.read_keypress
-          refresh(lines)
+          refresh(question.lines.count)
         end
-        render_question
+        @prompt.print(render_question)
         render_answer
       ensure
         @prompt.print(@prompt.show)
@@ -237,14 +238,12 @@ module TTY
       #
       # @api private
       def render_question
-        header = "#{@prefix}#{@question} #{render_header}"
-        @prompt.puts(header)
+        header = "#{@prefix}#{@question} #{render_header}\n"
         @first_render = false
         rendered_menu = render_menu
         rendered_menu << render_footer
-        @prompt.print(rendered_menu) unless @done
-
-        header.lines.count + rendered_menu.lines.count
+        header << rendered_menu unless @done
+        header
       end
 
       # Provide help information
