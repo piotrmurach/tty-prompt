@@ -62,10 +62,8 @@ module TTY
           end
           header += masked
         end
-        @prompt.print(header)
-        @prompt.puts if @done
-
-        header.lines.count + (@done ? 1 : 0)
+        header << "\n" if @done
+        header
       end
 
       def render_error(errors)
@@ -80,11 +78,10 @@ module TTY
         @done_masked = false
         @failure = false
         @input = ''
-
         until @done_masked
           @prompt.read_keypress
           @prompt.print(@prompt.clear_line)
-          render_question
+          @prompt.print(render_question)
         end
         @prompt.puts
         @input

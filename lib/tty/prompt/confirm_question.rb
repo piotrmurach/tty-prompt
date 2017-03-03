@@ -66,10 +66,11 @@ module TTY
 
       # Render confirmation question
       #
+      # @return [String]
+      #
       # @api private
       def render_question
         header = "#{@prefix}#{message} "
-
         if !@done
           header += @prompt.decorate("(#{@suffix})", @help_color) + ' '
         else
@@ -77,10 +78,8 @@ module TTY
           label  = answer ? @positive : @negative
           header += @prompt.decorate(label, @active_color)
         end
-        @prompt.print(header)
-        @prompt.puts if @done
-
-        header.lines.count + (@done ? 1 : 0)
+        header << "\n" if @done
+        header
       end
 
       protected

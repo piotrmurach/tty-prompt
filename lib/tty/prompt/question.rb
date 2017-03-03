@@ -103,21 +103,24 @@ module TTY
       def render
         @errors = []
         until @done
-          lines = render_question
+          question = render_question
+          @prompt.print(question)
           result = process_input
           if result.failure?
             @errors = result.errors
-            render_error(result.errors)
+            @prompt.print(render_error(result.errors))
           else
             @done = true
           end
-          refresh(lines)
+          @prompt.print(refresh(question.lines.count))
         end
-        render_question
+        @prompt.print(render_question)
         convert_result(result.value)
       end
 
       # Render question
+      #
+      # @return [String]
       #
       # @api private
       def render_question
@@ -129,10 +132,8 @@ module TTY
         elsif default? && !Utils.blank?(@default)
           header += @prompt.decorate("(#{default})", @help_color) + ' '
         end
-        @prompt.print(header)
-        @prompt.puts if @done
-
-        header.lines.count + (@done ? 1 : 0)
+        header << "\n" if @done
+        header
       end
 
       # Decide how to handle input from user
@@ -162,30 +163,37 @@ module TTY
 
       # Handle error condition
       #
+      # @return [String]
+      #
       # @api private
       def render_error(errors)
-        errors.each do |err|
+        errors.reduce('') do |acc, err|
           newline = (@echo ? '' : "\n")
-          @prompt.print(newline + @prompt.decorate('>>', :red) + ' ' + err)
+          acc << newline + @prompt.decorate('>>', :red) + ' ' + err
+          acc
         end
       end
 
       # Determine area of the screen to clear
       #
-      # @param [Array[String]] errors
+      # @param [Integer] lines
+      #   number of lines to clear
+      #
+      # @return [String]
       #
       # @api private
       def refresh(lines)
+        output = ''
         if @done
           if @errors.count.zero? && @echo
-            @prompt.print(@prompt.cursor.up(lines))
+            output << @prompt.cursor.up(lines)
           else
             lines += @errors.count
           end
         else
-          @prompt.print(@prompt.cursor.up(lines))
+          output << @prompt.cursor.up(lines)
         end
-        @prompt.print(@prompt.clear_lines(lines))
+        output + @prompt.clear_lines(lines)
       end
 
       # Convert value to expected type
