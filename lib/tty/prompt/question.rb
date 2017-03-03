@@ -154,8 +154,6 @@ module TTY
         case @read
         when :keypress
           @prompt.read_keypress
-        when :multiline
-          @prompt.read_multiline.each(&:chomp!)
         else
           @prompt.read_line(echo: echo).chomp
         end
