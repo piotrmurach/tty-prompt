@@ -151,12 +151,7 @@ module TTY
       #
       # @api private
       def read_input
-        case @read
-        when :keypress
-          @prompt.read_keypress
-        else
-          @prompt.read_line(echo: echo).chomp
-        end
+        @prompt.read_line(echo: echo).chomp
       end
 
       # Handle error condition
