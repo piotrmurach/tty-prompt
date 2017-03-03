@@ -158,19 +158,25 @@ module TTY
       def render
         @input = ''
         until @done
-          render_question
+          question = render_question
+          @prompt.print(question)
           read_input
           refresh
         end
-        render_question
-        render_answer
+        @prompt.print(render_question)
+        answer
       end
 
       # @api private
-      def render_answer
+      def answer
         @selected.value
       end
 
+      # Render message with options
+      #
+      # @return [String]
+      #
+      # @api private
       def render_header
         header = "#{@prefix}#{@message} "
         if @done
@@ -184,27 +190,34 @@ module TTY
         header
       end
 
+      # Show hint for selected option key
+      #
+      # return [String]
+      #
       # @api private
       def render_hint
         hint = "\n"
         hint << @prompt.decorate('>> ', @active_color)
         hint << @hint
-        @prompt.print(hint)
-        @prompt.print(@prompt.cursor.prev_line)
-        @prompt.print(@prompt.cursor.forward(@prompt.strip(render_header).size))
+        hint << @prompt.cursor.prev_line
+        hint << @prompt.cursor.forward(@prompt.strip(render_header).size)
       end
 
+      # Render question with menu
+      #
+      # @return [String]
+      #
       # @api private
       def render_question
         header = render_header
-        @prompt.print(header)
-        render_hint if @hint
-        @prompt.print("\n") if @done
+        header << render_hint if @hint
+        header << "\n" if @done
 
         if !@done && expanded?
-          @prompt.print(render_menu)
-          @prompt.print(render_footer)
+          header << render_menu
+          header << render_footer
         end
+        header
       end
 
       def render_footer
