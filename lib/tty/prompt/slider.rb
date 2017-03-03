@@ -109,48 +109,54 @@ module TTY
       def render
         @prompt.print(@prompt.hide)
         until @done
-          render_question
+          question = render_question
+          @prompt.print(question)
           @prompt.read_keypress
-          refresh
+          refresh(question.lines.count)
         end
-        render_question
-        answer = render_answer
+        @prompt.print(render_question)
+        answer
       ensure
         @prompt.print(@prompt.show)
-        answer
       end
 
       # Clear screen
       #
+      # @param [Integer] lines
+      #   the lines to clear
+      #
       # @api private
-      def refresh
-        lines = @question.scan("\n").length + 2
+      def refresh(lines)
         @prompt.print(@prompt.clear_lines(lines))
       end
 
       # @return [Integer]
       #
       # @api private
-      def render_answer
+      def answer
         range[@active]
       end
 
       # Render question with the slider
       #
+      # @return [String]
+      #
       # @api private
       def render_question
-        header = "#{@prefix}#{@question} #{render_header}"
-        @prompt.puts(header)
+        header = "#{@prefix}#{@question} #{render_header}\n"
         @first_render = false
-        @prompt.print(render_slider) unless @done
+        header << render_slider unless @done
+        header
       end
 
       # Render actual answer or help
       #
+      # @return [String]
+      #
       # @api private
       def render_header
         if @done
-          @prompt.decorate(render_answer.to_s, @active_color)
+          @prompt.decorate(answer.to_s, @active_color)
         elsif @first_render
           @prompt.decorate(HELP, @help_color)
         end
