@@ -1,5 +1,15 @@
 # Change log
 
+## [v0.12.0] - 2017-03-xx
+
+### Added
+* Add Reader::History for storing buffered lines
+* Add Multiline question type
+* Add Keypress question type
+
+### Changed
+* Remove :read option from Question
+
 ## [v0.11.0] - 2017-02-26
 
 ### Added
