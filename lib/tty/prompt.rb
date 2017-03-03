@@ -8,6 +8,7 @@ require_relative 'prompt/answers_collector'
 require_relative 'prompt/confirm_question'
 require_relative 'prompt/expander'
 require_relative 'prompt/enum_list'
+require_relative 'prompt/keypress'
 require_relative 'prompt/list'
 require_relative 'prompt/multi_list'
 require_relative 'prompt/multiline'
@@ -124,7 +125,7 @@ module TTY
     # @api public
     def ask(message, *args, &block)
       options = Utils.extract_options!(args)
-      options.merge!({messages: self.class.messages})
+      options.merge!(messages: self.class.messages)
       question = Question.new(self, options)
       question.call(message, &block)
     end
@@ -136,19 +137,22 @@ module TTY
     # @api public
     def keypress(message, *args, &block)
       options = Utils.extract_options!(args)
-      options.merge!(read: :keypress)
-      args << options
-      ask(message, *args, &block)
+      options.merge!(messages: self.class.messages)
+      question = Keypress.new(self, options)
+      question.call(message, &block)
     end
 
     # Ask a question with a multiline answer
     #
-    # @see @ask
+    # @example
+    #   prompt.multiline('Description?')
+    #
+    # @return [Array[String]]
     #
     # @api public
     def multiline(message, *args, &block)
       options = Utils.extract_options!(args)
-      options.merge!({messages: self.class.messages})
+      options.merge!(messages: self.class.messages)
       question = Multiline.new(self, options)
       question.call(message, &block)
     end
@@ -164,7 +168,7 @@ module TTY
     # @api public
     def mask(message, *args, &block)
       options = Utils.extract_options!(args)
-      options.merge!({messages: self.class.messages})
+      options.merge!(messages: self.class.messages)
       question = MaskQuestion.new(self, options)
       question.call(message, &block)
     end
@@ -351,7 +355,7 @@ module TTY
     # @api public
     def say(message = '', options = {})
       message = message.to_s
-      return unless message.length > 0
+      return if message.empty?
 
       statement = Statement.new(self, options)
       statement.call(message)

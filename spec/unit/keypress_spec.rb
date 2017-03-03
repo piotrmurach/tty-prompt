@@ -1,15 +1,15 @@
 # encoding: utf-8
 
 RSpec.describe TTY::Prompt::Question, 'ask keypress' do
-  it 'asks for a keypress with :read option' do
+  it 'receives line feed' do
     prompt = TTY::TestPrompt.new
-    prompt.input << "abcd"
+    prompt.input << "\n"
     prompt.input.rewind
-    answer = prompt.ask("Which one do you prefer a, b, c or d?", read: :keypress)
-    expect(answer).to eq("a")
+    answer = prompt.keypress("Which one do you prefer a, b, c or d?")
+    expect(answer).to eq(nil)
   end
 
-  it 'asks for a keypress with method' do
+  it 'asks for a keypress' do
     prompt = TTY::TestPrompt.new
     prompt.input << "abcd"
     prompt.input.rewind
