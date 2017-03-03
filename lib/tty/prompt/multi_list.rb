@@ -76,11 +76,13 @@ module TTY
       # @return [Array[nil,Object]]
       #
       # @api private
-      def render_answer
+      def answer
         @selected.map(&:value)
       end
 
       # Render menu with choices to select from
+      #
+      # @return [String]
       #
       # @api private
       def render_menu
