@@ -45,6 +45,10 @@ module TTY
         @interrupt = options.fetch(:interrupt) { :error }
         @env       = options.fetch(:env) { ENV }
         @console   = windows? ? WinConsole.new(input) : Console.new(input)
+        @history   = History.new do |h|
+          h.duplicates = false
+          h.exclude = proc { |line| line.strip == '' }
+        end
       end
 
       # Get input in unbuffered mode.
@@ -130,29 +134,54 @@ module TTY
         line = ''
         backspaces = 0
         delete_char = proc { |c| c == BACKSPACE || c == DELETE }
+        ctrls = @console.keys.keys.grep(/ctrl/)
 
         while (codes = get_codes(opts)) && (code = codes[0])
           char = codes.pack('U*')
           trigger_key_event(char)
 
+          #puts "code: #{codes}"
+
           if delete_char[code]
             line.slice!(-1, 1)
             backspaces -= 1
+          elsif ctrls.include?(@console.keys.key(char))
+            # skip
+          elsif @console.keys[:up] == char
+            line = history_previous
+          elsif @console.keys[:down] == char
+            line = history_next
           else
             line << char
+            line << "\n" if opts[:raw] && code == CARRIAGE_RETURN
             backspaces = line.size
           end
 
-          break if (code == CARRIAGE_RETURN || code == NEWLINE)
+          break if (code == CARRIAGE_RETURN || code == NEWLINE || code == 4)
 
           if delete_char[code] && opts[:echo]
             output.print(' ' + (backspaces >= 0 ? "\b" : ''))
           end
         end
+        add_to_history(line)
         line
       end
 
-      # Read multiple lines and terminate when empty line is submitted.
+      def add_to_history(line)
+        @history.push(line)
+      end
+
+      def history_next
+        @history.next
+      end
+
+      def history_previous
+        @history.previous
+      end
+
+      # Read multiple lines and return them in an array.
+      # Lines are separated by separator, by default new line char.
+      # Skip empty lines in the returned lines array.
       #
       # @yield [String] line
       #
@@ -160,19 +189,20 @@ module TTY
       #
       # @api public
       def read_multiline
-        response = []
+        lines = []
         loop do
-          line = read_line
-          break if !line || line == ''
+          line = read_line({raw: true})
+          break if !line || line == '' #|| line == "\n"
           next  if line !~ /\S/
           if block_given?
             yield(line)
           else
-            response << line
+            lines << line
           end
         end
-        response
+        lines
       end
+      alias read_lines read_multiline
 
       # Expose event broadcasting
       #
