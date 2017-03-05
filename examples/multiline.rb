@@ -6,4 +6,4 @@ prompt = TTY::Prompt::new
 
 answer = prompt.multiline("Description:")
 
-puts "Answer: #{answer}"
+puts "Answer: #{answer.inspect}"
