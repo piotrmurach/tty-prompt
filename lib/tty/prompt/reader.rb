@@ -49,6 +49,9 @@ module TTY
           h.duplicates = false
           h.exclude = proc { |line| line.strip == '' }
         end
+        @stop = false # gathering input
+
+        subscribe(self)
       end
 
       # Get input in unbuffered mode.
@@ -136,52 +139,48 @@ module TTY
         delete_char = proc { |c| c == BACKSPACE || c == DELETE }
         ctrls = @console.keys.keys.grep(/ctrl/)
 
-        while (codes = get_codes(opts)) && (code = codes[0])
+        while (codes = unbufferred { get_codes(opts) }) && (code = codes[0])
           char = codes.pack('U*')
           trigger_key_event(char)
-
-          #puts "code: #{codes}"
 
           if delete_char[code]
             line.slice!(-1, 1)
             backspaces -= 1
-          elsif ctrls.include?(@console.keys.key(char))
+          elsif [@console.keys[:ctrl_d], @console.keys[:ctrl_z]].include?(char)
+            break
+          elsif @console.keys[:ctrl_c] == char
+            handle_interrupt
+          elsif ctrls.include?(@console.keys.key(char)) ||
+                [@console.keys[:left], @console.keys[:right]].include?(code)
             # skip
           elsif @console.keys[:up] == char
-            line = history_previous
+            line = history_previous if history_previous?
           elsif @console.keys[:down] == char
-            line = history_next
+            line = history_next if history_next?
           else
+            char = "\n" if opts[:raw] && code == CARRIAGE_RETURN
             line << char
-            line << "\n" if opts[:raw] && code == CARRIAGE_RETURN
             backspaces = line.size
+            output.print(char) if opts[:raw] && opts[:echo]
           end
 
-          break if (code == CARRIAGE_RETURN || code == NEWLINE || code == 4)
+          break if (code == CARRIAGE_RETURN || code == NEWLINE)
 
           if delete_char[code] && opts[:echo]
-            output.print(' ' + (backspaces >= 0 ? "\b" : ''))
+            if opts[:raw]
+              output.print("\e[1D\e[1X")
+            else
+              output.print(' ' + (backspaces >= 0 ? "\b" : ''))
+            end
           end
         end
         add_to_history(line)
         line
       end
 
-      def add_to_history(line)
-        @history.push(line)
-      end
-
-      def history_next
-        @history.next
-      end
-
-      def history_previous
-        @history.previous
-      end
-
       # Read multiple lines and return them in an array.
-      # Lines are separated by separator, by default new line char.
       # Skip empty lines in the returned lines array.
+      # The input gathering is terminated by Ctrl+d or Ctrl+z.
       #
       # @yield [String] line
       #
@@ -189,16 +188,18 @@ module TTY
       #
       # @api public
       def read_multiline
+        @stop = false
         lines = []
         loop do
           line = read_line({raw: true})
-          break if !line || line == '' #|| line == "\n"
-          next  if line !~ /\S/
+          break if !line || line == ''
+          next  if line !~ /\S/ && !@stop
           if block_given?
-            yield(line)
+            yield(line) unless line.to_s.empty?
           else
-            lines << line
+            lines << line unless line.to_s.empty?
           end
+          break if @stop
         end
         lines
       end
@@ -211,18 +212,32 @@ module TTY
         publish(event, *args)
       end
 
-      # Publish event
+      # Capture Ctrl+d and Ctrl+z key events
       #
-      # @param [String] char
-      #   the key pressed
-      #
-      # @return [nil]
-      #
-      # @api public
-      def trigger_key_event(char)
-        event = KeyEvent.from(@console.keys, char)
-        trigger(:"key#{event.key.name}", event) if event.trigger?
-        trigger(:keypress, event)
+      # @api private
+      def keyctrl_d(*)
+        @stop = true
+      end
+      alias keyctrl_z keyctrl_d
+
+      def add_to_history(line)
+        @history.push(line)
+      end
+
+      def history_next?
+        @history.next?
+      end
+
+      def history_next
+        @history.next
+      end
+
+      def history_previous?
+        @history.previous?
+      end
+
+      def history_previous
+        @history.previous
       end
 
       # Inspect class name and public attributes
@@ -234,6 +249,20 @@ module TTY
       end
 
       private
+
+      # Publish event
+      #
+      # @param [String] char
+      #   the key pressed
+      #
+      # @return [nil]
+      #
+      # @api private
+      def trigger_key_event(char)
+        event = KeyEvent.from(@console.keys, char)
+        trigger(:"key#{event.key.name}", event) if event.trigger?
+        trigger(:keypress, event)
+      end
 
       # Handle input interrupt based on provided value
       #
