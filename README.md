@@ -357,7 +357,7 @@ prompt.keypress("Which one do you prefer a, b, c or d ?")
 
 ### 2.3 multiline
 
-Asking for multiline input can be done with `multiline` method. The reading of input will terminate when `Ctrl+d` or `Ctrl+z` is pressed. Emply lines will not be included in the returned array.
+Asking for multiline input can be done with `multiline` method. The reading of input will terminate when `Ctrl+d` or `Ctrl+z` is pressed. Empty lines will not be included in the returned array.
 
 ```ruby
 prompt.multiline("Description?")
