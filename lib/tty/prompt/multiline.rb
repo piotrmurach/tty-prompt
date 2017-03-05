@@ -7,7 +7,7 @@ module TTY
   class Prompt
     class Multiline < Question
       def read_input
-        @prompt.read_multiline.each(&:chomp!)
+        @prompt.read_multiline
       end
     end # Multiline
   end # Prompt
