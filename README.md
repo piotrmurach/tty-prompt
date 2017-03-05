@@ -361,12 +361,26 @@ Asking for multiline input can be done with `multiline` method. The reading of i
 
 ```ruby
 prompt.multiline("Description?")
-#
-# Description? (CTRL-D or CTRL-Z to finish)
+# Description? (Press CTRL-D or CTRL-Z to finish)
 # I know not all that may be coming,
 # but be it what it will,
 # I'll go to it laughing.
 # => ["I know not all that may be coming,\n", "but be it what it will,\n", "I'll go to it laughing.\n"]
+```
+
+The `multiline` uses similar options to those supported by `ask` prompt. For example, to provide default description:
+
+```ruby
+prompt.multiline("Description?", default: 'A super sweet prompt.')
+```
+
+or using DSL:
+
+```ruby
+prompt.multiline("Description?") do |q|
+  q.default 'A super sweet prompt.'
+  q.help 'Press thy ctrl+d to end'
+end
 ```
 
 ### 2.4 mask
@@ -381,14 +395,23 @@ prompt.mask('What is your secret?')
 The masking character can be changed by passing `:mask` option:
 
 ```ruby
-prompt.mask('What is your secret?', mask: '\u2665')
-# => What is your secret? ♥♥♥♥♥
+heart = prompt.decorate('❤ ', :magenta)
+prompt.mask('What is your secret?', mask: heart)
+# => What is your secret? ❤  ❤  ❤  ❤  ❤ 
 ```
 
 If you don't wish to show any output use `:echo` option like so:
 
 ```ruby
 prompt.mask('What is your secret?', echo: false)
+```
+
+You can also provide validation for your mask to enforce for instance strong passwords:
+
+```ruby
+prompt.mask('What is your secret?', mask: heart) do |q|
+  q.validate(/[a-z\ ]{5,15}/)
+end
 ```
 
 ### 2.5 yes?/no?
