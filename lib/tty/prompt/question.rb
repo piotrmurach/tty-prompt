@@ -16,7 +16,12 @@ module TTY
     class Question
       include Checks
 
-      UndefinedSetting = Module.new
+      UndefinedSetting = Class.new do
+        def to_s
+          "undefined"
+        end
+        alias inspect to_s
+      end
 
       # Store question message
       # @api public
