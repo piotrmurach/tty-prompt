@@ -6,6 +6,19 @@ RSpec.describe TTY::Prompt::Reader::History do
     expect(history.size).to eq(0)
   end
 
+  it "doesn't navigate through empty buffer" do
+    history = described_class.new
+    expect(history.next?).to eq(false)
+    expect(history.previous?).to eq(false)
+  end
+
+  it "allows to cycle through non-empty buffer" do
+    history = described_class.new(3, {cycle: true})
+    history << "line"
+    expect(history.next?).to eq(true)
+    expect(history.previous?).to eq(true)
+  end
+
   it "defaults maximum size" do
     history = described_class.new
     expect(history.max_size).to eq(512)
@@ -72,6 +85,7 @@ RSpec.describe TTY::Prompt::Reader::History do
     history.next
     expect(history.index).to eq(2)
     history.next
+    expect(history.next?).to eq(false)
     expect(history.index).to eq(2)
   end
 
@@ -87,6 +101,7 @@ RSpec.describe TTY::Prompt::Reader::History do
     expect(history.index).to eq(0)
     history.previous
     expect(history.index).to eq(2)
+    expect(history.next?).to eq(true)
     history.next
     history.next
     expect(history.index).to eq(1)

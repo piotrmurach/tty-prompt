@@ -22,6 +22,10 @@ module TTY
 
         attr_reader :index
 
+        attr_accessor :cycle
+
+        attr_accessor :duplicates
+
         attr_accessor :exclude
 
         # Create a History buffer
@@ -41,6 +45,7 @@ module TTY
           @duplicates = options.fetch(:duplicates) { true }
           @exclude    = options.fetch(:exclude) { proc {} }
           @cycle      = options.fetch(:cycle) { false }
+          yield self if block_given?
         end
 
         # Iterates over history lines
@@ -61,7 +66,7 @@ module TTY
         # @api public
         def push(line)
           @history.delete(line) unless @duplicates
-          return if line.empty? || @exclude[line]
+          return if line.to_s.empty? || @exclude[line]
 
           @history.shift if size >= max_size
           @history << line
@@ -83,6 +88,10 @@ module TTY
           end
         end
 
+        def next?
+          size > 0 && !(@index == size - 1 && !@cycle)
+        end
+
         # Move the pointer to the previous line in the history
         def previous
           return if size.zero?
@@ -91,6 +100,10 @@ module TTY
           else
             @index -= 1
           end
+        end
+
+        def previous?
+          size > 0 && !(@index.zero? && !@cycle)
         end
 
         # Get current line at index
