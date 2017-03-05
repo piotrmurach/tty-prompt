@@ -3,7 +3,7 @@
 RSpec.describe TTY::Prompt::Question, '#multiline' do
   it 'reads no lines' do
     prompt = TTY::TestPrompt.new
-    prompt.input << "\n"
+    prompt.input << "\C-d"
     prompt.input.rewind
     answer = prompt.multiline("Provide description?")
     expect(answer).to eq(nil)
@@ -11,9 +11,9 @@ RSpec.describe TTY::Prompt::Question, '#multiline' do
 
   it 'reads multiple lines with method' do
     prompt = TTY::TestPrompt.new
-    prompt.input << "First line\nSecond line\nThird line"
+    prompt.input << "First line\nSecond line\nThird line\C-d"
     prompt.input.rewind
     answer = prompt.multiline("Provide description?")
-    expect(answer).to eq(['First line', 'Second line', 'Third line'])
+    expect(answer).to eq(["First line\n", "Second line\n", "Third line"])
   end
 end
