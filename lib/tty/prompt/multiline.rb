@@ -11,8 +11,6 @@ module TTY
     class Multiline < Question
       HELP = '(Press CTRL-D or CTRL-Z to finish)'.freeze
 
-      attr_accessor :help
-
       def initialize(prompt, options = {})
         super
         @help         = options[:help] || self.class::HELP
