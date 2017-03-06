@@ -124,4 +124,17 @@ RSpec.describe TTY::Prompt::Reader::History do
     history.next
     expect(history.pop).to eq("line #2")
   end
+
+  it "clears all lines" do
+    history = described_class.new(3)
+
+    history << "line #1"
+    history << "line #2"
+    history << "line #3"
+
+    expect(history.size).to eq(3)
+    history.clear
+    expect(history.size).to eq(0)
+    expect(history.index).to eq(0)
+  end
 end

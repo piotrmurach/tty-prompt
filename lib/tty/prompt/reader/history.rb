@@ -114,6 +114,14 @@ module TTY
 
           @history[@index]
         end
+
+        # Empty all history lines
+        #
+        # @api public
+        def clear
+          @history.clear
+          @index = 0
+        end
       end # History
     end # Reader
   end # Prompt
