@@ -4,6 +4,7 @@ require 'wisper'
 require 'rbconfig'
 
 require_relative 'reader/history'
+require_relative 'reader/line'
 require_relative 'reader/key_event'
 require_relative 'reader/console'
 require_relative 'reader/win_console'
