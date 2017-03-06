@@ -3,9 +3,10 @@
 ## [v0.12.0] - 2017-03-xx
 
 ### Added
-* Add Reader::History for storing buffered lines
 * Add Multiline question type
 * Add Keypress question type
+* Add Reader::History for storing buffered lines
+* Add Reader::Line for line abstraction
 
 ### Changed
 * Remove :read option from Question
