@@ -89,6 +89,28 @@ module TTY
 
     # Initialize a Prompt
     #
+    # @param [Hash] options
+    # @option options [IO] :input
+    #   the input stream
+    # @option options [IO] :output
+    #   the output stream
+    # @option options [Hash] :env
+    #   the environment variables
+    # @option options [String] :prefix
+    #   the prompt prefix, by default empty
+    # @option options [Boolean] :enable_color
+    #   enable color support, true by default
+    # @option options [String] :active_color
+    #   the color used for selected option
+    # @option options [String] :help_color
+    #   the color used for help text
+    # @option options [String] :error_color
+    #   the color used for displaying error messages
+    # @option options [Symbol] :interrupt
+    #   handling of Ctrl+C key out of :signal, :exit, :noop
+    # @option options [Boolean] :track_history
+    #   disable line history tracking, true by default
+    #
     # @api public
     def initialize(*args)
       options = Utils.extract_options!(args)
