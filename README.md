@@ -79,6 +79,7 @@ Or install it yourself as:
   * [3.3 help_color](#33-help_color)
   * [3.4 interrupt](#34-interrupt)
   * [3.5 prefix](#35-prefix)
+  * [3.6 trakc_history](#36-track_history)
 
 ## 1. Usage
 
@@ -1083,6 +1084,14 @@ You can prefix each question asked using the `:prefix` option. This option can b
 
 ```ruby
 prompt = TTY::Prompt.new(prefix: '[?] ')
+```
+
+### 3.6 track_history
+
+The prompts that accept line input such as `multiline` or `ask` provide history buffer that tracks all the lines entered during `TTY::Prompt.new` interactions. The history buffer provides previoius or next lines when user presses up/down arrows respectively. However, if you wish to disable this behaviour use `:track_history` option like so:
+
+```ruby
+prompt = TTY::Prompt.new(track_history: false)
 ```
 
 ## Contributing
