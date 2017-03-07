@@ -39,12 +39,23 @@ module TTY
 
       # Initialize a Reader
       #
+      # @param [IO] input
+      #   the input stream
+      # @param [IO] output
+      #   the output stream
+      # @param [Hash] options
+      # @option options [Symbol] :interrupt
+      #   handling of Ctrl+C key out of :signal, :exit, :noop
+      # @option options [Boolean] :track_history
+      #   disable line history tracking, true by default
+      #
       # @api public
       def initialize(input = $stdin, output = $stdout, options = {})
         @input     = input
         @output    = output
         @interrupt = options.fetch(:interrupt) { :error }
         @env       = options.fetch(:env) { ENV }
+        @track_history = options.fetch(:track_history) { true }
         @console   = windows? ? WinConsole.new(input) : Console.new(input)
         @history   = History.new do |h|
           h.duplicates = false
@@ -162,7 +173,6 @@ module TTY
               output.print(clear_line, line)
             end
           elsif @console.keys[:down] == char
-            line = history_next if history_next?
             if history_next?
               line.replace(history_next)
               output.print(clear_line, line)
@@ -201,7 +211,7 @@ module TTY
             end
           end
         end
-        add_to_history(line.to_s.rstrip)
+        add_to_history(line.to_s.rstrip) if @track_history
         line.to_s
       end
 
@@ -253,10 +263,12 @@ module TTY
 
       def history_next?
         @history.next?
+        @history.pop
       end
 
       def history_next
         @history.next
+        @history.pop
       end
 
       def history_previous?
@@ -264,7 +276,9 @@ module TTY
       end
 
       def history_previous
+        line = @history.pop
         @history.previous
+        line
       end
 
       # Inspect class name and public attributes
