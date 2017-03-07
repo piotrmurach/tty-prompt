@@ -135,10 +135,11 @@ module TTY
       # @api public
       def read_line(options = {})
         opts = { echo: true, raw: false }.merge(options)
-        line = ''
+        line = Line.new('')
         backspaces = 0
         delete_char = proc { |c| c == BACKSPACE || c == DELETE }
         ctrls = @console.keys.keys.grep(/ctrl/)
+        clear_line = "\e[2K\e[1G"
 
         while (codes = unbufferred { get_codes(opts) }) && (code = codes[0])
           char = codes.pack('U*')
@@ -146,37 +147,62 @@ module TTY
 
           if delete_char[code]
             line.slice!(-1, 1)
+            line.left
             backspaces -= 1
-          elsif [@console.keys[:ctrl_d], @console.keys[:ctrl_z]].include?(char)
+          elsif [@console.keys[:ctrl_d],
+                 @console.keys[:ctrl_z]].include?(char)
             break
           elsif @console.keys[:ctrl_c] == char
             handle_interrupt
-          elsif ctrls.include?(@console.keys.key(char)) ||
-                [@console.keys[:left], @console.keys[:right]].include?(code)
+          elsif ctrls.include?(@console.keys.key(char))
             # skip
           elsif @console.keys[:up] == char
-            line = history_previous if history_previous?
+            if history_previous?
+              line.replace(history_previous)
+              output.print(clear_line, line)
+            end
           elsif @console.keys[:down] == char
             line = history_next if history_next?
+            if history_next?
+              line.replace(history_next)
+              output.print(clear_line, line)
+            end
+          elsif @console.keys[:left] == char
+            next if line.start?
+            output.print(char)
+            line.left
+          elsif @console.keys[:right] == char
+            line.right
+            output.print(char)
           else
-            char = "\n" if opts[:raw] && code == CARRIAGE_RETURN
-            line << char
+            if opts[:raw] && code == CARRIAGE_RETURN
+              char = "\n"
+              line.move_to_end
+            end
+            line.insert(char)
             backspaces = line.size
-            output.print(char) if opts[:raw] && opts[:echo]
+          end
+
+          if opts[:raw] && opts[:echo]
+            output.print(clear_line, line)
+            if char == "\n"
+              line.move_to_start
+            end
+            output.print("\e[#{line.cursor + 1}G")
           end
 
           break if (code == CARRIAGE_RETURN || code == NEWLINE)
 
           if delete_char[code] && opts[:echo]
             if opts[:raw]
-              output.print("\e[1D\e[1X")
+              output.print("\e[1X")
             else
-              output.print(' ' + (backspaces >= 0 ? "\b" : ''))
+              output.print(?\s + (backspaces >= 0 ? ?\b : ''))
             end
           end
         end
-        add_to_history(line)
-        line
+        add_to_history(line.to_s.rstrip)
+        line.to_s
       end
 
       # Read multiple lines and return them in an array.

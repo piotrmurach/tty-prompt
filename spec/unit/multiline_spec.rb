@@ -51,20 +51,28 @@ RSpec.describe TTY::Prompt::Question, '#multiline' do
 
   it 'reads multiple lines with empty lines' do
     prompt = TTY::TestPrompt.new
-    prompt.input << "First line\n\nSecond line\n\n\nThird line\C-d"
+    prompt.input << "aa\n\nbb\n\n\ncc\C-d"
     prompt.input.rewind
 
     answer = prompt.multiline("Description?")
 
-    expect(answer).to eq(["First line\n", "Second line\n", "Third line"])
+    expect(answer).to eq(["aa\n", "bb\n", "cc"])
     expect(prompt.output.string).to eq([
       "Description? \e[90m(Press CTRL-D or CTRL-Z to finish)\e[0m\n",
-      "First line\n\n",
-      "Second line\n\n\n",
-      "Third line",
+      "\e[2K\e[1Ga\e[2G",
+      "\e[2K\e[1Gaa\e[3G",
+      "\e[2K\e[1Gaa\n\e[1G",
+      "\e[2K\e[1G\n\e[1G",
+      "\e[2K\e[1Gb\e[2G",
+      "\e[2K\e[1Gbb\e[3G",
+      "\e[2K\e[1Gbb\n\e[1G",
+      "\e[2K\e[1G\n\e[1G",
+      "\e[2K\e[1G\n\e[1G",
+      "\e[2K\e[1Gc\e[2G",
+      "\e[2K\e[1Gcc\e[3G",
       "\e[2K\e[1G\e[1A" * 6,
       "\e[2K\e[1G",
-      "Description? \e[32mFirst line ...\e[0m\n"
+      "Description? \e[32maa ...\e[0m\n"
     ].join)
   end
 end
