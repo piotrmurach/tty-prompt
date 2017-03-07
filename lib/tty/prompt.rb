@@ -100,10 +100,13 @@ module TTY
       @active_color  = options.fetch(:active_color) { :green }
       @help_color    = options.fetch(:help_color)   { :bright_black }
       @error_color   = options.fetch(:error_color)  { :red }
+      @interrupt     = options.fetch(:interrupt)    { :error }
+      @track_history = options.fetch(:track_history) { true }
 
       @cursor = TTY::Cursor
       @pastel = Pastel.new(@enabled_color.nil? ? {} : { enabled: @enabled_color })
-      @reader = Reader.new(@input, @output, interrupt: options[:interrupt], env: @env)
+      @reader = Reader.new(@input, @output, interrupt: @interrupt,
+                           track_history: @track_history, env: @env)
     end
 
     # Ask a question.
