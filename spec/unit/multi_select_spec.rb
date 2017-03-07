@@ -257,6 +257,24 @@ RSpec.describe TTY::Prompt do
     ].join)
   end
 
+  it "paginates choices as hash object" do
+    prompt = TTY::TestPrompt.new
+    choices = {A: 1, B: 2, C: 3, D: 4, E: 5, F: 6, G: 7, H: 8}
+    prompt.input << "\r"
+    prompt.input.rewind
+    value = prompt.multi_select("What letter?", choices, default: 4, per_page: 3)
+    expect(value).to eq([4])
+    expect(prompt.output.string).to eq([
+      "\e[?25lWhat letter? D \e[90m(Use arrow keys, press Space to select and Enter to finish)\e[0m\n",
+      "#{symbols[:pointer]} \e[32m#{symbols[:radio_on]}\e[0m D\n",
+      "  #{symbols[:radio_off]} E\n",
+      "  #{symbols[:radio_off]} F\n",
+      "\e[90m(Move up or down to reveal more choices)\e[0m",
+      "\e[2K\e[1G\e[1A" * 4, "\e[2K\e[1G",
+      "What letter? \e[32mD\e[0m\n\e[?25h",
+    ].join)
+  end
+
   it "paginates long selections through DSL" do
     prompt = TTY::TestPrompt.new
     choices = %w(A B C D E F G H)

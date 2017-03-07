@@ -117,7 +117,7 @@ module TTY
       #
       # @api public
       def choices(values)
-        values.each { |val| choice(*val) }
+        Array(values).each { |val| choice(*val) }
       end
 
       # Call the list menu by passing question and choices

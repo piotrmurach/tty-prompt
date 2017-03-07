@@ -277,7 +277,11 @@ module TTY
       choices = if block
                   []
                 elsif args.empty?
-                  options
+                  possible = options.dup
+                  options = {}
+                  possible
+                elsif args.size == 1 && args[0].is_a?(Hash)
+                  Utils.extract_options!(args)
                 else
                   args.flatten
                 end

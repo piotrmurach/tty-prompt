@@ -51,7 +51,7 @@ RSpec.describe TTY::Prompt, '#select' do
     choices = {large: 1, medium: 2, small: 3}
     prompt.input << " "
     prompt.input.rewind
-    expect(prompt.select('What size?', choices)).to eq(1)
+    expect(prompt.select('What size?', choices, default: 1)).to eq(1)
     expect(prompt.output.string).to eq([
       "\e[?25lWhat size? \e[90m(Use arrow keys, press Enter to select)\e[0m\n",
       "\e[32m#{symbols[:pointer]} large\e[0m\n",
@@ -239,6 +239,25 @@ RSpec.describe TTY::Prompt, '#select' do
     prompt.input.rewind
     value = prompt.select("What letter?", choices, per_page: 3, default: 4)
     expect(value).to eq('D')
+    expect(prompt.output.string).to eq([
+      "\e[?25lWhat letter? \e[90m(Use arrow keys, press Enter to select)\e[0m\n",
+      "\e[32m#{symbols[:pointer]} D\e[0m\n",
+      "  E\n",
+      "  F\n",
+      "\e[90m(Move up or down to reveal more choices)\e[0m",
+      "\e[2K\e[1G\e[1A" * 4,
+      "\e[2K\e[1G",
+      "What letter? \e[32mD\e[0m\n\e[?25h",
+    ].join)
+  end
+
+  it "paginates choices as hash object" do
+    prompt = TTY::TestPrompt.new
+    choices = {A: 1, B: 2, C: 3, D: 4, E: 5, F: 6, G: 7, H: 8}
+    prompt.input << "\r"
+    prompt.input.rewind
+    value = prompt.select("What letter?", choices, per_page: 3, default: 4)
+    expect(value).to eq(4)
     expect(prompt.output.string).to eq([
       "\e[?25lWhat letter? \e[90m(Use arrow keys, press Enter to select)\e[0m\n",
       "\e[32m#{symbols[:pointer]} D\e[0m\n",
