@@ -103,7 +103,7 @@ module TTY
         end
 
         def previous?
-          size > 0 && !(@index.zero? && !@cycle)
+          size > 0 && !(@index < 0 && !@cycle)
         end
 
         # Get current line at index

@@ -109,6 +109,25 @@ RSpec.describe TTY::Prompt::Reader::History do
     expect(history.index).to eq(2)
   end
 
+  it "checks if navigation is possible" do
+    history = described_class.new(3)
+    expect(history.previous?).to eq(false)
+    expect(history.next?).to eq(false)
+
+    history << "line #1"
+    history << "line #2"
+    expect(history.previous?).to eq(true)
+    expect(history.next?).to eq(false)
+
+    history.previous
+    expect(history.previous?).to eq(true)
+    expect(history.next?).to eq(true)
+
+    history.previous
+    expect(history.previous?).to eq(true)
+    expect(history.next?).to eq(true)
+  end
+
   it "retrieves current line" do
     history = described_class.new(3, cycle: true)
     expect(history.pop).to eq(nil)
