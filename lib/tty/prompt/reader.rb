@@ -168,15 +168,13 @@ module TTY
           elsif ctrls.include?(@console.keys.key(char))
             # skip
           elsif @console.keys[:up] == char
-            if history_previous?
-              line.replace(history_previous)
-              output.print(clear_line, line)
-            end
+            next unless history_previous?
+            line.replace(history_previous)
+            output.print(clear_line, line)
           elsif @console.keys[:down] == char
-            if history_next?
-              line.replace(history_next)
-              output.print(clear_line, line)
-            end
+            next unless history_next?
+            line.replace(history_next)
+            output.print(clear_line, line)
           elsif @console.keys[:left] == char
             next if line.start?
             output.print(char)
