@@ -322,7 +322,7 @@ module TTY
     #
     # @api public
     def no?(message, *args, &block)
-      defaults = { default: false, type: :no }
+      defaults = { default: false }
       options  = Utils.extract_options!(args)
       options.merge!(defaults.reject { |k, _| options.key?(k) })
 
