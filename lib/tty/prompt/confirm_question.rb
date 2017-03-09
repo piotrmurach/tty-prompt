@@ -108,29 +108,17 @@ module TTY
       end
 
       def create_default_labels
-        if is?(:yes)
-          @suffix   = default? ? 'Y/n' : 'y/N'
-          @positive = default? ? 'Yes' : 'yes'
-          @negative = default? ? 'no' : 'No'
-        else
-          @suffix   = default? ? 'y/N' : 'Y/n'
-          @positive = default? ? 'Yes' : 'yes'
-          @negative = default? ? 'No'  : 'no'
+          @suffix   = @default ? 'Y/n' : 'y/N'
+          @positive = @default ? 'Yes' : 'yes'
+          @negative = @default ? 'no' : 'No'
         end
-      end
 
       # @api private
       def create_suffix
         result = ''
-        if is?(:yes)
-          result << "#{default? ? @positive.capitalize : @positive.downcase}"
+          result << "#{@default ? @positive.capitalize : @positive.downcase}"
           result << '/'
-          result << "#{default? ? @negative.downcase : @negative.capitalize}"
-        else
-          result << "#{default? ? @positive.downcase : @positive.capitalize}"
-          result << '/'
-          result << "#{default? ? @negative.capitalize : @negative.downcase}"
-        end
+          result << "#{@default ? @negative.downcase : @negative.capitalize}"
       end
 
       # Create custom conversion
