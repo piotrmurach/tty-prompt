@@ -16,11 +16,9 @@ module TTY
       # @api public
       def initialize(prompt, options = {})
         super
-
         @suffix   = options.fetch(:suffix)   { UndefinedSetting }
         @positive = options.fetch(:positive) { UndefinedSetting }
         @negative = options.fetch(:negative) { UndefinedSetting }
-        @type     = options.fetch(:type)     { :yes }
       end
 
       def positive?
@@ -85,15 +83,10 @@ module TTY
       protected
 
       # @api private
-      def is?(type)
-        @type == type
-      end
-
-      # @api private
       def setup_defaults
         return if suffix? && positive?
 
-        if suffix? && !positive?
+        if suffix? && (!positive? || !negative?)
           parts = @suffix.split('/')
           @positive = parts[0]
           @negative = parts[1]
@@ -103,22 +96,23 @@ module TTY
           @convert = conversion
         else
           create_default_labels
-          @convert  = :bool
+          @convert = :bool
         end
       end
 
+      # @api private
       def create_default_labels
-          @suffix   = @default ? 'Y/n' : 'y/N'
-          @positive = @default ? 'Yes' : 'yes'
-          @negative = @default ? 'no' : 'No'
-        end
+        @suffix   = @default ? 'Y/n' : 'y/N'
+        @positive = @default ? 'Yes' : 'yes'
+        @negative = @default ? 'no' : 'No'
+      end
 
       # @api private
       def create_suffix
         result = ''
-          result << "#{@default ? @positive.capitalize : @positive.downcase}"
-          result << '/'
-          result << "#{@default ? @negative.downcase : @negative.capitalize}"
+        result << "#{@default ? @positive.capitalize : @positive.downcase}"
+        result << '/'
+        result << "#{@default ? @negative.downcase : @negative.capitalize}"
       end
 
       # Create custom conversion
