@@ -31,6 +31,11 @@ module TTY
 
       attr_reader :env
 
+      attr_reader :track_history
+      alias track_history? track_history
+
+      attr_reader :console
+
       # Key codes
       CARRIAGE_RETURN = 13
       NEWLINE         = 10
@@ -103,7 +108,7 @@ module TTY
         char  = codes ? codes.pack('U*') : nil
 
         trigger_key_event(char) if char
-        handle_interrupt if char == @console.keys[:ctrl_c]
+        handle_interrupt if char == console.keys[:ctrl_c]
         char
       end
       alias read_char read_keypress
@@ -118,7 +123,7 @@ module TTY
       # @api private
       def get_codes(options = {}, codes = [])
         opts = { echo: true, raw: false }.merge(options)
-        char = @console.get_char(opts)
+        char = console.get_char(opts)
         return if char.nil?
         codes << char.ord
 
@@ -128,7 +133,7 @@ module TTY
           !(64..126).include?(codes.last)
         }
 
-        while @console.escape_codes.any?(&condition)
+        while console.escape_codes.any?(&condition)
           get_codes(options, codes)
         end
         codes
@@ -149,7 +154,7 @@ module TTY
         line = Line.new('')
         backspaces = 0
         delete_char = proc { |c| c == BACKSPACE || c == DELETE }
-        ctrls = @console.keys.keys.grep(/ctrl/)
+        ctrls = console.keys.keys.grep(/ctrl/)
         clear_line = "\e[2K\e[1G"
 
         while (codes = unbufferred { get_codes(opts) }) && (code = codes[0])
@@ -160,26 +165,26 @@ module TTY
             line.slice!(-1, 1)
             line.left
             backspaces -= 1
-          elsif [@console.keys[:ctrl_d],
-                 @console.keys[:ctrl_z]].include?(char)
+          elsif [console.keys[:ctrl_d],
+                 console.keys[:ctrl_z]].include?(char)
             break
-          elsif @console.keys[:ctrl_c] == char
+          elsif console.keys[:ctrl_c] == char
             handle_interrupt
-          elsif ctrls.include?(@console.keys.key(char))
+          elsif ctrls.include?(console.keys.key(char))
             # skip
-          elsif @console.keys[:up] == char
+          elsif console.keys[:up] == char
             next unless history_previous?
             line.replace(history_previous)
             output.print(clear_line, line)
-          elsif @console.keys[:down] == char
+          elsif console.keys[:down] == char
             next unless history_next?
             line.replace(history_next)
             output.print(clear_line, line)
-          elsif @console.keys[:left] == char
+          elsif console.keys[:left] == char
             next if line.start?
             output.print(char)
             line.left
-          elsif @console.keys[:right] == char
+          elsif console.keys[:right] == char
             line.right
             output.print(char)
           else
@@ -209,7 +214,7 @@ module TTY
             end
           end
         end
-        add_to_history(line.to_s.rstrip) if @track_history
+        add_to_history(line.to_s.rstrip) if track_history?
         line.to_s
       end
 
@@ -298,7 +303,7 @@ module TTY
       #
       # @api private
       def trigger_key_event(char)
-        event = KeyEvent.from(@console.keys, char)
+        event = KeyEvent.from(console.keys, char)
         trigger(:"key#{event.key.name}", event) if event.trigger?
         trigger(:keypress, event)
       end
