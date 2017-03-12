@@ -19,7 +19,7 @@ module TTY
         #
         # @api public
         def echo(is_on = true, &block)
-          if is_on
+          if is_on || @input.tty?
             yield
           else
             @input.noecho(&block)
@@ -32,7 +32,7 @@ module TTY
         #
         # @api public
         def raw(is_on = true, &block)
-          if is_on
+          if is_on && !@input.tty?
             @input.raw(&block)
           else
             yield
