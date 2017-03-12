@@ -83,4 +83,17 @@ RSpec.describe TTY::Prompt::Reader::Line do
     line.insert('x')
     expect(line.text).to eq('axcd')
   end
+
+  it "inserts chars on empty string" do
+    line = described_class.new('')
+    expect(line.cursor).to eq(0)
+    line.insert('a')
+    expect(line.cursor).to eq(1)
+    line.insert('b')
+    expect(line.cursor).to eq(2)
+    expect(line.to_s).to eq('ab')
+    line.insert('cc')
+    expect(line.cursor).to eq(4)
+    expect(line.to_s).to eq('abcc')
+  end
 end
