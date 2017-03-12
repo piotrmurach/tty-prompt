@@ -186,11 +186,9 @@ module TTY
           elsif console.keys[:up] == char
             next unless history_previous?
             line.replace(history_previous)
-            output.print(clear_line, line)
           elsif console.keys[:down] == char
             next unless history_next?
             line.replace(history_next)
-            output.print(clear_line, line)
           elsif console.keys[:left] == char
             next if line.start?
             output.print(char)
@@ -208,11 +206,13 @@ module TTY
           end
 
           if opts[:raw] && opts[:echo]
-            output.print(clear_line, line)
+            output.print(clear_line)
+            output.print(line)
             if char == "\n"
               line.move_to_start
+            elsif !line.end?
+              output.print("\e[#{line.size - line.cursor}D")
             end
-            output.print("\e[#{line.cursor + 1}G")
           end
 
           break if (code == CARRIAGE_RETURN || code == NEWLINE)

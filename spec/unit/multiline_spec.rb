@@ -55,21 +55,20 @@ RSpec.describe TTY::Prompt::Question, '#multiline' do
     prompt.input.rewind
 
     answer = prompt.multiline("Description?")
-
     expect(answer).to eq(["aa\n", "bb\n", "cc"])
     expect(prompt.output.string).to eq([
       "Description? \e[90m(Press CTRL-D or CTRL-Z to finish)\e[0m\n",
-      "\e[2K\e[1Ga\e[2G",
-      "\e[2K\e[1Gaa\e[3G",
-      "\e[2K\e[1Gaa\n\e[1G",
-      "\e[2K\e[1G\n\e[1G",
-      "\e[2K\e[1Gb\e[2G",
-      "\e[2K\e[1Gbb\e[3G",
-      "\e[2K\e[1Gbb\n\e[1G",
-      "\e[2K\e[1G\n\e[1G",
-      "\e[2K\e[1G\n\e[1G",
-      "\e[2K\e[1Gc\e[2G",
-      "\e[2K\e[1Gcc\e[3G",
+      "\e[2K\e[1Ga",
+      "\e[2K\e[1Gaa",
+      "\e[2K\e[1Gaa\n",
+      "\e[2K\e[1G\n",
+      "\e[2K\e[1Gb",
+      "\e[2K\e[1Gbb",
+      "\e[2K\e[1Gbb\n",
+      "\e[2K\e[1G\n",
+      "\e[2K\e[1G\n",
+      "\e[2K\e[1Gc",
+      "\e[2K\e[1Gcc",
       "\e[2K\e[1G\e[1A" * 6,
       "\e[2K\e[1G",
       "Description? \e[32maa ...\e[0m\n"
