@@ -61,7 +61,7 @@ module TTY
         @interrupt = options.fetch(:interrupt) { :error }
         @env       = options.fetch(:env) { ENV }
         @track_history = options.fetch(:track_history) { true }
-        @console   = windows? ? WinConsole.new(input) : Console.new(input)
+        @console   = select_console(input)
         @history   = History.new do |h|
           h.duplicates = false
           h.exclude = proc { |line| line.strip == '' }
@@ -69,6 +69,17 @@ module TTY
         @stop = false # gathering input
 
         subscribe(self)
+      end
+
+      # Select appropriate console
+      #
+      # @api private
+      def select_console(input)
+        if windows? && !env['TTY_TEST']
+          WinConsole.new(input)
+        else
+          Console.new(input)
+        end
       end
 
       # Get input in unbuffered mode.
@@ -332,7 +343,6 @@ module TTY
       #
       # @api public
       def windows?
-        return false if env["TTY_TEST"] == true
         ::File::ALT_SEPARATOR == "\\"
       end
     end # Reader
