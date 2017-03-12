@@ -41,7 +41,11 @@ module TTY
         #
         # @api private
         def get_char(options)
-          options[:echo] ? @input.getc : WinAPI.getch.chr
+          if options[:raw]
+            WinAPI.getch.chr
+          else
+            options[:echo] ? @input.getc : WinAPI.getch.chr
+          end
         end
       end # Console
     end # Reader
