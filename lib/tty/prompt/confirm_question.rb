@@ -36,21 +36,24 @@ module TTY
       # Set question suffix
       #
       # @api public
-      def suffix(value)
+      def suffix(value = (not_set = true))
+        return @negative if not_set
         @suffix = value
       end
 
       # Set value for matching positive choice
       #
       # @api public
-      def positive(value)
+      def positive(value = (not_set = true))
+        return @positive if not_set
         @positive = value
       end
 
       # Set value for matching negative choice
       #
       # @api public
-      def negative(value)
+      def negative(value = (not_set = true))
+        return @negative if not_set
         @negative = value
       end
 
@@ -102,24 +105,24 @@ module TTY
 
       # @api private
       def create_default_labels
-        @suffix   = @default ? 'Y/n' : 'y/N'
-        @positive = @default ? 'Yes' : 'yes'
-        @negative = @default ? 'no' : 'No'
+        @suffix   = default ? 'Y/n' : 'y/N'
+        @positive = default ? 'Yes' : 'yes'
+        @negative = default ? 'no' : 'No'
       end
 
       # @api private
       def create_suffix
         result = ''
-        result << "#{@default ? @positive.capitalize : @positive.downcase}"
+        result << "#{default ? positive.capitalize : positive.downcase}"
         result << '/'
-        result << "#{@default ? @negative.downcase : @negative.capitalize}"
+        result << "#{default ? negative.downcase : negative.capitalize}"
       end
 
       # Create custom conversion
       #
       # @api private
       def conversion
-        proc { |input| !input.match(/^#{@positive}|#{@positive[0]}$/i).nil? }
+        proc { |input| !input.match(/^#{positive}|#{positive[0]}$/i).nil? }
       end
     end # ConfirmQuestion
   end # Prompt
