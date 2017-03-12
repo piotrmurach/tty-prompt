@@ -26,7 +26,7 @@ module TTY
 
         def initialize(input)
           @input = input
-          @mode  = Mode.new
+          @mode  = Mode.new(input)
           @keys  = Codes.keys
           @escape_codes = [[ESC.ord], CSI.bytes.to_a]
         end
