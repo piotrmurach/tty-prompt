@@ -11,10 +11,7 @@ RSpec.describe TTY::Prompt::Reader::Line do
 
   it "moves cursor left and right" do
     line = described_class.new('aaaaa')
-    line.left
-    line.left
-    line.left
-    line.left
+    5.times { line.left }
     expect(line.cursor).to eq(0)
     expect(line.start?).to eq(true)
     line.left(5)
@@ -26,7 +23,7 @@ RSpec.describe TTY::Prompt::Reader::Line do
 
   it "inserts char at start of the line" do
     line = described_class.new('aaaaa')
-    expect(line.cursor).to eq(4)
+    expect(line.cursor).to eq(5)
     line[0] = 'b'
     expect(line.cursor).to eq(1)
     expect(line.text).to eq('baaaaa')
@@ -36,7 +33,7 @@ RSpec.describe TTY::Prompt::Reader::Line do
 
   it "inserts char at end of the line" do
     line = described_class.new('aaaaa')
-    expect(line.cursor).to eq(4)
+    expect(line.cursor).to eq(5)
     line[4] = 'b'
     expect(line.cursor).to eq(5)
     expect(line.text).to eq('aaaaab')
@@ -44,7 +41,7 @@ RSpec.describe TTY::Prompt::Reader::Line do
 
   it "inserts char inside the line" do
     line = described_class.new('aaaaa')
-    expect(line.cursor).to eq(4)
+    expect(line.cursor).to eq(5)
     line[2] = 'b'
     expect(line.cursor).to eq(3)
     expect(line.text).to eq('aabaaa')
@@ -52,36 +49,10 @@ RSpec.describe TTY::Prompt::Reader::Line do
 
   it "inserts char outside of the line size" do
     line = described_class.new('aaaaa')
-    expect(line.cursor).to eq(4)
+    expect(line.cursor).to eq(5)
     line[10] = 'b'
     expect(line.cursor).to eq(11)
     expect(line.text).to eq('aaaaa     b')
-  end
-
-  it "inserts characters with #insert call" do
-    line = described_class.new('aaaaa')
-    line.left(2)
-    expect(line.cursor).to eq(2)
-    line.insert(' test ')
-    expect(line.text).to eq('aa test aaa')
-    expect(line.cursor).to eq(8)
-    line.right
-    expect(line.cursor).to eq(9)
-  end
-
-  it "removes char from current position" do
-    line = described_class.new('abcdef')
-    line.remove
-    line.remove
-    expect(line.text).to eq('abcd')
-    expect(line.cursor).to eq(3)
-    line.left
-    line.left
-    line.remove
-    expect(line.text).to eq('acd')
-    expect(line.cursor).to eq(1)
-    line.insert('x')
-    expect(line.text).to eq('axcd')
   end
 
   it "inserts chars on empty string" do
@@ -95,5 +66,45 @@ RSpec.describe TTY::Prompt::Reader::Line do
     line.insert('cc')
     expect(line.cursor).to eq(4)
     expect(line.to_s).to eq('abcc')
+  end
+
+  it "inserts characters with #insert call" do
+    line = described_class.new('aaaaa')
+    line.left(2)
+    expect(line.cursor).to eq(3)
+    line.insert(' test ')
+    expect(line.text).to eq('aaa test aa')
+    expect(line.cursor).to eq(9)
+    line.right
+    expect(line.cursor).to eq(10)
+  end
+
+  it "removes char before current cursor position" do
+    line = described_class.new('abcdef')
+    expect(line.cursor).to eq(6)
+    line.remove
+    line.remove
+    expect(line.text).to eq('abcd')
+    expect(line.cursor).to eq(4)
+    line.left
+    line.left
+    line.remove
+    expect(line.text).to eq('acd')
+    expect(line.cursor).to eq(1)
+    line.insert('x')
+    expect(line.text).to eq('axcd')
+  end
+
+  it "deletes char under current cursor position" do
+    line = described_class.new('abcdef')
+    line.left(3)
+    line.delete
+    expect(line.text).to eq('abcef')
+    line.right
+    line.delete
+    expect(line.text).to eq('abce')
+    line.left(4)
+    line.delete
+    expect(line.text).to eq('bce')
   end
 end

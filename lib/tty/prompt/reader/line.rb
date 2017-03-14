@@ -17,7 +17,7 @@ module TTY
 
         def initialize(text = "")
           @text = text
-          @cursor = [0, @text.length - 1].max
+          @cursor = [0, @text.length].max
           yield self if block_given?
         end
 
@@ -145,9 +145,16 @@ module TTY
         # Remove char from the line at current position
         #
         # @api public
-        def remove
+        def delete
           @text.slice!(@cursor, 1)
-          @cursor -= 1 if end? # only move cursor at the end of line
+        end
+
+        # Remove char from the line in front of the cursor
+        #
+        # @api public
+        def remove
+          left
+          @text.slice!(@cursor, 1)
         end
       end # Line
     end # Reader
