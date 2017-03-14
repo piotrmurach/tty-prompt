@@ -164,7 +164,6 @@ module TTY
         opts = { echo: true, raw: false }.merge(options)
         line = Line.new('')
         backspaces = 0
-        delete_char = proc { |c| c == BACKSPACE || c == DELETE }
         ctrls = console.keys.keys.grep(/ctrl/)
         clear_line = "\e[2K\e[1G"
 
@@ -172,9 +171,11 @@ module TTY
           char = codes.pack('U*')
           trigger_key_event(char)
 
-          if delete_char[code]
-            line.slice!(-1, 1)
+          if console.keys[:delete] == char || DELETE == code
+            line.delete
+          elsif console.keys[:backspace] == char || BACKSPACE == code
             line.left
+            line.delete
             backspaces -= 1
           elsif [console.keys[:ctrl_d],
                  console.keys[:ctrl_z]].include?(char)
@@ -190,7 +191,6 @@ module TTY
             next unless history_next?
             line.replace(history_next)
           elsif console.keys[:left] == char
-            next if line.start?
             output.print(char)
             line.left
           elsif console.keys[:right] == char
@@ -217,7 +217,7 @@ module TTY
 
           break if (code == CARRIAGE_RETURN || code == NEWLINE)
 
-          if delete_char[code] && opts[:echo]
+          if (console.keys[:backspace] == char || BACKSPACE == code) && opts[:echo]
             if opts[:raw]
               output.print("\e[1X")
             else
