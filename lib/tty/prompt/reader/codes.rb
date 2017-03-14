@@ -44,8 +44,10 @@ module TTY
             escape:    "\e",
             space:     " ",
             backspace: ?\C-?,
+            home:      "\e[1~",
             insert:    "\e[2~",
             delete:    "\e[3~",
+            end:       "\e[4~",
             page_up:   "\e[5~",
             page_down: "\e[6~",
 
@@ -54,8 +56,6 @@ module TTY
             right:  "\e[C",
             left:   "\e[D",
             clear:  "\e[E",
-            end:    "\e[F",
-            home:   "\e[H",
 
             f1_xterm: "\eOP",
             f2_xterm: "\eOQ",
@@ -86,6 +86,8 @@ module TTY
             escape:    "\e",
             space:     " ",
             backspace: "\b",
+            home:      [224, 71].pack('U*'),
+            end:       [224, 79].pack('U*'),
             insert:    [224, 82].pack('U*'),
             delete:    [224, 83].pack('U*'),
             page_up:   [224, 73].pack('U*'),
@@ -96,8 +98,6 @@ module TTY
             right:  [224, 77].pack('U*'),
             left:   [224, 75].pack('U*'),
             clear:  [224, 83].pack('U*'),
-            end:    [224, 79].pack('U*'),
-            home:   [224, 71].pack('U*'),
 
             f1:  "\x00;",
             f2:  "\x00<",
