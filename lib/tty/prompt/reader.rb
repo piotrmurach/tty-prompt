@@ -171,12 +171,12 @@ module TTY
           char = codes.pack('U*')
           trigger_key_event(char)
 
-          if console.keys[:delete] == char || DELETE == code
-            line.delete
-          elsif console.keys[:backspace] == char || BACKSPACE == code
+          if console.keys[:backspace] == char || BACKSPACE == code
             line.left
             line.delete
             backspaces -= 1
+          elsif console.keys[:delete] == char || DELETE == code
+            line.delete
           elsif [console.keys[:ctrl_d],
                  console.keys[:ctrl_z]].include?(char)
             break
