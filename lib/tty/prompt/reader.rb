@@ -163,7 +163,6 @@ module TTY
       def read_line(options = {})
         opts = { echo: true, raw: false }.merge(options)
         line = Line.new('')
-        backspaces = 0
         ctrls = console.keys.keys.grep(/ctrl/)
         clear_line = "\e[2K\e[1G"
 
@@ -172,9 +171,9 @@ module TTY
           trigger_key_event(char)
 
           if console.keys[:backspace] == char || BACKSPACE == code
+            next if line.start?
             line.left
             line.delete
-            backspaces -= 1
           elsif console.keys[:delete] == char || DELETE == code
             line.delete
           elsif [console.keys[:ctrl_d],
@@ -204,7 +203,6 @@ module TTY
               line.move_to_end
             end
             line.insert(char)
-            backspaces = line.size
           end
 
           if opts[:raw] && opts[:echo]
@@ -221,9 +219,9 @@ module TTY
 
           if (console.keys[:backspace] == char || BACKSPACE == code) && opts[:echo]
             if opts[:raw]
-              output.print("\e[1X")
+              output.print("\e[1X") unless line.start?
             else
-              output.print(?\s + (backspaces >= 0 ? ?\b : ''))
+              output.print(?\s + (line.start? ? '' :  ?\b))
             end
           end
         end
