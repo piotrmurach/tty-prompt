@@ -14,11 +14,12 @@
   character such as Ctrl+x
 * Change Reader#read_multiline to gather multi line input correctly,
   skip empty lines and terminate when Ctrl+d and Ctrl+z are pressed
+* Change Reader::Mode to check if tty is available by Matt Martyn (@MMartyn)
 
 ### Fixed
 * Fix issue with #select, #multi_selct, #enum_select when choices are
   provided as hash object together with prompt options.
-* Fix issue with default parameter for yes?/no? prompt by @carlosefonseca
+* Fix issue with default parameter for yes?/no? prompt by Carlos Fonseca (@carlosefonseca)
 
 ## [v0.11.0] - 2017-02-26
 
