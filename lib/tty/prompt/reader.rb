@@ -191,11 +191,13 @@ module TTY
             next unless history_next?
             line.replace(history_next)
           elsif console.keys[:left] == char
-            output.print(char)
+            output.print(char) unless line.start?
             line.left
+            next
           elsif console.keys[:right] == char
+            output.print(char) unless line.end?
             line.right
-            output.print(char)
+            next
           else
             if opts[:raw] && code == CARRIAGE_RETURN
               char = "\n"

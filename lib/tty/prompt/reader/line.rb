@@ -36,7 +36,7 @@ module TTY
         #
         # @api public
         def end?
-          @cursor >= @text.length - 1
+          @cursor == @text.length
         end
 
         # Move line position to the left by n chars
