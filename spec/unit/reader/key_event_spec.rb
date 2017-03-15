@@ -59,15 +59,19 @@ RSpec.describe TTY::Prompt::Reader::KeyEvent, '#from' do
     end
   end
 
-  # arrow keys & page navigation
+  # arrow keys & text editing
   {
-    up:    ["\e[A"],
-    down:  ["\e[B"],
-    right: ["\e[C"],
-    left:  ["\e[D"],
-    clear: ["\e[E"],
-    end:   ["\e[F"],
-    home:  ["\e[H"]
+    up:     ["\e[A"],
+    down:   ["\e[B"],
+    right:  ["\e[C"],
+    left:   ["\e[D"],
+    clear:  ["\e[E"],
+    home:   ["\e[1~"],
+    insert: ["\e[2~"],
+    delete: ["\e[3~"],
+    end:    ["\e[4~"],
+    page_up:   ["\e[5~"],
+    page_down: ["\e[6~"]
   }.each do |name, codes|
     codes.each do |code|
       it "parses #{Shellwords.escape(code)} as #{name} key" do
