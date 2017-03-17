@@ -11,10 +11,13 @@
 ### Changed
 * Remove :read option from Question
 * Chnage Reader#read_line to handle raw mode for processing special
-  character such as Ctrl+x
+  characters such as Ctrl+x, navigate through history buffer
+  using up/down arrows, allow editing current line by moving left/right
+  with arrow keys and inserting content
 * Change Reader#read_multiline to gather multi line input correctly,
   skip empty lines and terminate when Ctrl+d and Ctrl+z are pressed
 * Change Reader::Mode to check if tty is available by Matt Martyn (@MMartyn)
+* Change #keypress prompt to correctly refresh line
 
 ### Fixed
 * Fix issue with #select, #multi_selct, #enum_select when choices are
