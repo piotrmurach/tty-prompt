@@ -350,10 +350,12 @@ prompt.ask('What is your email?') { |q| q.validate :email }
 
 ### 2.2. keypress
 
-In order to ask question with a single character or keypress answer use `keypress`:
+In order to ask question that awaits a single character answer use `keypress`:
 
 ```ruby
-prompt.keypress("Which one do you prefer a, b, c or d ?")
+prompt.keypress("Press key ?")
+# Press key? a
+# => a
 ```
 
 ### 2.3 multiline
