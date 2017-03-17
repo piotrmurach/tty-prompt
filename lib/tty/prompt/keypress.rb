@@ -6,8 +6,10 @@ require_relative 'symbols'
 module TTY
   class Prompt
     class Keypress < Question
-      def read_input
-        @prompt.read_keypress
+
+      def process_input
+        @input = @prompt.read_keypress
+        @evaluator.(@input)
       end
 
       def refresh(lines)
