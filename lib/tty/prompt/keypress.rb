@@ -9,6 +9,10 @@ module TTY
       def read_input
         @prompt.read_keypress
       end
+
+      def refresh(lines)
+        @prompt.clear_line
+      end
     end # Keypress
   end # Prompt
 end # TTY
