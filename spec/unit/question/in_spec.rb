@@ -24,6 +24,7 @@ RSpec.describe TTY::Prompt::Question, '#in' do
     expect(answer).to eq('8')
     expect(prompt.output.string).to eq([
       "How do you like it on scale 1-10? ",
+      "\e[2K\e[1GHow do you like it on scale 1-10? 8",
       "\e[1A\e[2K\e[1G",
       "How do you like it on scale 1-10? \e[32m8\e[0m\n",
     ].join)
@@ -40,6 +41,9 @@ RSpec.describe TTY::Prompt::Question, '#in' do
     expect(answer).to eq('8.1')
     expect(prompt.output.string).to eq([
       "How do you like it on scale 1-10? ",
+      "\e[2K\e[1GHow do you like it on scale 1-10? 8",
+      "\e[2K\e[1GHow do you like it on scale 1-10? 8.",
+      "\e[2K\e[1GHow do you like it on scale 1-10? 8.1",
       "\e[1A\e[2K\e[1G",
       "How do you like it on scale 1-10? \e[32m8.1\e[0m\n",
     ].join)
@@ -56,6 +60,7 @@ RSpec.describe TTY::Prompt::Question, '#in' do
     expect(answer).to eq('E')
     expect(prompt.output.string).to eq([
       "Your favourite vitamin? (A-K) ",
+      "\e[2K\e[1GYour favourite vitamin? (A-K) E",
       "\e[1A\e[2K\e[1G",
       "Your favourite vitamin? (A-K) \e[32mE\e[0m\n"
     ].join)
@@ -70,9 +75,13 @@ RSpec.describe TTY::Prompt::Question, '#in' do
     expect(answer).to eq('2')
     expect(prompt.output.string).to eq([
       "How spicy on scale? (1-5) ",
+      "\e[2K\e[1GHow spicy on scale? (1-5) A",
+      "\e[2K\e[1GHow spicy on scale? (1-5) A\n",
       "\e[31m>>\e[0m Value A must be within the range 1..5\e[1A",
       "\e[2K\e[1G",
       "How spicy on scale? (1-5) ",
+      "\e[2K\e[1GHow spicy on scale? (1-5) 2",
+      "\e[2K\e[1GHow spicy on scale? (1-5) 2\n",
       "\e[2K\e[1G",
       "\e[1A\e[2K\e[1G",
       "How spicy on scale? (1-5) \e[32m2\e[0m\n"
@@ -91,9 +100,13 @@ RSpec.describe TTY::Prompt::Question, '#in' do
     expect(answer).to eq('2')
     expect(prompt.output.string).to eq([
       "How spicy on scale? (1-5) ",
+      "\e[2K\e[1GHow spicy on scale? (1-5) A",
+      "\e[2K\e[1GHow spicy on scale? (1-5) A\n",
       "\e[31m>>\e[0m Ohh dear what is this A doing in 1..5?\e[1A",
       "\e[2K\e[1G",
       "How spicy on scale? (1-5) ",
+      "\e[2K\e[1GHow spicy on scale? (1-5) 2",
+      "\e[2K\e[1GHow spicy on scale? (1-5) 2\n",
       "\e[2K\e[1G",
       "\e[1A\e[2K\e[1G",
       "How spicy on scale? (1-5) \e[32m2\e[0m\n"

@@ -109,7 +109,7 @@ module TTY
         until @done
           question = render_question
           @prompt.print(question)
-          result = process_input
+          result = process_input(question)
           if result.failure?
             @errors = result.errors
             @prompt.print(render_error(result.errors))
@@ -143,8 +143,8 @@ module TTY
       # Decide how to handle input from user
       #
       # @api private
-      def process_input
-        @input = read_input
+      def process_input(question)
+        @input = read_input(question)
         if Utils.blank?(@input)
           @input = default? ? default : nil
         end
@@ -154,8 +154,8 @@ module TTY
       # Process input
       #
       # @api private
-      def read_input
-        @prompt.read_line(echo: echo).chomp
+      def read_input(question)
+        @prompt.read_line(question, echo: echo).chomp
       end
 
       # Handle error condition

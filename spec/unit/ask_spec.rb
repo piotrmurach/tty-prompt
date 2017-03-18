@@ -34,6 +34,7 @@ RSpec.describe TTY::Prompt, '#ask' do
     expect(answer).to eq(nil)
     expect(prompt.output.string).to eq([
       "[?] Are you Polish? ",
+      "\e[2K\e[1G[?] Are you Polish? \n",
       "\e[1A\e[2K\e[1G",
       "[?] Are you Polish? \n"
     ].join)
@@ -74,6 +75,7 @@ RSpec.describe TTY::Prompt, '#ask' do
     expect(answer).to eq('')
     expect(prompt.output.string).to eq([
       "What is your name? ",
+      "\e[2K\e[1GWhat is your name? \n",
       "\e[1A\e[2K\e[1G",
       "What is your name? \n"
     ].join)
@@ -87,6 +89,7 @@ RSpec.describe TTY::Prompt, '#ask' do
     expect(answer).to eq(nil)
     expect(prompt.output.string).to eq([
       "What is your name? ",
+      "\e[2K\e[1GWhat is your name? \n",
       "\e[1A\e[2K\e[1G",
       "What is your name? \n"
     ].join)
@@ -107,9 +110,21 @@ RSpec.describe TTY::Prompt, '#ask' do
 
     expect(prompt.output.string).to eq([
       "[?] What is your name? ",
+      "\e[2K\e[1G[?] What is your name? P",
+      "\e[2K\e[1G[?] What is your name? Pi",
+      "\e[2K\e[1G[?] What is your name? Pio",
+      "\e[2K\e[1G[?] What is your name? Piot",
+      "\e[2K\e[1G[?] What is your name? Piotr",
+      "\e[2K\e[1G[?] What is your name? Piotr\n",
       "\e[1A\e[2K\e[1G",
       "[?] What is your name? \e[36mPiotr\e[0m\n",
       ":-) What is your name? ",
+      "\e[2K\e[1G:-) What is your name? P",
+      "\e[2K\e[1G:-) What is your name? Pi",
+      "\e[2K\e[1G:-) What is your name? Pio",
+      "\e[2K\e[1G:-) What is your name? Piot",
+      "\e[2K\e[1G:-) What is your name? Piotr",
+      "\e[2K\e[1G:-) What is your name? Piotr\n",
       "\e[1A\e[2K\e[1G",
       ":-) What is your name? \e[34mPiotr\e[0m\n"
     ].join)
