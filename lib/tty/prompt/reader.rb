@@ -187,8 +187,7 @@ module TTY
             next unless history_previous?
             line.replace(history_previous)
           elsif console.keys[:down] == char
-            next unless history_next?
-            line.replace(history_next)
+            line.replace(history_next? ? history_next : '')
           elsif console.keys[:left] == char
             output.print(char) unless line.start?
             line.left
@@ -277,12 +276,11 @@ module TTY
 
       def history_next?
         @history.next?
-        @history.pop
       end
 
       def history_next
         @history.next
-        @history.pop
+        @history.get
       end
 
       def history_previous?
@@ -290,7 +288,7 @@ module TTY
       end
 
       def history_previous
-        line = @history.pop
+        line = @history.get
         @history.previous
         line
       end
