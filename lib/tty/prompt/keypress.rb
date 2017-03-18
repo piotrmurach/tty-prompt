@@ -7,7 +7,7 @@ module TTY
   class Prompt
     class Keypress < Question
 
-      def process_input
+      def process_input(question)
         @input = @prompt.read_keypress
         @evaluator.(@input)
       end
