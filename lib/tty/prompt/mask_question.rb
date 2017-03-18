@@ -74,7 +74,7 @@ module TTY
       # Read input from user masked by character
       #
       # @private
-      def read_input
+      def read_input(question)
         @done_masked = false
         @failure = false
         @input = ''
