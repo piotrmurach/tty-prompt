@@ -245,7 +245,7 @@ module TTY
         @stop = false
         lines = []
         loop do
-          line = read_line(prompt) #({raw: true})
+          line = read_line(prompt)
           break if !line || line == ''
           next  if line !~ /\S/ && !@stop
           if block_given?

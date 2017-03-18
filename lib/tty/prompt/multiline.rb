@@ -53,7 +53,7 @@ module TTY
         header
       end
 
-      def process_input
+      def process_input(question)
         @lines = read_input
         @input = "#{@lines.first.strip} ..." unless @lines.first.to_s.empty?
         if Utils.blank?(@input)
