@@ -5,7 +5,8 @@ require 'forwardable'
 module TTY
   class Prompt
     class Reader
-      # A class responsible for storing shell interactions history
+      # A class responsible for storing a history of all lines entered by
+      # user when interacting with shell prompt.
       #
       # @api private
       class History
@@ -106,13 +107,29 @@ module TTY
           size > 0 && !(@index < 0 && !@cycle)
         end
 
-        # Get current line at index
+        # Return line at the specified index
+        #
+        # @raise [IndexError] index out of range
         #
         # @api public
-        def pop
+        def [](index)
+          if index < 0
+            index += @history.size if index < 0
+          end
+          line = @history[index]
+          if line.nil?
+            raise IndexError, 'invalid index'
+          end
+          line.dup
+        end
+
+        # Get current line
+        #
+        # @api public
+        def get
           return if size.zero?
 
-          @history[@index]
+          self[@index]
         end
 
         # Empty all history lines

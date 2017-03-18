@@ -128,20 +128,33 @@ RSpec.describe TTY::Prompt::Reader::History do
     expect(history.next?).to eq(true)
   end
 
+  it "gets line based on index" do
+    history = described_class.new(3, cycle: true)
+    history << "line #1"
+    history << "line #2"
+    history << "line #3"
+
+    expect(history[-1]).to eq('line #3')
+    expect(history[1]).to eq('line #2')
+    expect {
+      history[11]
+    }.to raise_error(IndexError, 'invalid index')
+  end
+
   it "retrieves current line" do
     history = described_class.new(3, cycle: true)
-    expect(history.pop).to eq(nil)
+    expect(history.get).to eq(nil)
 
     history << "line #1"
     history << "line #2"
     history << "line #3"
 
-    expect(history.pop).to eq("line #3")
+    expect(history.get).to eq("line #3")
     history.previous
     history.previous
-    expect(history.pop).to eq("line #1")
+    expect(history.get).to eq("line #1")
     history.next
-    expect(history.pop).to eq("line #2")
+    expect(history.get).to eq("line #2")
   end
 
   it "clears all lines" do
