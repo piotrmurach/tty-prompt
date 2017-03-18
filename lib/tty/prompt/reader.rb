@@ -154,14 +154,19 @@ module TTY
       # back to the shell. The input terminates when enter or
       # return key is pressed.
       #
+      # @param [String] prompt
+      #   the prompt to display before input
+      #
       # @param [Boolean] echo
       #   if true echo back characters, output nothing otherwise
       #
       # @return [String]
       #
       # @api public
-      def read_line(options = {})
-        opts = { echo: true, raw: false }.merge(options)
+      def read_line(*args)
+        options = args.last.respond_to?(:to_hash) ? args.pop : {}
+        prompt = args.empty? ? '' : args.pop
+        opts = { echo: true, raw: true }.merge(options)
         line = Line.new('')
         ctrls = console.keys.keys.grep(/ctrl/)
         clear_line = "\e[2K\e[1G"
@@ -202,7 +207,7 @@ module TTY
 
           if opts[:raw] && opts[:echo]
             output.print(clear_line)
-            output.print(line)
+            output.print(prompt + line.to_s)
             if char == "\n"
               line.move_to_start
             elsif !line.end?
@@ -228,16 +233,19 @@ module TTY
       # Skip empty lines in the returned lines array.
       # The input gathering is terminated by Ctrl+d or Ctrl+z.
       #
+      # @param [String] prompt
+      #   the prompt displayed before the input
+      #
       # @yield [String] line
       #
       # @return [Array[String]]
       #
       # @api public
-      def read_multiline
+      def read_multiline(prompt = '')
         @stop = false
         lines = []
         loop do
-          line = read_line({raw: true})
+          line = read_line(prompt) #({raw: true})
           break if !line || line == ''
           next  if line !~ /\S/ && !@stop
           if block_given?

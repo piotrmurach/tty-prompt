@@ -19,7 +19,37 @@ RSpec.describe TTY::Prompt::Reader, '#read_line' do
     input.rewind
     answer = reader.read_line
     expect(answer).to eq("password\n")
-    expect(output.string).to eq("")
+    expect(output.string).to eq([
+      "\e[2K\e[1Gp",
+      "\e[2K\e[1Gpa",
+      "\e[2K\e[1Gpas",
+      "\e[2K\e[1Gpass",
+      "\e[2K\e[1Gpassw",
+      "\e[2K\e[1Gpasswo",
+      "\e[2K\e[1Gpasswor",
+      "\e[2K\e[1Gpassword",
+      "\e[2K\e[1Gpassword\n"
+    ].join)
+  end
+
+  it "doesn't echo characters back" do
+    input << "password\n"
+    input.rewind
+    answer = reader.read_line(echo: false)
+    expect(answer).to eq("password\n")
+    expect(output.string).to eq('')
+  end
+
+  it "displays a prompt before input" do
+    input << "aa\n"
+    input.rewind
+    answer = reader.read_line('>> ')
+    expect(answer).to eq("aa\n")
+    expect(output.string).to eq([
+      "\e[2K\e[1G>> a",
+      "\e[2K\e[1G>> aa",
+      "\e[2K\e[1G>> aa\n"
+    ].join)
   end
 
   xit 'deletes characters when backspace pressed' do
