@@ -216,6 +216,26 @@ RSpec.describe TTY::Prompt, '#select' do
     ].join)
   end
 
+  it "changes help text through DSL" do
+    choices = %w(Large Medium Small)
+    prompt.input << " "
+    prompt.input.rewind
+    value = prompt.select('What size?') do |menu|
+              menu.help "(Bash keyboard)"
+              menu.choices choices
+            end
+    expect(value).to eq('Large')
+    expect(prompt.output.string).to eq([
+      "\e[?25lWhat size? \e[90m(Bash keyboard)\e[0m\n",
+      "\e[32m#{symbols[:pointer]} Large\e[0m\n",
+      "  Medium\n",
+      "  Small",
+      "\e[2K\e[1G\e[1A" * 3,
+      "\e[2K\e[1G",
+      "What size? \e[32mLarge\e[0m\n\e[?25h"
+    ].join)
+  end
+
   it "sets prompt prefix" do
     prompt = TTY::TestPrompt.new(prefix: '[?] ')
     choices = %w(Large Medium Small)

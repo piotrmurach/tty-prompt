@@ -92,6 +92,27 @@ module TTY
         @page_help = text
       end
 
+      # Provide help information
+      #
+      # @param [String] value
+      #   the new help text
+      #
+      # @return [String]
+      #
+      # @api public
+      def help(value = (not_set = true))
+        return @help if !@help.nil? && not_set
+
+        @help = (@help.nil? && !not_set) ? value : default_help
+      end
+
+      # Default help text
+      #
+      # @api public
+      def default_help
+        self.class::HELP % [enumerate? ? " or number (1-#{@choices.size})" : '']
+      end
+
       # Set selecting active index using number pad
       #
       # @api public
@@ -243,14 +264,6 @@ module TTY
         rendered_menu << render_footer
         header << rendered_menu unless @done
         header
-      end
-
-      # Provide help information
-      #
-      # @return [String]
-      def help
-        return @help unless @help.nil?
-        self.class::HELP % [enumerate? ? " or number (1-#{@choices.size})" : '']
       end
 
       # Render initial help and selected choice
