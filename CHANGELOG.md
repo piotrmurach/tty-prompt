@@ -17,7 +17,7 @@
 * Change Reader#read_multiline to gather multi line input correctly,
   skip empty lines and terminate when Ctrl+d and Ctrl+z are pressed
 * Change Reader::Mode to check if tty is available by Matt Martyn (@MMartyn)
-* Change #keypress prompt to correctly refresh line
+* Change #keypress prompt to correctly refresh line and accept :keys & :timeout options
 
 ### Fixed
 * Fix issue with #select, #multi_selct, #enum_select when choices are
