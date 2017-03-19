@@ -1,6 +1,6 @@
 # Change log
 
-## [v0.12.0] - 2017-03-xx
+## [v0.12.0] - 2017-03-19
 
 ### Added
 * Add Multiline question type
@@ -23,6 +23,7 @@
 * Fix issue with #select, #multi_selct, #enum_select when choices are
   provided as hash object together with prompt options.
 * Fix issue with default parameter for yes?/no? prompt by Carlos Fonseca (@carlosefonseca)
+* Fix List#help to allow setting help text through DSL
 
 ## [v0.11.0] - 2017-02-26
 
