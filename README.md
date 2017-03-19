@@ -56,7 +56,7 @@ Or install it yourself as:
     * [2.1.7 required](#217-required)
     * [2.1.8 validate](#218-validate)
   * [2.2 keypress](#22-keypress)
-    * [2.2.1 timeout](#22-timeout)
+    * [2.2.1 timeout](#221-timeout)
   * [2.3 multiline](#23-multiline)
   * [2.4 mask](#24-mask)
   * [2.5 yes?/no?](#25-yesno)
@@ -359,7 +359,7 @@ prompt.keypress("Press key ?")
 # => a
 ```
 
-By default any key is accepted but you can limit keys by using `:keys` option. Any key event names such as `:space` or `ctrl_k` are valid:
+By default any key is accepted but you can limit keys by using `:keys` option. Any key event names such as `:space` or `:ctrl_k` are valid:
 
 ```ruby
 prompt.keypress("Press space or enter to continue, keys: [:space, :return])
@@ -373,10 +373,10 @@ Timeout can be set using `:timeout` option to expire prompt and allow the script
 prompt.keypress("Press any key to continue, resumes automatically in 3 seconds ...", timeout: 3)
 ```
 
-In addition the `keypress` recognises `:countdown` token when inserted inside the question. It will automatically countdown the time:
+In addition the `keypress` recognises `:countdown` token when inserted inside the question. It will automatically countdown the time in seconds:
 
 ```ruby
-prompt.keypress("Press any key to continue, resumes automatically in :countdown seconds ...", keys: [:space, :return], timeout: 3)
+prompt.keypress("Press any key to continue, resumes automatically in :countdown ...", timeout: 3)
 ```
 
 ### 2.3 multiline
