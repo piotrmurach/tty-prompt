@@ -1,12 +1,12 @@
 # encoding: utf-8
 
 RSpec.describe TTY::Prompt::Question, '#keypress' do
-  it 'receives line feed' do
+  it 'receives line feed with echo on' do
     prompt = TTY::TestPrompt.new
     prompt.input << "\n"
     prompt.input.rewind
 
-    answer = prompt.keypress("Press key:")
+    answer = prompt.keypress("Press key:", echo: true)
 
     expect(answer).to eq("\n")
     expect(prompt.output.string).to eq([
@@ -16,7 +16,22 @@ RSpec.describe TTY::Prompt::Question, '#keypress' do
     ].join)
   end
 
-  it 'asks for a keypress' do
+  it 'asks for a keypress with echo on' do
+    prompt = TTY::TestPrompt.new
+    prompt.input << "abcd"
+    prompt.input.rewind
+
+    answer = prompt.keypress("Press key:", echo: true)
+
+    expect(answer).to eq("a")
+    expect(prompt.output.string).to eq([
+      "Press key: ",
+      "\e[2K\e[1G",
+      "Press key: \e[32ma\e[0m\n",
+    ].join)
+  end
+
+  it 'asks for a keypress with echo off' do
     prompt = TTY::TestPrompt.new
     prompt.input << "abcd"
     prompt.input.rewind
@@ -27,7 +42,7 @@ RSpec.describe TTY::Prompt::Question, '#keypress' do
     expect(prompt.output.string).to eq([
       "Press key: ",
       "\e[2K\e[1G",
-      "Press key: \e[32ma\e[0m\n",
+      "Press key: \n",
     ].join)
   end
 
