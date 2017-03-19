@@ -131,6 +131,22 @@ module TTY
                            track_history: @track_history, env: @env)
     end
 
+    # Invoke a question type of prompt
+    #
+    # @example
+    #   prompt = TTY::Prompt.new
+    #   prompt.invoke_question(Question, "Your name? ")
+    #
+    # @return [String]
+    #
+    # @api public
+    def invoke_question(object, message, *args, &block)
+      options = Utils.extract_options!(args)
+      options[:messages] = self.class.messages
+      question = object.new(self, options)
+      question.(message, &block)
+    end
+
     # Ask a question.
     #
     # @example
@@ -149,10 +165,7 @@ module TTY
     #
     # @api public
     def ask(message, *args, &block)
-      options = Utils.extract_options!(args)
-      options.merge!(messages: self.class.messages)
-      question = Question.new(self, options)
-      question.call(message, &block)
+      invoke_question(Question, message, *args, &block)
     end
 
     # Ask a question with a keypress answer
@@ -161,10 +174,7 @@ module TTY
     #
     # @api public
     def keypress(message, *args, &block)
-      options = Utils.extract_options!(args)
-      options.merge!(messages: self.class.messages)
-      question = Keypress.new(self, options)
-      question.call(message, &block)
+      invoke_question(Keypress, message, *args, &block)
     end
 
     # Ask a question with a multiline answer
@@ -176,10 +186,35 @@ module TTY
     #
     # @api public
     def multiline(message, *args, &block)
+      invoke_question(Multiline, message, *args, &block)
+    end
+
+    # Invoke a list type of prompt
+    #
+    # @example
+    #   prompt = TTY::Prompt.new
+    #   editors = %w(emacs nano vim)
+    #   prompt.invoke_select(EnumList, "Select editor: ", editors)
+    #
+    # @return [String]
+    #
+    # @api public
+    def invoke_select(object, question, *args, &block)
       options = Utils.extract_options!(args)
-      options.merge!(messages: self.class.messages)
-      question = Multiline.new(self, options)
-      question.call(message, &block)
+      choices = if block
+                  []
+                elsif args.empty?
+                  possible = options.dup
+                  options = {}
+                  possible
+                elsif args.size == 1 && args[0].is_a?(Hash)
+                  Utils.extract_options!(args)
+                else
+                  args.flatten
+                end
+
+      list = object.new(self, options)
+      list.(question, choices, &block)
     end
 
     # Ask masked question
@@ -192,10 +227,7 @@ module TTY
     #
     # @api public
     def mask(message, *args, &block)
-      options = Utils.extract_options!(args)
-      options.merge!(messages: self.class.messages)
-      question = MaskQuestion.new(self, options)
-      question.call(message, &block)
+      invoke_question(MaskQuestion, message, *args, &block)
     end
 
     # Ask a question with a list of options
@@ -260,34 +292,6 @@ module TTY
     # @api public
     def enum_select(question, *args, &block)
       invoke_select(EnumList, question, *args, &block)
-    end
-
-    # Invoke a list type of prompt
-    #
-    # @example
-    #   prompt = TTY::Prompt.new
-    #   editors = %w(emacs nano vim)
-    #   prompt.invoke_select(EnumList, "Select editor: ", editors)
-    #
-    # @return [String]
-    #
-    # @api public
-    def invoke_select(object, question, *args, &block)
-      options = Utils.extract_options!(args)
-      choices = if block
-                  []
-                elsif args.empty?
-                  possible = options.dup
-                  options = {}
-                  possible
-                elsif args.size == 1 && args[0].is_a?(Hash)
-                  Utils.extract_options!(args)
-                else
-                  args.flatten
-                end
-
-      list = object.new(self, options)
-      list.call(question, choices, &block)
     end
 
     # A shortcut method to ask the user positive question and return
@@ -525,7 +529,7 @@ module TTY
         enabled_color: enabled_color,
         help_color: help_color
       }
-      "#<#{self.class}: #{attributes.each { |name, val| "@#{name}=#{val}" } }"
+      "#<#{self.class}: #{attributes.each { |name, val| "@#{name}=#{val}" }}"
     end
   end # Prompt
 end # TTY
