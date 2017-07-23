@@ -11,35 +11,44 @@ module TTY
         @timeout_handler  = options.fetch(:timeout_handler) { TIMEOUT_HANDLER }
         @interval_handler = options.fetch(:interval_handler) { proc { } }
         @lock = Mutex.new
+        @running = true
       end
 
-      def self.timeout(secs, interval, &block)
-        (@scheduler ||= new).timeout(secs, interval, &block)
+      def self.timeout(time, interval, &block)
+        (@scheduler ||= new).timeout(time, interval, &block)
       end
 
-      def timeout(secs, interval, &block)
-        return block.() if secs.nil? || secs.to_i.zero?
-        @lock.synchronize do
-          @runner = Thread.new {
-            run_in(secs, interval)
-          }
-        end
-        block.()
+      # Evalute block and time it
+      #
+      # @param [Float] time
+      #   the time by which to stop
+      # @param [Float] interval
+      #   the interval time for each tick
+      #
+      # @api public
+      def timeout(time, interval, &block)
+        @runner = async_run(time, interval)
+        @running = block.()
+        @runner.join
       end
 
-      def run_in(secs, interval)
-        Thread.current.abort_on_exception = true
-        start = Time.now
+      def async_run(time, interval)
+        Thread.new do
+          Thread.current.abort_on_exception = true
+          start = Time.now
 
-        loop do
-          sleep(interval)
-          runtime = Time.now - start
-          delta = secs - runtime
-          @interval_handler.(delta.round)
+          while @running
+            @lock.synchronize {
+              sleep(interval)
+              runtime = Time.now - start
+              delta = time - runtime
+              @interval_handler.(delta.round)
 
-          if delta < 0.0
-            @timeout_handler.(Thread.current)
-            break
+              if delta <= 0.0
+                @timeout_handler.(Thread.current)
+                break
+              end
+            }
           end
         end
       end

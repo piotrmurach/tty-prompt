@@ -18,7 +18,9 @@ module TTY
         @echo    = options.fetch(:echo) { false }
         @keys    = options.fetch(:keys) { UndefinedSetting }
         @timeout = options.fetch(:timeout) { UndefinedSetting }
-        @interval = options.fetch(:interval) { 1 }
+        @interval = options.fetch(:interval) {
+          (@timeout != UndefinedSetting && @timeout < 1) ? @timeout : 1
+        }
         @pause   = true
         @countdown = @timeout
         @interval_handler = proc { |time|
@@ -67,6 +69,7 @@ module TTY
           while @pause
             @input = @prompt.read_keypress
           end
+          @pause
         end
         @evaluator.(@input)
       end
@@ -77,10 +80,10 @@ module TTY
 
       def time(&block)
         if timeout?
-          secs = Integer(@timeout)
-          interval = Integer(@interval)
+          time = Float(@timeout)
+          interval = Float(@interval)
           scheduler = Timeout.new(interval_handler: @interval_handler)
-          scheduler.timeout(secs, interval, &block)
+          scheduler.timeout(time, interval, &block)
         else
           block.()
         end
