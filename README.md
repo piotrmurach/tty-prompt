@@ -268,7 +268,7 @@ You can change these and configure to your liking either by inling them with the
 
 ```ruby
 prompt.ask('What is your email?') do |q|
-  question.validate(/\A\w+@\w+\.\w+\Z/, 'Invalid email address')
+  q.validate(/\A\w+@\w+\.\w+\Z/, 'Invalid email address')
 end
 ```
 
@@ -276,8 +276,8 @@ or change the `messages` key entry out of `:required?`, `:valid?`, `:range?`:
 
 ```ruby
 prompt.ask('What is your email?') do |q|
-  question.validate(/\A\w+@\w+\.\w+\Z/)
-  question.messages[:valid?] = 'Invalid email address'
+  q.validate(/\A\w+@\w+\.\w+\Z/)
+  q.messages[:valid?] = 'Invalid email address'
 end
 ```
 
