@@ -345,8 +345,7 @@ module TTY
       #
       # @api public
       def windows?
-        ::File::ALT_SEPARATOR == '\\' &&
-          !env['TERM'] =~ /cygwin/
+        ::File::ALT_SEPARATOR == '\\'
       end
     end # Reader
   end # Prompt
