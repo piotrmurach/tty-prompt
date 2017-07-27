@@ -1,5 +1,16 @@
 # Change log
 
+## [v0.13.0] _ 2017-xx-xx
+
+### Added
+
+### Changed
+* Change Timeout to use clock time instead of sleep to measure interval
+
+### Fixed
+* Fix keypress with timeout option to cleanly stop timeout thread
+* Fix Reader to treat git-bash & cygwin emulators as unix like
+
 ## [v0.12.0] - 2017-03-19
 
 ### Added
