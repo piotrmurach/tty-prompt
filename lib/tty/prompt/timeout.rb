@@ -1,5 +1,7 @@
 # encoding: utf-8
 
+require 'timers'
+
 module TTY
   class Prompt
     class Timeout
@@ -9,9 +11,10 @@ module TTY
 
       def initialize(options = {})
         @timeout_handler  = options.fetch(:timeout_handler) { TIMEOUT_HANDLER }
-        @interval_handler = options.fetch(:interval_handler) { proc { } }
-        @lock = Mutex.new
+        @interval_handler = options.fetch(:interval_handler) { proc {} }
+        @lock    = Mutex.new
         @running = true
+        @timers  = Timers::Group.new
       end
 
       def self.timeout(time, interval, &block)
@@ -37,12 +40,19 @@ module TTY
           Thread.current.abort_on_exception = true
           start = Time.now
 
+          interval_timer = @timers.every(interval) do
+            runtime = Time.now - start
+            delta = time - runtime
+            if delta.round >= 0
+              @interval_handler.(delta.round)
+            end
+          end
+
           while @running
             @lock.synchronize {
-              sleep(interval)
+              @timers.wait
               runtime = Time.now - start
               delta = time - runtime
-              @interval_handler.(delta.round)
 
               if delta <= 0.0
                 @timeout_handler.(Thread.current)
@@ -50,6 +60,8 @@ module TTY
               end
             }
           end
+
+          interval_timer.cancel
         end
       end
     end # Scheduler
