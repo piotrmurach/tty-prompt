@@ -42,10 +42,17 @@ module TTY
         # @api private
         def get_char(options)
           if options[:raw]
-            WinAPI.getch.chr
+            get_char_non_blocking
           else
-            options[:echo] ? @input.getc : WinAPI.getch.chr
+            options[:echo] ? @input.getc : get_char_non_blocking
           end
+        end
+
+        # Get the char for last key pressed, or if no keypress return nil
+        #
+        # @api private
+        def get_char_non_blocking
+          WinAPI.kbhit.zero? ? nil : WinAPI.getch.chr
         end
       end # Console
     end # Reader
