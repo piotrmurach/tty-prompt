@@ -29,10 +29,15 @@ module TTY
       #   the interval time for each tick
       #
       # @api public
-      def timeout(time, interval, &block)
+      def timeout(time, interval, &job)
         @runner = async_run(time, interval)
-        @running = block.()
+        job.()
         @runner.join
+      end
+
+      def cancel
+        return unless @running
+        @running = false
       end
 
       def async_run(time, interval)
