@@ -1,5 +1,17 @@
 # Change log
 
+## [v0.13.1] - 2017-08-xx
+
+### Added
+* Add ability to manually cancel the time scheduler
+
+### Changed
+* Change #keypress to use new scheduler canceling
+* Change Reader to inline interrupt to allow for early exit
+
+### Fix
+* Fix keypress reading on Windows to distinguish between blocking & non-blocking IO
+
 ## [v0.13.0] - 2017-08-11
 
 ### Changed
