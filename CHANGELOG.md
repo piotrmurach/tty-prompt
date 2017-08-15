@@ -1,12 +1,12 @@
 # Change log
 
-## [v0.13.1] - 2017-08-xx
+## [v0.13.1] - 2017-08-16
 
 ### Added
 * Add ability to manually cancel the time scheduler
 
 ### Changed
-* Change #keypress to use new scheduler canceling
+* Change #keypress to use new scheduler cancelling
 * Change Reader to inline interrupt to allow for early exit
 
 ### Fix
