@@ -6,4 +6,4 @@ prompt = TTY::Prompt::new
 
 answer = prompt.keypress("Press any key to continue")
 
-puts "Answer: #{answer}"
+puts "Answer: #{answer.inspect}"
