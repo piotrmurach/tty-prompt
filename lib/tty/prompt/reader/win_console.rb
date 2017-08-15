@@ -31,20 +31,30 @@ module TTY
           @escape_codes = [[NUL_HEX.ord], [ESC.ord], EXT_HEX.bytes.to_a]
         end
 
-        # Get a character from console with echo
+        # Get a character from console blocking for input
         #
         # @param [Hash[Symbol]] options
         # @option options [Symbol] :echo
-        #   the echo toggle
+        #   the echo mode toggle
+        # @option options [Symbol] :raw
+        #   the raw mode toggle
         #
         # @return [String]
         #
         # @api private
         def get_char(options)
-          if options[:raw]
-            get_char_non_blocking
+          if options[:raw] && options[:echo]
+            if options[:nonblock]
+              get_char_echo_non_blocking
+            else
+              get_char_echo_blocking
+            end
+          elsif options[:raw] && !options[:echo]
+            options[:nonblock] ? get_char_non_blocking : get_char_blocking
+          elsif !options[:raw] && !options[:echo]
+            options[:nonblock] ? get_char_non_blocking : get_char_blocking
           else
-            options[:echo] ? @input.getc : get_char_non_blocking
+            @input.getc
           end
         end
 
@@ -52,7 +62,28 @@ module TTY
         #
         # @api private
         def get_char_non_blocking
-          WinAPI.kbhit.zero? ? nil : WinAPI.getch.chr
+          input_ready? ? get_char_blocking : nil
+        end
+
+        def get_char_echo_non_blocking
+          input_ready? ? get_char_echo_blocking : nil
+        end
+
+        def get_char_blocking
+          WinAPI.getch.chr
+        end
+
+        def get_char_echo_blocking
+          WinAPI.getche.chr
+        end
+
+        # Check if IO has user input
+        #
+        # @return [Boolean]
+        #
+        # @api private
+        def input_ready?
+          !WinAPI.kbhit.zero?
         end
       end # Console
     end # Reader

@@ -69,7 +69,7 @@ module TTY
       end
 
       def process_input(question)
-        time { @input = @prompt.read_keypress }
+        time { @input = @prompt.read_keypress(nonblock: true) }
         @evaluator.(@input)
       end
 
