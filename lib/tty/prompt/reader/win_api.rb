@@ -12,12 +12,24 @@ module TTY
 
         CRT_HANDLE = Handle.new("msvcrt") rescue Handle.new("crtdll")
 
+        # Get a character from the console without echo.
+        #
+        # @return [String]
+        #   return the character read
+        #
+        # @api public
         def getch
           @@getch ||= Fiddle::Function.new(CRT_HANDLE["_getch"], [], TYPE_INT)
           @@getch.call
         end
         module_function :getch
 
+        # Gets a character from the console with echo.
+        #
+        # @return [String]
+        #   return the character read
+        #
+        # @api public
         def getche
           @@getche ||= Fiddle::Function.new(CRT_HANDLE["_getche"], [], TYPE_INT)
           @@getche.call
