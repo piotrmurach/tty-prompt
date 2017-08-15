@@ -119,7 +119,6 @@ module TTY
         char  = codes ? codes.pack('U*') : nil
 
         trigger_key_event(char) if char
-        handle_interrupt if char == console.keys[:ctrl_c]
         char
       end
       alias read_char read_keypress
@@ -135,6 +134,7 @@ module TTY
       def get_codes(options = {}, codes = [])
         opts = { echo: true, raw: false }.merge(options)
         char = console.get_char(opts)
+        handle_interrupt if char == console.keys[:ctrl_c]
         return if char.nil?
         codes << char.ord
 
@@ -184,8 +184,6 @@ module TTY
           elsif [console.keys[:ctrl_d],
                  console.keys[:ctrl_z]].include?(char)
             break
-          elsif console.keys[:ctrl_c] == char
-            handle_interrupt
           elsif ctrls.include?(console.keys.key(char))
             # skip
           elsif console.keys[:up] == char
