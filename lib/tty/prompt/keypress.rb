@@ -21,14 +21,16 @@ module TTY
         @interval = options.fetch(:interval) {
           (@timeout != UndefinedSetting && @timeout < 1) ? @timeout : 1
         }
-        @pause   = true
         @countdown = @timeout
         @interval_handler = proc { |time|
-          question = render_question
-          @prompt.print(refresh(question.lines.count))
-          countdown(time)
-          @prompt.print(render_question)
+          unless @done
+            question = render_question
+            @prompt.print(refresh(question.lines.count))
+            countdown(time)
+            @prompt.print(render_question)
+          end
         }
+        @scheduler = Timeout.new(interval_handler: @interval_handler)
 
         @prompt.subscribe(self)
       end
@@ -50,11 +52,13 @@ module TTY
 
       def keypress(event)
         if any_key?
-          @pause = false
+          @done = true
+          @scheduler.cancel
         elsif @keys.is_a?(Array) && @keys.include?(event.key.name)
-          @pause = false
+          @done = true
+          @scheduler.cancel
         else
-          @pause = true
+          @done = false
         end
       end
 
@@ -65,12 +69,7 @@ module TTY
       end
 
       def process_input(question)
-        time do
-          while @pause
-            @input = @prompt.read_keypress
-          end
-          @pause
-        end
+        time { @input = @prompt.read_keypress }
         @evaluator.(@input)
       end
 
@@ -78,14 +77,16 @@ module TTY
         @prompt.clear_lines(lines)
       end
 
-      def time(&block)
+      # Wait for keypress or timeout
+      #
+      # @api private
+      def time(&job)
         if timeout?
           time = Float(@timeout)
           interval = Float(@interval)
-          scheduler = Timeout.new(interval_handler: @interval_handler)
-          scheduler.timeout(time, interval, &block)
+          @scheduler.timeout(time, interval, &job)
         else
-          block.()
+          job.()
         end
       rescue Timeout::Error
       end
