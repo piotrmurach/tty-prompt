@@ -2,8 +2,8 @@ source 'https://rubygems.org'
 
 gemspec
 
-#gem 'tty-reader', path: '../tty-reader'
-gem 'tty-reader', git: 'https://github.com/piotrmurach/tty-reader'
+# gem 'tty-reader', path: '../tty-reader'
+# gem 'tty-reader', git: 'https://github.com/piotrmurach/tty-reader'
 
 group :test do
   gem 'benchmark-ips', '~> 2.0.0'
