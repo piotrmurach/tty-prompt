@@ -1,5 +1,10 @@
 # Change log
 
+## [v0.13.2] - 2017-08-30
+
+### Changed
+* Change to extract TTY::Prompt::Reader to its own dependency
+
 ## [v0.13.1] - 2017-08-16
 
 ### Added
@@ -213,6 +218,8 @@
 
 * Initial implementation and release
 
+[v0.13.2]: https://github.com/piotrmurach/tty-prompt/compare/v0.13.1...v0.13.2
+[v0.13.1]: https://github.com/piotrmurach/tty-prompt/compare/v0.13.0...v0.13.1
 [v0.13.0]: https://github.com/piotrmurach/tty-prompt/compare/v0.12.0...v0.13.0
 [v0.12.0]: https://github.com/piotrmurach/tty-prompt/compare/v0.11.0...v0.12.0
 [v0.11.0]: https://github.com/piotrmurach/tty-prompt/compare/v0.10.1...v0.11.0
