@@ -3,6 +3,7 @@
 require 'forwardable'
 require 'pastel'
 require 'tty-cursor'
+require 'tty-reader'
 
 require_relative 'prompt/answers_collector'
 require_relative 'prompt/confirm_question'
@@ -14,7 +15,6 @@ require_relative 'prompt/multi_list'
 require_relative 'prompt/multiline'
 require_relative 'prompt/mask_question'
 require_relative 'prompt/question'
-require_relative 'prompt/reader'
 require_relative 'prompt/slider'
 require_relative 'prompt/statement'
 require_relative 'prompt/suggestion'
@@ -127,8 +127,8 @@ module TTY
 
       @cursor = TTY::Cursor
       @pastel = Pastel.new(@enabled_color.nil? ? {} : { enabled: @enabled_color })
-      @reader = Reader.new(@input, @output, interrupt: @interrupt,
-                           track_history: @track_history, env: @env)
+      @reader = TTY::Reader.new(@input, @output, interrupt: @interrupt,
+                                track_history: @track_history, env: @env)
     end
 
     # Invoke a question type of prompt
