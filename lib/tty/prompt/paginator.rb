@@ -43,6 +43,8 @@ module TTY
         @lower_index ||= current_index
         @upper_index ||= max_index
 
+        raise ArgumentError, 'per_page must be > 0' if @per_page < 1
+
         # Don't paginate short lists
         if list.size <= @per_page
           @lower_index = 0
