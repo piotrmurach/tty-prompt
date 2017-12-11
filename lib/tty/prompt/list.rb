@@ -41,7 +41,7 @@ module TTY
         @active_color = options.fetch(:active_color) { @prompt.active_color }
         @help_color   = options.fetch(:help_color) { @prompt.help_color }
         @marker       = options.fetch(:marker) { symbols[:pointer] }
-        @wraparound   = options.fetch(:wraparound) { true }
+        @cycle        = options.fetch(:cycle) { false }
         @help         = options[:help]
         @first_render = true
         @done         = false
@@ -180,9 +180,7 @@ module TTY
 
       def keyup(*)
         if @active == 1
-          if @wraparound
-            @active = @choices.length
-          end
+          @active = @choices.length if @cycle
         else
           @active -= 1
         end
@@ -190,9 +188,7 @@ module TTY
 
       def keydown(*)
         if @active == @choices.length
-          if @wraparound
-            @active = 1
-          end
+          @active = 1 if @cycle
         else
           @active += 1
         end

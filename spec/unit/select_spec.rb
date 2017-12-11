@@ -6,6 +6,19 @@ RSpec.describe TTY::Prompt, '#select' do
 
   let(:symbols) { TTY::Prompt::Symbols.symbols }
 
+  def output_helper(prompt, choices, active,
+                    hint: "Use arrow keys, press Enter to select",
+                    init: false)
+    out = ""
+    out << (init ? "\e[?25l#{prompt} \e[90m(#{hint})\e[0m\n" : "#{prompt} \n")
+    out << choices.map do |c|
+      (c == active ? "\e[32m#{symbols[:pointer]} #{c}\e[0m" : "  #{c}")
+    end.join("\n")
+    out << "\e[2K\e[1G\e[1A" * choices.count
+    out << "\e[2K\e[1G"
+    out
+  end
+
   it "selects by default first option" do
     choices = %w(Large Medium Small)
     prompt.input << "\r"
@@ -295,7 +308,7 @@ RSpec.describe TTY::Prompt, '#select' do
     choices = %w(A B C D E F G H)
     prompt.input << "\r"
     prompt.input.rewind
-    value = prompt.select('What letter?') do |menu|
+    value = prompt.select("What letter?") do |menu|
               menu.per_page 3
               menu.page_help '(Wiggle thy finger up or down to see more)'
               menu.default 4
@@ -313,6 +326,40 @@ RSpec.describe TTY::Prompt, '#select' do
       "\e[2K\e[1G",
       "What letter? \e[32mD\e[0m\n\e[?25h",
     ].join)
+  end
+
+  it "doesn't cycle by default" do
+    prompt = TTY::TestPrompt.new
+    choices = %w(A B C)
+    prompt.on(:keypress) { |e| prompt.trigger(:keydown) if e.value == "j" }
+    prompt.input << "j" << "j" << "j" << "\r"
+    prompt.input.rewind
+    value = prompt.select("What letter?", choices)
+    expect(value).to eq("C")
+    expect(prompt.output.string).to eq(
+      output_helper("What letter?", choices, "A", init: true) +
+      output_helper("What letter?", choices, "B") +
+      output_helper("What letter?", choices, "C") +
+      output_helper("What letter?", choices, "C") +
+      "What letter? \e[32mC\e[0m\n\e[?25h"
+    )
+  end
+
+  it "cycles around when configured to do so" do
+    prompt = TTY::TestPrompt.new
+    choices = %w(A B C)
+    prompt.on(:keypress) { |e| prompt.trigger(:keydown) if e.value == "j" }
+    prompt.input << "j" << "j" << "j" << "\r"
+    prompt.input.rewind
+    value = prompt.select("What letter?", choices, cycle: true)
+    expect(value).to eq("A")
+    expect(prompt.output.string).to eq(
+      output_helper("What letter?", choices, "A", init: true) +
+      output_helper("What letter?", choices, "B") +
+      output_helper("What letter?", choices, "C") +
+      output_helper("What letter?", choices, "A") +
+      "What letter? \e[32mA\e[0m\n\e[?25h"
+    )
   end
 
   it "verifies default index format" do
