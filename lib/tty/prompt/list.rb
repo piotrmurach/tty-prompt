@@ -41,6 +41,7 @@ module TTY
         @active_color = options.fetch(:active_color) { @prompt.active_color }
         @help_color   = options.fetch(:help_color) { @prompt.help_color }
         @marker       = options.fetch(:marker) { symbols[:pointer] }
+        @wraparound   = options.fetch(:wraparound) { true }
         @help         = options[:help]
         @first_render = true
         @done         = false
@@ -178,11 +179,23 @@ module TTY
       end
 
       def keyup(*)
-        @active = (@active == 1) ? @choices.length : @active - 1
+        if @active == 1
+          if @wraparound
+            @active = @choices.length
+          end
+        else
+          @active -= 1
+        end
       end
 
       def keydown(*)
-        @active = (@active == @choices.length) ? 1 : @active + 1
+        if @active == @choices.length
+          if @wraparound
+            @active = 1
+          end
+        else
+          @active += 1
+        end
       end
       alias keytab keydown
 
