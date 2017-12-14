@@ -3,6 +3,24 @@
 RSpec.describe TTY::Prompt do
   let(:symbols) { TTY::Prompt::Symbols.symbols }
 
+  def output_helper(prompt, choices, active, selected,
+                    hint: "Use arrow keys, press Space to select and Enter to finish",
+                    init: false)
+    if init
+      out = "\e[?25l#{prompt} \e[90m(#{hint})\e[0m\n"
+    else
+      out = "#{prompt} #{selected.join(", ")}\n"
+    end
+    out << choices.map do |c|
+      prefix =  (c == active) ? "#{symbols[:pointer]} " : "  "
+      prefix += (selected.include?(c)) ? "\e[32m#{symbols[:radio_on]}\e[0m" : "#{symbols[:radio_off]}"
+      "#{prefix} #{c}"
+    end.join("\n")
+    out << "\e[2K\e[1G\e[1A" * choices.count
+    out << "\e[2K\e[1G"
+    out
+  end
+
   it "selects nothing when return pressed immediately" do
     prompt = TTY::TestPrompt.new
     choices = %w(vodka beer wine whisky bourbon)
@@ -316,4 +334,41 @@ RSpec.describe TTY::Prompt do
       "What letter? \e[32mA\e[0m\n\e[?25h",
     ].join)
   end
+
+  it "doesn't cycle by default" do
+    prompt = TTY::TestPrompt.new
+    choices = %w(A B C)
+    prompt.on(:keypress) { |e| prompt.trigger(:keydown) if e.value == "j" }
+    prompt.input << "j" << "j" << "j" << " " << "\r"
+    prompt.input.rewind
+    value = prompt.multi_select("What letter?", choices)
+    expect(value).to eq(["C"])
+    expect(prompt.output.string).to eq(
+      output_helper("What letter?", choices, "A", [], init: true) +
+      output_helper("What letter?", choices, "B", []) +
+      output_helper("What letter?", choices, "C", []) +
+      output_helper("What letter?", choices, "C", []) +
+      output_helper("What letter?", choices, "C", ["C"]) +
+      "What letter? \e[32mC\e[0m\n\e[?25h"
+    )
+  end
+
+  it "cycles when configured to do so" do
+    prompt = TTY::TestPrompt.new
+    choices = %w(A B C)
+    prompt.on(:keypress) { |e| prompt.trigger(:keydown) if e.value == "j" }
+    prompt.input << "j" << "j" << "j" << " " << "\r"
+    prompt.input.rewind
+    value = prompt.multi_select("What letter?", choices, cycle: true)
+    expect(value).to eq(["A"])
+    expect(prompt.output.string).to eq(
+      output_helper("What letter?", choices, "A", [], init: true) +
+      output_helper("What letter?", choices, "B", []) +
+      output_helper("What letter?", choices, "C", []) +
+      output_helper("What letter?", choices, "A", []) +
+      output_helper("What letter?", choices, "A", ["A"]) +
+      "What letter? \e[32mA\e[0m\n\e[?25h"
+    )
+  end
+
 end
