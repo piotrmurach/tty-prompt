@@ -6,15 +6,19 @@ RSpec.describe TTY::Prompt do
   def output_helper(prompt, choices, active, selected,
                     hint: "Use arrow keys, press Space to select and Enter to finish",
                     init: false)
-    if init
-      out = "\e[?25l#{prompt} \e[90m(#{hint})\e[0m\n"
-    else
-      out = "#{prompt} #{selected.join(", ")}\n"
-    end
-    out << choices.map do |c|
-      prefix =  (c == active) ? "#{symbols[:pointer]} " : "  "
-      prefix += (selected.include?(c)) ? "\e[32m#{symbols[:radio_on]}\e[0m" : "#{symbols[:radio_off]}"
-      "#{prefix} #{c}"
+    out = if init
+            "\e[?25l#{prompt} \e[90m(#{hint})\e[0m\n"
+          else
+            "#{prompt} #{selected.join(', ')}\n"
+          end
+    out << choices.map do |choice|
+      prefix = choice == active ? "#{symbols[:pointer]} " : "  "
+      prefix += if selected.include? choice
+                  "\e[32m#{symbols[:radio_on]}\e[0m "
+                else
+                  "#{symbols[:radio_off]} "
+                end
+      prefix + choice
     end.join("\n")
     out << "\e[2K\e[1G\e[1A" * choices.count
     out << "\e[2K\e[1G"
@@ -370,5 +374,4 @@ RSpec.describe TTY::Prompt do
       "What letter? \e[32mA\e[0m\n\e[?25h"
     )
   end
-
 end

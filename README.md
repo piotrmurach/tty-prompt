@@ -564,6 +564,17 @@ end
 # ‣ Jax
 ```
 
+You can navigate the choices using the arrow keys or define your own keymappings (see [keyboard events](#212-keyboard-events). When reaching the top/bottom of the list, the selection does not cycle around by default. If you wish to enable cycling, you can pass `cycle: true` to `select` and `mutli_select`:
+
+```ruby
+prompt.select("Choose your destiny?", %w(Scorpion Kano Jax), cycle: true)
+# =>
+# Choose your destiny? (Use arrow keys, press Enter to select)
+# ‣ Scorpion
+#   Kano
+#   Jax
+```
+
 For ordered choices set `enum` to any delimiter String. In that way, you can use arrows keys and numbers (0-9) to select the item.
 
 ```ruby
@@ -702,6 +713,12 @@ And when you press enter you will see the following selected:
 ```ruby
 # Select drinks? beer, bourbon
 # => [{score: 20}, {score: 50}]
+```
+
+Also like, `select`, the method takes an option `cycle` (which defaults to `false`), which lets you configure whether the selection should cycle around when reaching the top/bottom of the list when navigating:
+
+```ruby
+prompt.multi_select("Select drinks?", %w(vodka beer wine), cycle: true)
 ```
 
 You can configure help message and/or marker like so
