@@ -24,6 +24,7 @@ module TTY
         @active_color = options.fetch(:active_color) { @prompt.active_color }
         @help_color   = options.fetch(:help_color)   { @prompt.help_color }
         @error_color  = options.fetch(:error_color)  { @prompt.error_color }
+        @cycle        = options.fetch(:cycle) { false }
         @input        = nil
         @done         = false
         @first_render = true
@@ -140,7 +141,7 @@ module TTY
         if (@page_active + page_size) <= @choices.size
           @page_active += page_size
         else
-          @page_active = 1
+          @page_active = 1 if @cycle
         end
       end
       alias keytab keyright
@@ -149,7 +150,7 @@ module TTY
         if (@page_active - page_size) >= 0
           @page_active -= page_size
         else
-          @page_active = @choices.size - 1
+          @page_active = @choices.size - 1 if @cycle
         end
       end
 
