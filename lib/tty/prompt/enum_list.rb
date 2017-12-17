@@ -140,8 +140,8 @@ module TTY
       def keyright(*)
         if (@page_active + page_size) <= @choices.size
           @page_active += page_size
-        else
-          @page_active = 1 if @cycle
+        elsif @cycle
+          @page_active = 1
         end
       end
       alias keytab keyright
@@ -149,8 +149,8 @@ module TTY
       def keyleft(*)
         if (@page_active - page_size) >= 0
           @page_active -= page_size
-        else
-          @page_active = @choices.size - 1 if @cycle
+        elsif @cycle
+          @page_active = @choices.size - 1
         end
       end
 

@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-require 'tty-prompt'
+require_relative "../lib/tty-prompt"
 
 choices = [{
   key: 'y',

@@ -318,7 +318,7 @@ RSpec.describe TTY::Prompt do
               menu.per_page 3
               menu.choices choices
             end
-    expect(value).to eq('A')
+    expect(value).to eq("A")
     expect(prompt.output.string).to eq([
       "What letter? \n",
       "\e[32m  1) A\e[0m\n",
@@ -361,7 +361,7 @@ RSpec.describe TTY::Prompt do
               menu.per_page 3
               menu.choices choices
             end
-    expect(value).to eq('A')
+    expect(value).to eq("A")
     expect(prompt.output.string).to eq([
       "What letter? \n",
       "\e[32m  1) A\e[0m\n",
