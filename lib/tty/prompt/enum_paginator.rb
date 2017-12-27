@@ -13,7 +13,7 @@ module TTY
         default_size = (list.size <= DEFAULT_PAGE_SIZE ? list.size : DEFAULT_PAGE_SIZE)
         @per_page = @per_page || per_page || default_size
 
-        raise ArgumentError, 'per_page must be > 0' if @per_page < 1
+        check_page_size!
 
         # Don't paginate short lists
         if list.size <= @per_page

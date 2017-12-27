@@ -60,4 +60,14 @@ RSpec.describe TTY::Prompt::Paginator, '#paginate' do
 
     expect(paginator.paginate(list, 4).to_a).to eq([['d',3], ['e',4], ['f',5]])
   end
+
+  it "doesn't accept invalid pagination" do
+    list = %w(a b c d e f g)
+
+    paginator = described_class.new({per_page: 0})
+
+    expect {
+      paginator.paginate(list, 4)
+    }.to raise_error(TTY::Prompt::InvalidArgument, /per_page must be > 0/)
+  end
 end

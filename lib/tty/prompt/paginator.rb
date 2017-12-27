@@ -24,6 +24,15 @@ module TTY
         @lower_index + @per_page - 1
       end
 
+      # Check if page size is valid
+      #
+      # @raise [InvalidArgument]
+      #
+      # @api private
+      def check_page_size!
+        raise InvalidArgument, 'per_page must be > 0' if @per_page < 1
+      end
+
       # Paginate collection given an active index
       #
       # @param [Array[Choice]] list
@@ -43,7 +52,7 @@ module TTY
         @lower_index ||= current_index
         @upper_index ||= max_index
 
-        raise ArgumentError, 'per_page must be > 0' if @per_page < 1
+        check_page_size!
 
         # Don't paginate short lists
         if list.size <= @per_page
