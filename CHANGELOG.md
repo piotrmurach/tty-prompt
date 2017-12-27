@@ -1,5 +1,13 @@
 # Change log
 
+## [v0.14.0] - 2017-12-xx
+
+### Added
+* Add :cycle option to #select, #multi_select & #enum_select prompts to allow toggling between infinite and bounded list by Jonas Müller(@muellerj)
+
+### Changed
+* Change #multi_selct, #select & #enum_select to stop cycling options by default by Jona Müller(@muellerj)
+
 ## [v0.13.2] - 2017-08-30
 
 ### Changed
