@@ -1,8 +1,8 @@
 # coding: utf-8
 
-require 'tty-prompt'
 require 'benchmark/ips'
 require 'stringio'
+require_relative '../lib/tty-prompt'
 
 input  = ::StringIO.new
 output = ::StringIO.new
