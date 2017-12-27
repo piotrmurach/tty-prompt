@@ -2,17 +2,20 @@
 language: ruby
 sudo: false
 cache: bundler
+before_install: "gem update bundler"
 bundler_args: --without tools
 script: "bundle exec rake ci"
 rvm:
   - 1.9.3
   - 2.0.0
   - 2.1.10
-  - 2.2.6
-  - 2.3.3
-  - 2.4.1
+  - 2.2.9
+  - 2.3.6
+  - 2.4.3
+  - 2.5.0
   - ruby-head
   - jruby-9000
+  - jruby-9.1.1.0
   - jruby-head
 matrix:
   allow_failures:
