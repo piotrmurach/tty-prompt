@@ -175,8 +175,8 @@ module TTY
       # @api private
       def validate_defaults
         return if @default >= 1 && @default <= @choices.size
-        raise PromptConfigurationError,
-              "default index `#{d}` out of range (1 - #{@choices.size})"
+        raise ConfigurationError,
+              "default index `#{@default}` out of range (1 - #{@choices.size})"
       end
 
       # Setup default option and active selection

@@ -1,6 +1,16 @@
 # encoding: utf-8
 
 RSpec.describe TTY::Prompt do
+  it "raises configuration error when wrong default" do
+    prompt = TTY::TestPrompt.new
+    choices = %w(/bin/nano /usr/bin/vim.basic /usr/bin/vim.tiny)
+
+    expect {
+      prompt.enum_select("Select an editor?", choices, default: 100)
+    }.to raise_error(TTY::Prompt::ConfigurationError,
+                     /default index `100` out of range \(1 - 3\)/)
+  end
+
   it "selects default option when return pressed immediately" do
     prompt = TTY::TestPrompt.new
     choices = %w(/bin/nano /usr/bin/vim.basic /usr/bin/vim.tiny)
