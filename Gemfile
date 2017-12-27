@@ -17,6 +17,6 @@ group :tools do
 end
 
 group :metrics do
-  gem 'yard',      '~> 0.8.7'
+  gem 'yard',      '~> 0.9.12'
   gem 'yardstick', '~> 0.9.9'
 end
