@@ -6,9 +6,9 @@ RSpec.describe TTY::Prompt, '#select' do
 
   let(:symbols) { TTY::Prompt::Symbols.symbols }
 
-  def output_helper(prompt, choices, active,
-                    hint: "Use arrow keys, press Enter to select",
-                    init: false)
+  def output_helper(prompt, choices, active, options = {})
+    hint = options.fetch(:hint, "Use arrow keys, press Enter to select")
+    init = options.fetch(:init, false)
     out = ""
     out << (init ? "\e[?25l#{prompt} \e[90m(#{hint})\e[0m\n" : "#{prompt} \n")
     out << choices.map do |c|

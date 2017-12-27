@@ -3,9 +3,10 @@
 RSpec.describe TTY::Prompt do
   let(:symbols) { TTY::Prompt::Symbols.symbols }
 
-  def output_helper(prompt, choices, active, selected,
-                    hint: "Use arrow keys, press Space to select and Enter to finish",
-                    init: false)
+  def output_helper(prompt, choices, active, selected, options = {})
+    hint = options.fetch(:hint, "Use arrow keys, press Space to select and Enter to finish")
+    init = options.fetch(:init, false)
+
     out = if init
             "\e[?25l#{prompt} \e[90m(#{hint})\e[0m\n"
           else
