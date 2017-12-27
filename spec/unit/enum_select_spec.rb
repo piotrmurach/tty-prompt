@@ -307,4 +307,90 @@ RSpec.describe TTY::Prompt do
       "What letter? \e[32mD\e[0m\n"
     ].join)
   end
+
+  it "doesn't cycle around by default" do
+    prompt = TTY::TestPrompt.new
+    choices = %w(A B C D E F)
+    prompt.input << "\t" << "\t" << "\n"
+    prompt.input.rewind
+    value = prompt.enum_select("What letter?") do |menu|
+              menu.default 1
+              menu.per_page 3
+              menu.choices choices
+            end
+    expect(value).to eq("A")
+    expect(prompt.output.string).to eq([
+      "What letter? \n",
+      "\e[32m  1) A\e[0m\n",
+      "  2) B\n",
+      "  3) C\n",
+      "  Choose 1-6 [1]: ",
+      "\n\e[90m(Press tab/right or left to reveal more choices)\e[0m",
+      "\e[A\e[1G\e[18C",
+      "\e[2K\e[1G\e[1A" * 4,
+      "\e[2K\e[1G\e[J",
+      "What letter? \n",
+      "  4) D\n",
+      "  5) E\n",
+      "  6) F\n",
+      "  Choose 1-6 [1]: ",
+      "\n\e[90m(Press tab/right or left to reveal more choices)\e[0m",
+      "\e[A\e[1G\e[18C",
+      "\e[2K\e[1G\e[1A" * 4,
+      "\e[2K\e[1G\e[J",
+      "What letter? \n",
+      "  4) D\n",
+      "  5) E\n",
+      "  6) F\n",
+      "  Choose 1-6 [1]: ",
+      "\n\e[90m(Press tab/right or left to reveal more choices)\e[0m",
+      "\e[A\e[1G\e[18C",
+      "\e[2K\e[1G\e[1A" * 4,
+      "\e[2K\e[1G\e[J",
+      "What letter? \e[32mA\e[0m\n"
+    ].join)
+  end
+
+  it "cycles around when configured to do so" do
+    prompt = TTY::TestPrompt.new
+    choices = %w(A B C D E F)
+    prompt.input << "\t" << "\t" << "\n"
+    prompt.input.rewind
+    value = prompt.enum_select("What letter?", cycle: true) do |menu|
+              menu.default 1
+              menu.per_page 3
+              menu.choices choices
+            end
+    expect(value).to eq("A")
+    expect(prompt.output.string).to eq([
+      "What letter? \n",
+      "\e[32m  1) A\e[0m\n",
+      "  2) B\n",
+      "  3) C\n",
+      "  Choose 1-6 [1]: ",
+      "\n\e[90m(Press tab/right or left to reveal more choices)\e[0m",
+      "\e[A\e[1G\e[18C",
+      "\e[2K\e[1G\e[1A" * 4,
+      "\e[2K\e[1G\e[J",
+      "What letter? \n",
+      "  4) D\n",
+      "  5) E\n",
+      "  6) F\n",
+      "  Choose 1-6 [1]: ",
+      "\n\e[90m(Press tab/right or left to reveal more choices)\e[0m",
+      "\e[A\e[1G\e[18C",
+      "\e[2K\e[1G\e[1A" * 4,
+      "\e[2K\e[1G\e[J",
+      "What letter? \n",
+      "\e[32m  1) A\e[0m\n",
+      "  2) B\n",
+      "  3) C\n",
+      "  Choose 1-6 [1]: ",
+      "\n\e[90m(Press tab/right or left to reveal more choices)\e[0m",
+      "\e[A\e[1G\e[18C",
+      "\e[2K\e[1G\e[1A" * 4,
+      "\e[2K\e[1G\e[J",
+      "What letter? \e[32mA\e[0m\n"
+    ].join)
+  end
 end
