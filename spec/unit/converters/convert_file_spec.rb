@@ -10,6 +10,7 @@ RSpec.describe TTY::Prompt::Question, 'convert file' do
     allow(::File).to receive(:dirname).and_return('.')
     allow(::File).to receive(:join).and_return("test.txt")
     allow(::File).to receive(:open).with("test.txt", any_args).and_return(file)
+    allow(file).to receive(:close)
 
     answer = prompt.ask("Which file to open?", convert: :file)
 
