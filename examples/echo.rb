@@ -8,4 +8,4 @@ answer = prompt.ask('Password?', echo: false) do |q|
   q.validate(/^[^\.]+\.[^\.]+/)
 end
 
-#puts answer
+puts "Password: #{answer}"
