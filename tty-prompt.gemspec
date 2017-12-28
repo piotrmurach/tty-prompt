@@ -24,9 +24,9 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'pastel',       '~> 0.7.0'
   spec.add_dependency 'timers',       '~> 4.1.2'
   spec.add_dependency 'tty-cursor',   '~> 0.5.0'
-  spec.add_dependency 'tty-reader',   '~> 0.1.0'
+  # spec.add_dependency 'tty-reader',   '~> 0.1.0'
 
   spec.add_development_dependency 'bundler', '>= 1.5.0', '< 2.0'
   spec.add_development_dependency 'rake'
-  spec.add_development_dependency 'rspec', '~> 3.5.0'
+  spec.add_development_dependency 'rspec', '~> 3.0'
 end
