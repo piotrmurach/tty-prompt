@@ -78,6 +78,7 @@ module TTY
         @done_masked = false
         @failure = false
         @input = ''
+        @prompt.print(question)
         until @done_masked
           @prompt.read_keypress
           @prompt.print(@prompt.clear_line)

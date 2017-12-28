@@ -70,6 +70,7 @@ module TTY
 
       def process_input(question)
         time do
+          @prompt.print(render_question)
           until @done
             @input = @prompt.read_keypress(nonblock: true)
           end

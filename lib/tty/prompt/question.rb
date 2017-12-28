@@ -108,7 +108,6 @@ module TTY
         @errors = []
         until @done
           question = render_question
-          @prompt.print(question)
           result = process_input(question)
           if result.failure?
             @errors = result.errors

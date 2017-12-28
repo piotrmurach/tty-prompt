@@ -54,6 +54,7 @@ module TTY
       end
 
       def process_input(question)
+        @prompt.print(question)
         @lines = read_input
         @input = "#{@lines.first.strip} ..." unless @lines.first.to_s.empty?
         if Utils.blank?(@input)
