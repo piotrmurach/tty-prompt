@@ -362,7 +362,7 @@ prompt.keypress("Press key ?")
 By default any key is accepted but you can limit keys by using `:keys` option. Any key event names such as `:space` or `:ctrl_k` are valid:
 
 ```ruby
-prompt.keypress("Press space or enter to continue, keys: [:space, :return])
+prompt.keypress("Press space or enter to continue", keys: [:space, :return])
 ```
 
 #### 2.2.1 timeout
