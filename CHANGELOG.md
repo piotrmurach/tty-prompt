@@ -8,6 +8,10 @@
 ### Changed
 * Change #multi_selct, #select & #enum_select to stop cycling options by default by Jona Müller(@muellerj)
 
+### Fixed
+* Fix Paginator & EnumPaginator to allow only positive integer values by Andy Brody(@ab)
+* Fix EnumSelect to report on default option out of range and raise correctly
+
 ## [v0.13.2] - 2017-08-30
 
 ### Changed
