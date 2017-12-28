@@ -60,13 +60,11 @@ module TTY
       end
 
       converter(:file) do |input|
-        directory = ::File.expand_path(::File.dirname($0))
-        ::File.open(::File.join(directory, input))
+        ::File.open(::File.join(Dir.pwd, input))
       end
 
       converter(:path) do |input|
-        directory = ::File.expand_path(::File.dirname($0))
-        Pathname.new(::File.join(directory, input))
+        Pathname.new(::File.join(Dir.pwd, input))
       end
 
       converter(:char) do |input|

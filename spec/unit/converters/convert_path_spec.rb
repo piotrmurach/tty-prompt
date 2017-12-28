@@ -4,12 +4,9 @@ RSpec.describe TTY::Prompt::Question, 'convert path' do
   subject(:prompt) { TTY::TestPrompt.new }
 
   it "converts pathname" do
-    path = double(:path)
-    prompt.input << "/path/to/file"
+    path = Pathname.new(::File.join(Dir.pwd, 'spec/unit'))
+    prompt.input << "spec/unit"
     prompt.input.rewind
-
-    allow(Pathname).to receive(:new).and_return(path)
-    expect(Pathname).to receive(:new).with(/path\/to\/file/)
 
     answer = prompt.ask('File location?', convert: :path)
 
