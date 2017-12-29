@@ -13,6 +13,6 @@ RSpec.describe TTY::Prompt::Question, 'convert file' do
     expect(::File.basename(answer)).to eq('test.txt')
     expect(::File.read(answer)).to eq('foobar')
 
-    ::File.unlink('test.txt')
+    ::File.unlink('test.txt') unless Gem.win_platform?
   end
 end
