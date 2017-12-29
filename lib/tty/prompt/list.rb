@@ -170,13 +170,11 @@ module TTY
         @active = value
       end
 
-      def keyspace(*)
+      def keyenter(*)
         @done = true
       end
-
-      def keyreturn(*)
-        @done = true
-      end
+      alias keyreturn keyenter
+      alias keyspace keyenter
 
       def keyup(*)
         if @active == 1
