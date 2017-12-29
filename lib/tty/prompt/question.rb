@@ -181,7 +181,7 @@ module TTY
       def refresh(lines)
         output = ''
         if @done
-          if @errors.count.zero? && @echo
+          if @errors.count.zero?
             output << @prompt.cursor.up(lines)
           else
             lines += @errors.count

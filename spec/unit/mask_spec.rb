@@ -90,7 +90,7 @@ RSpec.describe TTY::Prompt, '#mask' do
       "What is your password? ",
       "\e[2K\e[1G",
       "What is your password? \n",
-      "\e[2K\e[1G",
+      "\e[1A\e[2K\e[1G",
       "What is your password? \n",
     ].join)
   end
