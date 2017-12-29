@@ -11,6 +11,7 @@
 ### Fixed
 * Fix Paginator & EnumPaginator to allow only positive integer values by Andy Brody(@ab)
 * Fix EnumSelect to report on default option out of range and raise correctly
+* Fix #ask :file & :path converters to correctly locate the files
 
 ## [v0.13.2] - 2017-08-30
 
