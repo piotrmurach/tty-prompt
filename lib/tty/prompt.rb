@@ -127,8 +127,13 @@ module TTY
 
       @cursor = TTY::Cursor
       @pastel = Pastel.new(@enabled_color.nil? ? {} : { enabled: @enabled_color })
-      @reader = TTY::Reader.new(@input, @output, interrupt: @interrupt,
-                                track_history: @track_history, env: @env)
+      @reader = TTY::Reader.new(
+        input: @input,
+        output: @output,
+        interrupt: @interrupt,
+        track_history: @track_history,
+        env: @env
+      )
     end
 
     # Invoke a question type of prompt
