@@ -25,6 +25,15 @@
 * User friendly error feedback
 * Intuitive DSL for creating complex menus
 * Ability to page long menus
+* Support for Linux, OS X, FreeBSD and Windows systems
+
+## Windows support
+
+`tty-prompt` works across all Unix and Windows systems in the "best possible" way. On Windows, it uses Win32 API in place of terminal device to provide matching functionality.
+
+Since Unix terminals provide richer set of features than Windows PowerShell consoles, expect to have a better experience on Unix-like platform.
+
+For Windows, consider using [conemu](https://conemu.github.io/), [cmder](http://cmder.net/) or [PowerCmd](http://www.powercmd.com/).
 
 ## Installation
 
