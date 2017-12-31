@@ -165,11 +165,10 @@ module TTY
       #
       # @api private
       def render_error(errors)
-        errors.reduce('') do |acc, err|
-          newline = (@echo ? '' : "\n")
-          acc << newline + @prompt.decorate('>>', :red) + ' ' + err
+        errors.reduce([]) do |acc, err|
+          acc << @prompt.decorate('>>', :red) + ' ' + err
           acc
-        end
+        end.join("\n")
       end
 
       # Determine area of the screen to clear
