@@ -92,7 +92,7 @@ module TTY
       alias_method :keydown, :keyleft
 
       def keyright(*)
-        @active += 1 if (@active + @step) < range.size
+        @active += 1 if (@active + 1) < range.size
       end
       alias_method :keyup, :keyright
 
