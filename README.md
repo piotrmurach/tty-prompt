@@ -950,29 +950,47 @@ prompt.suggest('b', possible, indent: 4, single_text: 'Perhaps you meant?')
 
 ### 2.10 slider
 
-If you have constrained range of numbers for user to choose from you may consider using `slider`. The slider provides easy visual way of picking a value marked by `O` marker.
+If you have constrained range of numbers for user to choose from you may consider using `slider`.
+
+The slider provides easy visual way of picking a value marked by `O` marker. You can set `:min`(defaults to 0), `:max` and `:step`(defaults to 1) options to configure slider range:
 
 ```ruby
-prompt.slider('What size?', min: 32, max: 54, step: 2)
+prompt.slider('Volume', max: 100, step: 5)
 # =>
-#
-# What size? (User arrow keys, press Enter to select)
-# |------O-----| 44
+# Volume ──────────O────────── 50
+# (User arrow keys, press Enter to select)
+```
+
+By default the slider is configured to pick middle of the range as a start value, you can change this by using the `:default` option:
+
+```ruby
+prompt.slider('Volume', max: 100, step: 5, default: 75)
+# =>
+# Volume ───────────────O───── 75
+# (Use arrow keys, press Enter to select)
+```
+
+You can also change the default slider formatting using the `:format`. The value must contain the `:slider` token for placing the actual animation and any `sprintf` compatible flag for number display, in our case `%d`:
+
+```ruby
+prompt.slider('Volume', max: 100, step: 5, default: 75, format: "|:slider| %d%")
+# =>
+# Volume |───────────────O─────| 75%
+# (Use arrow keys, press Enter to select)
 ```
 
 Slider can be configured through DSL as well:
 
 ```ruby
 prompt.slider('What size?') do |range|
-  range.default 4
-  range.min 0
-  range.max 20
-  range.step 2
+  range.max 100
+  range.step 5
+  range.default 75
+  range.format "|:slider| %d%"
 end
 # =>
-#
-# What size? (User arrow keys, press Enter to select)
-# |--O-------| 4
+# Volume |───────────────O─────| 75%
+# (Use arrow keys, press Enter to select)
 ```
 
 ### 2.11 say
