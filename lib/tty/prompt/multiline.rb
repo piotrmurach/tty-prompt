@@ -63,8 +63,8 @@ module TTY
         @evaluator.(@lines)
       end
 
-      def refresh(lines)
-        size = @lines_count + lines + 1
+      def refresh(lines, lines_to_clear)
+        size = @lines_count + lines_to_clear + 1
         @prompt.clear_lines(size)
       end
     end # Multiline

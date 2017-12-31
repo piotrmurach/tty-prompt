@@ -25,7 +25,9 @@ module TTY
         @interval_handler = proc { |time|
           unless @done
             question = render_question
-            @prompt.print(refresh(question.lines.count))
+            line_size = question.size
+            total_lines = @prompt.count_screen_lines(line_size)
+            @prompt.print(refresh(question.lines.count, total_lines))
             countdown(time)
             @prompt.print(render_question)
           end
@@ -78,7 +80,7 @@ module TTY
         @evaluator.(@input)
       end
 
-      def refresh(lines)
+      def refresh(lines, lines_to_clear)
         @prompt.clear_lines(lines)
       end
 

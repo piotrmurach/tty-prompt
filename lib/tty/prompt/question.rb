@@ -115,7 +115,9 @@ module TTY
           else
             @done = true
           end
-          @prompt.print(refresh(question.lines.count))
+          line_size = question.size + result.value.to_s.size
+          total_lines = @prompt.count_screen_lines(line_size)
+          @prompt.print(refresh(question.lines.count, total_lines))
         end
         @prompt.print(render_question)
         convert_result(result.value)
@@ -178,18 +180,19 @@ module TTY
       # @return [String]
       #
       # @api private
-      def refresh(lines)
+      def refresh(lines, lines_to_clear)
         output = ''
         if @done
           if @errors.count.zero?
             output << @prompt.cursor.up(lines)
           else
             lines += @errors.count
+            lines_to_clear += @errors.count
           end
         else
           output << @prompt.cursor.up(lines)
         end
-        output + @prompt.clear_lines(lines)
+        output + @prompt.clear_lines(lines_to_clear)
       end
 
       # Convert value to expected type
