@@ -33,7 +33,9 @@
 
 Since Unix terminals provide richer set of features than Windows PowerShell consoles, expect to have a better experience on Unix-like platform.
 
-For Windows, consider using [conemu](https://conemu.github.io/), [cmder](http://cmder.net/) or [PowerCmd](http://www.powercmd.com/).
+Some features like `select` or `multi_select` menus may not work on Windows when run from Git Bash. See GitHub suggested [fixes](https://github.com/git-for-windows/git/wiki/FAQ#some-native-console-programs-dont-work-when-run-from-git-bash-how-to-fix-it).
+
+For Windows, consider installing [ConEmu](https://conemu.github.io/), [cmder](http://cmder.net/) or [PowerCmd](http://www.powercmd.com/).
 
 ## Installation
 
