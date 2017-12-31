@@ -13,7 +13,7 @@ module TTY
 
       HELP = '(Use arrow keys, press Enter to select)'.freeze
 
-      FORMAT = "#{Symbols.symbols[:pipe]}:slider#{Symbols.symbols[:pipe]} %d".freeze
+      FORMAT = ':slider %d'.freeze
 
       # Initailize a Slider
       #
