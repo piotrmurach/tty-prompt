@@ -20,6 +20,8 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
+  spec.required_ruby_version = '>= 2.0.0'
+
   spec.add_dependency 'necromancer',  '~> 0.4.0'
   spec.add_dependency 'pastel',       '~> 0.7.0'
   spec.add_dependency 'timers',       '~> 4.1.2'
