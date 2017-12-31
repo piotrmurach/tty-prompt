@@ -7,11 +7,15 @@
 
 ### Changed
 * Change #multi_selct, #select & #enum_select to stop cycling options by default by Jona Müller(@muellerj)
+* Change gemspec to require ruby >= 2.0.0
+* Change #slider prompt to display slider next to query and help underneath
 
 ### Fixed
 * Fix Paginator & EnumPaginator to allow only positive integer values by Andy Brody(@ab)
 * Fix EnumSelect to report on default option out of range and raise correctly
 * Fix #ask :file & :path converters to correctly locate the files
+* Fix #ask, #multiline to correctly handle long strings that wrap around screen
+* Fix #slider prompt to correctly scale sliding
 
 ## [v0.13.2] - 2017-08-30
 
