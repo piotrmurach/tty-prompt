@@ -105,17 +105,18 @@ module TTY
       def keyleft(*)
         @active -= 1 if @active > 0
       end
-      alias_method :keydown, :keyleft
+      alias keydown keyleft
 
       def keyright(*)
         @active += 1 if (@active + 1) < range.size
       end
-      alias_method :keyup, :keyright
+      alias keyup keyright
 
       def keyreturn(*)
         @done = true
       end
-      alias_method :keyspace, :keyreturn
+      alias keyspace keyreturn
+      alias keyenter keyreturn
 
       private
 
@@ -183,7 +184,7 @@ module TTY
                  @prompt.decorate(symbols[:handle], @active_color) +
                  (symbols[:line] * (range.size - @active - 1))
         value = " #{range[@active]}"
-        @format.gsub(":slider", slider) % [value]
+        @format.gsub(':slider', slider) % [value]
       end
     end # Slider
   end # Prompt
