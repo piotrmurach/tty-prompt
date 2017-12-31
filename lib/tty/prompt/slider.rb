@@ -85,6 +85,10 @@ module TTY
         @step = value
       end
 
+      def format(value)
+        @format = value
+      end
+
       # Call the slider by passing question
       #
       # @param [String] question
