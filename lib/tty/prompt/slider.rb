@@ -13,7 +13,18 @@ module TTY
 
       HELP = '(Use arrow keys, press Enter to select)'.freeze
 
+      FORMAT = "#{Symbols.symbols[:pipe]}:slider#{Symbols.symbols[:pipe]} %d".freeze
+
       # Initailize a Slider
+      #
+      # @param [Prompt] prompt
+      #   the prompt
+      # @param [Hash] options
+      #   the options to configure this slider
+      # @option options [Integer] :min The minimum value
+      # @option options [Integer] :max The maximum value
+      # @option options [Integer] :step The step value
+      # @option options [String] :format The display format
       #
       # @api public
       def initialize(prompt, options = {})
@@ -25,6 +36,7 @@ module TTY
         @default      = options[:default]
         @active_color = options.fetch(:active_color) { @prompt.active_color }
         @help_color   = options.fetch(:help_color) { @prompt.help_color }
+        @format       = options.fetch(:format) { FORMAT }
         @first_render = true
         @done         = false
 
@@ -143,7 +155,7 @@ module TTY
       #
       # @api private
       def render_question
-        header = "#{@prefix}#{@question} " #" #{render_header}\n"
+        header = "#{@prefix}#{@question} "
         if @done
           header << @prompt.decorate(answer.to_s, @active_color)
           header << "\n"
@@ -163,14 +175,11 @@ module TTY
       #
       # @api private
       def render_slider
-        output = ''
-        output << symbols[:pipe]
-        output << symbols[:line] * @active
-        output << @prompt.decorate(symbols[:handle], @active_color)
-        output << symbols[:line] * (range.size - @active - 1)
-        output << symbols[:pipe]
-        output << " #{range[@active]}"
-        output
+        slider = (symbols[:line] * @active) +
+                 @prompt.decorate(symbols[:handle], @active_color) +
+                 (symbols[:line] * (range.size - @active - 1))
+        value = " #{range[@active]}"
+        @format.gsub(":slider", slider) % [value]
       end
     end # Slider
   end # Prompt
