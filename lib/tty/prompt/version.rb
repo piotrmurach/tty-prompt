@@ -2,6 +2,6 @@
 
 module TTY
   class Prompt
-    VERSION = "0.13.2"
+    VERSION = '0.14.0'.freeze
   end # Prompt
 end # TTY
