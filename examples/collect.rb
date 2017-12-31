@@ -1,5 +1,7 @@
 # encoding: utf-8
 
+require 'json'
+
 require_relative "../lib/tty-prompt"
 
 prompt = TTY::Prompt.new(prefix: '[?] ')
@@ -16,4 +18,4 @@ result = prompt.collect do
   end
 end
 
-puts result
+puts JSON.pretty_generate(result)
