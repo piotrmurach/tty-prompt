@@ -11,10 +11,11 @@ RSpec.describe TTY::Prompt, '#slider' do
     prompt.input.rewind
     expect(prompt.slider('What size?', min: 32, max: 54, step: 2)).to eq(44)
     expect(prompt.output.string).to eq([
-      "\e[?25lWhat size? \e[90m(Use arrow keys, press Enter to select)\e[0m\n",
+      "\e[?25lWhat size? ",
       symbols[:pipe] + symbols[:line] * 6,
       "\e[32m#{symbols[:handle]}\e[0m",
       "#{symbols[:line] * 5 + symbols[:pipe]} 44",
+      "\n\e[90m(Use arrow keys, press Enter to select)\e[0m",
       "\e[2K\e[1G\e[1A\e[2K\e[1G",
       "What size? \e[32m44\e[0m\n\e[?25h"
     ].join)
@@ -25,10 +26,11 @@ RSpec.describe TTY::Prompt, '#slider' do
     prompt.input.rewind
     expect(prompt.slider('What size?', min: 32, max: 54, step: 2, default: 38)).to eq(38)
     expect(prompt.output.string).to eq([
-      "\e[?25lWhat size? \e[90m(Use arrow keys, press Enter to select)\e[0m\n",
+      "\e[?25lWhat size? ",
       symbols[:pipe] + symbols[:line] * 3,
       "\e[32m#{symbols[:handle]}\e[0m",
       "#{symbols[:line] * 8 + symbols[:pipe]} 38",
+      "\n\e[90m(Use arrow keys, press Enter to select)\e[0m",
       "\e[2K\e[1G\e[1A\e[2K\e[1G",
       "What size? \e[32m38\e[0m\n\e[?25h"
     ].join)
@@ -45,10 +47,11 @@ RSpec.describe TTY::Prompt, '#slider' do
             end
     expect(value).to eq(6)
     expect(prompt.output.string).to eq([
-      "\e[?25lWhat size? \e[90m(Use arrow keys, press Enter to select)\e[0m\n",
+      "\e[?25lWhat size? ",
       symbols[:pipe] + symbols[:line] * 3,
       "\e[32m#{symbols[:handle]}\e[0m",
       "#{symbols[:line] * 7 + symbols[:pipe]} 6",
+      "\n\e[90m(Use arrow keys, press Enter to select)\e[0m",
       "\e[2K\e[1G\e[1A\e[2K\e[1G",
       "What size? \e[32m6\e[0m\n\e[?25h"
     ].join)
@@ -60,10 +63,11 @@ RSpec.describe TTY::Prompt, '#slider' do
     options = {active_color: :red, help_color: :cyan}
     expect(prompt.slider('What size?', options)).to eq(5)
     expect(prompt.output.string).to eq([
-      "\e[?25lWhat size? \e[36m(Use arrow keys, press Enter to select)\e[0m\n",
+      "\e[?25lWhat size? ",
       symbols[:pipe] + symbols[:line] * 5,
       "\e[31m#{symbols[:handle]}\e[0m",
       "#{symbols[:line] * 5 + symbols[:pipe]} 5",
+      "\n\e[36m(Use arrow keys, press Enter to select)\e[0m",
       "\e[2K\e[1G\e[1A\e[2K\e[1G",
       "What size? \e[31m5\e[0m\n\e[?25h"
     ].join)
@@ -80,16 +84,17 @@ RSpec.describe TTY::Prompt, '#slider' do
     res = prompt.slider('What size?', min: 0, max: 10, step: 1, default: 10)
     expect(res).to eq(10)
     expect(prompt.output.string).to eq([
-      "\e[?25lWhat size? \e[90m(Use arrow keys, press Enter to select)\e[0m\n",
+      "\e[?25lWhat size? ",
       symbols[:pipe] + symbols[:line] * 10,
       "\e[32m#{symbols[:handle]}\e[0m",
       "#{symbols[:pipe]} 10",
+      "\n\e[90m(Use arrow keys, press Enter to select)\e[0m",
       "\e[2K\e[1G\e[1A\e[2K\e[1G",
-      "What size? \n",
+      "What size? ",
       symbols[:pipe] + symbols[:line] * 10,
       "\e[32m#{symbols[:handle]}\e[0m",
       "#{symbols[:pipe]} 10",
-      "\e[2K\e[1G\e[1A\e[2K\e[1G",
+      "\e[2K\e[1G",
       "What size? \e[32m10\e[0m\n\e[?25h"
     ].join)
   end

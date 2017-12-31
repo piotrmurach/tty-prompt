@@ -143,23 +143,18 @@ module TTY
       #
       # @api private
       def render_question
-        header = "#{@prefix}#{@question} #{render_header}\n"
-        @first_render = false
-        header << render_slider unless @done
-        header
-      end
-
-      # Render actual answer or help
-      #
-      # @return [String]
-      #
-      # @api private
-      def render_header
+        header = "#{@prefix}#{@question} " #" #{render_header}\n"
         if @done
-          @prompt.decorate(answer.to_s, @active_color)
-        elsif @first_render
-          @prompt.decorate(HELP, @help_color)
+          header << @prompt.decorate(answer.to_s, @active_color)
+          header << "\n"
+        else
+          header << render_slider
         end
+        if @first_render
+          header << "\n" + @prompt.decorate(HELP, @help_color)
+          @first_render = false
+        end
+        header
       end
 
       # Render slider representation
