@@ -107,16 +107,16 @@ module TTY
       def render
         @errors = []
         until @done
-          question = render_question
-          result = process_input(question)
+          result = process_input(render_question)
           if result.failure?
             @errors = result.errors
             @prompt.print(render_error(result.errors))
           else
             @done = true
           end
-          line_size = question.size + result.value.to_s.size
-          total_lines = @prompt.count_screen_lines(line_size)
+          question    = render_question
+          input_line  = question + result.value.to_s
+          total_lines = @prompt.count_screen_lines(input_line)
           @prompt.print(refresh(question.lines.count, total_lines))
         end
         @prompt.print(render_question)
