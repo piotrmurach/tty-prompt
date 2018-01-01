@@ -81,7 +81,9 @@ module TTY
         @prompt.print(question)
         until @done_masked
           @prompt.read_keypress
-          @prompt.print(@prompt.clear_line)
+          question = render_question
+          total_lines = @prompt.count_screen_lines(question)
+          @prompt.print(@prompt.clear_lines(total_lines))
           @prompt.print(render_question)
         end
         @prompt.puts
