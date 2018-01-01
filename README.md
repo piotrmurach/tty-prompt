@@ -1,4 +1,5 @@
 # TTY::Prompt [![Gitter](https://badges.gitter.im/Join%20Chat.svg)][gitter]
+
 [![Gem Version](https://badge.fury.io/rb/tty-prompt.svg)][gem]
 [![Build Status](https://secure.travis-ci.org/piotrmurach/tty-prompt.svg?branch=master)][travis]
 [![Build status](https://ci.appveyor.com/api/projects/status/4cguoiah5dprbq7n?svg=true)][appveyor]
@@ -1175,4 +1176,4 @@ This project is intended to be a safe, welcoming space for collaboration, and co
 
 ## Copyright
 
-Copyright (c) 2015-2017 Piotr Murach. See LICENSE for further details.
+Copyright (c) 2015-2018 Piotr Murach. See LICENSE for further details.
