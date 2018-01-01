@@ -1,6 +1,6 @@
 # Change log
 
-## [v0.14.0] - 2017-12-xx
+## [v0.14.0] - 2018-01-01
 
 ### Added
 * Add :cycle option to #select, #multi_select & #enum_select prompts to allow toggling between infinite and bounded list by Jonas Müller(@muellerj)
@@ -9,6 +9,7 @@
 * Change #multi_selct, #select & #enum_select to stop cycling options by default by Jona Müller(@muellerj)
 * Change gemspec to require ruby >= 2.0.0
 * Change #slider prompt to display slider next to query and help underneath
+* Change to use tty-reader v0.2.0 with new line editing features for processing long inputs
 
 ### Fixed
 * Fix Paginator & EnumPaginator to allow only positive integer values by Andy Brody(@ab)
