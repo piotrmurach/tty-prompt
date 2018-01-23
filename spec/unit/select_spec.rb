@@ -7,16 +7,31 @@ RSpec.describe TTY::Prompt, '#select' do
   let(:symbols) { TTY::Prompt::Symbols.symbols }
 
   def output_helper(prompt, choices, active, options = {})
-    hint = options.fetch(:hint, "Use arrow keys, press Enter to select")
+    raise ":init requires :hint" if options[:init] && options[:hint].nil?
+
+    hint = options[:hint]
     init = options.fetch(:init, false)
+
     out = ""
-    out << (init ? "\e[?25l#{prompt} \e[90m(#{hint})\e[0m\n" : "#{prompt} \n")
+
+    out << "\e[?25l" if init
+    out << prompt << " "
+    out << "\e[90m(#{hint})\e[0m" if hint
+    out << "\n"
+
     out << choices.map do |c|
       (c == active ? "\e[32m#{symbols[:pointer]} #{c}\e[0m" : "  #{c}")
     end.join("\n")
     out << "\e[2K\e[1G\e[1A" * choices.count
     out << "\e[2K\e[1G"
+
+    out << "\e[1A\e[2K\e[1G" if choices.empty?
+
     out
+  end
+
+  def exit_message(prompt, choice)
+    "#{prompt} \e[32m#{choice}\e[0m\n\e[?25h"
   end
 
   it "selects by default first option" do
@@ -337,7 +352,7 @@ RSpec.describe TTY::Prompt, '#select' do
     value = prompt.select("What letter?", choices)
     expect(value).to eq("C")
     expect(prompt.output.string).to eq(
-      output_helper("What letter?", choices, "A", init: true) +
+      output_helper("What letter?", choices, "A", init: true, hint: "Use arrow keys, press Enter to select") +
       output_helper("What letter?", choices, "B") +
       output_helper("What letter?", choices, "C") +
       output_helper("What letter?", choices, "C") +
@@ -354,7 +369,7 @@ RSpec.describe TTY::Prompt, '#select' do
     value = prompt.select("What letter?", choices, cycle: true)
     expect(value).to eq("A")
     expect(prompt.output.string).to eq(
-      output_helper("What letter?", choices, "A", init: true) +
+      output_helper("What letter?", choices, "A", init: true, hint: "Use arrow keys, press Enter to select") +
       output_helper("What letter?", choices, "B") +
       output_helper("What letter?", choices, "C") +
       output_helper("What letter?", choices, "A") +
@@ -400,7 +415,114 @@ RSpec.describe TTY::Prompt, '#select' do
     prompt.input.rewind
 
     expect {
-      prompt.select('What size?', choices, default: 10)
+      prompt.select("What size?", choices, default: 10)
     }.to raise_error(TTY::Prompt::ConfigurationError, /`10` out of range \(1 - 3\)/)
+  end
+
+  context "with filter" do
+    it "doesn't allow mixing enumeration and filter" do
+      prompt = TTY::TestPrompt.new
+
+      expect {
+        prompt.select("What size?", [], enum: '.', filter: true)
+      }.to raise_error(TTY::Prompt::ConfigurationError, "Enumeration can't be used with filter")
+    end
+
+    it "filters and chooses a uniquely matching entry, ignoring case" do
+      prompt = TTY::TestPrompt.new
+
+      prompt.input << "U" << "g" << "\r"
+      prompt.input.rewind
+
+      actual_value = prompt.select("What size?", %w(Small Medium Large Huge), filter: true)
+      expected_value = "Huge"
+
+      expect(actual_value).to eql(expected_value)
+
+      actual_prompt_output = prompt.output.string
+
+      expected_prompt_output =
+        output_helper("What size?", %w(Small Medium Large Huge), "Small", init: true, hint: "Use arrow keys, press Enter to select, and letter keys to filter") +
+        output_helper("What size?", %w(Medium Huge), "Medium", hint: 'Filter: "U"') +
+        output_helper("What size?", %w(Huge), "Huge", hint: 'Filter: "Ug"') +
+        exit_message("What size?", "Huge")
+
+      expect(actual_prompt_output).to eql(expected_prompt_output)
+    end
+
+    it "filters and chooses the first of multiple matching entries" do
+      prompt = TTY::TestPrompt.new
+
+      prompt.input << "g" << "\r"
+      prompt.input.rewind
+
+      actual_value = prompt.select("What size?", %w(Small Medium Large Huge), filter: true)
+      expected_value = "Large"
+
+      expect(actual_value).to eql(expected_value)
+
+      actual_prompt_output = prompt.output.string
+
+      expected_prompt_output =
+        output_helper("What size?", %w(Small Medium Large Huge), "Small", init: true, hint: "Use arrow keys, press Enter to select, and letter keys to filter") +
+        output_helper("What size?", %w(Large Huge), "Large", hint: 'Filter: "g"') +
+        exit_message("What size?", "Large")
+
+      expect(actual_prompt_output).to eql(expected_prompt_output)
+    end
+
+    # This test can't be done in an exact way, at least, with the current framework
+    it "doesn't exit when there are no matching entries" do
+      prompt = TTY::TestPrompt.new
+
+      prompt.on(:keypress) { |e| prompt.trigger(:keybackspace) if e.value == "a" }
+
+      prompt.input << "z" << "\r"    # shows no entry, blocking exit
+      prompt.input << "a" << "\r"    # triggers Backspace before `a` (see above)
+      prompt.input.rewind
+
+      actual_value = prompt.select("What size?", %w(Tiny Medium Large Huge), filter: true)
+      expected_value = "Large"
+
+      expect(actual_value).to eql(expected_value)
+
+      actual_prompt_output = prompt.output.string
+
+      expected_prompt_output =
+        output_helper("What size?", %w(Tiny Medium Large Huge), "Tiny", init: true, hint: "Use arrow keys, press Enter to select, and letter keys to filter") +
+        output_helper("What size?", %w(), "", hint: 'Filter: "z"') +
+        output_helper("What size?", %w(), "", hint: 'Filter: "z"') +
+        output_helper("What size?", %w(Large), "Large", hint: 'Filter: "a"') +
+        exit_message("What size?", "Large")
+
+      expect(actual_prompt_output).to eql(expected_prompt_output)
+    end
+
+    it "cancels a selection" do
+      prompt = TTY::TestPrompt.new
+
+      prompt.on(:keypress) { |e| prompt.trigger(:keydelete) if e.value == "S" }
+
+      prompt.input << "Hu"
+      prompt.input << "S"   # triggers Canc before `S` (see above)
+      prompt.input << "\r"
+      prompt.input.rewind
+
+      actual_value = prompt.select("What size?", %w(Small Medium Large Huge), filter: true)
+      expected_value = "Small"
+
+      expect(actual_value).to eql(expected_value)
+
+      actual_prompt_output = prompt.output.string
+
+      expected_prompt_output =
+        output_helper("What size?", %w(Small Medium Large Huge), "Small", init: true, hint: "Use arrow keys, press Enter to select, and letter keys to filter") +
+        output_helper("What size?", %w(Huge), "Huge", hint: 'Filter: "H"') +
+        output_helper("What size?", %w(Huge), "Huge", hint: 'Filter: "Hu"') +
+        output_helper("What size?", %w(Small), "Small", hint: 'Filter: "S"') +
+        exit_message("What size?", "Small")
+
+      expect(actual_prompt_output).to eql(expected_prompt_output)
+    end
   end
 end

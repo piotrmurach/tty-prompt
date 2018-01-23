@@ -9,7 +9,7 @@ module TTY
     #
     # @api private
     class MultiList < List
-      HELP = '(Use arrow%s keys, press Space to select and Enter to finish)'.freeze
+      HELP = '(Use arrow%s keys, press Space to select and Enter to finish%s)'.freeze
 
       # Create instance of TTY::Prompt::MultiList menu.
       #
@@ -29,7 +29,7 @@ module TTY
       #
       # @api private
       def keyspace(*)
-        active_choice = @choices[@active - 1]
+        active_choice = choices[@active - 1]
         if @selected.include?(active_choice)
           @selected.delete(active_choice)
         else
@@ -44,6 +44,7 @@ module TTY
       # @api private
       def setup_defaults
         validate_defaults
+        # At this stage, @choices matches all the visible choices.
         @selected = @choices.values_at(*@default.map { |d| d - 1 })
         @active = @default.last unless @selected.empty?
       end
@@ -65,9 +66,12 @@ module TTY
         if @done && @echo
           @prompt.decorate(selected_names, @active_color)
         elsif @selected.size.nonzero? && @echo
-          selected_names + (@first_render ? " #{instructions}" : '')
+          help_suffix = @choices_filter.to_s != "" ? " #{filter_help}" : ""
+          selected_names + (@first_render ? " #{instructions}" : help_suffix)
         elsif @first_render
           instructions
+        elsif @choices_filter.to_s != ""
+          filter_help
         end
       end
 
@@ -87,7 +91,7 @@ module TTY
       # @api private
       def render_menu
         output = ''
-        @paginator.paginate(@choices, @active, @per_page) do |choice, index|
+        @paginator.paginate(choices, @active, @per_page) do |choice, index|
           num = enumerate? ? (index + 1).to_s + @enum + ' ' : ''
           indicator = (index + 1 == @active) ?  @marker : ' '
           indicator += ' '
@@ -97,7 +101,7 @@ module TTY
                     else
                       symbols[:radio_off] + ' ' + num + choice.name
                     end
-          max_index = paginated? ? @paginator.max_index : @choices.size - 1
+          max_index = paginated? ? @paginator.max_index : choices.size - 1
           newline = (index == max_index) ? '' : "\n"
           output << indicator + message + newline
         end
