@@ -4,14 +4,20 @@ RSpec.describe TTY::Prompt do
   let(:symbols) { TTY::Prompt::Symbols.symbols }
 
   def output_helper(prompt, choices, active, selected, options = {})
-    hint = options.fetch(:hint, "Use arrow keys, press Space to select and Enter to finish")
+    raise ":init requires :hint" if options[:init] && options[:hint].nil?
+
+    hint = options[:hint]
     init = options.fetch(:init, false)
 
-    out = if init
-            "\e[?25l#{prompt} \e[90m(#{hint})\e[0m\n"
-          else
-            "#{prompt} #{selected.join(', ')}\n"
-          end
+    out = ""
+
+    out << "\e[?25l" if init
+    out << prompt << " "
+    out << selected.join(', ')
+    out << "\e[90m" if init
+    out << (init ? "(#{hint})\e[0m" : " (#{hint})") if hint
+    out << "\n"
+
     out << choices.map do |choice|
       prefix = choice == active ? "#{symbols[:pointer]} " : "  "
       prefix += if selected.include? choice
@@ -24,6 +30,10 @@ RSpec.describe TTY::Prompt do
     out << "\e[2K\e[1G\e[1A" * choices.count
     out << "\e[2K\e[1G"
     out
+  end
+
+  def exit_message(prompt, choices)
+    "#{prompt} \e[32m#{choices.join(', ')}\e[0m\n\e[?25h"
   end
 
   it "selects nothing when return pressed immediately" do
@@ -349,7 +359,7 @@ RSpec.describe TTY::Prompt do
     value = prompt.multi_select("What letter?", choices)
     expect(value).to eq(["C"])
     expect(prompt.output.string).to eq(
-      output_helper("What letter?", choices, "A", [], init: true) +
+      output_helper("What letter?", choices, "A", [], init: true, hint: "Use arrow keys, press Space to select and Enter to finish") +
       output_helper("What letter?", choices, "B", []) +
       output_helper("What letter?", choices, "C", []) +
       output_helper("What letter?", choices, "C", []) +
@@ -367,12 +377,42 @@ RSpec.describe TTY::Prompt do
     value = prompt.multi_select("What letter?", choices, cycle: true)
     expect(value).to eq(["A"])
     expect(prompt.output.string).to eq(
-      output_helper("What letter?", choices, "A", [], init: true) +
+      output_helper("What letter?", choices, "A", [], init: true, hint: "Use arrow keys, press Space to select and Enter to finish") +
       output_helper("What letter?", choices, "B", []) +
       output_helper("What letter?", choices, "C", []) +
       output_helper("What letter?", choices, "A", []) +
       output_helper("What letter?", choices, "A", ["A"]) +
       "What letter? \e[32mA\e[0m\n\e[?25h"
     )
+  end
+
+  context "with filter" do
+    it "doesn't lose the selection when switching between filters" do
+      prompt = TTY::TestPrompt.new
+
+      prompt.on(:keypress) { |e| prompt.trigger(:keydelete) if e.value == "\r" }
+
+      prompt.input << " "         # select `Tiny`
+      prompt.input << "a" << " "  # match and select `Large`
+      prompt.input << "\u007F"    # backspace (shows all)
+      prompt.input << "\r"
+      prompt.input.rewind
+
+      actual_values = prompt.multi_select("What size?", %w(Tiny Medium Large Huge), filter: true)
+      expected_values = %w(Tiny Large)
+
+      expect(actual_values).to eql(expected_values)
+
+      actual_prompt_output = prompt.output.string
+      expected_prompt_output =
+        output_helper("What size?", %w(Tiny Medium Large Huge), "Tiny", %w(), init: true, hint: "Use arrow keys, press Space to select and Enter to finish, and letter keys to filter") +
+        output_helper("What size?", %w(Tiny Medium Large Huge), "Tiny", %w(Tiny)) +
+        output_helper("What size?", %w(Large), "Large", %w(Tiny), hint: 'Filter: "a"') +
+        output_helper("What size?", %w(Large), "Large", %w(Tiny Large), hint: 'Filter: "a"') +
+        output_helper("What size?", %w(Tiny Medium Large Huge), "Tiny", %w(Tiny Large)) +
+        exit_message("What size?", %w(Tiny Large))
+
+      expect(actual_prompt_output).to eql(expected_prompt_output)
+    end
   end
 end

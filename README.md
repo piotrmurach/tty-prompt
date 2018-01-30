@@ -76,6 +76,7 @@ Or install it yourself as:
     * [2.6.1 select](#261-select)
     * [2.6.2 multi_select](#262-multi_select)
     * [2.6.2.1 echo](#2621-echo)
+    * [2.6.2.2 filter](#2622-filter)
     * [2.6.3 enum_select](#263-enum_select)
   * [2.7 expand](#27-expand)
   * [2.8 collect](#28-collect)
@@ -777,6 +778,36 @@ prompt.multi_select("Select drinks?", choices, echo: false)
 #   ⬡ 4) whisky
 # ‣ ⬢ 5) bourbon
 ```
+
+### 2.6.2.2 filter
+
+To activate dynamic list filtering on letter/number typing, use the :filter option:
+
+```ruby
+choices = %w(vodka beer wine whisky bourbon)
+prompt.multi_select("Select drinks?", choices, filter: true)
+# =>
+# Select drinks? (Use arrow keys, press Space to select and Enter to finish, and letter keys to filter)
+# ‣ ⬡ vodka
+#   ⬡ beer
+#   ⬡ wine
+#   ⬡ whisky
+#   ⬡ bourbon
+```
+
+After the user presses "w":
+
+```
+# Select drinks? (Filter: "w")
+# ‣ ⬡ wine
+#   ⬡ whisky
+```
+
+Filter characters can be deleted partially or entirely via, respectively, Backspace and Canc.
+
+If the user changes or deletes a filter, the choices previously selected remain selected.
+
+The `filter` option is not compatible with `enum`.
 
 ### 2.6.3 enum_select
 
