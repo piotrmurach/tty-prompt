@@ -149,7 +149,7 @@ module TTY
         end
       end
 
-      # Add multiple choices, or display them.
+      # Add multiple choices, or return them.
       #
       # @param [Array[Object]] values
       #   the values to add as choices; if not passed, the current
@@ -158,12 +158,12 @@ module TTY
       # @api public
       def choices(values = (not_set = true))
         if not_set
-          if @filter.to_s != ""
+          if @filter.to_s.empty?
+            @choices
+          else
             @choices.select do |the_choice|
               the_choice.name.downcase.include?(@filter.downcase)
             end
-          else
-            @choices
           end
         else
           Array(values).each { |val| choice(*val) }
@@ -240,7 +240,7 @@ module TTY
       def keybackspace(*)
         return unless @filter
 
-        @filter = @filter[0..-2]
+        @filter.slice!(-1)
         @active = 1
       end
 
@@ -292,7 +292,7 @@ module TTY
           @prompt.print(question)
           @prompt.read_keypress
 
-          # Split manually; if the second line is blank (when there are not
+          # Split manually; if the second line is blank (when there are no
           # matching lines), it won't be included by using String#lines.
           question_lines = question.split($INPUT_RECORD_SEPARATOR, -1)
 
@@ -334,6 +334,15 @@ module TTY
         rendered_menu << render_footer
         header << rendered_menu unless @done
         header
+      end
+
+      # Header part showing the current filter
+      #
+      # @return String
+      #
+      # @api private
+      def filter_help
+        "(Filter: #{@filter.inspect})"
       end
 
       # Render initial help and selected choice
@@ -385,15 +394,6 @@ module TTY
         return '' unless paginated?
         colored_footer = @prompt.decorate(@page_help, @help_color)
         "\n" << colored_footer
-      end
-
-      # Header part showing the current filter
-      #
-      # @return String
-      #
-      # @api private
-      def filter_help
-        "(Filter: #{@filter.inspect})"
       end
     end # List
   end # Prompt
