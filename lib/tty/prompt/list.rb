@@ -39,23 +39,23 @@ module TTY
       def initialize(prompt, options = {})
         check_options_consistency(options)
 
-        @prompt         = prompt
-        @prefix         = options.fetch(:prefix) { @prompt.prefix }
-        @enum           = options.fetch(:enum) { nil }
-        @default        = Array[options.fetch(:default) { 1 }]
-        @active         = @default.first
-        @choices        = Choices.new
-        @active_color   = options.fetch(:active_color) { @prompt.active_color }
-        @help_color     = options.fetch(:help_color) { @prompt.help_color }
-        @marker         = options.fetch(:marker) { symbols[:pointer] }
-        @cycle          = options.fetch(:cycle) { false }
-        @help           = options[:help]
-        @first_render   = true
-        @done           = false
-        @per_page       = options[:per_page]
-        @page_help      = options[:page_help] || PAGE_HELP
-        @paginator      = Paginator.new
-        @choices_filter = options.fetch(:filter) { false } ? "" : nil
+        @prompt       = prompt
+        @prefix       = options.fetch(:prefix) { @prompt.prefix }
+        @enum         = options.fetch(:enum) { nil }
+        @default      = Array[options.fetch(:default) { 1 }]
+        @active       = @default.first
+        @choices      = Choices.new
+        @active_color = options.fetch(:active_color) { @prompt.active_color }
+        @help_color   = options.fetch(:help_color) { @prompt.help_color }
+        @marker       = options.fetch(:marker) { symbols[:pointer] }
+        @cycle        = options.fetch(:cycle) { false }
+        @filter       = options.fetch(:filter) { false } ? "" : nil
+        @help         = options[:help]
+        @first_render = true
+        @done         = false
+        @per_page     = options[:per_page]
+        @page_help    = options[:page_help] || PAGE_HELP
+        @paginator    = Paginator.new
 
         @prompt.subscribe(self)
       end
@@ -122,7 +122,7 @@ module TTY
         # Note that enumeration and filter are mutually exclusive
         tokens = if enumerate?
                    [" or number (1-#{choices.size})", ""]
-                 elsif @choices_filter
+                 elsif @filter
                    ["", ", and letter keys to filter"]
                  else
                    ["", ""]
@@ -158,9 +158,9 @@ module TTY
       # @api public
       def choices(values = (not_set = true))
         if not_set
-          if @choices_filter.to_s != ""
+          if @filter.to_s != ""
             @choices.select do |the_choice|
-              the_choice.name.downcase.include?(@choices_filter.downcase)
+              the_choice.name.downcase.include?(@filter.downcase)
             end
           else
             @choices
@@ -222,25 +222,25 @@ module TTY
       alias keytab keydown
 
       def keypress(event)
-        return unless @choices_filter
+        return unless @filter
 
         if event.value =~ FILTER_KEYS_MATCHER
-          @choices_filter += event.value
+          @filter += event.value
           @active = 1
         end
       end
 
       def keydelete(*)
-        return unless @choices_filter
+        return unless @filter
 
-        @choices_filter = ""
+        @filter = ""
         @active = 1
       end
 
       def keybackspace(*)
-        return unless @choices_filter
+        return unless @filter
 
-        @choices_filter = @choices_filter[0..-2]
+        @filter = @filter[0..-2]
         @active = 1
       end
 
@@ -347,7 +347,7 @@ module TTY
           @prompt.decorate(selected_item, @active_color)
         elsif @first_render
           @prompt.decorate(help, @help_color)
-        elsif @choices_filter.to_s != ""
+        elsif @filter.to_s != ""
           @prompt.decorate(filter_help, @help_color)
         end
       end
@@ -393,7 +393,7 @@ module TTY
       #
       # @api private
       def filter_help
-        "(Filter: #{@choices_filter.inspect})"
+        "(Filter: #{@filter.inspect})"
       end
     end # List
   end # Prompt
