@@ -196,6 +196,33 @@ end
 # {:name => "Piotr", :age => 30, :address => {:street => "Street", :city => "City", :zip => "123"}}
 ```
 
+In order to collect _mutliple values_ for a given key in a loop, chain `values` onto the `key` desired:
+
+```rb
+result = prompt.collect do
+  key(:name).ask('Name?')
+
+  key(:age).ask('Age?', convert: :int)
+
+  while prompt.yes?("continue?")
+    key(:addresses).values do
+      key(:street).ask('Street?', required: true)
+      key(:city).ask('City?')
+      key(:zip).ask('Zip?', validate: /\A\d{3}\Z/)
+    end
+  end
+end
+# =>
+# {
+#   :name => "Piotr",
+#   :age => 30,
+#   :addresses => [
+#     {:street => "Street", :city => "City", :zip => "123"},
+#     {:street => "Street", :city => "City", :zip => "234"}
+#   ]
+# }
+```
+
 ## 2. Interface
 
 ### 2.1 ask
