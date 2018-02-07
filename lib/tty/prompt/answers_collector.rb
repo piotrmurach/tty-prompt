@@ -37,8 +37,14 @@ module TTY
         self
       end
 
+      # Change to collect all values for a key
+      #
+      # @example
+      #   key(:colors).values.ask('Color?')
+      #
+      # @api public
       def values(&block)
-        @answers[@name] = @answers.key?(@name) ? [*@answers[@name]] : []
+        @answers[@name] = Array(@answers[@name])
         if block
           answer = create_collector.call(&block)
           add_answer(answer)
