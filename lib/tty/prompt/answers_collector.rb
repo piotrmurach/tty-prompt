@@ -31,7 +31,16 @@ module TTY
       def key(name, &block)
         @name = name
         if block
-          answer = create_collector.(&block)
+          answer = create_collector.call(&block)
+          add_answer(answer)
+        end
+        self
+      end
+
+      def values(&block)
+        @answers[@name] = @answers.key?(@name) ? [*@answers[@name]] : []
+        if block
+          answer = create_collector.call(&block)
           add_answer(answer)
         end
         self
@@ -44,7 +53,11 @@ module TTY
 
       # @api public
       def add_answer(answer)
-        @answers[@name] = answer
+        if @answers[@name].is_a?(Array)
+          @answers[@name] << answer
+        else
+          @answers[@name] = answer
+        end
       end
 
       private
