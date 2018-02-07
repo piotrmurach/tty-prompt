@@ -4,6 +4,10 @@
 
 ### Added
 * Add ability to filter list items in #select, #multi_select & #enum_selct prompts by Saverio Miroddi(@saveriomiroddi)
+* Add support for array of values for an answer collector key by Danny Hadley(@dadleyy)
+
+### Changed
+* Relax dependency on timers by Andy Brody(@brodygov)
 
 ## [v0.14.0] - 2018-01-01
 
