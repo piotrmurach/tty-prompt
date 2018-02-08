@@ -161,8 +161,8 @@ module TTY
           if @filter.to_s.empty?
             @choices
           else
-            @choices.select do |the_choice|
-              the_choice.name.downcase.include?(@filter.downcase)
+            @choices.select do |_choice|
+              _choice.name.downcase.include?(@filter.downcase)
             end
           end
         else
