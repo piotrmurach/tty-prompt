@@ -1,6 +1,6 @@
 # Change log
 
-## [v0.15.0] - 2018-xx-xx
+## [v0.15.0] - 2018-02-08
 
 ### Added
 * Add ability to filter list items in #select, #multi_select & #enum_selct prompts by Saverio Miroddi(@saveriomiroddi)
