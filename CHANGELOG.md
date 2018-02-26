@@ -1,5 +1,10 @@
 # Change log
 
+## [v0.16.0] - 2018-0x-xx
+
+### Fixed
+* Fix #select, #enum_select & #multi_select navigation to work correctly with items longer than terminal screen width
+
 ## [v0.15.0] - 2018-02-08
 
 ### Added
