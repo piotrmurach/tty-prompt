@@ -184,7 +184,7 @@ module TTY
                  @prompt.decorate(symbols[:handle], @active_color) +
                  (symbols[:line] * (range.size - @active - 1))
         value = " #{range[@active]}"
-        format(@format.gsub(':slider', slider), value)
+        @format.gsub(':slider', slider) % [value]
       end
     end # Slider
   end # Prompt
