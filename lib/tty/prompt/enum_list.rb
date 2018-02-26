@@ -1,5 +1,7 @@
 # encoding: utf-8
 
+require 'English'
+
 require_relative 'choices'
 require_relative 'enum_paginator'
 require_relative 'paginator'
@@ -205,10 +207,22 @@ module TTY
             @prompt.print(render_page_help)
           end
           @prompt.read_keypress
-          @prompt.print(refresh(question.lines.count))
+          question_lines = question.split($INPUT_RECORD_SEPARATOR, -1)
+          @prompt.print(refresh(question_lines_count(question_lines)))
         end
         @prompt.print(render_question)
         answer
+      end
+
+      # Count how many screen lines the question spans
+      #
+      # @return [Integer]
+      #
+      # @api private
+      def question_lines_count(question_lines)
+        question_lines.reduce(0) do |acc, line|
+          acc + @prompt.count_screen_lines(line)
+        end
       end
 
       # Find value for the choice selected
