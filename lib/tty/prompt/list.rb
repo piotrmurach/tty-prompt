@@ -296,12 +296,23 @@ module TTY
           # matching lines), it won't be included by using String#lines.
           question_lines = question.split($INPUT_RECORD_SEPARATOR, -1)
 
-          @prompt.print(refresh(question_lines.count))
+          @prompt.print(refresh(question_lines_count(question_lines)))
         end
         @prompt.print(render_question)
         answer
       ensure
         @prompt.print(@prompt.show)
+      end
+
+      # Count how many screen lines the question spans
+      #
+      # @return [Integer]
+      #
+      # @api private
+      def question_lines_count(question_lines)
+        question_lines.reduce(0) do |acc, line|
+          acc + @prompt.count_screen_lines(line)
+        end
       end
 
       # Find value for the choice selected
