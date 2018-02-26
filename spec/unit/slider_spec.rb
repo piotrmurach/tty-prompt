@@ -44,7 +44,7 @@ RSpec.describe TTY::Prompt, '#slider' do
               range.min 0
               range.max 20
               range.step 2
-              range.format "|:slider| %d%"
+              range.format "|:slider| %d%%"
             end
     expect(value).to eq(6)
     expect(prompt.output.string).to eq([
