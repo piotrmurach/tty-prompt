@@ -56,6 +56,7 @@ module TTY
         @per_page     = options[:per_page]
         @page_help    = options[:page_help] || PAGE_HELP
         @paginator    = Paginator.new
+        @pastel       = Pastel.new
 
         @prompt.subscribe(self)
       end
@@ -296,12 +297,19 @@ module TTY
           # matching lines), it won't be included by using String#lines.
           question_lines = question.split($INPUT_RECORD_SEPARATOR, -1)
 
-          @prompt.print(refresh(question_lines.count))
+          @prompt.print(refresh(terminal_linecount(question_lines)))
         end
         @prompt.print(render_question)
         answer
       ensure
         @prompt.print(@prompt.show)
+      end
+
+      def terminal_linecount(lines, termwidth=TTY::Screen.width)
+        lines.reduce(0) do |sum, line|
+          carry = (@pastel.strip(line).length - 1) / termwidth
+          sum + 1 + carry
+        end
       end
 
       # Find value for the choice selected
