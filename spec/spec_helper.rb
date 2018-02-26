@@ -16,6 +16,11 @@ if RUBY_VERSION > '1.9' and (ENV['COVERAGE'] || ENV['TRAVIS'])
 end
 
 require 'tty-prompt'
+require 'tty-screen'
+
+puts "###################################"
+puts "screen width: #{TTY::Screen.width}"
+puts "###################################"
 
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|
