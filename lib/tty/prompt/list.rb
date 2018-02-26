@@ -305,8 +305,8 @@ module TTY
         @prompt.print(@prompt.show)
       end
 
-      def terminal_linecount(lines, termwidth=TTY::Screen.width)
-        lines.reduce(0) do |sum, line|
+      def terminal_linecount(lines, termwidth = TTY::Screen.width)
+        lines.inject(0) do |sum, line|
           carry = (@pastel.strip(line).length - 1) / termwidth
           sum + 1 + carry
         end
