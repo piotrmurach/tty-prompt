@@ -214,8 +214,9 @@ module TTY
 
       def terminal_linecount(lines, termwidth = TTY::Screen.width)
         lines.inject(0) do |sum, line|
-          displine = @pastel.strip(line)
-          linecount = 1 + [(displine.length - 1), 0].max / termwidth
+          linewidth = @pastel.strip(line).length
+          linecount = 1 + (linewidth - 1) / termwidth
+          linecount = [1, linecount].max
           sum + linecount
         end
       end
