@@ -35,6 +35,7 @@ module TTY
         @page_help    = options[:page_help] || PAGE_HELP
         @paginator    = EnumPaginator.new
         @page_active  = @default
+        @pastel       = Pastel.new
 
         @prompt.subscribe(self)
       end
@@ -205,10 +206,19 @@ module TTY
             @prompt.print(render_page_help)
           end
           @prompt.read_keypress
-          @prompt.print(refresh(question.lines.count))
+          @prompt.print(refresh(terminal_linecount(question.lines)))
         end
         @prompt.print(render_question)
         answer
+      end
+
+      def terminal_linecount(lines, termwidth = TTY::Screen.width)
+        lines.inject(0) do |sum, line|
+          linewidth = @pastel.strip(line).length
+          linecount = 1 + (linewidth - 1) / termwidth
+          linecount = [1, linecount].max
+          sum + linecount
+        end
       end
 
       # Find value for the choice selected
