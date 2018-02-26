@@ -130,6 +130,7 @@ RSpec.describe TTY::Prompt do
   end
 
   it "sets choice name and value through DSL" do
+    allow(TTY::Screen).to receive(:width).and_return(200)
     prompt = TTY::TestPrompt.new
     prompt.input << " \r"
     prompt.input.rewind
@@ -162,6 +163,7 @@ RSpec.describe TTY::Prompt do
   end
 
   it "sets default options through DSL syntax" do
+    allow(TTY::Screen).to receive(:width).and_return(200)
     prompt = TTY::TestPrompt.new
     prompt.input << "\r"
     prompt.input.rewind
@@ -388,6 +390,7 @@ RSpec.describe TTY::Prompt do
 
   context "with filter" do
     it "doesn't lose the selection when switching between filters" do
+      allow(TTY::Screen).to receive(:width).and_return(200)
       prompt = TTY::TestPrompt.new
 
       prompt.on(:keypress) { |e| prompt.trigger(:keydelete) if e.value == "\r" }
