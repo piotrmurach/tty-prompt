@@ -307,7 +307,8 @@ module TTY
 
       def terminal_linecount(lines, termwidth = TTY::Screen.width)
         lines.inject(0) do |sum, line|
-          carry = (@pastel.strip(line).length - 1) / termwidth
+          displine = @pastel.strip(line)
+          carry = [(displine.length - 1), 0].max / termwidth
           sum + 1 + carry
         end
       end
