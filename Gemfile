@@ -7,9 +7,8 @@ gemspec
 
 group :test do
   gem 'benchmark-ips', '~> 2.7.2'
-  gem 'simplecov', '~> 0.10.0'
-  gem 'coveralls', '~> 0.8.2'
-  gem 'term-ansicolor', '=1.3.2'
+  gem 'simplecov', '~> 0.14.1'
+  gem 'coveralls', '~> 0.8.21'
 end
 
 group :tools do
