@@ -36,6 +36,9 @@ RSpec.describe TTY::Prompt do
     "#{prompt} \e[32m#{choices.join(', ')}\e[0m\n\e[?25h"
   end
 
+  # Ensure a wide prompt on CI
+  before { allow(TTY::Screen).to receive(:width).and_return(200) }
+
   it "selects nothing when return pressed immediately" do
     prompt = TTY::TestPrompt.new
     choices = %w(vodka beer wine whisky bourbon)
@@ -130,7 +133,6 @@ RSpec.describe TTY::Prompt do
   end
 
   it "sets choice name and value through DSL" do
-    allow(TTY::Screen).to receive(:width).and_return(200)
     prompt = TTY::TestPrompt.new
     prompt.input << " \r"
     prompt.input.rewind
@@ -163,7 +165,6 @@ RSpec.describe TTY::Prompt do
   end
 
   it "sets default options through DSL syntax" do
-    allow(TTY::Screen).to receive(:width).and_return(200)
     prompt = TTY::TestPrompt.new
     prompt.input << "\r"
     prompt.input.rewind
@@ -390,7 +391,6 @@ RSpec.describe TTY::Prompt do
 
   context "with filter" do
     it "doesn't lose the selection when switching between filters" do
-      allow(TTY::Screen).to receive(:width).and_return(200)
       prompt = TTY::TestPrompt.new
 
       prompt.on(:keypress) { |e| prompt.trigger(:keydelete) if e.value == "\r" }
