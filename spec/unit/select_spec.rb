@@ -39,6 +39,9 @@ RSpec.describe TTY::Prompt, '#select' do
     "#{prompt} \e[32m#{choice}\e[0m\n\e[?25h"
   end
 
+  # Ensure a wide prompt on CI
+  before { allow(TTY::Screen).to receive(:width).and_return(200) }
+
   it "selects by default first option" do
     choices = %w(Large Medium Small)
     prompt.input << "\r"
@@ -554,12 +557,6 @@ RSpec.describe TTY::Prompt, '#select' do
         output_helper("What letter?", [], "", hint: 'Filter: "c"') +
         output_helper("What letter?", ['A'], "A", hint: 'Filter: "a"') +
         exit_message("What letter?", "A")
-
-      puts "EXPECTED>>"
-      puts expected_output.inspect
-      puts "-----------------"
-      puts "ACTUAL>>"
-      puts prompt.output.string.inspect
 
       expect(prompt.output.string).to eq(expected_output)
     end
