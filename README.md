@@ -74,11 +74,12 @@ Or install it yourself as:
   * [2.5 yes?/no?](#25-yesno)
   * [2.6 menu](#26-menu)
     * [2.6.1 choices](#261-choices)
-    * [2.6.1.1 :disabled](#2632-disabled)
+    * [2.6.1.1 :disabled](#2611-disabled)
     * [2.6.2 select](#262-select)
+      * [2.6.2.1 :disabled](#2621-disabled)
     * [2.6.3 multi_select](#263-multi_select)
-    * [2.6.3.1 :echo](#2631-echo)
-    * [2.6.3.2 :filter](#2632-filter)
+      * [2.6.3.1 :echo](#2631-echo)
+      * [2.6.3.2 :filter](#2632-filter)
     * [2.6.4 enum_select](#264-enum_select)
   * [2.7 expand](#27-expand)
   * [2.8 collect](#28-collect)
@@ -857,7 +858,7 @@ prompt.multi_select("Select drinks?", choices, filter: true)
 
 After the user presses "w":
 
-```
+```ruby
 # Select drinks? (Filter: "w")
 # ‣ ⬡ wine
 #   ⬡ whisky
