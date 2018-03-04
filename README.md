@@ -737,6 +737,8 @@ prompt.select('Choose your destiny?', warriors)
 To activate dynamic list searching on letter/number key presses use `:filter` option:
 
 ```ruby
+warriors = %w(Scorpion Kano Jax Kitana Raiden)
+prompt.select('Choose your destiny?', warriors, filter: true)
 # =>
 # Choose your destiny? (Use arrow keys, press Enter to select, and letter keys to filter)
 # ‣ Scorpion
