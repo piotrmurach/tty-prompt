@@ -68,7 +68,7 @@ Or install it yourself as:
     * [2.1.7 required](#217-required)
     * [2.1.8 validate](#218-validate)
   * [2.2 keypress](#22-keypress)
-    * [2.2.1 timeout](#221-timeout)
+    * [2.2.1 :timeout](#221-timeout)
   * [2.3 multiline](#23-multiline)
   * [2.4 mask](#24-mask)
   * [2.5 yes?/no?](#25-yesno)
@@ -77,6 +77,7 @@ Or install it yourself as:
     * [2.6.1.1 :disabled](#2611-disabled)
     * [2.6.2 select](#262-select)
       * [2.6.2.1 :disabled](#2621-disabled)
+      * [2.6.2.2 :filter](#2622-filter)
     * [2.6.3 multi_select](#263-multi_select)
       * [2.6.3.1 :echo](#2631-echo)
       * [2.6.3.2 :filter](#2632-filter)
@@ -701,6 +702,70 @@ prompt.select("Choose your letter?") do |menu|
   menu.choices letters
 end
 ```
+
+#### 2.6.2.1 `:disabled`
+
+To disable menu choice, use the `:disabled` key with a value that explains the reason for the choice being unavailable. For example, out of all warriors, the Goro is currently injured:
+
+```ruby
+warriors = [
+  'Scorpion',
+  'Kano',
+  { name: 'Goro', disabled: '(injury)' },
+  'Jax',
+  'Kitana',
+  'Raiden'
+]
+```
+
+The disabled choice will be displaed with a cross `✘` character next to it and followed by an explanation:
+
+```ruby
+prompt.select('Choose your destiny?', warriors)
+# =>
+# Choose your destiny? (Use arrow keys, press Enter to select)
+# ‣ Scorpion
+#   Kano
+# ✘ Goro (injury)
+#   Jax
+#   Kitana
+#   Raiden
+```
+
+#### 2.6.2.2 `:filter`
+
+To activate dynamic list searching on letter/number key presses use `:filter` option:
+
+```ruby
+# =>
+# Choose your destiny? (Use arrow keys, press Enter to select, and letter keys to filter)
+# ‣ Scorpion
+#   Kano
+#   Jax
+#   Kitana
+#   Raiden
+```
+
+After the user presses "k":
+
+```ruby
+# =>
+# Choose your destiny? (Filter: "k")
+# ‣ Kano
+#   Kitana
+```
+
+After the user presse "ka":
+
+```ruby
+# =>
+# Choose your destiny? (Filter: "ka")
+# ‣ Kano
+```
+
+Filter characters can be deleted partially or entirely via, respectively, Backspace and Canc.
+
+If the user changes or deletes a filter, the choices previously selected remain selected.
 
 ### 2.6.3 multi_select
 
