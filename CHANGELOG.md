@@ -2,6 +2,13 @@
 
 ## [v0.16.0] - 2018-0x-xx
 
+### Added
+* Add :disabled key to Choice
+* Add ability to disable choices in #select, #multi_selct & #enum_select prompts
+
+### Changed
+* Change Choice#from to allow parsing different data strucutures
+
 ### Fixed
 * Fix #select, #enum_select & #multi_select navigation to work correctly with items longer than terminal screen width
 
@@ -250,6 +257,7 @@
 
 * Initial implementation and release
 
+[v0.16.0]: https://github.com/piotrmurach/tty-prompt/compare/v0.15.0...v0.16.0
 [v0.15.0]: https://github.com/piotrmurach/tty-prompt/compare/v0.14.0...v0.15.0
 [v0.14.0]: https://github.com/piotrmurach/tty-prompt/compare/v0.13.2...v0.14.0
 [v0.13.2]: https://github.com/piotrmurach/tty-prompt/compare/v0.13.1...v0.13.2
