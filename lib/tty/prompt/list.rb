@@ -162,7 +162,8 @@ module TTY
             @choices
           else
             @choices.select do |_choice|
-              !_choice.disabled? && _choice.name.downcase.include?(@filter.downcase)
+              !_choice.disabled? &&
+                _choice.name.downcase.include?(@filter.downcase)
             end
           end
         else
@@ -195,7 +196,7 @@ module TTY
         return unless enumerate?
         value = event.value.to_i
         return unless (1..choices.count).cover?(value)
-        return if choices[value-1].disabled?
+        return if choices[value - 1].disabled?
         @active = value
       end
 
@@ -211,7 +212,7 @@ module TTY
         else
           @active -= 1
         end
-        current = choices[@active-1]
+        current = choices[@active - 1]
         @active -= 1 if current.disabled?
       end
 
@@ -221,8 +222,8 @@ module TTY
         else
           @active += 1
         end
-        current = choices[@active-1]
-        @active +=1 if current.disabled?
+        current = choices[@active - 1]
+        @active += 1 if current.disabled?
       end
       alias keytab keydown
 
