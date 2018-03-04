@@ -73,8 +73,8 @@ Or install it yourself as:
   * [2.4 mask](#24-mask)
   * [2.5 yes?/no?](#25-yesno)
   * [2.6 menu](#26-menu)
-    * [2.6.1 choices](#261-select)
-    * [2.6.1.1 :disabled](#2632-filter)
+    * [2.6.1 choices](#261-choices)
+    * [2.6.1.1 :disabled](#2632-disabled)
     * [2.6.2 select](#262-select)
     * [2.6.3 multi_select](#263-multi_select)
     * [2.6.3.1 :echo](#2631-echo)
@@ -514,19 +514,19 @@ Similarly to `yes?` method, you can supply the same options to customize the que
 
 ### 2.6.1 choices
 
-There are many ways you can craete menu choices. The simplest way is to create an array of values:
+There are many ways in which you can add menu choices. The simplest way is to create an array of values:
 
 ```ruby
 choices = %w(small medium large)
 ```
 
-By default the choice name is also the value the prompt will return when selected. To change this you can provide a hash with keys as choice names and their respective values:
+By default the choice name is also the value the prompt will return when selected. To provide custom values, you can provide a hash with keys as choice names and their respective values:
 
 ```ruby
 choices = {small: 1, medium: 2, large: 3}
 ```
 
-Finally, you can define an array of choices where each choice is a hash value with `:name` & `:value` keys which can include other keys for customising indvidual choices:
+Finally, you can define an array of choices where each choice is a hash value with `:name` & `:value` keys which can include other options for customising indvidual choices:
 
 ```ruby
 choices = [
@@ -536,9 +536,9 @@ choices = [
 ]
 ```
 
-Also, you can specify `:key` which will be used as short name for selecting the choice via keyboard key.
+You can specify `:key` as an additional option which will be used as short name for selecting the choice via keyboard key press.
 
-Another way to create menu with choices is using the DSL and the `choice` method. for example, the previous array of choices with hash values can be translated as:
+Another way to create menu with choices is using the DSL and the `choice` method. For example, the previous array of choices with hash values can be translated as:
 
 ```ruby
 prompt.select('What size?') do |menu|
@@ -548,7 +548,7 @@ prompt.select('What size?') do |menu|
 end
 ```
 
-or more compact way:
+or in a more compact way:
 
 ```ruby
 prompt.select('What size?') do |menu|
@@ -560,7 +560,7 @@ end
 
 #### 2.6.1.1 `:disabled`
 
-The `:disabled` key indicates whether to display a choice as currently unavailable to select. Disabled choices are displayed with a cross `✘` character next to them. If the choice is disabled, it cannot be selected. The value for the `:disabled` is used next to the choice to provide reason for excluding it from the selection menu. For example:
+The `:disabled` key indicates to display a choice as currently unavailable to select. Disabled choices are displayed with a cross `✘` character next to them. If the choice is disabled, it cannot be selected. The value for the `:disabled` is used next to the choice to provide reason for excluding it from the selection menu. For example:
 
 ```ruby
 choices = [
@@ -701,7 +701,7 @@ prompt.select("Choose your letter?") do |menu|
 end
 ```
 
-### 2.6.2 multi_select
+### 2.6.3 multi_select
 
 For asking questions involving multiple selection list use `multi_select` method by passing the question and possible choices:
 
@@ -822,7 +822,7 @@ prompt.multi_select("Choose your letter?", letters, per_page: 4)
 # (Move up or down to reveal more choices)
 ```
 
-### 2.6.2.1 echo
+### 2.6.3.1 `:echo`
 
 To control whether the selected items are shown on the question
 header use the :echo option:
@@ -839,7 +839,7 @@ prompt.multi_select("Select drinks?", choices, echo: false)
 # ‣ ⬢ 5) bourbon
 ```
 
-### 2.6.2.2 filter
+### 2.6.3.2 `:filter`
 
 To activate dynamic list filtering on letter/number typing, use the :filter option:
 
@@ -869,7 +869,7 @@ If the user changes or deletes a filter, the choices previously selected remain 
 
 The `filter` option is not compatible with `enum`.
 
-### 2.6.3 enum_select
+### 2.6.4 enum_select
 
 In order to ask for standard selection from indexed list you can use `enum_select` and pass question together with possible choices:
 
