@@ -275,18 +275,15 @@ module TTY
       # @api private
       def validate_defaults
         @default.each do |d|
-          if d.nil? || d.to_s.empty?
-            raise ConfigurationError,
-                 "default index must be an integer in range (1 - #{choices.size})"
-          end
-          if d < 1 || d > choices.size
-            raise ConfigurationError,
-                 "default index `#{d}` out of range (1 - #{choices.size})"
-          end
-          if choices[d - 1] && choices[d - 1].disabled?
-            raise ConfigurationError,
+          msg = if d.nil? || d.to_s.empty?
+                  "default index must be an integer in range (1 - #{choices.size})"
+                elsif d < 1 || d > choices.size
+                  "default index `#{d}` out of range (1 - #{choices.size})"
+                elsif choices[d - 1] && choices[d - 1].disabled?
                   "default index `#{d}` matches disabled choice item"
-          end
+                end
+
+          raise(ConfigurationError, msg) if msg
         end
       end
 
