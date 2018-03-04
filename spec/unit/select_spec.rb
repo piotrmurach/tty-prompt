@@ -553,7 +553,13 @@ RSpec.describe TTY::Prompt, '#select' do
         output_helper("What letter?", [], "", hint: 'Filter: "c"') +
         output_helper("What letter?", [], "", hint: 'Filter: "c"') +
         output_helper("What letter?", ['A'], "A", hint: 'Filter: "a"') +
-        "What letter? \e[32mA\e[0m\n\e[?25h"
+        exit_message("What letter?", "A")
+
+      puts "EXPECTED>>"
+      puts expected_output.inspect
+      puts "-----------------"
+      puts "ACTUAL>>"
+      puts prompt.output.string.inspect
 
       expect(prompt.output.string).to eq(expected_output)
     end
