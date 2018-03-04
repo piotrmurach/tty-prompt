@@ -47,6 +47,10 @@ module TTY
         # At this stage, @choices matches all the visible choices.
         @selected = @choices.values_at(*@default.map { |d| d - 1 })
         @active = @default.last unless @selected.empty?
+        if choices[@active - 1] && choices[@active - 1].disabled?
+          raise ConfigurationError,
+                "active choice '#{choices[@active - 1]}' matches disabled item"
+        end
       end
 
       # Generate selected items names
@@ -95,9 +99,12 @@ module TTY
           num = enumerate? ? (index + 1).to_s + @enum + ' ' : ''
           indicator = (index + 1 == @active) ?  @marker : ' '
           indicator += ' '
-          message = if @selected.include?(choice)
+          message = if @selected.include?(choice) && !choice.disabled?
                       selected = @prompt.decorate(symbols[:radio_on], @active_color)
                       selected + ' ' + num + choice.name
+                    elsif choice.disabled?
+                      @prompt.decorate(symbols[:cross], :red) +
+                        ' ' + num + choice.name + ' ' + choice.disabled.to_s
                     else
                       symbols[:radio_off] + ' ' + num + choice.name
                     end
