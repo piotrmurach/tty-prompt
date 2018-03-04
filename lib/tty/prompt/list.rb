@@ -166,7 +166,7 @@ module TTY
             end
           end
         else
-          Array(values).each { |val| choice(*val) }
+          values.each { |val| @choices << val }
         end
       end
 
