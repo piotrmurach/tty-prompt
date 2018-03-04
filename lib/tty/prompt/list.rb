@@ -207,24 +207,36 @@ module TTY
       alias keyreturn keyenter
       alias keyspace keyenter
 
+      def search_choice_in(searchable)
+        searchable.find { |i| !choices[i - 1].disabled? }
+      end
+
       def keyup(*)
-        if @active == 1
-          @active = choices.length if @cycle
-        else
-          @active -= 1
+        searchable  = (@active - 1).downto(1).to_a
+        prev_active = search_choice_in(searchable)
+
+        if prev_active
+          @active = prev_active
+        elsif @cycle
+          searchable  = (choices.length).downto(1).to_a
+          prev_active = search_choice_in(searchable)
+
+          @active = prev_active if prev_active
         end
-        current = choices[@active - 1]
-        @active -= 1 if current.disabled?
       end
 
       def keydown(*)
-        if @active == choices.length
-          @active = 1 if @cycle
-        else
-          @active += 1
+        searchable  = ((@active + 1)..choices.length)
+        next_active = search_choice_in(searchable)
+
+        if next_active
+          @active = next_active
+        elsif @cycle
+          searchable = (1..choices.length)
+          next_active = search_choice_in(searchable)
+
+          @active = next_active if next_active
         end
-        current = choices[@active - 1]
-        @active += 1 if current.disabled?
       end
       alias keytab keydown
 
@@ -399,8 +411,8 @@ module TTY
                       selected = @marker + ' ' + num + choice.name
                       @prompt.decorate(selected.to_s, @active_color)
                     elsif choice.disabled?
-                      "#{@prompt.decorate(symbols[:cross], :red)} " + num +
-                        choice.name + " #{choice.disabled}"
+                      @prompt.decorate(symbols[:cross], :red) +
+                        ' ' + num + choice.name + ' ' + choice.disabled.to_s
                     else
                       ' ' * 2 + num + choice.name
                     end

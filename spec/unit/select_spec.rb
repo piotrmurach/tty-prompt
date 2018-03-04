@@ -385,6 +385,32 @@ RSpec.describe TTY::Prompt, '#select' do
         "What letter? \e[32mA\e[0m\n\e[?25h"
       )
     end
+
+    it "cycles around disabled items" do
+      prompt = TTY::TestPrompt.new
+      choices = [
+        {name: 'A', disabled: '(out)'},
+        {name: 'B'},
+        {name: 'C', disabled: '(out)'},
+        {name: 'D'},
+        {name: 'E', disabled: '(out)'},
+      ]
+      prompt.on(:keypress) { |e| prompt.trigger(:keydown) if e.value == "j" }
+      prompt.input << "j" << "j" << "j" << "\r"
+      prompt.input.rewind
+      value = prompt.select("What letter?", choices, cycle: true, default: 2)
+      expect(value).to eq("D")
+
+      expected_output =
+        output_helper("What letter?", choices, "B", init: true,
+                       hint: "Use arrow keys, press Enter to select") +
+        output_helper("What letter?", choices, "D") +
+        output_helper("What letter?", choices, "B") +
+        output_helper("What letter?", choices, "D") +
+        "What letter? \e[32mD\e[0m\n\e[?25h"
+
+      expect(prompt.output.string).to eq(expected_output)
+    end
   end
 
   it "verifies default index format" do
