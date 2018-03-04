@@ -73,11 +73,13 @@ Or install it yourself as:
   * [2.4 mask](#24-mask)
   * [2.5 yes?/no?](#25-yesno)
   * [2.6 menu](#26-menu)
-    * [2.6.1 select](#261-select)
-    * [2.6.2 multi_select](#262-multi_select)
-    * [2.6.2.1 echo](#2621-echo)
-    * [2.6.2.2 filter](#2622-filter)
-    * [2.6.3 enum_select](#263-enum_select)
+    * [2.6.1 choices](#261-select)
+    * [2.6.1.1 :disabled](#2632-filter)
+    * [2.6.2 select](#262-select)
+    * [2.6.3 multi_select](#263-multi_select)
+    * [2.6.3.1 :echo](#2631-echo)
+    * [2.6.3.2 :filter](#2632-filter)
+    * [2.6.4 enum_select](#264-enum_select)
   * [2.7 expand](#27-expand)
   * [2.8 collect](#28-collect)
   * [2.9 suggest](#29-suggest)
@@ -510,7 +512,65 @@ Similarly to `yes?` method, you can supply the same options to customize the que
 
 ### 2.6 menu
 
-### 2.6.1 select
+### 2.6.1 choices
+
+There are many ways you can craete menu choices. The simplest way is to create an array of values:
+
+```ruby
+choices = %w(small medium large)
+```
+
+By default the choice name is also the value the prompt will return when selected. To change this you can provide a hash with keys as choice names and their respective values:
+
+```ruby
+choices = {small: 1, medium: 2, large: 3}
+```
+
+Finally, you can define an array of choices where each choice is a hash value with `:name` & `:value` keys which can include other keys for customising indvidual choices:
+
+```ruby
+choices = [
+  {name: 'small', value: 1},
+  {name: 'medium', value: 2, disabled: '(out of stock)'},
+  {name: 'large', value: 3}
+]
+```
+
+Also, you can specify `:key` which will be used as short name for selecting the choice via keyboard key.
+
+Another way to create menu with choices is using the DSL and the `choice` method. for example, the previous array of choices with hash values can be translated as:
+
+```ruby
+prompt.select('What size?') do |menu|
+  menu.choice name: 'small',  value: 1
+  menu.choice name: 'medium', value: 2, disabled: '(out of stock)'
+  menu.choice name: 'large',  value: 3
+end
+```
+
+or more compact way:
+
+```ruby
+prompt.select('What size?') do |menu|
+  menu.choice 'small', 1
+  menu.choice 'medium', 2, disabled: '(out of stock)'
+  menu.choice 'large', 3
+end
+```
+
+#### 2.6.1.1 `:disabled`
+
+The `:disabled` key indicates whether to display a choice as currently unavailable to select. Disabled choices are displayed with a cross `✘` character next to them. If the choice is disabled, it cannot be selected. The value for the `:disabled` is used next to the choice to provide reason for excluding it from the selection menu. For example:
+
+```ruby
+choices = [
+  {name: 'small', value: 1},
+  {name: 'medium', value: 2, disabled: '(out of stock)'}
+  {name: 'large', value: 3}
+]
+```
+
+### 2.6.2 select
 
 For asking questions involving list of options use `select` method by passing the question and possible choices:
 
