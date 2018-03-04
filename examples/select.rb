@@ -15,4 +15,6 @@ prompt.on(:keypress) do |event|
   end
 end
 
-prompt.select('Choose your destiny?', warriors)
+answer = prompt.select('Choose your destiny?', warriors)
+
+puts answer.inspect
