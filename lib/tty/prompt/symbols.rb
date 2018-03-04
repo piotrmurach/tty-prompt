@@ -28,7 +28,7 @@ module TTY
 
       WIN_KEYS = {
         tick: '√',
-        cross: '×',
+        cross: 'x',
         star: '*',
         square: '[█]',
         square_empty: '[ ]',
