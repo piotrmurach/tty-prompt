@@ -162,7 +162,7 @@ module TTY
             @choices
           else
             @choices.select do |_choice|
-              _choice.name.downcase.include?(@filter.downcase)
+              !_choice.disabled? && _choice.name.downcase.include?(@filter.downcase)
             end
           end
         else
@@ -195,6 +195,7 @@ module TTY
         return unless enumerate?
         value = event.value.to_i
         return unless (1..choices.count).cover?(value)
+        return if choices[value-1].disabled?
         @active = value
       end
 
@@ -210,6 +211,8 @@ module TTY
         else
           @active -= 1
         end
+        current = choices[@active-1]
+        @active -= 1 if current.disabled?
       end
 
       def keydown(*)
@@ -218,6 +221,8 @@ module TTY
         else
           @active += 1
         end
+        current = choices[@active-1]
+        @active +=1 if current.disabled?
       end
       alias keytab keydown
 
@@ -263,6 +268,10 @@ module TTY
 
       # Validate default indexes to be within range
       #
+      # @raise [ConfigurationError]
+      #   raised when the default index is either non-integer,
+      #   out of range or clashes with disabled choice item.
+      #
       # @api private
       def validate_defaults
         @default.each do |d|
@@ -273,6 +282,10 @@ module TTY
           if d < 1 || d > choices.size
             raise ConfigurationError,
                  "default index `#{d}` out of range (1 - #{choices.size})"
+          end
+          if choices[d - 1] && choices[d - 1].disabled?
+            raise ConfigurationError,
+                  "default index `#{d}` matches disabled choice item"
           end
         end
       end
@@ -363,7 +376,7 @@ module TTY
       # @api private
       def render_header
         if @done
-          selected_item = "#{choices[@active - 1].name}"
+          selected_item = choices[@active - 1].name
           @prompt.decorate(selected_item, @active_color)
         elsif @first_render
           @prompt.decorate(help, @help_color)
@@ -382,9 +395,12 @@ module TTY
 
         @paginator.paginate(choices, @active, @per_page) do |choice, index|
           num = enumerate? ? (index + 1).to_s + @enum + ' ' : ''
-          message = if index + 1 == @active
+          message = if index + 1 == @active && !choice.disabled?
                       selected = @marker + ' ' + num + choice.name
-                      @prompt.decorate("#{selected}", @active_color)
+                      @prompt.decorate(selected.to_s, @active_color)
+                    elsif choice.disabled?
+                      "#{@prompt.decorate(symbols[:cross], :red)} " + num +
+                        choice.name + " #{choice.disabled}"
                     else
                       ' ' * 2 + num + choice.name
                     end

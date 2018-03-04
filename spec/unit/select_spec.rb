@@ -8,25 +8,30 @@ RSpec.describe TTY::Prompt, '#select' do
 
   def output_helper(prompt, choices, active, options = {})
     raise ":init requires :hint" if options[:init] && options[:hint].nil?
-
     hint = options[:hint]
     init = options.fetch(:init, false)
+    enum = options[:enum]
 
     out = ""
-
     out << "\e[?25l" if init
     out << prompt << " "
     out << "\e[90m(#{hint})\e[0m" if hint
     out << "\n"
-
-    out << choices.map do |c|
-      (c == active ? "\e[32m#{symbols[:pointer]} #{c}\e[0m" : "  #{c}")
+    out << choices.map.with_index do |c, i|
+      name = c.is_a?(Hash) ? c[:name] : c
+      disabled = c.is_a?(Hash) ? c[:disabled] : false
+      num = (i + 1).to_s + enum if enum
+      if disabled
+        "\e[31m#{symbols[:cross]}\e[0m #{num}#{name} #{disabled}"
+      elsif name == active
+        "\e[32m#{symbols[:pointer]} #{num}#{name}\e[0m"
+      else
+        "  #{num}#{name}"
+      end
     end.join("\n")
     out << "\e[2K\e[1G\e[1A" * choices.count
     out << "\e[2K\e[1G"
-
     out << "\e[1A\e[2K\e[1G" if choices.empty?
-
     out
   end
 
@@ -343,38 +348,40 @@ RSpec.describe TTY::Prompt, '#select' do
     ].join)
   end
 
-  it "doesn't cycle by default" do
-    prompt = TTY::TestPrompt.new
-    choices = %w(A B C)
-    prompt.on(:keypress) { |e| prompt.trigger(:keydown) if e.value == "j" }
-    prompt.input << "j" << "j" << "j" << "\r"
-    prompt.input.rewind
-    value = prompt.select("What letter?", choices)
-    expect(value).to eq("C")
-    expect(prompt.output.string).to eq(
-      output_helper("What letter?", choices, "A", init: true, hint: "Use arrow keys, press Enter to select") +
-      output_helper("What letter?", choices, "B") +
-      output_helper("What letter?", choices, "C") +
-      output_helper("What letter?", choices, "C") +
-      "What letter? \e[32mC\e[0m\n\e[?25h"
-    )
-  end
+  context 'with :cycle option' do
+    it "doesn't cycle by default" do
+      prompt = TTY::TestPrompt.new
+      choices = %w(A B C)
+      prompt.on(:keypress) { |e| prompt.trigger(:keydown) if e.value == "j" }
+      prompt.input << "j" << "j" << "j" << "\r"
+      prompt.input.rewind
+      value = prompt.select("What letter?", choices)
+      expect(value).to eq("C")
+      expect(prompt.output.string).to eq(
+        output_helper("What letter?", choices, "A", init: true, hint: "Use arrow keys, press Enter to select") +
+        output_helper("What letter?", choices, "B") +
+        output_helper("What letter?", choices, "C") +
+        output_helper("What letter?", choices, "C") +
+        "What letter? \e[32mC\e[0m\n\e[?25h"
+      )
+    end
 
-  it "cycles around when configured to do so" do
-    prompt = TTY::TestPrompt.new
-    choices = %w(A B C)
-    prompt.on(:keypress) { |e| prompt.trigger(:keydown) if e.value == "j" }
-    prompt.input << "j" << "j" << "j" << "\r"
-    prompt.input.rewind
-    value = prompt.select("What letter?", choices, cycle: true)
-    expect(value).to eq("A")
-    expect(prompt.output.string).to eq(
-      output_helper("What letter?", choices, "A", init: true, hint: "Use arrow keys, press Enter to select") +
-      output_helper("What letter?", choices, "B") +
-      output_helper("What letter?", choices, "C") +
-      output_helper("What letter?", choices, "A") +
-      "What letter? \e[32mA\e[0m\n\e[?25h"
-    )
+    it "cycles around when configured to do so" do
+      prompt = TTY::TestPrompt.new
+      choices = %w(A B C)
+      prompt.on(:keypress) { |e| prompt.trigger(:keydown) if e.value == "j" }
+      prompt.input << "j" << "j" << "j" << "\r"
+      prompt.input.rewind
+      value = prompt.select("What letter?", choices, cycle: true)
+      expect(value).to eq("A")
+      expect(prompt.output.string).to eq(
+        output_helper("What letter?", choices, "A", init: true, hint: "Use arrow keys, press Enter to select") +
+        output_helper("What letter?", choices, "B") +
+        output_helper("What letter?", choices, "C") +
+        output_helper("What letter?", choices, "A") +
+        "What letter? \e[32mA\e[0m\n\e[?25h"
+      )
+    end
   end
 
   it "verifies default index format" do
@@ -430,14 +437,11 @@ RSpec.describe TTY::Prompt, '#select' do
 
     it "filters and chooses a uniquely matching entry, ignoring case" do
       prompt = TTY::TestPrompt.new
-
       prompt.input << "U" << "g" << "\r"
       prompt.input.rewind
 
-      actual_value = prompt.select("What size?", %w(Small Medium Large Huge), filter: true)
-      expected_value = "Huge"
-
-      expect(actual_value).to eql(expected_value)
+      answer = prompt.select("What size?", %w(Small Medium Large Huge), filter: true)
+      expect(answer).to eql("Huge")
 
       actual_prompt_output = prompt.output.string
 
@@ -452,17 +456,13 @@ RSpec.describe TTY::Prompt, '#select' do
 
     it "filters and chooses the first of multiple matching entries" do
       prompt = TTY::TestPrompt.new
-
       prompt.input << "g" << "\r"
       prompt.input.rewind
 
-      actual_value = prompt.select("What size?", %w(Small Medium Large Huge), filter: true)
-      expected_value = "Large"
-
-      expect(actual_value).to eql(expected_value)
+      answer = prompt.select("What size?", %w(Small Medium Large Huge), filter: true)
+      expect(answer).to eql("Large")
 
       actual_prompt_output = prompt.output.string
-
       expected_prompt_output =
         output_helper("What size?", %w(Small Medium Large Huge), "Small", init: true, hint: "Use arrow keys, press Enter to select, and letter keys to filter") +
         output_helper("What size?", %w(Large Huge), "Large", hint: 'Filter: "g"') +
@@ -474,20 +474,15 @@ RSpec.describe TTY::Prompt, '#select' do
     # This test can't be done in an exact way, at least, with the current framework
     it "doesn't exit when there are no matching entries" do
       prompt = TTY::TestPrompt.new
-
       prompt.on(:keypress) { |e| prompt.trigger(:keybackspace) if e.value == "a" }
-
       prompt.input << "z" << "\r"    # shows no entry, blocking exit
       prompt.input << "a" << "\r"    # triggers Backspace before `a` (see above)
       prompt.input.rewind
 
-      actual_value = prompt.select("What size?", %w(Tiny Medium Large Huge), filter: true)
-      expected_value = "Large"
-
-      expect(actual_value).to eql(expected_value)
+      answer = prompt.select("What size?", %w(Tiny Medium Large Huge), filter: true)
+      expect(answer).to eql("Large")
 
       actual_prompt_output = prompt.output.string
-
       expected_prompt_output =
         output_helper("What size?", %w(Tiny Medium Large Huge), "Tiny", init: true, hint: "Use arrow keys, press Enter to select, and letter keys to filter") +
         output_helper("What size?", %w(), "", hint: 'Filter: "z"') +
@@ -500,20 +495,14 @@ RSpec.describe TTY::Prompt, '#select' do
 
     it "cancels a selection" do
       prompt = TTY::TestPrompt.new
-
       prompt.on(:keypress) { |e| prompt.trigger(:keydelete) if e.value == "S" }
-
       prompt.input << "Hu"
       prompt.input << "S"   # triggers Canc before `S` (see above)
       prompt.input << "\r"
       prompt.input.rewind
 
-      actual_value = prompt.select("What size?", %w(Small Medium Large Huge), filter: true)
-      expected_value = "Small"
-
-      expect(actual_value).to eql(expected_value)
-
-      actual_prompt_output = prompt.output.string
+      answer = prompt.select("What size?", %w(Small Medium Large Huge), filter: true)
+      expect(answer).to eql("Small")
 
       expected_prompt_output =
         output_helper("What size?", %w(Small Medium Large Huge), "Small", init: true, hint: "Use arrow keys, press Enter to select, and letter keys to filter") +
@@ -522,7 +511,85 @@ RSpec.describe TTY::Prompt, '#select' do
         output_helper("What size?", %w(Small), "Small", hint: 'Filter: "S"') +
         exit_message("What size?", "Small")
 
-      expect(actual_prompt_output).to eql(expected_prompt_output)
+      expect(prompt.output.string).to eql(expected_prompt_output)
+    end
+  end
+
+  context 'with :disabled choice' do
+    it "omits disabled choice when navigating menu" do
+      choices = [ 'Small', 'Medium', {name: 'Large', disabled: '(out of stock)'}, 'Huge' ]
+      prompt = TTY::TestPrompt.new
+      prompt.input << "j" << "j" << "\r"
+      prompt.input.rewind
+      prompt.on(:keypress) { |e| prompt.trigger(:keydown) if e.value == "j" }
+
+      answer = prompt.select("What size?", choices)
+      expect(answer).to eq('Huge')
+
+      expected_output =
+        output_helper("What size?", choices, "Small", init: true,
+                      hint: "Use arrow keys, press Enter to select") +
+        output_helper("What size?", choices, "Medium") +
+        output_helper("What size?", choices, "Huge") +
+        "What size? \e[32mHuge\e[0m\n\e[?25h"
+
+      expect(prompt.output.string).to eq(expected_output)
+    end
+
+    it "doesn't show disabled choice when filtering choices" do
+      choices = [ 'A', 'B', {name: 'C', disabled: '(unavailable)'}, 'D' ]
+      prompt = TTY::TestPrompt.new
+      prompt.on(:keypress) { |e| prompt.trigger(:keybackspace) if e.value == "a" }
+      prompt.input << "c" << "\r" # nothing matches
+      prompt.input << "a" << "\r" # backtracks & chooses default option
+      prompt.input.rewind
+
+      answer = prompt.select("What letter?", choices, filter: true)
+      expect(answer).to eq('A')
+
+      expected_output =
+        output_helper("What letter?", choices, "A", init: true,
+                      hint: "Use arrow keys, press Enter to select, and letter keys to filter") +
+        output_helper("What letter?", [], "", hint: 'Filter: "c"') +
+        output_helper("What letter?", [], "", hint: 'Filter: "c"') +
+        output_helper("What letter?", ['A'], "A", hint: 'Filter: "a"') +
+        "What letter? \e[32mA\e[0m\n\e[?25h"
+
+      expect(prompt.output.string).to eq(expected_output)
+    end
+
+    it "omits disabled choice when number key is pressed" do
+      choices = [ 'Small', {name: 'Medium', disabled: '(out of stock)'}, 'Large' ]
+      prompt = TTY::TestPrompt.new
+      prompt.input << "2" << "\r" << "\r"
+      prompt.input.rewind
+      answer = prompt.select('What size?') do |menu|
+                 menu.enum ')'
+
+                 menu.choice 'Small', 1
+                 menu.choice 'Medium', 2, disabled: '(out of stock)'
+                 menu.choice 'Large', 3
+               end
+      expect(answer).to eq(1)
+
+      expected_output =
+        output_helper("What size?", choices, "Small", init: true, enum: ') ',
+                    hint: "Use arrow or number (1-3) keys, press Enter to select") +
+        output_helper("What size?", choices, "Small", enum: ') ') +
+        "What size? \e[32mSmall\e[0m\n\e[?25h"
+
+      expect(prompt.output.string).to eq(expected_output)
+    end
+
+    it "sets default correct when disabled choice" do
+      choices = [ {name: 'Small', disabled: '(out of stock)'}, 'Medium', 'Large', 'Huge' ]
+      prompt = TTY::TestPrompt.new
+      prompt.input << "\r"
+      prompt.input.rewind
+
+      expect {
+        prompt.select("What size?", choices)
+      }.to raise_error(TTY::Prompt::ConfigurationError, /default index `1` matches disabled choice item/)
     end
   end
 end
