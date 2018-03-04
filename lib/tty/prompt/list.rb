@@ -1,6 +1,7 @@
 # encoding: utf-8
+# frozen_string_literal: true
 
-require "English"
+require 'English'
 
 require_relative 'choices'
 require_relative 'paginator'
@@ -15,9 +16,9 @@ module TTY
     class List
       include Symbols
 
-      HELP = '(Use arrow%s keys, press Enter to select%s)'
+      HELP = '(Use arrow%s keys, press Enter to select%s)'.freeze
 
-      PAGE_HELP = '(Move up or down to reveal more choices)'
+      PAGE_HELP = '(Move up or down to reveal more choices)'.freeze
 
       # Allowed keys for filter, along with backspace and canc.
       FILTER_KEYS_MATCHER = /\A\w\Z/
@@ -49,7 +50,7 @@ module TTY
         @help_color   = options.fetch(:help_color) { @prompt.help_color }
         @marker       = options.fetch(:marker) { symbols[:pointer] }
         @cycle        = options.fetch(:cycle) { false }
-        @filter       = options.fetch(:filter) { false } ? "" : nil
+        @filter       = options.fetch(:filter) { false } ? '' : nil
         @help         = options[:help]
         @first_render = true
         @done         = false
@@ -121,11 +122,11 @@ module TTY
       def default_help
         # Note that enumeration and filter are mutually exclusive
         tokens = if enumerate?
-                   [" or number (1-#{choices.size})", ""]
+                   [" or number (1-#{choices.size})", '']
                  elsif @filter
-                   ["", ", and letter keys to filter"]
+                   ['', ", and letter keys to filter"]
                  else
-                   ["", ""]
+                   ['', '']
                  end
 
         format(self.class::HELP, *tokens)
@@ -239,7 +240,7 @@ module TTY
       def keydelete(*)
         return unless @filter
 
-        @filter = ""
+        @filter = ''
         @active = 1
       end
 
@@ -350,12 +351,13 @@ module TTY
       #
       # @api private
       def render_question
-        header = "#{@prefix}#{@question} #{render_header}\n"
+        header = ["#{@prefix}#{@question} #{render_header}\n"]
         @first_render = false
-        rendered_menu = render_menu
-        rendered_menu << render_footer
-        header << rendered_menu unless @done
-        header
+        unless @done
+          header << render_menu
+          header << render_footer
+        end
+        header.join
       end
 
       # Header part showing the current filter
@@ -378,7 +380,7 @@ module TTY
           @prompt.decorate(selected_item, @active_color)
         elsif @first_render
           @prompt.decorate(help, @help_color)
-        elsif @filter.to_s != ""
+        elsif @filter.to_s != ''
           @prompt.decorate(filter_help, @help_color)
         end
       end
@@ -389,7 +391,7 @@ module TTY
       #
       # @api private
       def render_menu
-        output = ''
+        output = []
 
         @paginator.paginate(choices, @active, @per_page) do |choice, index|
           num = enumerate? ? (index + 1).to_s + @enum + ' ' : ''
@@ -407,7 +409,7 @@ module TTY
           output << (message + newline)
         end
 
-        output
+        output.join
       end
 
       # Render page info footer
@@ -418,7 +420,7 @@ module TTY
       def render_footer
         return '' unless paginated?
         colored_footer = @prompt.decorate(@page_help, @help_color)
-        "\n" << colored_footer
+        "\n" + colored_footer
       end
     end # List
   end # Prompt
