@@ -1,4 +1,5 @@
 # encoding: utf-8
+# frozen_string_literal: true
 
 require_relative 'choices'
 
@@ -13,7 +14,7 @@ module TTY
         key: 'h',
         name: 'print help',
         value: :help
-      }
+      }.freeze
 
       # Create instance of Expander
       #
@@ -68,7 +69,7 @@ module TTY
           @input = ''
         end
       end
-      alias_method :keyreturn, :keyenter
+      alias keyreturn keyenter
 
       # Respond to key press event
       #
@@ -178,16 +179,16 @@ module TTY
       #
       # @api private
       def render_header
-        header = "#{@prefix}#{@message} "
+        header = ["#{@prefix}#{@message} "]
         if @done
-          selected_item = "#{@selected.name}"
+          selected_item = @selected.name.to_s
           header << @prompt.decorate(selected_item, @active_color)
         elsif collapsed?
           header << %[(enter "h" for help) ]
           header << "[#{possible_keys}] "
           header << @input
         end
-        header
+        header.join
       end
 
       # Show hint for selected option key
@@ -196,11 +197,10 @@ module TTY
       #
       # @api private
       def render_hint
-        hint = "\n"
-        hint << @prompt.decorate('>> ', @active_color)
-        hint << @hint
-        hint << @prompt.cursor.prev_line
-        hint << @prompt.cursor.forward(@prompt.strip(render_header).size)
+        "\n" + @prompt.decorate('>> ', @active_color) +
+          @hint +
+          @prompt.cursor.prev_line +
+          @prompt.cursor.forward(@prompt.strip(render_header).size)
       end
 
       # Render question with menu
@@ -251,7 +251,7 @@ module TTY
       #
       # @api private
       def render_menu
-        output = "\n"
+        output = ["\n"]
         @choices.each do |choice|
           chosen = %(#{choice.key} - #{choice.name})
           if @selected && @selected.key == choice.key
@@ -259,7 +259,7 @@ module TTY
           end
           output << '  ' + chosen + "\n"
         end
-        output
+        output.join
       end
 
       def setup_defaults
@@ -271,7 +271,7 @@ module TTY
         keys = []
         @choices.each do |choice|
           if choice.key.nil?
-            errors <<  "Choice #{choice.name} is missing a :key attribute"
+            errors << "Choice #{choice.name} is missing a :key attribute"
             next
           end
           if choice.key.length != 1
@@ -285,7 +285,7 @@ module TTY
           end
           keys << choice.key if choice.key
         end
-        errors.each { |err| fail ConfigurationError, err }
+        errors.each { |err| raise ConfigurationError, err }
       end
     end # Expander
   end # Prompt
