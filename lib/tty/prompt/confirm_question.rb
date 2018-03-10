@@ -1,4 +1,5 @@
 # encoding: utf-8
+# frozen_string_literal: true
 
 require_relative 'question'
 require_relative 'utils'
@@ -112,10 +113,8 @@ module TTY
 
       # @api private
       def create_suffix
-        result = ''
-        result << "#{default ? positive.capitalize : positive.downcase}"
-        result << '/'
-        result << "#{default ? negative.downcase : negative.capitalize}"
+        (default ? positive.capitalize : positive.downcase) + '/' +
+          (default ? negative.downcase : negative.capitalize)
       end
 
       # Create custom conversion
