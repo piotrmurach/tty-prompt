@@ -1,4 +1,5 @@
 # encoding: utf-8
+# frozen_string_literal: true
 
 require 'English'
 
@@ -253,12 +254,12 @@ module TTY
       #
       # @api private
       def render_question
-        header = "#{@prefix}#{@question} #{render_header}\n"
+        header = ["#{@prefix}#{@question} #{render_header}\n"]
         unless @done
           header << render_menu
           header << render_footer
         end
-        header
+        header.join
       end
 
       # Error message when incorrect index chosen
@@ -334,7 +335,8 @@ module TTY
       #
       # @api private
       def render_menu
-        output = ''
+        output = []
+
         @paginator.paginate(@choices, @page_active, @per_page) do |choice, index|
           num = (index + 1).to_s + @enum + ' '
           selected = ' ' * 2 + num + choice.name
@@ -345,7 +347,8 @@ module TTY
                     end
           output << "\n"
         end
-        output
+
+        output.join
       end
     end # EnumList
   end # Prompt
