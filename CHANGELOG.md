@@ -5,9 +5,11 @@
 ### Added
 * Add :disabled key to Choice
 * Add ability to disable choices in #select, #multi_selct & #enum_select prompts
+* Add #frozen_string_literal to all classes
 
 ### Changed
 * Change Choice#from to allow parsing different data strucutures
+* Change all classes to prevent strings mutations
 
 ### Fixed
 * Fix #select, #enum_select & #multi_select navigation to work correctly with items longer than terminal screen width
