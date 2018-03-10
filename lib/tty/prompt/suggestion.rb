@@ -1,4 +1,5 @@
 # encoding: utf-8
+# frozen_string_literal: true
 
 require_relative 'distance'
 
@@ -97,16 +98,13 @@ module TTY
 
       # @api private
       def build_single_suggestion
-        suggestion = ''
-        suggestion << single_text + "\n"
-        suggestion << (' ' * indent + @suggestions.first)
+        single_text + "\n" + (' ' * indent) + @suggestions.first
       end
 
       # @api private
       def build_multiple_suggestions
-        suggestion = ''
-        suggestion << plural_text + "\n"
-        suggestion << @suggestions.map do |sugest|
+        plural_text + "\n" +
+        @suggestions.map do |sugest|
           ' ' * indent + sugest
         end.join("\n")
       end

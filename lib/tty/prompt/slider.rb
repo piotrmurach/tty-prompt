@@ -1,4 +1,5 @@
 # encoding: utf-8
+# frozen_string_literal: true
 
 require_relative 'symbols'
 
@@ -160,7 +161,7 @@ module TTY
       #
       # @api private
       def render_question
-        header = "#{@prefix}#{@question} "
+        header = ["#{@prefix}#{@question} "]
         if @done
           header << @prompt.decorate(answer.to_s, @active_color)
           header << "\n"
@@ -171,7 +172,7 @@ module TTY
           header << "\n" + @prompt.decorate(HELP, @help_color)
           @first_render = false
         end
-        header
+        header.join
       end
 
       # Render slider representation
