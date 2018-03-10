@@ -1,4 +1,5 @@
 # encoding: utf-8
+# frozen_string_literal: true
 
 require_relative 'question'
 require_relative 'symbols'
@@ -40,17 +41,17 @@ module TTY
       alias keyenter keyreturn
 
       def render_question
-        header = "#{@prefix}#{message} "
+        header = ["#{@prefix}#{message} "]
         if !echo?
           header
         elsif @done
-          header += @prompt.decorate("#{@input}", @active_color)
+          header << @prompt.decorate("#{@input}", @active_color)
         elsif @first_render
-          header += @prompt.decorate(help, @help_color)
+          header << @prompt.decorate(help, @help_color)
           @first_render = false
         end
-        header += "\n"
-        header
+        header << "\n"
+        header.join
       end
 
       def process_input(question)
