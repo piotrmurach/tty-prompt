@@ -1,4 +1,5 @@
 # encoding: utf-8
+# frozen_string_literal: true
 
 require_relative 'list'
 
@@ -94,7 +95,8 @@ module TTY
       #
       # @api private
       def render_menu
-        output = ''
+        output = []
+
         @paginator.paginate(choices, @active, @per_page) do |choice, index|
           num = enumerate? ? (index + 1).to_s + @enum + ' ' : ''
           indicator = (index + 1 == @active) ?  @marker : ' '
@@ -112,7 +114,8 @@ module TTY
           newline = (index == max_index) ? '' : "\n"
           output << indicator + message + newline
         end
-        output
+
+        output.join
       end
     end # MultiList
   end # Prompt
