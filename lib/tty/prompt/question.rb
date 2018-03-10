@@ -1,4 +1,5 @@
 # encoding: utf-8
+# frozen_string_literal: true
 
 require_relative 'converters'
 require_relative 'evaluator'
@@ -20,7 +21,7 @@ module TTY
         def to_s
           "undefined"
         end
-        alias inspect to_s
+        alias_method :inspect, :to_s
       end
 
       # Store question message
@@ -46,7 +47,7 @@ module TTY
         @convert    = options.fetch(:convert) { UndefinedSetting }
         @active_color = options.fetch(:active_color) { @prompt.active_color }
         @help_color = options.fetch(:help_color) { @prompt.help_color }
-        @error_color = options.fetch(:error_color)  { :red }
+        @error_color = options.fetch(:error_color) { :red }
         @messages   = Utils.deep_copy(options.fetch(:messages) { { } })
         @done       = false
         @input      = nil
@@ -129,16 +130,16 @@ module TTY
       #
       # @api private
       def render_question
-        header = "#{@prefix}#{message} "
+        header = ["#{@prefix}#{message} "]
         if !echo?
           header
         elsif @done
-          header += @prompt.decorate("#{@input}", @active_color)
+          header << @prompt.decorate(@input.to_s, @active_color)
         elsif default? && !Utils.blank?(@default)
-          header += @prompt.decorate("(#{default})", @help_color) + ' '
+          header << @prompt.decorate("(#{default})", @help_color) + ' '
         end
         header << "\n" if @done
-        header
+        header.join
       end
 
       # Decide how to handle input from user
@@ -180,7 +181,7 @@ module TTY
       #
       # @api private
       def refresh(lines, lines_to_clear)
-        output = ''
+        output = []
         if @done
           if @errors.count.zero?
             output << @prompt.cursor.up(lines)
@@ -191,7 +192,7 @@ module TTY
         else
           output << @prompt.cursor.up(lines)
         end
-        output + @prompt.clear_lines(lines_to_clear)
+        output.join + @prompt.clear_lines(lines_to_clear)
       end
 
       # Convert value to expected type
@@ -321,7 +322,7 @@ module TTY
 
       # @api public
       def to_s
-        "#{message}"
+        message.to_s
       end
 
       # String representation of this question
