@@ -1,4 +1,5 @@
 # encoding: utf-8
+# frozen_string_literal: true
 
 require_relative 'question'
 require_relative 'symbols'
@@ -52,18 +53,18 @@ module TTY
       #
       # @api private
       def render_question
-        header = "#{@prefix}#{message} "
+        header = ["#{@prefix}#{message} "]
         if echo?
-          masked = "#{@mask * "#{@input}".length}"
+          masked = @mask.to_s * @input.to_s.length
           if @done_masked && !@failure
             masked = @prompt.decorate(masked, @active_color)
           elsif @done_masked && @failure
             masked = @prompt.decorate(masked, @error_color)
           end
-          header += masked
+          header << masked
         end
         header << "\n" if @done
-        header
+        header.join
       end
 
       def render_error(errors)
