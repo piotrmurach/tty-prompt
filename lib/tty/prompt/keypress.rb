@@ -96,7 +96,6 @@ module TTY
         else
           job.()
         end
-      rescue Timeout::Error
       end
     end # Keypress
   end # Prompt
