@@ -385,4 +385,62 @@ RSpec.describe TTY::Prompt do
       "What letter? \e[32mA\e[0m\n"
     ].join)
   end
+
+  context "with :disabled choice" do
+    it "fails when active item is also disabled" do
+      prompt = TTY::TestPrompt.new
+      choices = [{name: 'A', disabled: true}, 'B', 'C', 'D', 'E']
+      expect {
+        prompt.enum_select("What letter?", choices)
+      }.to raise_error(TTY::Prompt::ConfigurationError,
+        /default index 1 matches disabled choice item/)
+    end
+
+    it "doesn't allow to choose disabled choice and defaults" do
+      choices = ['A', {name: 'B', disabled: '(out)'}, 'C', 'D', 'E', 'F']
+      prompt = TTY::TestPrompt.new
+      prompt.input << "2" << "\n" << "3" << "\n"
+      prompt.input.rewind
+
+      answer = prompt.enum_select("What letter?", choices)
+      expect(answer).to eq("C")
+
+      expected_output =
+        output_helper("What letter?", choices, 'A') +
+        output_helper("What letter?", choices, 'A', input: '2') +
+        output_helper("What letter?", choices, 'A', input: '', error: 'Please enter a valid number') +
+        output_helper("What letter?", choices, 'C', input: '3', error: 'Please enter a valid number') +
+        exit_message("What letter?", "C")
+
+      expect(prompt.output.string).to eq(expected_output)
+    end
+
+    it "omits disabled choice when navigating with numbers" do
+      choices = [
+        {name: 'A'},
+        {name: 'B', disabled: '(out)'},
+        {name: 'C', disabled: '(out)'},
+        {name: 'D'},
+        {name: 'E'}
+      ]
+      prompt = TTY::TestPrompt.new
+      prompt.on(:keypress) { |e| prompt.trigger(:keydelete) if e.value == "B"}
+      prompt.input << "2" << "\u007F" << "3" << "\u007F" << '4' << "\n"
+      prompt.input.rewind
+
+      answer = prompt.enum_select("What letter?", choices)
+      expect(answer).to eq("D")
+
+      expected_output =
+        output_helper("What letter?", choices, 'A') +
+        output_helper("What letter?", choices, 'A', input: '2') +
+        output_helper("What letter?", choices, 'A', input: '') +
+        output_helper("What letter?", choices, 'A', input: '3') +
+        output_helper("What letter?", choices, 'A', input: '') +
+        output_helper("What letter?", choices, 'D', input: '4') +
+        exit_message("What letter?", "D")
+
+      expect(prompt.output.string).to eq(expected_output)
+    end
+  end
 end

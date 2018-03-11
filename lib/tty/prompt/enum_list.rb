@@ -6,6 +6,7 @@ require 'English'
 require_relative 'choices'
 require_relative 'enum_paginator'
 require_relative 'paginator'
+require_relative 'symbols'
 
 module TTY
   class Prompt
@@ -14,7 +15,9 @@ module TTY
     #
     # @api private
     class EnumList
-      PAGE_HELP = '(Press tab/right or left to reveal more choices)'.freeze
+      include Symbols
+
+      PAGE_HELP = '(Press tab/right or left to reveal more choices)'
 
       # Create instance of EnumList menu.
       #
@@ -100,8 +103,12 @@ module TTY
       #   the values to add as choices
       #
       # @api public
-      def choices(values)
-        values.each { |val| choice(*val) }
+      def choices(values = (not_set = true))
+        if not_set
+          @choices
+        else
+          values.each { |val| @choices << val }
+        end
       end
 
       # Call the list menu by passing question and choices
@@ -131,7 +138,11 @@ module TTY
 
       def keyreturn(*)
         @failure = false
-        if (@input.to_i > 0 && @input.to_i <= @choices.size) || @input.empty?
+        num = @input.to_i
+        choice_disabled = choices[num - 1] && choices[num - 1].disabled?
+        choice_in_range = num > 0 && num <= @choices.size
+
+        if choice_in_range && !choice_disabled || @input.empty?
           @done = true
         else
           @input = ''
@@ -165,7 +176,11 @@ module TTY
       #
       # @api private
       def mark_choice_as_active
-        if (@input.to_i > 0) && !@choices[@input.to_i - 1].nil?
+        next_active = @choices[@input.to_i - 1]
+
+        if next_active && next_active.disabled?
+          # noop
+        elsif (@input.to_i > 0) && next_active
           @active = @input.to_i
         else
           @active = @default
@@ -177,9 +192,15 @@ module TTY
       #
       # @api private
       def validate_defaults
-        return if @default >= 1 && @default <= @choices.size
-        raise ConfigurationError,
-              "default index `#{@default}` out of range (1 - #{@choices.size})"
+        msg = if @default.nil? || @default.to_s.empty?
+                "default index must be an integer in range (1 - #{choices.size})"
+              elsif @default < 1 || @default > @choices.size
+                "default index #{@default} out of range (1 - #{@choices.size})"
+              elsif choices[@default - 1] && choices[@default - 1].disabled?
+                "default index #{@default} matches disabled choice item"
+              end
+
+        raise(ConfigurationError, msg) if msg
       end
 
       # Setup default option and active selection
@@ -339,11 +360,14 @@ module TTY
 
         @paginator.paginate(@choices, @page_active, @per_page) do |choice, index|
           num = (index + 1).to_s + @enum + ' '
-          selected = ' ' * 2 + num + choice.name
-          output << if index + 1 == @active
-                      @prompt.decorate(selected.to_s, @active_color)
+          selected = num + choice.name
+          output << if index + 1 == @active && !choice.disabled?
+                      (' ' * 2) + @prompt.decorate(selected, @active_color)
+                    elsif choice.disabled?
+                      @prompt.decorate(symbols[:cross], :red) + ' ' +
+                      selected + ' ' + choice.disabled.to_s
                     else
-                      selected
+                      (' ' * 2) + selected
                     end
           output << "\n"
         end
