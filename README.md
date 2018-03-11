@@ -891,7 +891,7 @@ prompt.multi_select("Choose your letter?", letters, per_page: 4)
 # (Move up or down to reveal more choices)
 ```
 
-#### 2.6.2.1 `:disabled`
+#### 2.6.3.1 `:disabled`
 
 To disable menu choice, use the `:disabled` key with a value that explains the reason for the choice being unavailable. For example, out of all drinks, the sake and beer are currently out of stock:
 
