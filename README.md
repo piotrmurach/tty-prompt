@@ -79,8 +79,9 @@ Or install it yourself as:
       * [2.6.2.1 :disabled](#2621-disabled)
       * [2.6.2.2 :filter](#2622-filter)
     * [2.6.3 multi_select](#263-multi_select)
-      * [2.6.3.1 :echo](#2631-echo)
-      * [2.6.3.2 :filter](#2632-filter)
+      * [2.6.3.1 :disabled](#2631-disabled)
+      * [2.6.3.2 :echo](#2632-echo)
+      * [2.6.3.3 :filter](#2633-filter)
     * [2.6.4 enum_select](#264-enum_select)
   * [2.7 expand](#27-expand)
   * [2.8 collect](#28-collect)
@@ -890,7 +891,36 @@ prompt.multi_select("Choose your letter?", letters, per_page: 4)
 # (Move up or down to reveal more choices)
 ```
 
-### 2.6.3.1 `:echo`
+#### 2.6.2.1 `:disabled`
+
+To disable menu choice, use the `:disabled` key with a value that explains the reason for the choice being unavailable. For example, out of all drinks, the sake and beer are currently out of stock:
+
+```ruby
+drinks = [
+  'bourbon',
+  {name: 'sake', disabled: '(out of stock)'},
+  'vodka',
+  {name: 'beer', disabled: '(out of stock)'},
+  'wine',
+  'whisky'
+]
+```
+
+The disabled choice will be displaed with a cross `✘` character next to it and followed by an explanation:
+
+```ruby
+prompt.multi_select('Choose your favourite drink?', drinks)
+# =>
+# Choose your favourite drink? (Use arrow keys, press Space to select and Enter to finish)
+# ‣ ⬡ bourbon
+#   ✘ sake (out of stock)
+#   ⬡ vodka
+#   ✘ beer (out of stock)
+#   ⬡ wine
+#   ⬡ whisky
+```
+
+#### 2.6.3.2 `:echo`
 
 To control whether the selected items are shown on the question
 header use the :echo option:
@@ -907,7 +937,7 @@ prompt.multi_select("Select drinks?", choices, echo: false)
 # ‣ ⬢ 5) bourbon
 ```
 
-### 2.6.3.2 `:filter`
+#### 2.6.3.3 `:filter`
 
 To activate dynamic list filtering on letter/number typing, use the :filter option:
 
