@@ -6,12 +6,10 @@ require 'timers'
 module TTY
   class Prompt
     class Timeout
-      Error = Class.new(RuntimeError)
-
-      TIMEOUT_HANDLER = proc { |t| t.raise Error, 'timeout expired' }
-
+      # A class responsible for measuring interval
+      #
+      # @api private
       def initialize(options = {})
-        @timeout_handler  = options.fetch(:timeout_handler) { TIMEOUT_HANDLER }
         @interval_handler = options.fetch(:interval_handler) { proc {} }
         @lock    = Mutex.new
         @running = true
