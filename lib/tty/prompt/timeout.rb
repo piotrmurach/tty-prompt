@@ -31,17 +31,23 @@ module TTY
       #
       # @api public
       def timeout(time, interval, &job)
-        @runner = async_run(time, interval)
-        job.()
-        @runner.join
+        input_thread  = Thread.new { job.() }
+        timing_thread = measure_intervals(time, interval, input_thread)
+        [input_thread, timing_thread].each(&:join)
       end
 
+      # Cancel this timeout measurement
+      #
+      # @api public
       def cancel
         return unless @running
         @running = false
       end
 
-      def async_run(time, interval)
+      # Measure intervals and terminate input
+      #
+      # @api private
+      def measure_intervals(time, interval, input_thread)
         Thread.new do
           Thread.current.abort_on_exception = true
           start = Time.now
@@ -61,12 +67,12 @@ module TTY
               delta = time - runtime
 
               if delta <= 0.0
-                @timeout_handler.(Thread.current)
-                break
+                @running = false
               end
             }
           end
 
+          input_thread.terminate
           interval_timer.cancel
         end
       end
