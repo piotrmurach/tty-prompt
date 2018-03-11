@@ -1,18 +1,20 @@
 # Change log
 
-## [v0.16.0] - 2018-0x-xx
+## [v0.16.0] - 2018-03-xx
 
 ### Added
 * Add :disabled key to Choice
 * Add ability to disable choices in #select, #multi_selct & #enum_select prompts
-* Add #frozen_string_literal to all classes
+* Add #frozen_string_literal to all files
 
 ### Changed
 * Change Choice#from to allow parsing different data strucutures
 * Change all classes to prevent strings mutations
+* Change Timeout to cleanly terminate keypress input without raising errors
 
 ### Fixed
 * Fix #select, #enum_select & #multi_select navigation to work correctly with items longer than terminal screen width
+* Fix timeout on Ruby 2.5 and stop raising Timeout::Error
 
 ## [v0.15.0] - 2018-02-08
 
