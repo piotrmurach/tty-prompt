@@ -1,6 +1,6 @@
 # Change log
 
-## [v0.16.0] - 2018-03-xx
+## [v0.16.0] - 2018-03-11
 
 ### Added
 * Add :disabled key to Choice
