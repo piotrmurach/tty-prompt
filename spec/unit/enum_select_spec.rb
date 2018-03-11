@@ -1,6 +1,46 @@
 # encoding: utf-8
 
 RSpec.describe TTY::Prompt do
+  let(:symbols) { TTY::Prompt::Symbols.symbols }
+
+  def output_helper(prompt, choices, active, options = {})
+    enum    = options.fetch(:enum, ')')
+    input   = options[:input]
+    error   = options[:error]
+    default = options.fetch(:default, 1)
+
+    out  = ""
+    out << prompt << " \n"
+    out << choices.map.with_index do |c, i|
+      name = c.is_a?(Hash) ? c[:name] : c
+      disabled = c.is_a?(Hash) ? c[:disabled] : false
+      num = (i + 1).to_s + enum
+      if disabled
+        "\e[31m#{symbols[:cross]}\e[0m #{num} #{name} #{disabled}"
+      elsif name == active
+        "  \e[32m#{num} #{name}\e[0m"
+      else
+        "  #{num} #{name}"
+      end
+    end.join("\n")
+    out << "\n"
+    choice =  "  Choose 1-#{choices.count} [#{default}]: "
+    choice << input.to_s if input
+    out << choice
+    if error
+      out << "\n"
+      out << "\e[31m>>\e[0m #{error}"
+      out << "\e[A\e[1G\e[#{choice.size}C"
+    end
+    out << "\e[2K\e[1G\e[1A" * (choices.count + 1)
+    out << "\e[2K\e[1G\e[J"
+    out
+  end
+
+  def exit_message(prompt, choice)
+    "#{prompt} \e[32m#{choice}\e[0m\n"
+  end
+
   it "raises configuration error when wrong default" do
     prompt = TTY::TestPrompt.new
     choices = %w(/bin/nano /usr/bin/vim.basic /usr/bin/vim.tiny)
@@ -8,59 +48,48 @@ RSpec.describe TTY::Prompt do
     expect {
       prompt.enum_select("Select an editor?", choices, default: 100)
     }.to raise_error(TTY::Prompt::ConfigurationError,
-                     /default index `100` out of range \(1 - 3\)/)
+                     /default index 100 out of range \(1 - 3\)/)
   end
 
   it "selects default option when return pressed immediately" do
-    prompt = TTY::TestPrompt.new
     choices = %w(/bin/nano /usr/bin/vim.basic /usr/bin/vim.tiny)
+    prompt = TTY::TestPrompt.new
     prompt.input << "\n"
     prompt.input.rewind
 
-    expect(prompt.enum_select("Select an editor?", choices)).to eq('/bin/nano')
-    expect(prompt.output.string).to eq([
-      "Select an editor? \n",
-      "\e[32m  1) /bin/nano\e[0m\n",
-      "  2) /usr/bin/vim.basic\n",
-      "  3) /usr/bin/vim.tiny\n",
-      "  Choose 1-3 [1]: ",
-      "\e[2K\e[1G\e[1A" * 4,
-      "\e[2K\e[1G\e[J",
-      "Select an editor? \e[32m/bin/nano\e[0m\n"
-    ].join)
+    answer = prompt.enum_select("Select an editor?", choices)
+    expect(answer).to eq('/bin/nano')
+
+    expected_output =
+      output_helper("Select an editor?", choices, "/bin/nano") +
+      exit_message("Select an editor?", "/bin/nano")
+
+    expect(prompt.output.string).to eq(expected_output)
   end
 
   it "selects option by index from the list" do
-    prompt = TTY::TestPrompt.new
     choices = %w(/bin/nano /usr/bin/vim.basic /usr/bin/vim.tiny)
+    prompt = TTY::TestPrompt.new
     prompt.input << "3\n"
     prompt.input.rewind
 
-    expect(prompt.enum_select("Select an editor?", choices, default: 2)).to eq('/usr/bin/vim.tiny')
-    expect(prompt.output.string).to eq([
-      "Select an editor? \n",
-      "  1) /bin/nano\n",
-      "\e[32m  2) /usr/bin/vim.basic\e[0m\n",
-      "  3) /usr/bin/vim.tiny\n",
-      "  Choose 1-3 [2]: ",
-      "\e[2K\e[1G\e[1A" * 4,
-      "\e[2K\e[1G\e[J",
-      "Select an editor? \n",
-      "  1) /bin/nano\n",
-      "  2) /usr/bin/vim.basic\n",
-      "\e[32m  3) /usr/bin/vim.tiny\e[0m\n",
-      "  Choose 1-3 [2]: 3",
-      "\e[2K\e[1G\e[1A" * 4,
-      "\e[2K\e[1G\e[J",
-      "Select an editor? \e[32m/usr/bin/vim.tiny\e[0m\n"
-    ].join)
+    answer = prompt.enum_select("Select an editor?", choices, default: 2)
+    expect(answer).to eq('/usr/bin/vim.tiny')
+
+    expected_output =
+      output_helper("Select an editor?", choices, "/usr/bin/vim.basic", default: 2) +
+      output_helper("Select an editor?", choices, "/usr/bin/vim.tiny", default: 2, input: '3') +
+      exit_message("Select an editor?", "/usr/bin/vim.tiny")
+
+    expect(prompt.output.string).to eq(expected_output)
   end
 
   it "selects option through DSL" do
+    choices = %w(/bin/nano /usr/bin/vim.basic /usr/bin/vim.tiny)
     prompt = TTY::TestPrompt.new
     prompt.input << "1\n"
     prompt.input.rewind
-    value = prompt.enum_select("Select an editor?") do |menu|
+    answer = prompt.enum_select("Select an editor?") do |menu|
       menu.default 2
       menu.enum '.'
 
@@ -68,32 +97,23 @@ RSpec.describe TTY::Prompt do
       menu.choice "/usr/bin/vim.basic"
       menu.choice "/usr/bin/vim.tiny"
     end
+    expect(answer).to eq('/bin/nano')
 
-    expect(value).to eq('/bin/nano')
-    expect(prompt.output.string).to eq([
-      "Select an editor? \n",
-      "  1. /bin/nano\n",
-      "\e[32m  2. /usr/bin/vim.basic\e[0m\n",
-      "  3. /usr/bin/vim.tiny\n",
-      "  Choose 1-3 [2]: ",
-      "\e[2K\e[1G\e[1A" * 4,
-      "\e[2K\e[1G\e[J",
-      "Select an editor? \n",
-      "\e[32m  1. /bin/nano\e[0m\n",
-      "  2. /usr/bin/vim.basic\n",
-      "  3. /usr/bin/vim.tiny\n",
-      "  Choose 1-3 [2]: 1",
-      "\e[2K\e[1G\e[1A" * 4,
-      "\e[2K\e[1G\e[J",
-      "Select an editor? \e[32m/bin/nano\e[0m\n"
-    ].join)
+    expected_output =
+      output_helper("Select an editor?", choices, "/usr/bin/vim.basic", default: 2, enum: '.') +
+      output_helper("Select an editor?", choices, "/bin/nano", default: 2, enum: '.', input: 1) +
+      exit_message("Select an editor?", "/bin/nano")
+
+    expect(prompt.output.string).to eq(expected_output)
   end
 
   it "selects option through DSL with key and value" do
+    choices = %w(nano vim emacs)
     prompt = TTY::TestPrompt.new
     prompt.input << "\n"
     prompt.input.rewind
-    value = prompt.enum_select("Select an editor?") do |menu|
+
+    answer = prompt.enum_select("Select an editor?") do |menu|
       menu.default 2
 
       menu.choice :nano,  '/bin/nano'
@@ -101,17 +121,13 @@ RSpec.describe TTY::Prompt do
       menu.choice :emacs, '/usr/bin/emacs'
     end
 
-    expect(value).to eq('/usr/bin/vim')
-    expect(prompt.output.string).to eq([
-      "Select an editor? \n",
-      "  1) nano\n",
-      "\e[32m  2) vim\e[0m\n",
-      "  3) emacs\n",
-      "  Choose 1-3 [2]: ",
-      "\e[2K\e[1G\e[1A" * 4,
-      "\e[2K\e[1G\e[J",
-      "Select an editor? \e[32mvim\e[0m\n"
-    ].join)
+    expect(answer).to eq('/usr/bin/vim')
+
+    expected_output =
+      output_helper("Select an editor?", choices, "vim", default: 2) +
+      exit_message("Select an editor?", "vim")
+
+    expect(prompt.output.string).to eq(expected_output)
   end
 
   it "changes colors for selection, hint and error" do
@@ -123,7 +139,7 @@ RSpec.describe TTY::Prompt do
     expect(prompt.enum_select("Select an editor?", choices, options)).to eq('/bin/nano')
     expect(prompt.output.string).to eq([
       "Select an editor? \n",
-      "\e[31m  1) /bin/nano\e[0m\n",
+      "  \e[31m1) /bin/nano\e[0m\n",
       "  2) /usr/bin/vim.basic\n",
       "  3) /usr/bin/vim.tiny\n",
       "  Choose 1-3 [1]: ",
@@ -134,66 +150,37 @@ RSpec.describe TTY::Prompt do
   end
 
   it "displays error with unrecognized input" do
-    prompt = TTY::TestPrompt.new
     choices = %w(/bin/nano /usr/bin/vim.basic /usr/bin/vim.tiny)
+    prompt = TTY::TestPrompt.new
     prompt.input << "11\n2\n"
     prompt.input.rewind
-    value = prompt.enum_select("Select an editor?", choices)
-    expect(value).to eq('/usr/bin/vim.basic')
-    expect(prompt.output.string).to eq([
-      "Select an editor? \n",
-      "\e[32m  1) /bin/nano\e[0m\n",
-      "  2) /usr/bin/vim.basic\n",
-      "  3) /usr/bin/vim.tiny\n",
-      "  Choose 1-3 [1]: ",
-      "\e[2K\e[1G\e[1A" * 4,
-      "\e[2K\e[1G\e[J",
-      "Select an editor? \n",
-      "\e[32m  1) /bin/nano\e[0m\n",
-      "  2) /usr/bin/vim.basic\n",
-      "  3) /usr/bin/vim.tiny\n",
-      "  Choose 1-3 [1]: 1",
-      "\e[2K\e[1G\e[1A" * 4,
-      "\e[2K\e[1G\e[J",
-      "Select an editor? \n",
-      "\e[32m  1) /bin/nano\e[0m\n",
-      "  2) /usr/bin/vim.basic\n",
-      "  3) /usr/bin/vim.tiny\n",
-      "  Choose 1-3 [1]: 11",
-      "\e[2K\e[1G\e[1A" * 4,
-      "\e[2K\e[1G\e[J",
-      "Select an editor? \n",
-      "\e[32m  1) /bin/nano\e[0m\n",
-      "  2) /usr/bin/vim.basic\n",
-      "  3) /usr/bin/vim.tiny\n",
-      "  Choose 1-3 [1]: \n",
-      "\e[31m>>\e[0m Please enter a valid number",
-      "\e[A\e[1G\e[18C",
-      "\e[2K\e[1G\e[1A" * 4,
-      "\e[2K\e[1G\e[J",
-      "Select an editor? \n",
-      "  1) /bin/nano\n",
-      "\e[32m  2) /usr/bin/vim.basic\e[0m\n",
-      "  3) /usr/bin/vim.tiny\n",
-      "  Choose 1-3 [1]: 2\n",
-      "\e[31m>>\e[0m Please enter a valid number",
-      "\e[A\e[1G\e[19C",
-      "\e[2K\e[1G\e[1A" * 4,
-      "\e[2K\e[1G\e[J",
-      "Select an editor? \e[32m/usr/bin/vim.basic\e[0m\n"
-    ].join)
+
+    answer = prompt.enum_select("Select an editor?", choices)
+    expect(answer).to eq('/usr/bin/vim.basic')
+
+    expected_output =
+      output_helper("Select an editor?", choices, "/bin/nano") +
+      output_helper("Select an editor?", choices, "/bin/nano", input: '1') +
+      output_helper("Select an editor?", choices, "/bin/nano", input: '11') +
+      output_helper("Select an editor?", choices, "/bin/nano", error: 'Please enter a valid number', input: '') +
+      output_helper("Select an editor?", choices, "/usr/bin/vim.basic", error: 'Please enter a valid number', input: '2') +
+      exit_message("Select an editor?", "/usr/bin/vim.basic")
+
+    expect(prompt.output.string).to eq(expected_output)
   end
 
   it "paginates long selections" do
-    prompt = TTY::TestPrompt.new
     choices = %w(A B C D E F G H)
+    prompt = TTY::TestPrompt.new
     prompt.input << "\n"
     prompt.input.rewind
-    value = prompt.enum_select("What letter?", choices, per_page: 3, default: 4)
-    expect(value).to eq('D')
+
+    answer = prompt.enum_select("What letter?", choices, per_page: 3, default: 4)
+    expect(answer).to eq('D')
+
     expect(prompt.output.string).to eq([
       "What letter? \n",
-      "\e[32m  4) D\e[0m\n",
+      "  \e[32m4) D\e[0m\n",
       "  5) E\n",
       "  6) F\n",
       "  Choose 1-8 [4]: ",
@@ -206,24 +193,19 @@ RSpec.describe TTY::Prompt do
   end
 
   it "doesn't paginate short selections" do
-    prompt = TTY::TestPrompt.new
     choices = %w(A B C D)
+    prompt = TTY::TestPrompt.new
     prompt.input << "\r"
     prompt.input.rewind
-    value = prompt.enum_select("What letter?", choices, per_page: 4, default: 1)
-    expect(value).to eq('A')
 
-    expect(prompt.output.string).to eq([
-      "What letter? \n",
-      "\e[32m  1) A\e[0m\n",
-      "  2) B\n",
-      "  3) C\n",
-      "  4) D\n",
-      "  Choose 1-4 [1]: ",
-      "\e[2K\e[1G\e[1A" * 5,
-      "\e[2K\e[1G\e[J",
-      "What letter? \e[32mA\e[0m\n"
-    ].join)
+    answer = prompt.enum_select("What letter?", choices, per_page: 4, default: 1)
+    expect(answer).to eq('A')
+
+    expected_output =
+      output_helper("What letter?", choices, "A") +
+      exit_message("What letter?", "A")
+
+    expect(prompt.output.string).to eq(expected_output)
   end
 
   it "shows pages matching input" do
@@ -235,7 +217,7 @@ RSpec.describe TTY::Prompt do
     expect(value).to eq('A')
     expect(prompt.output.string).to eq([
       "What letter? \n",
-      "\e[32m  1) A\e[0m\n",
+      "  \e[32m1) A\e[0m\n",
       "  2) B\n",
       "  3) C\n",
       "  Choose 1-8 [1]: ",
@@ -244,7 +226,7 @@ RSpec.describe TTY::Prompt do
       "\e[2K\e[1G\e[1A" * 4,
       "\e[2K\e[1G\e[J",
       "What letter? \n",
-      "\e[32m  1) A\e[0m\n",
+      "  \e[32m1) A\e[0m\n",
       "  2) B\n",
       "  3) C\n",
       "  Choose 1-8 [1]: 1",
@@ -253,7 +235,7 @@ RSpec.describe TTY::Prompt do
       "\e[2K\e[1G\e[1A" * 4,
       "\e[2K\e[1G\e[J",
       "What letter? \n",
-      "\e[32m  1) A\e[0m\n",
+      "  \e[32m1) A\e[0m\n",
       "  2) B\n",
       "  3) C\n",
       "  Choose 1-8 [1]: 11",
@@ -262,7 +244,7 @@ RSpec.describe TTY::Prompt do
       "\e[2K\e[1G\e[1A" * 4,
       "\e[2K\e[1G\e[J",
       "What letter? \n",
-      "\e[32m  1) A\e[0m\n",
+      "  \e[32m1) A\e[0m\n",
       "  2) B\n",
       "  3) C\n",
       "  Choose 1-8 [1]: \n",
@@ -272,7 +254,7 @@ RSpec.describe TTY::Prompt do
       "\e[2K\e[1G\e[1A" * 4,
       "\e[2K\e[1G\e[J",
       "What letter? \n",
-      "\e[32m  1) A\e[0m\n",
+      "  \e[32m1) A\e[0m\n",
       "  2) B\n",
       "  3) C\n",
       "  Choose 1-8 [1]: \n",
@@ -298,7 +280,7 @@ RSpec.describe TTY::Prompt do
     expect(value).to eq('D')
     expect(prompt.output.string).to eq([
       "What letter? \n",
-      "\e[32m  4) D\e[0m\n",
+      "  \e[32m4) D\e[0m\n",
       "  5) E\n",
       "  6) F\n",
       "  Choose 1-8 [4]: ",
@@ -331,7 +313,7 @@ RSpec.describe TTY::Prompt do
     expect(value).to eq("A")
     expect(prompt.output.string).to eq([
       "What letter? \n",
-      "\e[32m  1) A\e[0m\n",
+      "  \e[32m1) A\e[0m\n",
       "  2) B\n",
       "  3) C\n",
       "  Choose 1-6 [1]: ",
@@ -374,7 +356,7 @@ RSpec.describe TTY::Prompt do
     expect(value).to eq("A")
     expect(prompt.output.string).to eq([
       "What letter? \n",
-      "\e[32m  1) A\e[0m\n",
+      "  \e[32m1) A\e[0m\n",
       "  2) B\n",
       "  3) C\n",
       "  Choose 1-6 [1]: ",
@@ -392,7 +374,7 @@ RSpec.describe TTY::Prompt do
       "\e[2K\e[1G\e[1A" * 4,
       "\e[2K\e[1G\e[J",
       "What letter? \n",
-      "\e[32m  1) A\e[0m\n",
+      "  \e[32m1) A\e[0m\n",
       "  2) B\n",
       "  3) C\n",
       "  Choose 1-6 [1]: ",
