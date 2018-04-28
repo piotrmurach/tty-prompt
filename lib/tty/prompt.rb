@@ -76,7 +76,7 @@ module TTY
                    :show, :hide
 
     def_delegators :@reader, :read_char, :read_line, :read_keypress,
-                   :read_multiline, :on, :subscribe, :trigger,
+                   :read_multiline, :on, :subscribe, :unsubscribe, :trigger,
                    :count_screen_lines
 
     def_delegators :@output, :print, :puts, :flush

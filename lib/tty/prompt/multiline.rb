@@ -17,8 +17,6 @@ module TTY
         @help         = options[:help] || self.class::HELP
         @first_render = true
         @lines_count  = 0
-
-        @prompt.subscribe(self)
       end
 
       # Provide help information

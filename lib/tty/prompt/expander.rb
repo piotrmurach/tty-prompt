@@ -31,8 +31,6 @@ module TTY
         @status       = :collapsed
         @hint         = nil
         @default_key  = false
-
-        @prompt.subscribe(self)
       end
 
       def expanded?
@@ -133,7 +131,9 @@ module TTY
         block.call(self) if block
         setup_defaults
         choice(HELP_CHOICE)
-        render
+        @prompt.subscribe(self) do
+          render
+        end
       end
 
       private

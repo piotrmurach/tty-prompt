@@ -57,8 +57,6 @@ module TTY
         @per_page     = options[:per_page]
         @page_help    = options[:page_help] || PAGE_HELP
         @paginator    = Paginator.new
-
-        @prompt.subscribe(self)
       end
 
       # Set marker
@@ -183,7 +181,9 @@ module TTY
         @question = question
         block.call(self) if block
         setup_defaults
-        render
+        @prompt.subscribe(self) do
+          render
+        end
       end
 
       # Check if list is enumerated

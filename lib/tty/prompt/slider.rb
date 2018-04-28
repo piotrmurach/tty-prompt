@@ -40,8 +40,6 @@ module TTY
         @format       = options.fetch(:format) { FORMAT }
         @first_render = true
         @done         = false
-
-        @prompt.subscribe(self)
       end
 
       # Setup initial active position
@@ -100,7 +98,9 @@ module TTY
         @question = question
         block.call(self) if block
         @active = initial
-        render
+        @prompt.subscribe(self) do
+          render
+        end
       end
 
       def keyleft(*)

@@ -99,7 +99,9 @@ module TTY
         return if Utils.blank?(message)
         @message = message
         block.call(self) if block
-        render
+        @prompt.subscribe(self) do
+          render
+        end
       end
 
       # Read answer and convert to type

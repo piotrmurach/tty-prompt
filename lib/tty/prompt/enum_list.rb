@@ -41,8 +41,6 @@ module TTY
         @page_help    = options[:page_help] || PAGE_HELP
         @paginator    = EnumPaginator.new
         @page_active  = @default
-
-        @prompt.subscribe(self)
       end
 
       # Set default option selected
@@ -122,7 +120,9 @@ module TTY
         @question = question
         block[self] if block
         setup_defaults
-        render
+        @prompt.subscribe(self) do
+          render
+        end
       end
 
       def keypress(event)

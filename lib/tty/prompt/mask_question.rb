@@ -18,7 +18,6 @@ module TTY
         @mask        = options.fetch(:mask) { Symbols.symbols[:dot] }
         @done_masked = false
         @failure     = false
-        @prompt.subscribe(self)
       end
 
       # Set character for masking the STDIN input
