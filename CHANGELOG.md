@@ -1,5 +1,10 @@
 # Change log
 
+## [v0.16.1] - 2018-04-29
+
+### Fixed
+* Fix key events subscription to only listen for the current prompt events
+
 ## [v0.16.0] - 2018-03-11
 
 ### Added
@@ -261,6 +266,7 @@
 
 * Initial implementation and release
 
+[v0.16.1]: https://github.com/piotrmurach/tty-prompt/compare/v0.16.0...v0.16.1
 [v0.16.0]: https://github.com/piotrmurach/tty-prompt/compare/v0.15.0...v0.16.0
 [v0.15.0]: https://github.com/piotrmurach/tty-prompt/compare/v0.14.0...v0.15.0
 [v0.14.0]: https://github.com/piotrmurach/tty-prompt/compare/v0.13.2...v0.14.0
