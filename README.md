@@ -758,7 +758,7 @@ After the user presses "k":
 #   Kitana
 ```
 
-After the user presse "ka":
+After the user presses "ka":
 
 ```ruby
 # =>
@@ -1186,7 +1186,7 @@ The slider provides easy visual way of picking a value marked by `O` marker. You
 prompt.slider('Volume', max: 100, step: 5)
 # =>
 # Volume ──────────O────────── 50
-# (User arrow keys, press Enter to select)
+# (Use arrow keys, press Enter to select)
 ```
 
 By default the slider is configured to pick middle of the range as a start value, you can change this by using the `:default` option:
