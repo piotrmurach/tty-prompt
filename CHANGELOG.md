@@ -1,5 +1,11 @@
 # Change log
 
+## [v0.17.0] - 2018-08-05
+
+### Changed
+* Change to update tty-reader & tty-cursor dependencies
+* Change to directly requrie files in gemspec
+
 ## [v0.16.1] - 2018-04-29
 
 ### Fixed
@@ -266,6 +272,7 @@
 
 * Initial implementation and release
 
+[v0.17.0]: https://github.com/piotrmurach/tty-prompt/compare/v0.16.1...v0.17.0
 [v0.16.1]: https://github.com/piotrmurach/tty-prompt/compare/v0.16.0...v0.16.1
 [v0.16.0]: https://github.com/piotrmurach/tty-prompt/compare/v0.15.0...v0.16.0
 [v0.15.0]: https://github.com/piotrmurach/tty-prompt/compare/v0.14.0...v0.15.0
