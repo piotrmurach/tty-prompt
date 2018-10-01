@@ -50,7 +50,9 @@ module TTY
         @help_color   = options.fetch(:help_color) { @prompt.help_color }
         @marker       = options.fetch(:marker) { symbols[:pointer] }
         @cycle        = options.fetch(:cycle) { false }
-        @filter       = options.fetch(:filter) { false } ? '' : nil
+        # String#+@ unfreezes (if necessary) a String instance
+        # We want to do this because we're going to potentially modify @filter
+        @filter       = options.fetch(:filter) { false } ? +"" : nil
         @help         = options[:help]
         @first_render = true
         @done         = false
