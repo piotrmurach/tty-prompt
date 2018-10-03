@@ -1,5 +1,13 @@
 # Change log
 
+## [v0.17.1] - 2018-10-03
+
+### Change
+* Change #select, #multi_select to allow alphanumeric, punctuation and space characters in filters
+
+### Fixed
+* Fix #select by making filter an array to avoid frozen string issues by Chris Hoffman(@yarmiganosca)
+
 ## [v0.17.0] - 2018-08-05
 
 ### Changed
@@ -272,6 +280,7 @@
 
 * Initial implementation and release
 
+[v0.17.1]: https://github.com/piotrmurach/tty-prompt/compare/v0.17.0...v0.17.1
 [v0.17.0]: https://github.com/piotrmurach/tty-prompt/compare/v0.16.1...v0.17.0
 [v0.16.1]: https://github.com/piotrmurach/tty-prompt/compare/v0.16.0...v0.16.1
 [v0.16.0]: https://github.com/piotrmurach/tty-prompt/compare/v0.15.0...v0.16.0
