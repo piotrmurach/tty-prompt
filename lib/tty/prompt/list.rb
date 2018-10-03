@@ -21,7 +21,7 @@ module TTY
       PAGE_HELP = '(Move up or down to reveal more choices)'.freeze
 
       # Allowed keys for filter, along with backspace and canc.
-      FILTER_KEYS_MATCHER = /\A\w\Z/
+      FILTER_KEYS_MATCHER = /\A([[:alnum:]]|[[:punct:]]| )\Z/
 
       # Create instance of TTY::Prompt::List menu.
       #

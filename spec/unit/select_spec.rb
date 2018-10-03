@@ -500,6 +500,25 @@ RSpec.describe TTY::Prompt, '#select' do
       expect(actual_prompt_output).to eql(expected_prompt_output)
     end
 
+    it "filters based on alphanumeric and punctuation characters" do
+      prompt = TTY::TestPrompt.new
+      prompt.input << "p" << "*" << "2" << "\r"
+      prompt.input.rewind
+
+      answer = prompt.select("What email?", %w(p*1@mail.com p*2@mail.com p*3@mail.com), filter: true)
+      expect(answer).to eql("p*2@mail.com")
+
+      actual_prompt_output = prompt.output.string
+      expected_prompt_output =
+        output_helper("What email?", %w(p*1@mail.com p*2@mail.com p*3@mail.com), "p*1@mail.com", init: true, hint: "Use arrow keys, press Enter to select, and letter keys to filter") +
+        output_helper("What email?", %w(p*1@mail.com p*2@mail.com p*3@mail.com), "p*1@mail.com", hint: 'Filter: "p"') +
+        output_helper("What email?", %w(p*1@mail.com p*2@mail.com p*3@mail.com), "p*1@mail.com", hint: 'Filter: "p*"') +
+        output_helper("What email?", %w(p*2@mail.com), "p*2@mail.com", hint: 'Filter: "p*2"') +
+        exit_message("What email?", "p*2@mail.com")
+
+      expect(actual_prompt_output).to eql(expected_prompt_output)
+    end
+
     # This test can't be done in an exact way, at least, with the current framework
     it "doesn't exit when there are no matching entries" do
       prompt = TTY::TestPrompt.new
