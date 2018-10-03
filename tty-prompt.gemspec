@@ -13,7 +13,9 @@ Gem::Specification.new do |spec|
   spec.homepage      = "https://piotrmurach.github.io/tty"
   spec.license       = "MIT"
 
-  spec.files         = Dir["README.md", "LICENSE.txt", "Rakefile", "lib/**/*.rb", "examples/**/*.rb", "tasks/**", "tty-prompt.gemspec"]
+  spec.files         = Dir['{lib,spec,examples}/**/*.rb']
+  spec.files        += Dir['tasks/*', 'tty-prompt.gemspec']
+  spec.files        += Dir['README.md', 'CHANGELOG.md', 'LICENSE.txt', 'Rakefile']
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
   spec.test_files    = Dir["spec/**/*.rb"]
   spec.require_paths = ["lib"]
