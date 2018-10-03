@@ -50,7 +50,8 @@ module TTY
         @help_color   = options.fetch(:help_color) { @prompt.help_color }
         @marker       = options.fetch(:marker) { symbols[:pointer] }
         @cycle        = options.fetch(:cycle) { false }
-        @filter       = options.fetch(:filter) { false } ? '' : nil
+        @filterable   = options.fetch(:filter) { false }
+        @filter       = []
         @help         = options[:help]
         @first_render = true
         @done         = false
@@ -121,7 +122,7 @@ module TTY
         # Note that enumeration and filter are mutually exclusive
         tokens = if enumerate?
                    [" or number (1-#{choices.size})", '']
-                 elsif @filter
+                 elsif filterable?
                    ['', ", and letter keys to filter"]
                  else
                    ['', '']
@@ -157,12 +158,12 @@ module TTY
       # @api public
       def choices(values = (not_set = true))
         if not_set
-          if @filter.to_s.empty?
+          if !filterable? || @filter.empty?
             @choices
           else
             @choices.select do |_choice|
               !_choice.disabled? &&
-                _choice.name.downcase.include?(@filter.downcase)
+                _choice.name.downcase.include?(@filter.join.downcase)
             end
           end
         else
@@ -241,25 +242,25 @@ module TTY
       alias keytab keydown
 
       def keypress(event)
-        return unless @filter
+        return unless filterable?
 
         if event.value =~ FILTER_KEYS_MATCHER
-          @filter += event.value
+          @filter << event.value
           @active = 1
         end
       end
 
       def keydelete(*)
-        return unless @filter
+        return unless filterable?
 
-        @filter = ''
+        @filter = []
         @active = 1
       end
 
       def keybackspace(*)
-        return unless @filter
+        return unless filterable?
 
-        @filter.slice!(-1)
+        @filter.pop
         @active = 1
       end
 
@@ -372,13 +373,22 @@ module TTY
         header.join
       end
 
+      # Is filtering enabled?
+      #
+      # @return [Boolean]
+      #
+      # @api private
+      def filterable?
+        @filterable
+      end
+
       # Header part showing the current filter
       #
       # @return String
       #
       # @api private
       def filter_help
-        "(Filter: #{@filter.inspect})"
+        "(Filter: #{@filter.join.inspect})"
       end
 
       # Render initial help and selected choice
@@ -392,7 +402,7 @@ module TTY
           @prompt.decorate(selected_item, @active_color)
         elsif @first_render
           @prompt.decorate(help, @help_color)
-        elsif @filter.to_s != ''
+        elsif filterable? && @filter.any?
           @prompt.decorate(filter_help, @help_color)
         end
       end

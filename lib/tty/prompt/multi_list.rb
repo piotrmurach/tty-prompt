@@ -71,11 +71,11 @@ module TTY
         if @done && @echo
           @prompt.decorate(selected_names, @active_color)
         elsif @selected.size.nonzero? && @echo
-          help_suffix = @filter.to_s != "" ? " #{filter_help}" : ""
+          help_suffix = filterable? && @filter.any? ? " #{filter_help}" : ""
           selected_names + (@first_render ? " #{instructions}" : help_suffix)
         elsif @first_render
           instructions
-        elsif @filter.to_s != ""
+        elsif filterable? && @filter.any?
           filter_help
         end
       end
