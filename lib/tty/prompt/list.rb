@@ -253,7 +253,7 @@ module TTY
       def keydelete(*)
         return unless filterable?
 
-        @filter = []
+        @filter.clear
         @active = 1
       end
 
