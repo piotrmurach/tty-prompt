@@ -97,4 +97,21 @@ RSpec.describe TTY::Prompt, '#slider' do
       "What size? \e[32m10\e[0m\n\e[?25h"
     ].join)
   end
+
+  it 'format slider with Proc' do
+    prompt.input << "\r"
+    prompt.input.rewind
+    options = { max: 10, format: lambda { |value| ":slider #{value.to_f/10}" } }
+    value = prompt.slider('What size?', options)
+    expect(value).to eq(5)
+    expect(prompt.output.string).to eq([
+      "\e[?25lWhat size? ",
+      symbols[:line] * 5,
+      "\e[32m#{symbols[:handle]}\e[0m",
+      "#{symbols[:line] * 5} 0.5",
+      "\n\e[90m(Use arrow keys, press Enter to select)\e[0m",
+      "\e[2K\e[1G\e[1A\e[2K\e[1G",
+      "What size? \e[32m5\e[0m\n\e[?25h"
+    ].join)
+  end
 end
