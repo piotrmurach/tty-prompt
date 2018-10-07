@@ -1211,6 +1211,15 @@ prompt.slider('Volume', max: 100, step: 5, default: 75, format: "|:slider| %d%")
 # (Use arrow keys, press Enter to select)
 ```
 
+Format could be defined as String or as Proc:
+
+```ruby
+prompt.slider('Volume', max: 100, step: 5, default: 75, format: lambda {|v| "|:slider| #{v/10}%" })
+# =>
+# Volume |───────────────O─────| 7.5%
+# (Use arrow keys, press Enter to select)
+```
+
 Slider can be configured through DSL as well:
 
 ```ruby

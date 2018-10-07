@@ -25,7 +25,7 @@ module TTY
       # @option options [Integer] :min The minimum value
       # @option options [Integer] :max The maximum value
       # @option options [Integer] :step The step value
-      # @option options [String] :format The display format
+      # @option options [String, Proc] :format The display format
       #
       # @api public
       def initialize(prompt, options = {})
@@ -185,7 +185,12 @@ module TTY
                  @prompt.decorate(symbols[:handle], @active_color) +
                  (symbols[:line] * (range.size - @active - 1))
         value = " #{range[@active]}"
-        @format.gsub(':slider', slider) % [value]
+
+        if @format.is_a?(Proc)
+          @format.call(value).gsub(':slider', slider)
+        else
+          @format.gsub(':slider', slider) % [value]
+        end
       end
     end # Slider
   end # Prompt
