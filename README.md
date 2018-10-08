@@ -1211,6 +1211,15 @@ prompt.slider('Volume', max: 100, step: 5, default: 75, format: "|:slider| %d%")
 # (Use arrow keys, press Enter to select)
 ```
 
+You can also specify slider range with decimal numbers. For example, to have a step of `0.5` and display each value with a single decimal place use `%f` as format:
+
+```ruby
+prompt.slider("Volume", max: 10, step: 0.5, default: 5, format: "|:slider| %.1f")
+# =>
+# Volume |───────────────O─────| 7.5
+# (Use arrow keys, press Enter to select)
+```
+
 Slider can be configured through DSL as well:
 
 ```ruby
