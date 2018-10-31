@@ -121,7 +121,10 @@ module TTY
       #
       # @api private
       def conversion
-        proc { |input| !input.match(/^#{positive}|#{positive[0]}$/i).nil? }
+        proc { |input|
+          regex = Regexp.new(Regexp.escape("^#{positive}|#{positive[0]}$/i"))
+          !input.match(regex).nil?
+        }
       end
     end # ConfirmQuestion
   end # Prompt
