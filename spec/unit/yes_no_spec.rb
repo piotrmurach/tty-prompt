@@ -95,6 +95,22 @@ RSpec.describe TTY::Prompt, 'confirmation' do
       ].join)
     end
 
+    it "accepts regex conflicting characters as suffix" do
+      prompt.input << "]\n"
+      prompt.input.rewind
+      result = prompt.yes?("Are you a human? Use [ for yes and ] for no") do |q|
+        q.suffix '[/]'
+      end
+      expect(result).to eq(false)
+      expect(prompt.output.string).to eq([
+        "Are you a human? Use [ for yes and ] for no \e[90m([/])\e[0m ",
+        "\e[2K\e[1GAre you a human? Use [ for yes and ] for no \e[90m([/])\e[0m ]",
+        "\e[2K\e[1GAre you a human? Use [ for yes and ] for no \e[90m([/])\e[0m ]\n",
+        "\e[1A\e[2K\e[1G",
+        "Are you a human? Use [ for yes and ] for no \e[32m]\e[0m\n"
+      ].join)
+    end
+
     it "customizes question through options" do
       prompt.input << "\r"
       prompt.input.rewind
@@ -133,21 +149,6 @@ RSpec.describe TTY::Prompt, 'confirmation' do
         "\e[2K\e[1GAre you a human? \e[90m(Agree/Disagree)\e[0m disagree\n",
         "\e[1A\e[2K\e[1G",
         "Are you a human? \e[32mDisagree\e[0m\n"
-      ].join)
-    end
-
-    it "accepts regex conflicting characters as suffix" do
-      prompt.input << "]\n"
-      prompt.input.rewind
-      result = prompt.yes?("Are you a human? Use [ for yes and ] for no") do |q|
-        q.suffix '[/]'
-      end
-      expect(result).to eq(false)
-      expect(prompt.output.string).to eq([
-        "Are you a human? Use [ for yes and ] for no \e[90m([/])\e[0m ",
-        "\e[2K\e[1GAre you a human? Use [ for yes and ] for no \e[90m([/])\e[0m [",
-        "\e[2K\e[1GAre you a human? Use [ for yes and ] for no \e[90m([/])\e[0m [\n",
-        "Are you a human? Use [ for yes and ] for no \e[32m[\e[0m\n"
       ].join)
     end
   end

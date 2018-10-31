@@ -122,7 +122,9 @@ module TTY
       # @api private
       def conversion
         proc { |input|
-          regex = Regexp.new(Regexp.escape("^#{positive}|#{positive[0]}$/i"))
+          r1 = Regexp.escape(positive)
+          r2 = Regexp.escape(positive[0])
+          regex = Regexp.new("^#{r1}|#{r2}$", true)
           !input.match(regex).nil?
         }
       end
