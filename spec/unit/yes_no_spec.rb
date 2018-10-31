@@ -98,16 +98,16 @@ RSpec.describe TTY::Prompt, 'confirmation' do
     it "accepts regex conflicting characters as suffix" do
       prompt.input << "]\n"
       prompt.input.rewind
-      result = prompt.yes?("Are you a human? Use [ for yes and ] for no") do |q|
-        q.suffix '[/]'
+      result = prompt.yes?("Are you a human? [ as yes and ] as no") do |q|
+        q.suffix "[/]"
       end
       expect(result).to eq(false)
       expect(prompt.output.string).to eq([
-        "Are you a human? Use [ for yes and ] for no \e[90m([/])\e[0m ",
-        "\e[2K\e[1GAre you a human? Use [ for yes and ] for no \e[90m([/])\e[0m ]",
-        "\e[2K\e[1GAre you a human? Use [ for yes and ] for no \e[90m([/])\e[0m ]\n",
+        "Are you a human? [ as yes and ] as no \e[90m([/])\e[0m ",
+        "\e[2K\e[1GAre you a human? [ as yes and ] as no \e[90m([/])\e[0m ]",
+        "\e[2K\e[1GAre you a human? [ as yes and ] as no \e[90m([/])\e[0m ]\n",
         "\e[1A\e[2K\e[1G",
-        "Are you a human? Use [ for yes and ] for no \e[32m]\e[0m\n"
+        "Are you a human? [ as yes and ] as no \e[32m]\e[0m\n"
       ].join)
     end
 
