@@ -1,5 +1,10 @@
 # Change log
 
+## [v0.17.2] - 2018-11-01
+
+### Fixed
+* Fix #yes? & #no? prompt suffix option to all non-standard characters by Rui(@rpbaltazar)
+
 ## [v0.17.1] - 2018-10-03
 
 ### Change
@@ -12,7 +17,7 @@
 
 ### Changed
 * Change to update tty-reader & tty-cursor dependencies
-* Change to directly requrie files in gemspec
+* Change to directly require files in gemspec
 
 ## [v0.16.1] - 2018-04-29
 
@@ -27,7 +32,7 @@
 * Add #frozen_string_literal to all files
 
 ### Changed
-* Change Choice#from to allow parsing different data strucutures
+* Change Choice#from to allow parsing different data structures
 * Change all classes to prevent strings mutations
 * Change Timeout to cleanly terminate keypress input without raising errors
 
@@ -280,6 +285,7 @@
 
 * Initial implementation and release
 
+[v0.17.2]: https://github.com/piotrmurach/tty-prompt/compare/v0.17.1...v0.17.2
 [v0.17.1]: https://github.com/piotrmurach/tty-prompt/compare/v0.17.0...v0.17.1
 [v0.17.0]: https://github.com/piotrmurach/tty-prompt/compare/v0.16.1...v0.17.0
 [v0.16.1]: https://github.com/piotrmurach/tty-prompt/compare/v0.16.0...v0.16.1
