@@ -122,10 +122,10 @@ module TTY
       # @api private
       def conversion
         proc { |input|
-          r1 = Regexp.escape(positive)
-          r2 = Regexp.escape(positive[0])
-          regex = Regexp.new("^#{r1}|#{r2}$", true)
-          !input.match(regex).nil?
+          positive_word   = Regexp.escape(positive)
+          positive_letter = Regexp.escape(positive[0])
+          pattern = Regexp.new("^#{positive_word}|#{positive_letter}$", true)
+          !input.match(pattern).nil?
         }
       end
     end # ConfirmQuestion
