@@ -102,7 +102,7 @@ Or install it yourself as:
   * [3.3 help_color](#33-help_color)
   * [3.4 interrupt](#34-interrupt)
   * [3.5 prefix](#35-prefix)
-  * [3.6 trakc_history](#36-track_history)
+  * [3.6 track_history](#36-track_history)
 
 ## 1. Usage
 
@@ -286,7 +286,7 @@ prompt.ask('password:', echo: false)
 
 By default `tty-prompt` comes with predefined error messages for `required`, `in`, `validate` options.
 
-You can change these and configure to your liking either by inling them with the option:
+You can change these and configure to your liking either by passing message as second argument with the option:
 
 ```ruby
 prompt.ask('What is your email?') do |q|
@@ -365,7 +365,7 @@ prompt.ask('What is your username?') do |q|
 end
 ```
 
-The **TTY::Prompt** comes with bult-in validations for `:email` and you can use them directly like so:
+The **TTY::Prompt** comes with built-in validations for `:email` and you can use them directly like so:
 
 ```prompt
 prompt.ask('What is your email?') { |q| q.validate :email }
@@ -533,7 +533,7 @@ By default the choice name is also the value the prompt will return when selecte
 choices = {small: 1, medium: 2, large: 3}
 ```
 
-Finally, you can define an array of choices where each choice is a hash value with `:name` & `:value` keys which can include other options for customising indvidual choices:
+Finally, you can define an array of choices where each choice is a hash value with `:name` & `:value` keys which can include other options for customising individual choices:
 
 ```ruby
 choices = [
@@ -723,7 +723,7 @@ warriors = [
 ]
 ```
 
-The disabled choice will be displaed with a cross `✘` character next to it and followed by an explanation:
+The disabled choice will be displayed with a cross `✘` character next to it and followed by an explanation:
 
 ```ruby
 prompt.select('Choose your destiny?', warriors)
@@ -910,7 +910,7 @@ drinks = [
 ]
 ```
 
-The disabled choice will be displaed with a cross `✘` character next to it and followed by an explanation:
+The disabled choice will be displayed with a cross `✘` character next to it and followed by an explanation:
 
 ```ruby
 prompt.multi_select('Choose your favourite drink?', drinks)
@@ -1244,7 +1244,7 @@ prompt.say(...)
 
 The `say` method also accepts option `:color` which supports all the colors provided by [pastel](https://github.com/piotrmurach/pastel#3-supported-colors)
 
-**TTY::Prompt** provides more specific versions of `say` method to better express intenation behind the message such as `ok`, `warn` and `error`.
+**TTY::Prompt** provides more specific versions of `say` method to better express intention behind the message such as `ok`, `warn` and `error`.
 
 #### 2.11.1 ok
 
@@ -1326,7 +1326,7 @@ The available events are:
 
 ### 3.1 active_color
 
-All prompt types support `:active_color` option. In case of `select`, `multi_select`, `enum_select` or `expand` this color is used to highlight the currently selected choice. All the resulted inputs provided by user that are read in by the prompt as answer are highlighted with this color. This option can be applied either globablly for all prompts or individually.
+All prompt types support `:active_color` option. In case of `select`, `multi_select`, `enum_select` or `expand` this color is used to highlight the currently selected choice. All the resulted inputs provided by user that are read in by the prompt as answer are highlighted with this color. This option can be applied either globally for all prompts or individually.
 
 ```ruby
 prompt = TTY::Prompt.new(active_color: :cyan)
@@ -1350,7 +1350,7 @@ prompt = TTY::Prompt.new(enable_color: true)
 
 ### 3.3 help_color
 
-Prompts such as `select`, `multi_select`, `expand` support `:help_color` which is used to customize the help text. This option can be applied either globablly for all prompts or individually.
+Prompts such as `select`, `multi_select`, `expand` support `:help_color` which is used to customize the help text. This option can be applied either globally for all prompts or individually.
 
 ```ruby
 prompt = TTY::Prompt.new(help_color: :cyan)
@@ -1387,7 +1387,7 @@ prompt = TTY::Prompt.new(prefix: '[?] ')
 
 ### 3.6 track_history
 
-The prompts that accept line input such as `multiline` or `ask` provide history buffer that tracks all the lines entered during `TTY::Prompt.new` interactions. The history buffer provides previoius or next lines when user presses up/down arrows respectively. However, if you wish to disable this behaviour use `:track_history` option like so:
+The prompts that accept line input such as `multiline` or `ask` provide history buffer that tracks all the lines entered during `TTY::Prompt.new` interactions. The history buffer provides previous or next lines when user presses up/down arrows respectively. However, if you wish to disable this behaviour use `:track_history` option like so:
 
 ```ruby
 prompt = TTY::Prompt.new(track_history: false)
