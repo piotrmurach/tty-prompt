@@ -30,6 +30,7 @@ module TTY
         @done         = false
         @status       = :collapsed
         @hint         = nil
+        @auto_hint = options.fetch(:auto_hint) { false }
         @default_key  = false
       end
 
@@ -210,6 +211,10 @@ module TTY
       # @api private
       def render_question
         header = render_header
+        if !@hint && @auto_hint
+          default_choice = select_choice(@choices[@default - 1].key)
+          @hint = default_choice.name
+        end
         header << render_hint if @hint
         header << "\n" if @done
 
