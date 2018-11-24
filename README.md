@@ -644,7 +644,7 @@ end
 # ‣ Jax
 ```
 
-You can navigate the choices using the arrow keys or define your own keymappings (see [keyboard events](#212-keyboard-events). When reaching the top/bottom of the list, the selection does not cycle around by default. If you wish to enable cycling, you can pass `cycle: true` to `select` and `mutli_select`:
+You can navigate the choices using the arrow keys or define your own key mappings (see [keyboard events](#212-keyboard-events). When reaching the top/bottom of the list, the selection does not cycle around by default. If you wish to enable cycling, you can pass `cycle: true` to `select` and `mutli_select`:
 
 ```ruby
 prompt.select("Choose your destiny?", %w(Scorpion Kano Jax), cycle: true)
@@ -1405,4 +1405,4 @@ This project is intended to be a safe, welcoming space for collaboration, and co
 
 ## Copyright
 
-Copyright (c) 2015-2018 Piotr Murach. See LICENSE for further details.
+Copyright (c) 2015 Piotr Murach. See LICENSE for further details.
