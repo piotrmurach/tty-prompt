@@ -1,5 +1,16 @@
 # Change log
 
+## [v0.18.0] - 2018-11-24
+
+### Changed
+* Change to update tty-reader dependency
+* Remove encoding magic comments
+
+### Fixed
+* Fix #keypress to stop using the :nonblock option
+* Fix input reading to correctly capture the Esc key(#84)
+* Fix line editing when cursor is on second to last character(#94)
+
 ## [v0.17.2] - 2018-11-01
 
 ### Fixed
@@ -285,6 +296,7 @@
 
 * Initial implementation and release
 
+[v0.18.0]: https://github.com/piotrmurach/tty-prompt/compare/v0.17.2...v0.18.0
 [v0.17.2]: https://github.com/piotrmurach/tty-prompt/compare/v0.17.1...v0.17.2
 [v0.17.1]: https://github.com/piotrmurach/tty-prompt/compare/v0.17.0...v0.17.1
 [v0.17.0]: https://github.com/piotrmurach/tty-prompt/compare/v0.16.1...v0.17.0
