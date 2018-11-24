@@ -75,7 +75,7 @@ module TTY
         time do
           @prompt.print(render_question)
           until @done
-            @input = @prompt.read_keypress(nonblock: true)
+            @input = @prompt.read_keypress
           end
         end
         @evaluator.(@input)
