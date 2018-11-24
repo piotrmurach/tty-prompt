@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe TTY::Prompt, '#subscribe' do
   it "subscribes to key events only for the current prompt" do
     prompt = TTY::TestPrompt.new

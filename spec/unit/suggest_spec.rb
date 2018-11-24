@@ -1,4 +1,4 @@
-# encoding: utf-8
+# frozen_string_literal: true
 
 RSpec.describe TTY::Prompt, '#suggest' do
   let(:possible) { %w(status stage stash commit branch blame) }

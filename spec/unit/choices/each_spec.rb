@@ -1,4 +1,4 @@
-# encoding: utf-8
+# frozen_string_literal: true
 
 RSpec.describe TTY::Prompt::Choices, '.each' do
   it "iterates over collection" do

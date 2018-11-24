@@ -1,4 +1,4 @@
-# encoding: utf-8
+# frozen_string_literal: true
 
 RSpec.describe TTY::Prompt, '#select' do
 
@@ -12,7 +12,7 @@ RSpec.describe TTY::Prompt, '#select' do
     init = options.fetch(:init, false)
     enum = options[:enum]
 
-    out = ""
+    out = []
     out << "\e[?25l" if init
     out << prompt << " "
     out << "\e[90m(#{hint})\e[0m" if hint
@@ -32,7 +32,7 @@ RSpec.describe TTY::Prompt, '#select' do
     out << "\e[2K\e[1G\e[1A" * choices.count
     out << "\e[2K\e[1G"
     out << "\e[1A\e[2K\e[1G" if choices.empty?
-    out
+    out.join
   end
 
   def exit_message(prompt, choice)

@@ -1,4 +1,4 @@
-# encoding: utf-8
+# frozen_string_literal: true
 
 RSpec.describe TTY::Prompt do
   let(:symbols) { TTY::Prompt::Symbols.symbols }
@@ -9,7 +9,7 @@ RSpec.describe TTY::Prompt do
     error   = options[:error]
     default = options.fetch(:default, 1)
 
-    out  = ""
+    out  = []
     out << prompt << " \n"
     out << choices.map.with_index do |c, i|
       name = c.is_a?(Hash) ? c[:name] : c
@@ -25,7 +25,7 @@ RSpec.describe TTY::Prompt do
     end.join("\n")
     out << "\n"
     choice =  "  Choose 1-#{choices.count} [#{default}]: "
-    choice << input.to_s if input
+    choice = choice + input.to_s if input
     out << choice
     if error
       out << "\n"
@@ -34,7 +34,7 @@ RSpec.describe TTY::Prompt do
     end
     out << "\e[2K\e[1G\e[1A" * (choices.count + 1)
     out << "\e[2K\e[1G\e[J"
-    out
+    out.join
   end
 
   def exit_message(prompt, choice)

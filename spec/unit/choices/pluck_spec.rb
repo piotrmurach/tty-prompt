@@ -1,4 +1,4 @@
-# encoding: utf-8
+# frozen_string_literal: true
 
 RSpec.describe TTY::Prompt::Choices, '#pluck' do
   it "plucks choice by key name" do

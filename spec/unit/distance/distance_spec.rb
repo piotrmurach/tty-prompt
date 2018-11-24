@@ -1,4 +1,4 @@
-# coding: utf-8
+# frozen_string_literal: true
 
 RSpec.describe TTY::Prompt::Distance, '.distance' do
   let(:object) { described_class.new }

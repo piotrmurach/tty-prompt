@@ -1,4 +1,4 @@
-# encoding: utf-8
+# frozen_string_literal: true
 
 RSpec.describe TTY::Prompt do
   let(:symbols) { TTY::Prompt::Symbols.symbols }
@@ -9,7 +9,7 @@ RSpec.describe TTY::Prompt do
     init = options.fetch(:init, false)
     enum = options[:enum]
 
-    out = ""
+    out = []
     out << "\e[?25l" if init
     out << prompt << " "
     out << selected.join(', ')
@@ -33,7 +33,7 @@ RSpec.describe TTY::Prompt do
     end.join("\n")
     out << "\e[2K\e[1G\e[1A" * choices.count
     out << "\e[2K\e[1G"
-    out
+    out.join
   end
 
   def exit_message(prompt, choices)

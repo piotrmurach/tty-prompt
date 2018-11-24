@@ -1,4 +1,4 @@
-# encoding: utf-8
+# frozen_string_literal: true
 
 if RUBY_VERSION > '1.9' and (ENV['COVERAGE'] || ENV['TRAVIS'])
   require 'simplecov'

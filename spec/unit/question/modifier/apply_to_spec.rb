@@ -1,4 +1,4 @@
-# encoding: utf-8
+# frozen_string_literal: true
 
 RSpec.describe TTY::Prompt::Question::Modifier, '#apply_to' do
   let(:string)   { "text   to   be    modified"}
