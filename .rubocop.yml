@@ -9,13 +9,13 @@ Metrics/BlockLength:
     - "spec/**/*"
 
 Metrics/ClassLength:
-    Max: 1500
+  Max: 1500
 
 Metrics/CyclomaticComplexity:
   Enabled: false
 
 Metrics/LineLength:
-    Max: 80
+  Max: 80
 
 Metrics/MethodLength:
   Max: 20
