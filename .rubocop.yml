@@ -1,6 +1,9 @@
 Lint/AssignmentInCondition:
   Enabled: false
 
+Metrics/AbcSize:
+  Max: 30
+
 Metrics/BlockLength:
   CountComments: true
   Max: 25
