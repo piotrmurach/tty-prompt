@@ -398,7 +398,7 @@ module TTY
       def render_header
         if @done
           selected_item = choices[@active - 1].name
-          @prompt.decorate(selected_item, @active_color)
+          @prompt.decorate(selected_item.to_s, @active_color)
         elsif @first_render
           @prompt.decorate(help, @help_color)
         elsif filterable? && @filter.any?
@@ -417,13 +417,13 @@ module TTY
         @paginator.paginate(choices, @active, @per_page) do |choice, index|
           num = enumerate? ? (index + 1).to_s + @enum + ' ' : ''
           message = if index + 1 == @active && !choice.disabled?
-                      selected = @marker + ' ' + num + choice.name
+                      selected = "#{@marker} #{num}#{choice.name}"
                       @prompt.decorate(selected.to_s, @active_color)
                     elsif choice.disabled?
                       @prompt.decorate(symbols[:cross], :red) +
-                        ' ' + num + choice.name + ' ' + choice.disabled.to_s
+                        " #{num}#{choice.name} #{choice.disabled}"
                     else
-                      ' ' * 2 + num + choice.name
+                      "  #{num}#{choice.name}"
                     end
           max_index = paginated? ? @paginator.max_index : choices.size - 1
           newline = (index == max_index) ? '' : "\n"

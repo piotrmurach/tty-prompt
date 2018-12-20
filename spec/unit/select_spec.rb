@@ -43,11 +43,12 @@ RSpec.describe TTY::Prompt, '#select' do
   before { allow(TTY::Screen).to receive(:width).and_return(200) }
 
   it "selects by default first option" do
-    choices = %w(Large Medium Small)
+    choices = %i(Large Medium Small)
     prompt.input << "\r"
     prompt.input.rewind
-    expect(prompt.select('What size?', choices)).to eq('Large')
-    expect(prompt.output.string).to eq([
+
+    expect(prompt.select('What size?', choices)).to eq(:Large)
+    expected_output = [
       "\e[?25lWhat size? \e[90m(Use arrow keys, press Enter to select)\e[0m\n",
       "\e[32m#{symbols[:pointer]} Large\e[0m\n",
       "  Medium\n",
@@ -55,7 +56,9 @@ RSpec.describe TTY::Prompt, '#select' do
       "\e[2K\e[1G\e[1A" * 3,
       "\e[2K\e[1G",
       "What size? \e[32mLarge\e[0m\n\e[?25h"
-    ].join)
+    ].join
+
+    expect(prompt.output.string).to eq(expected_output)
   end
 
   it "allows navigation using events without errors" do
