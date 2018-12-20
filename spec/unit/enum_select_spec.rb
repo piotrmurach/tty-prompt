@@ -193,17 +193,17 @@ RSpec.describe TTY::Prompt do
   end
 
   it "doesn't paginate short selections" do
-    choices = %w(A B C D)
+    choices = %i(A B C D)
     prompt = TTY::TestPrompt.new
     prompt.input << "\r"
     prompt.input.rewind
 
     answer = prompt.enum_select("What letter?", choices, per_page: 4, default: 1)
-    expect(answer).to eq('A')
+    expect(answer).to eq(:A)
 
     expected_output =
-      output_helper("What letter?", choices, "A") +
-      exit_message("What letter?", "A")
+      output_helper("What letter?", choices, :A) +
+      exit_message("What letter?", :A)
 
     expect(prompt.output.string).to eq(expected_output)
   end

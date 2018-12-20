@@ -359,7 +359,7 @@ module TTY
 
         @paginator.paginate(@choices, @page_active, @per_page) do |choice, index|
           num = (index + 1).to_s + @enum + ' '
-          selected = num + choice.name
+          selected = num.to_s + choice.name.to_s
           output << if index + 1 == @active && !choice.disabled?
                       (' ' * 2) + @prompt.decorate(selected, @active_color)
                     elsif choice.disabled?
