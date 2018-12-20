@@ -15,12 +15,12 @@ module TTY
     class List
       include Symbols
 
-      HELP = '(Use arrow%s keys, press Enter to select%s)'.freeze
+      HELP = '(Use arrow%s keys, press Enter to select%s)'
 
-      PAGE_HELP = '(Move up or down to reveal more choices)'.freeze
+      PAGE_HELP = '(Move up or down to reveal more choices)'
 
       # Allowed keys for filter, along with backspace and canc.
-      FILTER_KEYS_MATCHER = /\A([[:alnum:]]|[[:punct:]])\Z/
+      FILTER_KEYS_MATCHER = /\A([[:alnum:]]|[[:punct:]])\Z/.freeze
 
       # Create instance of TTY::Prompt::List menu.
       #
@@ -122,7 +122,7 @@ module TTY
         tokens = if enumerate?
                    [" or number (1-#{choices.size})", '']
                  elsif filterable?
-                   ['', ", and letter keys to filter"]
+                   ['', ', and letter keys to filter']
                  else
                    ['', '']
                  end
@@ -160,9 +160,9 @@ module TTY
           if !filterable? || @filter.empty?
             @choices
           else
-            @choices.select do |_choice|
-              !_choice.disabled? &&
-                _choice.name.downcase.include?(@filter.join.downcase)
+            @choices.select do |choice|
+              !choice.disabled? &&
+                choice.name.downcase.include?(@filter.join.downcase)
             end
           end
         else
@@ -195,6 +195,7 @@ module TTY
 
       def keynum(event)
         return unless enumerate?
+
         value = event.value.to_i
         return unless (1..choices.count).cover?(value)
         return if choices[value - 1].disabled?
@@ -218,7 +219,7 @@ module TTY
         if prev_active
           @active = prev_active
         elsif @cycle
-          searchable  = (choices.length).downto(1).to_a
+          searchable  = choices.length.downto(1).to_a
           prev_active = search_choice_in(searchable)
 
           @active = prev_active if prev_active
@@ -440,6 +441,7 @@ module TTY
       # @api private
       def render_footer
         return '' unless paginated?
+
         colored_footer = @prompt.decorate(@page_help, @help_color)
         "\n" + colored_footer
       end
