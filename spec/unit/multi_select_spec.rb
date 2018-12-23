@@ -45,7 +45,7 @@ RSpec.describe TTY::Prompt do
 
   it "selects nothing when return pressed immediately" do
     prompt = TTY::TestPrompt.new
-    choices = %w(vodka beer wine whisky bourbon)
+    choices = %i(vodka beer wine whisky bourbon)
     prompt.input << "\r"
     prompt.input.rewind
     expect(prompt.multi_select("Select drinks?", choices)). to eq([])

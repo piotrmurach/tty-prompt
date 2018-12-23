@@ -102,12 +102,12 @@ module TTY
           indicator += ' '
           message = if @selected.include?(choice) && !choice.disabled?
                       selected = @prompt.decorate(symbols[:radio_on], @active_color)
-                      selected + ' ' + num + choice.name
+                      "#{selected} #{num}#{choice.name}"
                     elsif choice.disabled?
                       @prompt.decorate(symbols[:cross], :red) +
-                        ' ' + num + choice.name + ' ' + choice.disabled.to_s
+                        " #{num}#{choice.name} #{choice.disabled}"
                     else
-                      symbols[:radio_off] + ' ' + num + choice.name
+                      "#{symbols[:radio_off]} #{num}#{choice.name}"
                     end
           max_index = paginated? ? @paginator.max_index : choices.size - 1
           newline = (index == max_index) ? '' : "\n"
