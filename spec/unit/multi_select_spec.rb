@@ -425,13 +425,29 @@ RSpec.describe TTY::Prompt do
   end
 
   context "with :disabled" do
-    it "fails when active item is also disabled" do
+    it "fails when default item is also disabled" do
       prompt = TTY::TestPrompt.new
-      choices = [{name: 'vodka', disabled: true}, 'beer', 'wine', 'whisky', 'bourbon']
+      choices = [
+        {name: 'vodka', disabled: true},
+        'beer', 'wine', 'whisky', 'bourbon'
+      ]
       expect {
-        prompt.multi_select("Select drinks?", choices)
+        prompt.multi_select("Select drinks?", choices, default: 1)
       }.to raise_error(TTY::Prompt::ConfigurationError,
-        /active choice 'vodka' matches disabled item/)
+        /default index `1` matches disabled choice item/)
+    end
+
+    it "adjusts active index to match first non-disabled choice" do
+      choices = [
+        {name: 'vodka', disabled: true},
+        'beer', 'wine', 'whisky', 'bourbon'
+      ]
+      prompt = TTY::TestPrompt.new
+      prompt.input << " " << "\r"
+      prompt.input.rewind
+
+      answer = prompt.multi_select("Select drinks?", choices)
+      expect(answer).to eq(['beer'])
     end
 
     it "omits disabled choice when nagivating menu" do

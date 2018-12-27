@@ -9,7 +9,7 @@ module TTY
     #
     # @api private
     class MultiList < List
-      HELP = '(Use arrow%s keys, press Space to select and Enter to finish%s)'.freeze
+      HELP = '(Use arrow%s keys, press Space to select and Enter to finish%s)'
 
       # Create instance of TTY::Prompt::MultiList menu.
       #
@@ -46,10 +46,11 @@ module TTY
         validate_defaults
         # At this stage, @choices matches all the visible choices.
         @selected = @choices.values_at(*@default.map { |d| d - 1 })
-        @active = @default.last unless @selected.empty?
-        if choices[@active - 1] && choices[@active - 1].disabled?
-          raise ConfigurationError,
-                "active choice '#{choices[@active - 1]}' matches disabled item"
+
+        if !@selected.empty?
+          @active = @default.last
+        else
+          @active = @choices.index { |choice| choice.disabled? == false } + 1
         end
       end
 
