@@ -1344,7 +1344,7 @@ Please [see pastel](https://github.com/piotrmurach/pastel#3-supported-colors) fo
 
 If you wish to disable coloring for a prompt simply pass `:enable_color` option
 
-```
+```ruby
 prompt = TTY::Prompt.new(enable_color: true)
 ```
 
