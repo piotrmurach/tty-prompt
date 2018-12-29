@@ -20,8 +20,7 @@ module TTY
       def initialize(prompt, options)
         super
         @selected = []
-        @help    = options[:help]
-        @default = Array(options[:default])
+        @help = options[:help]
         @echo = options.fetch(:echo, true)
       end
 
@@ -47,10 +46,10 @@ module TTY
         # At this stage, @choices matches all the visible choices.
         @selected = @choices.values_at(*@default.map { |d| d - 1 })
 
-        if !@selected.empty?
+        if !@default.empty?
           @active = @default.last
         else
-          @active = @choices.index { |choice| choice.disabled? == false } + 1
+          @active = @choices.index { |choice| !choice.disabled? } + 1
         end
       end
 
