@@ -1,5 +1,13 @@
 # Change log
 
+## [v0.18.1] - 2018-12-29
+
+### Changed
+* Change #multi_select & #select to auto select first non-disabled active choice
+
+### Fixed
+* Fix #select, #multi_select & #enum_select to allow for symbols as choice names
+
 ## [v0.18.0] - 2018-11-24
 
 ### Changed
@@ -296,6 +304,7 @@
 
 * Initial implementation and release
 
+[v0.18.1]: https://github.com/piotrmurach/tty-prompt/compare/v0.18.0...v0.18.1
 [v0.18.0]: https://github.com/piotrmurach/tty-prompt/compare/v0.17.2...v0.18.0
 [v0.17.2]: https://github.com/piotrmurach/tty-prompt/compare/v0.17.1...v0.17.2
 [v0.17.1]: https://github.com/piotrmurach/tty-prompt/compare/v0.17.0...v0.17.1
