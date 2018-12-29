@@ -42,8 +42,7 @@ module TTY
         @prompt       = prompt
         @prefix       = options.fetch(:prefix) { @prompt.prefix }
         @enum         = options.fetch(:enum) { nil }
-        @default      = Array[options.fetch(:default) { 1 }]
-        @active       = @default.first
+        @default      = Array(options[:default])
         @choices      = Choices.new
         @active_color = options.fetch(:active_color) { @prompt.active_color }
         @help_color   = options.fetch(:help_color) { @prompt.help_color }
@@ -278,7 +277,12 @@ module TTY
       # @api private
       def setup_defaults
         validate_defaults
-        @active = @default.first
+
+        if !@default.empty?
+          @active = @default.first
+        else
+          @active = @choices.index { |choice| !choice.disabled? } + 1
+        end
       end
 
       # Validate default indexes to be within range

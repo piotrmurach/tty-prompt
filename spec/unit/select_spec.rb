@@ -632,14 +632,28 @@ RSpec.describe TTY::Prompt, '#select' do
       expect(prompt.output.string).to eq(expected_output)
     end
 
-    it "sets default correct when disabled choice" do
-      choices = [ {name: 'Small', disabled: '(out of stock)'}, 'Medium', 'Large', 'Huge' ]
+    it "sets active to be first non-disabled choice" do
+      choices = [
+        {name: 'Small', disabled: '(out of stock)'}, 'Medium', 'Large', 'Huge'
+      ]
+      prompt = TTY::TestPrompt.new
+      prompt.input << "\r"
+      prompt.input.rewind
+
+      answer = prompt.select("What size?", choices)
+      expect(answer).to eq('Medium')
+    end
+
+    it "prevents setting default to disabled choice" do
+      choices = [
+        {name: 'Small', disabled: '(out of stock)'}, 'Medium', 'Large', 'Huge'
+      ]
       prompt = TTY::TestPrompt.new
       prompt.input << "\r"
       prompt.input.rewind
 
       expect {
-        prompt.select("What size?", choices)
+        prompt.select("What size?", choices, default: 1)
       }.to raise_error(TTY::Prompt::ConfigurationError, /default index `1` matches disabled choice item/)
     end
   end
