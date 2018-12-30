@@ -44,14 +44,29 @@ RSpec.describe TTY::Prompt::Paginator, '#paginate' do
     expect(paginator.paginate(list, 8).to_a).to eq([['e',4], ['f',5], ['g',6]])
   end
 
-  it "finds maximum index for current selection" do
+  it "finds both start and end index for current selection" do
     list = %w(a b c d e f g)
     paginator = described_class.new({per_page: 3, default: 0})
 
+    paginator.paginate(list, 3)
+    expect(paginator.start_index).to eq(0)
+    expect(paginator.end_index).to eq(2)
+
     paginator.paginate(list, 4)
-    expect(paginator.max_index).to eq(3)
+    expect(paginator.start_index).to eq(1)
+    expect(paginator.end_index).to eq(3)
+
     paginator.paginate(list, 5)
-    expect(paginator.max_index).to eq(4)
+    expect(paginator.start_index).to eq(2)
+    expect(paginator.end_index).to eq(4)
+
+    paginator.paginate(list, 7)
+    expect(paginator.start_index).to eq(4)
+    expect(paginator.end_index).to eq(6)
+
+    paginator.paginate(list, 8)
+    expect(paginator.start_index).to eq(4)
+    expect(paginator.end_index).to eq(6)
   end
 
   it "starts with default selection" do
