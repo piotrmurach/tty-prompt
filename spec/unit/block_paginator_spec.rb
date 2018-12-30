@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe TTY::Prompt::EnumPaginator, '#paginate' do
+RSpec.describe TTY::Prompt::BlockPaginator, '#paginate' do
   it "ignores per_page when equal items " do
     list = %w(a b c d)
     paginator = described_class.new({per_page: 4})

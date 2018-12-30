@@ -4,7 +4,7 @@ require_relative 'paginator'
 
 module TTY
   class Prompt
-    class EnumPaginator < Paginator
+    class BlockPaginator < Paginator
       # Paginate list of choices based on current active choice.
       # Move entire pages.
       #

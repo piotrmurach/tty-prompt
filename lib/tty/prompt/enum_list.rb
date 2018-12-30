@@ -3,7 +3,7 @@
 require 'English'
 
 require_relative 'choices'
-require_relative 'enum_paginator'
+require_relative 'block_paginator'
 require_relative 'paginator'
 require_relative 'symbols'
 
@@ -38,7 +38,7 @@ module TTY
         @choices      = Choices.new
         @per_page     = options[:per_page]
         @page_help    = options[:page_help] || PAGE_HELP
-        @paginator    = EnumPaginator.new
+        @paginator    = BlockPaginator.new
         @page_active  = @default
       end
 
