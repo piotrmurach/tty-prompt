@@ -109,8 +109,8 @@ module TTY
                     else
                       "#{symbols[:radio_off]} #{num}#{choice.name}"
                     end
-          max_index = paginated? ? @paginator.max_index : choices.size - 1
-          newline = (index == max_index) ? '' : "\n"
+          end_index = paginated? ? @paginator.end_index : choices.size - 1
+          newline = (index == end_index) ? '' : "\n"
           output << indicator + message + newline
         end
 
