@@ -17,8 +17,8 @@ module TTY
 
         # Don't paginate short lists
         if list.size <= @per_page
-          @lower_index = 0
-          @upper_index = list.size - 1
+          @start_index = 0
+          @end_index = list.size - 1
           if block
             return list.each_with_index(&block)
           else
@@ -32,25 +32,26 @@ module TTY
         page  = (@last_index / @per_page.to_f).ceil
         pages = (list.size / @per_page.to_f).ceil
         if page == 0
-          @lower_index = 0
-          @upper_index = @lower_index + @per_page - 1
-        elsif page > 0 && page <= pages
-          @lower_index = (page - 1) * @per_page
-          @upper_index = @lower_index + @per_page - 1
+          @start_index = 0
+          @end_index = @start_index + @per_page - 1
+        elsif page > 0 && page < pages
+          @start_index = (page - 1) * @per_page
+          @end_index = @start_index + @per_page - 1
+        elsif page == pages
+          @start_index = (page - 1) * @per_page
+          @end_index = list.size - 1
         else
-          @upper_index = list.size - 1
-          @lower_index = @upper_index - @per_page + 1
+          @end_index = list.size - 1
+          @start_index = @end_index - @per_page + 1
         end
 
-        sliced_list = list[@lower_index..@upper_index]
-        indices = (@lower_index..@upper_index)
+        sliced_list = list[@start_index..@end_index]
+        page_range = (@start_index..@end_index)
 
-        if block
-          sliced_list.each_with_index do |item, index|
-            block[item, @lower_index + index]
-          end
-        else
-          sliced_list.zip(indices).to_enum unless block_given?
+        return sliced_list.zip(page_range).to_enum unless block_given?
+
+        sliced_list.each_with_index do |item, index|
+          block[item, @start_index + index]
         end
       end
     end # EnumPaginator
