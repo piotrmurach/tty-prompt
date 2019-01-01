@@ -292,66 +292,215 @@ RSpec.describe TTY::Prompt, '#select' do
     ].join)
   end
 
-  it "paginates long selections" do
-    choices = %w(A B C D E F G H)
-    prompt.input << "\r"
-    prompt.input.rewind
-    value = prompt.select("What letter?", choices, per_page: 3, default: 4)
-    expect(value).to eq('D')
-    expect(prompt.output.string).to eq([
-      "\e[?25lWhat letter? \e[90m(Use arrow keys, press Enter to select)\e[0m\n",
-      "\e[32m#{symbols[:pointer]} D\e[0m\n",
-      "  E\n",
-      "  F\n",
-      "\e[90m(Move up or down to reveal more choices)\e[0m",
-      "\e[2K\e[1G\e[1A" * 4,
-      "\e[2K\e[1G",
-      "What letter? \e[32mD\e[0m\n\e[?25h",
-    ].join)
-  end
+  context "when paginated" do
+    it "paginates long selections" do
+      choices = %w(A B C D E F G H)
+      prompt.input << "\r"
+      prompt.input.rewind
+      value = prompt.select("What letter?", choices, per_page: 3, default: 4)
+      expect(value).to eq('D')
+      expect(prompt.output.string).to eq([
+        "\e[?25lWhat letter? \e[90m(Use arrow keys, press Enter to select)\e[0m\n",
+        "\e[32m#{symbols[:pointer]} D\e[0m\n",
+        "  E\n",
+        "  F\n",
+        "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
+        "\e[2K\e[1G\e[1A" * 4,
+        "\e[2K\e[1G",
+        "What letter? \e[32mD\e[0m\n\e[?25h",
+      ].join)
+    end
 
-  it "paginates choices as hash object" do
-    prompt = TTY::TestPrompt.new
-    choices = {A: 1, B: 2, C: 3, D: 4, E: 5, F: 6, G: 7, H: 8}
-    prompt.input << "\r"
-    prompt.input.rewind
-    value = prompt.select("What letter?", choices, per_page: 3, default: 4)
-    expect(value).to eq(4)
-    expect(prompt.output.string).to eq([
-      "\e[?25lWhat letter? \e[90m(Use arrow keys, press Enter to select)\e[0m\n",
-      "\e[32m#{symbols[:pointer]} D\e[0m\n",
-      "  E\n",
-      "  F\n",
-      "\e[90m(Move up or down to reveal more choices)\e[0m",
-      "\e[2K\e[1G\e[1A" * 4,
-      "\e[2K\e[1G",
-      "What letter? \e[32mD\e[0m\n\e[?25h",
-    ].join)
-  end
+    it "paginates choices as hash object" do
+      prompt = TTY::TestPrompt.new
+      choices = {A: 1, B: 2, C: 3, D: 4, E: 5, F: 6, G: 7, H: 8}
+      prompt.input << "\r"
+      prompt.input.rewind
+      value = prompt.select("What letter?", choices, per_page: 3, default: 4)
+      expect(value).to eq(4)
+      expect(prompt.output.string).to eq([
+        "\e[?25lWhat letter? \e[90m(Use arrow keys, press Enter to select)\e[0m\n",
+        "\e[32m#{symbols[:pointer]} D\e[0m\n",
+        "  E\n",
+        "  F\n",
+        "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
+        "\e[2K\e[1G\e[1A" * 4,
+        "\e[2K\e[1G",
+        "What letter? \e[32mD\e[0m\n\e[?25h",
+      ].join)
+    end
 
-  it "paginates long selections through DSL" do
-    prompt = TTY::TestPrompt.new
-    choices = %w(A B C D E F G H)
-    prompt.input << "\r"
-    prompt.input.rewind
-    value = prompt.select("What letter?") do |menu|
-              menu.per_page 3
-              menu.page_help '(Wiggle thy finger up or down to see more)'
-              menu.default 4
+    it "paginates long selections through DSL" do
+      prompt = TTY::TestPrompt.new
+      choices = %w(A B C D E F G H)
+      prompt.input << "\r"
+      prompt.input.rewind
+      value = prompt.select("What letter?") do |menu|
+                menu.per_page 3
+                menu.page_help '(Wiggle thy finger up or down to see more)'
+                menu.default 4
 
-              menu.choices choices
-            end
-    expect(value).to eq('D')
-    expect(prompt.output.string).to eq([
-      "\e[?25lWhat letter? \e[90m(Use arrow keys, press Enter to select)\e[0m\n",
-      "\e[32m#{symbols[:pointer]} D\e[0m\n",
-      "  E\n",
-      "  F\n",
-      "\e[90m(Wiggle thy finger up or down to see more)\e[0m",
-      "\e[2K\e[1G\e[1A" * 4,
-      "\e[2K\e[1G",
-      "What letter? \e[32mD\e[0m\n\e[?25h",
-    ].join)
+                menu.choices choices
+              end
+      expect(value).to eq('D')
+      expect(prompt.output.string).to eq([
+        "\e[?25lWhat letter? \e[90m(Use arrow keys, press Enter to select)\e[0m\n",
+        "\e[32m#{symbols[:pointer]} D\e[0m\n",
+        "  E\n",
+        "  F\n",
+        "\e[90m(Wiggle thy finger up or down to see more)\e[0m",
+        "\e[2K\e[1G\e[1A" * 4,
+        "\e[2K\e[1G",
+        "What letter? \e[32mD\e[0m\n\e[?25h",
+      ].join)
+    end
+
+    it "navigates evenly paged output with right arrow until end of selection" do
+      prompt = TTY::TestPrompt.new
+      choices = ('1'..'12').to_a
+      prompt.on(:keypress) { |e| prompt.trigger(:keyright) if e.value == "l" }
+      prompt.input << "l" << "l" << "l" << "\r"
+      prompt.input.rewind
+
+      answer = prompt.select("What number?", choices, per_page: 4)
+
+      expect(answer).to eq('9')
+
+      expected_output = [
+        "\e[?25lWhat number? \e[90m(Use arrow keys, press Enter to select)\e[0m\n",
+        "\e[32m#{symbols[:pointer]} 1\e[0m\n",
+        "  2\n",
+        "  3\n",
+        "  4\n",
+        "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
+        "\e[2K\e[1G\e[1A" * 5,
+        "\e[2K\e[1G",
+        "What number? \n",
+        "\e[32m#{symbols[:pointer]} 5\e[0m\n",
+        "  6\n",
+        "  7\n",
+        "  8\n",
+        "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
+        "\e[2K\e[1G\e[1A" * 5,
+        "\e[2K\e[1G",
+        "What number? \n",
+        "\e[32m#{symbols[:pointer]} 9\e[0m\n",
+        "  10\n",
+        "  11\n",
+        "  12\n",
+        "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
+        "\e[2K\e[1G\e[1A" * 5,
+        "\e[2K\e[1G",
+        "What number? \n",
+        "\e[32m#{symbols[:pointer]} 9\e[0m\n",
+        "  10\n",
+        "  11\n",
+        "  12\n",
+        "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
+        "\e[2K\e[1G\e[1A" * 5,
+        "\e[2K\e[1G",
+        "What number? \e[32m9\e[0m\n\e[?25h",
+      ].join
+
+      expect(prompt.output.string).to eq(expected_output)
+    end
+
+    it "navigates unevenly paged output with right arrow until the end of selection" do
+      prompt = TTY::TestPrompt.new
+      choices = ('1'..'10').to_a
+      prompt.on(:keypress) { |e| prompt.trigger(:keyright) if e.value == "l" }
+      prompt.input << "l" << "l" << "l" << "\r"
+      prompt.input.rewind
+
+      answer = prompt.select("What number?", choices, default: 4, per_page: 4)
+
+      expect(answer).to eq('10')
+
+      expected_output = [
+        "\e[?25lWhat number? \e[90m(Use arrow keys, press Enter to select)\e[0m\n",
+        "  1\n",
+        "  2\n",
+        "  3\n",
+        "\e[32m#{symbols[:pointer]} 4\e[0m\n",
+        "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
+        "\e[2K\e[1G\e[1A" * 5,
+        "\e[2K\e[1G",
+        "What number? \n",
+        "  5\n",
+        "  6\n",
+        "  7\n",
+        "\e[32m#{symbols[:pointer]} 8\e[0m\n",
+        "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
+        "\e[2K\e[1G\e[1A" * 5,
+        "\e[2K\e[1G",
+        "What number? \n",
+        "  9\n",
+        "\e[32m#{symbols[:pointer]} 10\e[0m\n",
+        "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
+        "\e[2K\e[1G\e[1A" * 3,
+        "\e[2K\e[1G",
+        "What number? \n",
+        "  9\n",
+        "\e[32m#{symbols[:pointer]} 10\e[0m\n",
+        "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
+        "\e[2K\e[1G\e[1A" * 3,
+        "\e[2K\e[1G",
+        "What number? \e[32m10\e[0m\n\e[?25h",
+      ].join
+
+      expect(prompt.output.string).to eq(expected_output)
+    end
+
+    it "navigates left and right" do
+      prompt = TTY::TestPrompt.new
+      choices = ('1'..'10').to_a
+      prompt.on(:keypress) { |e| 
+        prompt.trigger(:keyright) if e.value == "l"
+        prompt.trigger(:keyleft) if e.value == "h"
+      }
+      prompt.input << "l" << "l" << "h" << "\r"
+      prompt.input.rewind
+
+      answer = prompt.select("What number?", choices, default: 2, per_page: 4)
+
+      expect(answer).to eq('6')
+
+      expected_output = [
+        "\e[?25lWhat number? \e[90m(Use arrow keys, press Enter to select)\e[0m\n",
+        "  1\n",
+        "\e[32m#{symbols[:pointer]} 2\e[0m\n",
+        "  3\n",
+        "  4\n",
+        "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
+        "\e[2K\e[1G\e[1A" * 5,
+        "\e[2K\e[1G",
+        "What number? \n",
+        "  5\n",
+        "\e[32m#{symbols[:pointer]} 6\e[0m\n",
+        "  7\n",
+        "  8\n",
+        "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
+        "\e[2K\e[1G\e[1A" * 5,
+        "\e[2K\e[1G",
+        "What number? \n",
+        "  9\n",
+        "\e[32m#{symbols[:pointer]} 10\e[0m\n",
+        "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
+        "\e[2K\e[1G\e[1A" * 3,
+        "\e[2K\e[1G",
+        "What number? \n",
+        "  5\n",
+        "\e[32m#{symbols[:pointer]} 6\e[0m\n",
+        "  7\n",
+        "  8\n",
+        "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
+        "\e[2K\e[1G\e[1A" * 5,
+        "\e[2K\e[1G",
+        "What number? \e[32m6\e[0m\n\e[?25h",
+      ].join
+
+      expect(prompt.output.string).to eq(expected_output)
+    end
   end
 
   context 'with :cycle option' do
@@ -361,15 +510,17 @@ RSpec.describe TTY::Prompt, '#select' do
       prompt.on(:keypress) { |e| prompt.trigger(:keydown) if e.value == "j" }
       prompt.input << "j" << "j" << "j" << "\r"
       prompt.input.rewind
+
       value = prompt.select("What letter?", choices)
+
       expect(value).to eq("C")
-      expect(prompt.output.string).to eq(
+      expected_output =
         output_helper("What letter?", choices, "A", init: true, hint: "Use arrow keys, press Enter to select") +
         output_helper("What letter?", choices, "B") +
         output_helper("What letter?", choices, "C") +
         output_helper("What letter?", choices, "C") +
         "What letter? \e[32mC\e[0m\n\e[?25h"
-      )
+      expect(prompt.output.string).to eq(expected_output)
     end
 
     it "cycles around when configured to do so" do
@@ -378,7 +529,9 @@ RSpec.describe TTY::Prompt, '#select' do
       prompt.on(:keypress) { |e| prompt.trigger(:keydown) if e.value == "j" }
       prompt.input << "j" << "j" << "j" << "\r"
       prompt.input.rewind
+
       value = prompt.select("What letter?", choices, cycle: true)
+
       expect(value).to eq("A")
       expect(prompt.output.string).to eq(
         output_helper("What letter?", choices, "A", init: true, hint: "Use arrow keys, press Enter to select") +
@@ -411,6 +564,63 @@ RSpec.describe TTY::Prompt, '#select' do
         output_helper("What letter?", choices, "B") +
         output_helper("What letter?", choices, "D") +
         "What letter? \e[32mD\e[0m\n\e[?25h"
+
+      expect(prompt.output.string).to eq(expected_output)
+    end
+
+    it "cycles choices using left/right arrows" do
+      prompt = TTY::TestPrompt.new
+      choices = ('1'..'10').to_a
+      prompt.on(:keypress) { |e|
+        prompt.trigger(:keyright) if e.value == "l"
+        prompt.trigger(:keyleft) if e.value == "h"
+      }
+      prompt.input << "l" << "l" << "l" << "h" << "\r"
+      prompt.input.rewind
+
+      answer = prompt.select("What number?", choices, default: 2, per_page: 4, cycle: true)
+
+      expect(answer).to eq('10')
+
+      expected_output = [
+        "\e[?25lWhat number? \e[90m(Use arrow keys, press Enter to select)\e[0m\n",
+        "  1\n",
+        "\e[32m#{symbols[:pointer]} 2\e[0m\n",
+        "  3\n",
+        "  4\n",
+        "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
+        "\e[2K\e[1G\e[1A" * 5,
+        "\e[2K\e[1G",
+        "What number? \n",
+        "  5\n",
+        "\e[32m#{symbols[:pointer]} 6\e[0m\n",
+        "  7\n",
+        "  8\n",
+        "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
+        "\e[2K\e[1G\e[1A" * 5,
+        "\e[2K\e[1G",
+        "What number? \n",
+        "  9\n",
+        "\e[32m#{symbols[:pointer]} 10\e[0m\n",
+        "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
+        "\e[2K\e[1G\e[1A" * 3,
+        "\e[2K\e[1G",
+        "What number? \n",
+        "  1\n",
+        "\e[32m#{symbols[:pointer]} 2\e[0m\n",
+        "  3\n",
+        "  4\n",
+        "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
+        "\e[2K\e[1G\e[1A" * 5,
+        "\e[2K\e[1G",
+        "What number? \n",
+        "  9\n",
+        "\e[32m#{symbols[:pointer]} 10\e[0m\n",
+        "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
+        "\e[2K\e[1G\e[1A" * 3,
+        "\e[2K\e[1G",
+        "What number? \e[32m10\e[0m\n\e[?25h",
+      ].join
 
       expect(prompt.output.string).to eq(expected_output)
     end

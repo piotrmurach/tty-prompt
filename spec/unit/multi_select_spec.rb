@@ -291,7 +291,7 @@ RSpec.describe TTY::Prompt do
       "#{symbols[:pointer]} \e[32m#{symbols[:radio_on]}\e[0m D\n",
       "  #{symbols[:radio_off]} E\n",
       "  #{symbols[:radio_off]} F\n",
-      "\e[90m(Move up or down to reveal more choices)\e[0m",
+      "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
       "\e[2K\e[1G\e[1A" * 4, "\e[2K\e[1G",
       "What letter? \e[32mD\e[0m\n\e[?25h",
     ].join)
@@ -309,7 +309,7 @@ RSpec.describe TTY::Prompt do
       "#{symbols[:pointer]} \e[32m#{symbols[:radio_on]}\e[0m D\n",
       "  #{symbols[:radio_off]} E\n",
       "  #{symbols[:radio_off]} F\n",
-      "\e[90m(Move up or down to reveal more choices)\e[0m",
+      "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
       "\e[2K\e[1G\e[1A" * 4, "\e[2K\e[1G",
       "What letter? \e[32mD\e[0m\n\e[?25h",
     ].join)

@@ -4,6 +4,7 @@ require 'English'
 
 require_relative 'choices'
 require_relative 'paginator'
+require_relative 'block_paginator'
 require_relative 'symbols'
 
 module TTY
@@ -17,7 +18,7 @@ module TTY
 
       HELP = '(Use arrow%s keys, press Enter to select%s)'
 
-      PAGE_HELP = '(Move up or down to reveal more choices)'
+      PAGE_HELP = '(Move up/down or left/right to reveal more choices)'
 
       # Allowed keys for filter, along with backspace and canc.
       FILTER_KEYS_MATCHER = /\A([[:alnum:]]|[[:punct:]])\Z/.freeze
@@ -56,6 +57,8 @@ module TTY
         @per_page     = options[:per_page]
         @page_help    = options[:page_help] || PAGE_HELP
         @paginator    = Paginator.new
+        @block_paginator = BlockPaginator.new
+        @by_page      = false
       end
 
       # Set marker
@@ -70,6 +73,15 @@ module TTY
       # @api public
       def default(*default_values)
         @default = default_values
+      end
+
+      # Select paginator based on the current navigation key
+      #
+      # @return [Paginator]
+      #
+      # @api private
+      def paginator
+        @by_page ? @block_paginator : @paginator
       end
 
       # Set number of items per page
@@ -223,6 +235,7 @@ module TTY
 
           @active = prev_active if prev_active
         end
+        @by_page = false
       end
 
       def keydown(*)
@@ -237,8 +250,40 @@ module TTY
 
           @active = next_active if next_active
         end
+        @by_page = false
       end
       alias keytab keydown
+
+      # Moves all choices page by page keeping the current selected item
+      # at the same level on each page.
+      #
+      # When the choice on a page is outside of next page range then
+      # adjust it to the last item, otherwise leave unchanged.
+      def keyright(*)
+        if (@active + page_size) <= @choices.size
+          @active += page_size
+        elsif @active <= @choices.size # last page shorter
+          current   = @active % page_size
+          remaining = @choices.size % page_size
+          if current.zero? || (remaining > 0 && current > remaining)
+            @active = @choices.size
+          elsif @cycle
+            @active = current.zero? ? page_size : current
+          end
+        end
+        @by_page = true
+      end
+      alias keypage_down keyright
+
+      def keyleft(*)
+        if (@active - page_size) > 0
+          @active -= page_size
+        elsif @cycle
+          @active = @choices.size
+        end
+        @by_page = true
+      end
+      alias keypage_up keyleft
 
       def keypress(event)
         return unless filterable?
@@ -419,7 +464,7 @@ module TTY
       def render_menu
         output = []
 
-        @paginator.paginate(choices, @active, @per_page) do |choice, index|
+        paginator.paginate(choices, @active, @per_page) do |choice, index|
           num = enumerate? ? (index + 1).to_s + @enum + ' ' : ''
           message = if index + 1 == @active && !choice.disabled?
                       selected = "#{@marker} #{num}#{choice.name}"
@@ -430,7 +475,7 @@ module TTY
                     else
                       "  #{num}#{choice.name}"
                     end
-          end_index = paginated? ? @paginator.end_index : choices.size - 1
+          end_index = paginated? ? paginator.end_index : choices.size - 1
           newline = (index == end_index) ? '' : "\n"
           output << (message + newline)
         end
