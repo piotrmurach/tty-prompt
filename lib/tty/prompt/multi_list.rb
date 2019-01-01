@@ -96,7 +96,7 @@ module TTY
       def render_menu
         output = []
 
-        @paginator.paginate(choices, @active, @per_page) do |choice, index|
+        paginator.paginate(choices, @active, @per_page) do |choice, index|
           num = enumerate? ? (index + 1).to_s + @enum + ' ' : ''
           indicator = (index + 1 == @active) ?  @marker : ' '
           indicator += ' '
@@ -109,7 +109,7 @@ module TTY
                     else
                       "#{symbols[:radio_off]} #{num}#{choice.name}"
                     end
-          end_index = paginated? ? @paginator.end_index : choices.size - 1
+          end_index = paginated? ? paginator.end_index : choices.size - 1
           newline = (index == end_index) ? '' : "\n"
           output << indicator + message + newline
         end
