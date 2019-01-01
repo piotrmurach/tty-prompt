@@ -46,10 +46,9 @@ module TTY
         current_index = active - 1
         default_size = (list.size <= DEFAULT_PAGE_SIZE ? list.size : DEFAULT_PAGE_SIZE)
         @per_page = @per_page || per_page || default_size
-        @start_index ||= current_index
-        @end_index ||= @start_index + @per_page - 1
-
         check_page_size!
+        @start_index ||= (current_index / @per_page) * @per_page
+        @end_index ||= @start_index + @per_page - 1
 
         # Don't paginate short lists
         if list.size <= @per_page

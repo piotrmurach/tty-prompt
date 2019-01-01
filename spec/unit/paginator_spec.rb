@@ -48,6 +48,10 @@ RSpec.describe TTY::Prompt::Paginator, '#paginate' do
     list = %w(a b c d e f g)
     paginator = described_class.new({per_page: 3, default: 0})
 
+    paginator.paginate(list, 2)
+    expect(paginator.start_index).to eq(0)
+    expect(paginator.end_index).to eq(2)
+
     paginator.paginate(list, 3)
     expect(paginator.start_index).to eq(0)
     expect(paginator.end_index).to eq(2)
