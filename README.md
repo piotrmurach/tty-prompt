@@ -695,7 +695,7 @@ prompt.select("Choose your letter?", letters, per_page: 4)
 #   B
 #   C
 #   D
-# (Move up or down to reveal more choices)
+# (Move up/down or left/right to reveal more choices)
 ```
 
 You can also customise page navigation text using `:page_help` option:
@@ -892,7 +892,7 @@ prompt.multi_select("Choose your letter?", letters, per_page: 4)
 #   ⬡ B
 #   ⬡ C
 #   ⬡ D
-# (Move up or down to reveal more choices)
+# (Move up/down or left/right to reveal more choices)
 ```
 
 #### 2.6.3.1 `:disabled`
