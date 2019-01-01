@@ -1,5 +1,14 @@
 # Change log
 
+## [v0.19.0] - 2019-01-x
+
+### Changed
+* Change Paginator to expose #start_index & #end_index
+* Change Paginator to figure out #start_index based on per page size
+* Change #enum_select to set default choice when navigating by page
+* Change #select & #multi_select to allow navigation by page with left/right keys
+* Change to remove test artifacts from the gem bundle
+
 ## [v0.18.1] - 2018-12-29
 
 ### Changed
