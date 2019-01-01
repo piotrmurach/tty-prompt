@@ -297,9 +297,11 @@ RSpec.describe TTY::Prompt, '#select' do
       choices = %w(A B C D E F G H)
       prompt.input << "\r"
       prompt.input.rewind
-      value = prompt.select("What letter?", choices, per_page: 3, default: 4)
-      expect(value).to eq('D')
-      expect(prompt.output.string).to eq([
+
+      answer = prompt.select("What letter?", choices, per_page: 3, default: 4)
+
+      expect(answer).to eq('D')
+      expected_output = [
         "\e[?25lWhat letter? \e[90m(Use arrow keys, press Enter to select)\e[0m\n",
         "\e[32m#{symbols[:pointer]} D\e[0m\n",
         "  E\n",
@@ -308,7 +310,8 @@ RSpec.describe TTY::Prompt, '#select' do
         "\e[2K\e[1G\e[1A" * 4,
         "\e[2K\e[1G",
         "What letter? \e[32mD\e[0m\n\e[?25h",
-      ].join)
+      ].join
+      expect(prompt.output.string).to eq(expected_output)
     end
 
     it "paginates choices as hash object" do
@@ -316,9 +319,11 @@ RSpec.describe TTY::Prompt, '#select' do
       choices = {A: 1, B: 2, C: 3, D: 4, E: 5, F: 6, G: 7, H: 8}
       prompt.input << "\r"
       prompt.input.rewind
-      value = prompt.select("What letter?", choices, per_page: 3, default: 4)
-      expect(value).to eq(4)
-      expect(prompt.output.string).to eq([
+
+      answer = prompt.select("What letter?", choices, per_page: 3, default: 4)
+
+      expect(answer).to eq(4)
+      expected_output = [
         "\e[?25lWhat letter? \e[90m(Use arrow keys, press Enter to select)\e[0m\n",
         "\e[32m#{symbols[:pointer]} D\e[0m\n",
         "  E\n",
@@ -327,7 +332,8 @@ RSpec.describe TTY::Prompt, '#select' do
         "\e[2K\e[1G\e[1A" * 4,
         "\e[2K\e[1G",
         "What letter? \e[32mD\e[0m\n\e[?25h",
-      ].join)
+      ].join
+      expect(prompt.output.string).to eq(expected_output)
     end
 
     it "paginates long selections through DSL" do
@@ -335,15 +341,17 @@ RSpec.describe TTY::Prompt, '#select' do
       choices = %w(A B C D E F G H)
       prompt.input << "\r"
       prompt.input.rewind
-      value = prompt.select("What letter?") do |menu|
+
+      answer = prompt.select("What letter?") do |menu|
                 menu.per_page 3
                 menu.page_help '(Wiggle thy finger up or down to see more)'
                 menu.default 4
 
                 menu.choices choices
               end
-      expect(value).to eq('D')
-      expect(prompt.output.string).to eq([
+
+      expect(answer).to eq('D')
+      expected_output = [
         "\e[?25lWhat letter? \e[90m(Use arrow keys, press Enter to select)\e[0m\n",
         "\e[32m#{symbols[:pointer]} D\e[0m\n",
         "  E\n",
@@ -352,7 +360,8 @@ RSpec.describe TTY::Prompt, '#select' do
         "\e[2K\e[1G\e[1A" * 4,
         "\e[2K\e[1G",
         "What letter? \e[32mD\e[0m\n\e[?25h",
-      ].join)
+      ].join
+      expect(prompt.output.string).to eq(expected_output)
     end
 
     it "navigates evenly paged output with right arrow until end of selection" do
@@ -454,7 +463,7 @@ RSpec.describe TTY::Prompt, '#select' do
     it "navigates left and right" do
       prompt = TTY::TestPrompt.new
       choices = ('1'..'10').to_a
-      prompt.on(:keypress) { |e| 
+      prompt.on(:keypress) { |e|
         prompt.trigger(:keyright) if e.value == "l"
         prompt.trigger(:keyleft) if e.value == "h"
       }
@@ -530,16 +539,16 @@ RSpec.describe TTY::Prompt, '#select' do
       prompt.input << "j" << "j" << "j" << "\r"
       prompt.input.rewind
 
-      value = prompt.select("What letter?", choices, cycle: true)
+      answer = prompt.select("What letter?", choices, cycle: true)
 
-      expect(value).to eq("A")
-      expect(prompt.output.string).to eq(
+      expect(answer).to eq("A")
+      expected_output =
         output_helper("What letter?", choices, "A", init: true, hint: "Use arrow keys, press Enter to select") +
         output_helper("What letter?", choices, "B") +
         output_helper("What letter?", choices, "C") +
         output_helper("What letter?", choices, "A") +
         "What letter? \e[32mA\e[0m\n\e[?25h"
-      )
+      expect(prompt.output.string).to eq(expected_output)
     end
 
     it "cycles around disabled items" do
