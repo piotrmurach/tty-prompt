@@ -4,6 +4,7 @@ require 'forwardable'
 require 'pastel'
 require 'tty-cursor'
 require 'tty-reader'
+require 'tty-screen'
 
 require_relative 'prompt/answers_collector'
 require_relative 'prompt/confirm_question'
@@ -446,6 +447,28 @@ module TTY
     def error(*args)
       options = Utils.extract_options!(args)
       args.each { |message| say message, options.merge(color: :red) }
+    end
+
+    # Print debug information in terminal top right corner
+    #
+    # @example
+    #   prompt.debug "info1", "info2"
+    #
+    # @param [Array] messages
+    #
+    # @retrun [nil]
+    #
+    # @api public
+    def debug(*messages)
+      longest = messages.max_by(&:length).size
+      width = TTY::Screen.width - longest
+      print cursor.save
+      messages.each_with_index do |msg, i|
+        print cursor.move_to(width, i)
+        print cursor.clear_line_after
+        print msg
+      end
+      print cursor.restore
     end
 
     # Takes the string provided by the user and compare it with other possible
