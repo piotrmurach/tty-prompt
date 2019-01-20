@@ -6,7 +6,7 @@ module TTY
       DEFAULT_PAGE_SIZE = 6
 
       # The 0-based index of the first item on this page
-      attr_reader :start_index
+      attr_accessor :start_index
 
       # The 0-based index of the last item on this page
       attr_reader :end_index
@@ -18,6 +18,14 @@ module TTY
         @last_index  = Array(options[:default]).flatten.first || 0
         @per_page    = options[:per_page]
         @start_index = Array(options[:default]).flatten.first
+      end
+
+      # Reset current page indexes
+      #
+      # @api private
+      def reset!
+        @start_index = nil
+        @end_index   = nil
       end
 
       # Check if page size is valid
