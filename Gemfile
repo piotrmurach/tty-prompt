@@ -5,6 +5,8 @@ gemspec
 #gem 'tty-reader', path: '../tty-reader'
 # gem 'tty-reader', git: 'https://github.com/piotrmurach/tty-reader'
 
+gem 'timers', '4.1.2'
+
 group :test do
   gem 'benchmark-ips', '~> 2.7.2'
   gem 'simplecov', '~> 0.16.1'
