@@ -80,8 +80,9 @@ Or install it yourself as:
     * [2.6.1 choices](#261-choices)
     * [2.6.1.1 :disabled](#2611-disabled)
     * [2.6.2 select](#262-select)
-      * [2.6.2.1 :disabled](#2621-disabled)
-      * [2.6.2.2 :filter](#2622-filter)
+      * [2.6.2.1 :per_page](#2621-per_page)
+      * [2.6.2.2 :disabled](#2622-disabled)
+      * [2.6.2.3 :filter](#2623-filter)
     * [2.6.3 multi_select](#263-multi_select)
       * [2.6.3.1 :disabled](#2631-disabled)
       * [2.6.3.2 :echo](#2632-echo)
@@ -684,6 +685,8 @@ prompt.select("Choose your destiny?", choices, help: "(Bash keyboard)", marker: 
 #   Jax
 ```
 
+#### 2.6.1.1 `:per_page`
+
 By default the menu is paginated if selection grows beyond `6` items. To change this setting use `:per_page` configuration.
 
 ```ruby
@@ -708,7 +711,7 @@ prompt.select("Choose your letter?") do |menu|
 end
 ```
 
-#### 2.6.2.1 `:disabled`
+#### 2.6.2.2 `:disabled`
 
 To disable menu choice, use the `:disabled` key with a value that explains the reason for the choice being unavailable. For example, out of all warriors, the Goro is currently injured:
 
@@ -737,7 +740,7 @@ prompt.select('Choose your destiny?', warriors)
 #   Raiden
 ```
 
-#### 2.6.2.2 `:filter`
+#### 2.6.2.3 `:filter`
 
 To activate dynamic list searching on letter/number key presses use `:filter` option:
 
