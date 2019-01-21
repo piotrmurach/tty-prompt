@@ -59,6 +59,7 @@ module TTY
         @paginator    = Paginator.new
         @block_paginator = BlockPaginator.new
         @by_page      = false
+        @paging_changed = false
       end
 
       # Set marker
@@ -82,6 +83,23 @@ module TTY
       # @api private
       def paginator
         @by_page ? @block_paginator : @paginator
+      end
+
+      # Synchronize paginators start positions
+      #
+      # @api private
+      def sync_paginators
+        if @by_page
+          if @paginator.start_index
+            @block_paginator.reset!
+            @block_paginator.start_index = @paginator.start_index
+          end
+        else
+          if @block_paginator.start_index
+            @paginator.reset!
+            @paginator.start_index = @block_paginator.start_index
+          end
+        end
       end
 
       # Set number of items per page
@@ -235,6 +253,8 @@ module TTY
 
           @active = prev_active if prev_active
         end
+
+        @paging_changed = @by_page
         @by_page = false
       end
 
@@ -250,6 +270,7 @@ module TTY
 
           @active = next_active if next_active
         end
+        @paging_changed = @by_page
         @by_page = false
       end
       alias keytab keydown
@@ -271,6 +292,7 @@ module TTY
             @active = current.zero? ? page_size : current
           end
         end
+        @paging_changed = !@by_page
         @by_page = true
       end
       alias keypage_down keyright
@@ -281,6 +303,7 @@ module TTY
         elsif @cycle
           @active = @choices.size
         end
+        @paging_changed = !@by_page
         @by_page = true
       end
       alias keypage_up keyleft
@@ -464,6 +487,7 @@ module TTY
       def render_menu
         output = []
 
+        sync_paginators if @paging_changed
         paginator.paginate(choices, @active, @per_page) do |choice, index|
           num = enumerate? ? (index + 1).to_s + @enum + ' ' : ''
           message = if index + 1 == @active && !choice.disabled?

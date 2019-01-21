@@ -510,6 +510,77 @@ RSpec.describe TTY::Prompt, '#select' do
 
       expect(prompt.output.string).to eq(expected_output)
     end
+
+    it "combines up/down navigation with left/right" do
+      prompt = TTY::TestPrompt.new
+      choices = ('1'..'11').to_a
+      prompt.on(:keypress) { |e|
+        prompt.trigger(:keyup)    if e.value == "k"
+        prompt.trigger(:keydown)  if e.value == "j"
+        prompt.trigger(:keyright) if e.value == "l"
+        prompt.trigger(:keyleft)  if e.value == "h"
+      }
+      prompt.input << "j" << "l" << "k" << "k" << "h" << "\r"
+      prompt.input.rewind
+
+      answer = prompt.select("What number?", choices, default: 2, per_page: 4)
+
+      expect(answer).to eq('1')
+
+      expected_output = [
+        "\e[?25lWhat number? \e[90m(Use arrow keys, press Enter to select)\e[0m\n",
+        "  1\n",
+        "\e[32m#{symbols[:pointer]} 2\e[0m\n",
+        "  3\n",
+        "  4\n",
+        "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
+        "\e[2K\e[1G\e[1A" * 5,
+        "\e[2K\e[1G",
+        "What number? \n",
+        "  1\n",
+        "  2\n",
+        "\e[32m#{symbols[:pointer]} 3\e[0m\n",
+        "  4\n",
+        "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
+        "\e[2K\e[1G\e[1A" * 5,
+        "\e[2K\e[1G",
+        "What number? \n",
+        "  5\n",
+        "  6\n",
+        "\e[32m#{symbols[:pointer]} 7\e[0m\n",
+        "  8\n",
+        "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
+        "\e[2K\e[1G\e[1A" * 5,
+        "\e[2K\e[1G",
+        "What number? \n",
+        "  5\n",
+        "\e[32m#{symbols[:pointer]} 6\e[0m\n",
+        "  7\n",
+        "  8\n",
+        "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
+        "\e[2K\e[1G\e[1A" * 5,
+        "\e[2K\e[1G",
+        "What number? \n",
+        "\e[32m#{symbols[:pointer]} 5\e[0m\n",
+        "  6\n",
+        "  7\n",
+        "  8\n",
+        "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
+        "\e[2K\e[1G\e[1A" * 5,
+        "\e[2K\e[1G",
+        "What number? \n",
+        "\e[32m#{symbols[:pointer]} 1\e[0m\n",
+        "  2\n",
+        "  3\n",
+        "  4\n",
+        "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
+        "\e[2K\e[1G\e[1A" * 5,
+        "\e[2K\e[1G",
+        "What number? \e[32m1\e[0m\n\e[?25h",
+      ].join
+
+      expect(prompt.output.string).to eq(expected_output)
+    end
   end
 
   context 'with :cycle option' do
