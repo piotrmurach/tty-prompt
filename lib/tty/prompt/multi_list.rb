@@ -96,6 +96,7 @@ module TTY
       def render_menu
         output = []
 
+        sync_paginators if @paging_changed
         paginator.paginate(choices, @active, @per_page) do |choice, index|
           num = enumerate? ? (index + 1).to_s + @enum + ' ' : ''
           indicator = (index + 1 == @active) ?  @marker : ' '
