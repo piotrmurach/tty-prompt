@@ -10,6 +10,7 @@ RSpec.describe TTY::Prompt, '#select' do
     raise ":init requires :hint" if options[:init] && options[:hint].nil?
     hint = options[:hint]
     init = options.fetch(:init, false)
+    nav  = options.fetch(:nav, false)
     enum = options[:enum]
 
     out = []
@@ -29,6 +30,10 @@ RSpec.describe TTY::Prompt, '#select' do
         "  #{num}#{name}"
       end
     end.join("\n")
+    if nav
+      out << "\n\e[90m(Move up/down or left/right to reveal more choices)\e[0m"
+      out << "\e[2K\e[1G\e[1A"
+    end
     out << "\e[2K\e[1G\e[1A" * choices.count
     out << "\e[2K\e[1G"
     out << "\e[1A\e[2K\e[1G" if choices.empty?
@@ -376,38 +381,11 @@ RSpec.describe TTY::Prompt, '#select' do
       expect(answer).to eq('9')
 
       expected_output = [
-        "\e[?25lWhat number? \e[90m(Use arrow keys, press Enter to select)\e[0m\n",
-        "\e[32m#{symbols[:pointer]} 1\e[0m\n",
-        "  2\n",
-        "  3\n",
-        "  4\n",
-        "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
-        "\e[2K\e[1G\e[1A" * 5,
-        "\e[2K\e[1G",
-        "What number? \n",
-        "\e[32m#{symbols[:pointer]} 5\e[0m\n",
-        "  6\n",
-        "  7\n",
-        "  8\n",
-        "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
-        "\e[2K\e[1G\e[1A" * 5,
-        "\e[2K\e[1G",
-        "What number? \n",
-        "\e[32m#{symbols[:pointer]} 9\e[0m\n",
-        "  10\n",
-        "  11\n",
-        "  12\n",
-        "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
-        "\e[2K\e[1G\e[1A" * 5,
-        "\e[2K\e[1G",
-        "What number? \n",
-        "\e[32m#{symbols[:pointer]} 9\e[0m\n",
-        "  10\n",
-        "  11\n",
-        "  12\n",
-        "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
-        "\e[2K\e[1G\e[1A" * 5,
-        "\e[2K\e[1G",
+        output_helper('What number?', choices[0..3], "1", init: true,
+                      hint: 'Use arrow keys, press Enter to select', nav: true),
+        output_helper('What number?', choices[4..7], "5", nav: true),
+        output_helper('What number?', choices[8..11], "9", nav: true),
+        output_helper('What number?', choices[8..11], "9", nav: true),
         "What number? \e[32m9\e[0m\n\e[?25h",
       ].join
 
@@ -426,34 +404,11 @@ RSpec.describe TTY::Prompt, '#select' do
       expect(answer).to eq('10')
 
       expected_output = [
-        "\e[?25lWhat number? \e[90m(Use arrow keys, press Enter to select)\e[0m\n",
-        "  1\n",
-        "  2\n",
-        "  3\n",
-        "\e[32m#{symbols[:pointer]} 4\e[0m\n",
-        "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
-        "\e[2K\e[1G\e[1A" * 5,
-        "\e[2K\e[1G",
-        "What number? \n",
-        "  5\n",
-        "  6\n",
-        "  7\n",
-        "\e[32m#{symbols[:pointer]} 8\e[0m\n",
-        "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
-        "\e[2K\e[1G\e[1A" * 5,
-        "\e[2K\e[1G",
-        "What number? \n",
-        "  9\n",
-        "\e[32m#{symbols[:pointer]} 10\e[0m\n",
-        "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
-        "\e[2K\e[1G\e[1A" * 3,
-        "\e[2K\e[1G",
-        "What number? \n",
-        "  9\n",
-        "\e[32m#{symbols[:pointer]} 10\e[0m\n",
-        "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
-        "\e[2K\e[1G\e[1A" * 3,
-        "\e[2K\e[1G",
+        output_helper('What number?', choices[0..3], "4", init: true,
+                      hint: 'Use arrow keys, press Enter to select', nav: true),
+        output_helper('What number?', choices[4..7], "8", nav: true),
+        output_helper('What number?', choices[8..9], "10", nav: true),
+        output_helper('What number?', choices[8..9], "10", nav: true),
         "What number? \e[32m10\e[0m\n\e[?25h",
       ].join
 
@@ -475,36 +430,11 @@ RSpec.describe TTY::Prompt, '#select' do
       expect(answer).to eq('6')
 
       expected_output = [
-        "\e[?25lWhat number? \e[90m(Use arrow keys, press Enter to select)\e[0m\n",
-        "  1\n",
-        "\e[32m#{symbols[:pointer]} 2\e[0m\n",
-        "  3\n",
-        "  4\n",
-        "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
-        "\e[2K\e[1G\e[1A" * 5,
-        "\e[2K\e[1G",
-        "What number? \n",
-        "  5\n",
-        "\e[32m#{symbols[:pointer]} 6\e[0m\n",
-        "  7\n",
-        "  8\n",
-        "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
-        "\e[2K\e[1G\e[1A" * 5,
-        "\e[2K\e[1G",
-        "What number? \n",
-        "  9\n",
-        "\e[32m#{symbols[:pointer]} 10\e[0m\n",
-        "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
-        "\e[2K\e[1G\e[1A" * 3,
-        "\e[2K\e[1G",
-        "What number? \n",
-        "  5\n",
-        "\e[32m#{symbols[:pointer]} 6\e[0m\n",
-        "  7\n",
-        "  8\n",
-        "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
-        "\e[2K\e[1G\e[1A" * 5,
-        "\e[2K\e[1G",
+        output_helper('What number?', choices[0..3], "2", init: true,
+                      hint: 'Use arrow keys, press Enter to select', nav: true),
+        output_helper('What number?', choices[4..7], "6", nav: true),
+        output_helper('What number?', choices[8..9], "10", nav: true),
+        output_helper('What number?', choices[4..7], "6", nav: true),
         "What number? \e[32m6\e[0m\n\e[?25h",
       ].join
 
@@ -528,55 +458,14 @@ RSpec.describe TTY::Prompt, '#select' do
       expect(answer).to eq('1')
 
       expected_output = [
-        "\e[?25lWhat number? \e[90m(Use arrow keys, press Enter to select)\e[0m\n",
-        "  1\n",
-        "\e[32m#{symbols[:pointer]} 2\e[0m\n",
-        "  3\n",
-        "  4\n",
-        "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
-        "\e[2K\e[1G\e[1A" * 5,
-        "\e[2K\e[1G",
-        "What number? \n",
-        "  1\n",
-        "  2\n",
-        "\e[32m#{symbols[:pointer]} 3\e[0m\n",
-        "  4\n",
-        "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
-        "\e[2K\e[1G\e[1A" * 5,
-        "\e[2K\e[1G",
-        "What number? \n",
-        "  5\n",
-        "  6\n",
-        "\e[32m#{symbols[:pointer]} 7\e[0m\n",
-        "  8\n",
-        "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
-        "\e[2K\e[1G\e[1A" * 5,
-        "\e[2K\e[1G",
-        "What number? \n",
-        "  5\n",
-        "\e[32m#{symbols[:pointer]} 6\e[0m\n",
-        "  7\n",
-        "  8\n",
-        "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
-        "\e[2K\e[1G\e[1A" * 5,
-        "\e[2K\e[1G",
-        "What number? \n",
-        "\e[32m#{symbols[:pointer]} 5\e[0m\n",
-        "  6\n",
-        "  7\n",
-        "  8\n",
-        "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
-        "\e[2K\e[1G\e[1A" * 5,
-        "\e[2K\e[1G",
-        "What number? \n",
-        "\e[32m#{symbols[:pointer]} 1\e[0m\n",
-        "  2\n",
-        "  3\n",
-        "  4\n",
-        "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
-        "\e[2K\e[1G\e[1A" * 5,
-        "\e[2K\e[1G",
-        "What number? \e[32m1\e[0m\n\e[?25h",
+        output_helper('What number?', choices[0..3], "2", init: true,
+                      hint: 'Use arrow keys, press Enter to select', nav: true),
+        output_helper('What number?', choices[0..3], "3", nav: true),
+        output_helper('What number?', choices[4..7], "7", nav: true),
+        output_helper('What number?', choices[4..7], "6", nav: true),
+        output_helper('What number?', choices[4..7], "5", nav: true),
+        output_helper('What number?', choices[0..3], "1", nav: true),
+        "What number? \e[32m1\e[0m\n\e[?25h"
       ].join
 
       expect(prompt.output.string).to eq(expected_output)
