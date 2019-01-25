@@ -37,7 +37,7 @@ module TTY
       #   the delimiter for the item index
       #
       # @api public
-      def initialize(prompt, options = {})
+      def initialize(prompt, **options)
         check_options_consistency(options)
 
         @prompt       = prompt

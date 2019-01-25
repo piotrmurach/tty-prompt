@@ -409,7 +409,7 @@ RSpec.describe TTY::Prompt do
       expect(answer).to eq(['4', '10'])
 
       expected_output = [
-        output_helper("What number?", choices[0..3], "4", ["4"], init: true, nav: true,
+        output_helper("What number?", choices[3..6], "4", ["4"], init: true, nav: true,
           hint: "Use arrow keys, press Space to select and Enter to finish"),
         output_helper("What number?", choices[4..7], "8", ["4"], nav: true),
         output_helper("What number?", choices[8..9], "10", ["4"], nav: true),
@@ -470,7 +470,7 @@ RSpec.describe TTY::Prompt do
         output_helper("What number?", choices[0..3], "3", ["2"], nav: true),
         output_helper("What number?", choices[4..7], "7", ["2"], nav: true),
         output_helper("What number?", choices[4..7], "6", ["2"], nav: true),
-        output_helper("What number?", choices[4..7], "5", ["2"], nav: true),
+        output_helper("What number?", choices[3..6], "5", ["2"], nav: true),
         output_helper("What number?", choices[0..3], "1", ["2"], nav: true),
         output_helper("What number?", choices[0..3], "1", ["2", "1"], nav: true),
         "What number? \e[32m2, 1\e[0m\n\e[?25h",
