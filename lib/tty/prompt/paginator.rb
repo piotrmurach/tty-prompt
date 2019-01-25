@@ -69,13 +69,15 @@ module TTY
           end
         end
 
+        step = (current_index - @last_index).abs
         if current_index > @last_index # going up
-          if current_index > @end_index && current_index < list.size - 1
-            @start_index += 1
+          if current_index >= @end_index && current_index < list.size - 1
+            last_page = list.size - @per_page
+            @start_index = [@start_index + step, last_page].min
           end
         elsif current_index < @last_index # going down
-          if current_index < @start_index && current_index > 0
-            @start_index -= 1
+          if current_index <= @start_index && current_index > 0
+            @start_index = [@start_index - step, 0].max
           end
         end
 

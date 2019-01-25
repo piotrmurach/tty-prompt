@@ -23,9 +23,9 @@ RSpec.describe TTY::Prompt::Paginator, '#paginate' do
 
     expect(paginator.paginate(list, 1).to_a).to eq([['a',0], ['b',1], ['c',2]])
     expect(paginator.paginate(list, 2).to_a).to eq([['a',0], ['b',1], ['c',2]])
-    expect(paginator.paginate(list, 3).to_a).to eq([['a',0], ['b',1], ['c',2]])
-    expect(paginator.paginate(list, 4).to_a).to eq([['b',1], ['c',2], ['d',3]])
-    expect(paginator.paginate(list, 5).to_a).to eq([['c',2], ['d',3], ['e',4]])
+    expect(paginator.paginate(list, 3).to_a).to eq([['b',1], ['c',2], ['d',3]])
+    expect(paginator.paginate(list, 4).to_a).to eq([['c',2], ['d',3], ['e',4]])
+    expect(paginator.paginate(list, 5).to_a).to eq([['d',3], ['e',4], ['f',5]])
     expect(paginator.paginate(list, 6).to_a).to eq([['d',3], ['e',4], ['f',5]])
     expect(paginator.paginate(list, 7).to_a).to eq([['d',3], ['e',4], ['f',5]])
   end
@@ -36,10 +36,10 @@ RSpec.describe TTY::Prompt::Paginator, '#paginate' do
 
     expect(paginator.paginate(list, 1).to_a).to eq([['a',0], ['b',1], ['c',2]])
     expect(paginator.paginate(list, 2).to_a).to eq([['a',0], ['b',1], ['c',2]])
-    expect(paginator.paginate(list, 3).to_a).to eq([['a',0], ['b',1], ['c',2]])
-    expect(paginator.paginate(list, 4).to_a).to eq([['b',1], ['c',2], ['d',3]])
-    expect(paginator.paginate(list, 5).to_a).to eq([['c',2], ['d',3], ['e',4]])
-    expect(paginator.paginate(list, 6).to_a).to eq([['d',3], ['e',4], ['f',5]])
+    expect(paginator.paginate(list, 3).to_a).to eq([['b',1], ['c',2], ['d',3]])
+    expect(paginator.paginate(list, 4).to_a).to eq([['c',2], ['d',3], ['e',4]])
+    expect(paginator.paginate(list, 5).to_a).to eq([['d',3], ['e',4], ['f',5]])
+    expect(paginator.paginate(list, 6).to_a).to eq([['e',4], ['f',5], ['g',6]])
     expect(paginator.paginate(list, 7).to_a).to eq([['e',4], ['f',5], ['g',6]])
     expect(paginator.paginate(list, 8).to_a).to eq([['e',4], ['f',5], ['g',6]])
   end
@@ -53,16 +53,16 @@ RSpec.describe TTY::Prompt::Paginator, '#paginate' do
     expect(paginator.end_index).to eq(2)
 
     paginator.paginate(list, 3)
-    expect(paginator.start_index).to eq(0)
-    expect(paginator.end_index).to eq(2)
-
-    paginator.paginate(list, 4)
     expect(paginator.start_index).to eq(1)
     expect(paginator.end_index).to eq(3)
 
-    paginator.paginate(list, 5)
+    paginator.paginate(list, 4)
     expect(paginator.start_index).to eq(2)
     expect(paginator.end_index).to eq(4)
+
+    paginator.paginate(list, 5)
+    expect(paginator.start_index).to eq(3)
+    expect(paginator.end_index).to eq(5)
 
     paginator.paginate(list, 7)
     expect(paginator.start_index).to eq(4)
