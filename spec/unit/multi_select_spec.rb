@@ -7,12 +7,14 @@ RSpec.describe TTY::Prompt do
     raise ":init requires :hint" if options[:init] && options[:hint].nil?
     hint = options[:hint]
     init = options.fetch(:init, false)
+    nav  = options.fetch(:nav, false)
     enum = options[:enum]
 
     out = []
     out << "\e[?25l" if init
     out << prompt << " "
     out << selected.join(', ')
+    out << " " if init && !selected.empty?
     out << "\e[90m" if init
     out << (init ? "(#{hint})\e[0m" : " (#{hint})") if hint
     out << "\n"
@@ -31,6 +33,10 @@ RSpec.describe TTY::Prompt do
                 end
       prefix
     end.join("\n")
+    if nav
+      out << "\n\e[90m(Move up/down or left/right to reveal more choices)\e[0m"
+      out << "\e[2K\e[1G\e[1A"
+    end
     out << "\e[2K\e[1G\e[1A" * choices.count
     out << "\e[2K\e[1G"
     out.join
@@ -379,46 +385,12 @@ RSpec.describe TTY::Prompt do
       expect(answer).to eq(["9"])
 
       expected_output = [
-        "\e[?25lWhat number? \e[90m(Use arrow keys, press Space to select and Enter to finish)\e[0m\n",
-        "#{symbols[:pointer]} #{symbols[:radio_off]} 1\n",
-        "  #{symbols[:radio_off]} 2\n",
-        "  #{symbols[:radio_off]} 3\n",
-        "  #{symbols[:radio_off]} 4\n",
-        "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
-        "\e[2K\e[1G\e[1A" * 5,
-        "\e[2K\e[1G",
-        "What number? \n",
-        "#{symbols[:pointer]} #{symbols[:radio_off]} 5\n",
-        "  #{symbols[:radio_off]} 6\n",
-        "  #{symbols[:radio_off]} 7\n",
-        "  #{symbols[:radio_off]} 8\n",
-        "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
-        "\e[2K\e[1G\e[1A" * 5,
-        "\e[2K\e[1G",
-        "What number? \n",
-        "#{symbols[:pointer]} #{symbols[:radio_off]} 9\n",
-        "  #{symbols[:radio_off]} 10\n",
-        "  #{symbols[:radio_off]} 11\n",
-        "  #{symbols[:radio_off]} 12\n",
-        "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
-        "\e[2K\e[1G\e[1A" * 5,
-        "\e[2K\e[1G",
-        "What number? \n",
-        "#{symbols[:pointer]} #{symbols[:radio_off]} 9\n",
-        "  #{symbols[:radio_off]} 10\n",
-        "  #{symbols[:radio_off]} 11\n",
-        "  #{symbols[:radio_off]} 12\n",
-        "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
-        "\e[2K\e[1G\e[1A" * 5,
-        "\e[2K\e[1G",
-        "What number? 9\n",
-        "#{symbols[:pointer]} \e[32m#{symbols[:radio_on]}\e[0m 9\n",
-        "  #{symbols[:radio_off]} 10\n",
-        "  #{symbols[:radio_off]} 11\n",
-        "  #{symbols[:radio_off]} 12\n",
-        "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
-        "\e[2K\e[1G\e[1A" * 5,
-        "\e[2K\e[1G",
+        output_helper("What number?", choices[0..3], "1", [], init: true, nav: true,
+          hint: "Use arrow keys, press Space to select and Enter to finish"),
+        output_helper("What number?", choices[4..7], "5", [], nav: true),
+        output_helper("What number?", choices[8..11], "9", [], nav: true),
+        output_helper("What number?", choices[8..11], "9", [], nav: true),
+        output_helper("What number?", choices[8..11], "9", ["9"], nav: true),
         "What number? \e[32m9\e[0m\n\e[?25h",
       ].join
 
@@ -437,40 +409,12 @@ RSpec.describe TTY::Prompt do
       expect(answer).to eq(['4', '10'])
 
       expected_output = [
-        "\e[?25lWhat number? 4 \e[90m(Use arrow keys, press Space to select and Enter to finish)\e[0m\n",
-        "  #{symbols[:radio_off]} 1\n",
-        "  #{symbols[:radio_off]} 2\n",
-        "  #{symbols[:radio_off]} 3\n",
-        "#{symbols[:pointer]} \e[32m#{symbols[:radio_on]}\e[0m 4\n",
-        "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
-        "\e[2K\e[1G\e[1A" * 5,
-        "\e[2K\e[1G",
-        "What number? 4\n",
-        "  #{symbols[:radio_off]} 5\n",
-        "  #{symbols[:radio_off]} 6\n",
-        "  #{symbols[:radio_off]} 7\n",
-        "#{symbols[:pointer]} #{symbols[:radio_off]} 8\n",
-        "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
-        "\e[2K\e[1G\e[1A" * 5,
-        "\e[2K\e[1G",
-        "What number? 4\n",
-        "  #{symbols[:radio_off]} 9\n",
-        "#{symbols[:pointer]} #{symbols[:radio_off]} 10\n",
-        "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
-        "\e[2K\e[1G\e[1A" * 3,
-        "\e[2K\e[1G",
-        "What number? 4\n",
-        "  #{symbols[:radio_off]} 9\n",
-        "#{symbols[:pointer]} #{symbols[:radio_off]} 10\n",
-        "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
-        "\e[2K\e[1G\e[1A" * 3,
-        "\e[2K\e[1G",
-        "What number? 4, 10\n",
-        "  #{symbols[:radio_off]} 9\n",
-        "#{symbols[:pointer]} \e[32m#{symbols[:radio_on]}\e[0m 10\n",
-        "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
-        "\e[2K\e[1G\e[1A" * 3,
-        "\e[2K\e[1G",
+        output_helper("What number?", choices[0..3], "4", ["4"], init: true, nav: true,
+          hint: "Use arrow keys, press Space to select and Enter to finish"),
+        output_helper("What number?", choices[4..7], "8", ["4"], nav: true),
+        output_helper("What number?", choices[8..9], "10", ["4"], nav: true),
+        output_helper("What number?", choices[8..9], "10", ["4"], nav: true),
+        output_helper("What number?", choices[8..9], "10", ["4", "10"], nav: true),
         "What number? \e[32m4, 10\e[0m\n\e[?25h",
       ].join
 
@@ -492,44 +436,12 @@ RSpec.describe TTY::Prompt do
       expect(answer).to eq(['2', '6'])
 
       expected_output = [
-        "\e[?25lWhat number? 2 \e[90m(Use arrow keys, press Space to select and Enter to finish)\e[0m\n",
-        "  #{symbols[:radio_off]} 1\n",
-        "#{symbols[:pointer]} \e[32m#{symbols[:radio_on]}\e[0m 2\n",
-        "  #{symbols[:radio_off]} 3\n",
-        "  #{symbols[:radio_off]} 4\n",
-        "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
-        "\e[2K\e[1G\e[1A" * 5,
-        "\e[2K\e[1G",
-        "What number? 2\n",
-        "  #{symbols[:radio_off]} 5\n",
-        "#{symbols[:pointer]} #{symbols[:radio_off]} 6\n",
-        "  #{symbols[:radio_off]} 7\n",
-        "  #{symbols[:radio_off]} 8\n",
-        "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
-        "\e[2K\e[1G\e[1A" * 5,
-        "\e[2K\e[1G",
-        "What number? 2\n",
-        "  #{symbols[:radio_off]} 9\n",
-        "#{symbols[:pointer]} #{symbols[:radio_off]} 10\n",
-        "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
-        "\e[2K\e[1G\e[1A" * 3,
-        "\e[2K\e[1G",
-        "What number? 2\n",
-        "  #{symbols[:radio_off]} 5\n",
-        "#{symbols[:pointer]} #{symbols[:radio_off]} 6\n",
-        "  #{symbols[:radio_off]} 7\n",
-        "  #{symbols[:radio_off]} 8\n",
-        "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
-        "\e[2K\e[1G\e[1A" * 5,
-        "\e[2K\e[1G",
-        "What number? 2, 6\n",
-        "  #{symbols[:radio_off]} 5\n",
-        "#{symbols[:pointer]} \e[32m#{symbols[:radio_on]}\e[0m 6\n",
-        "  #{symbols[:radio_off]} 7\n",
-        "  #{symbols[:radio_off]} 8\n",
-        "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
-        "\e[2K\e[1G\e[1A" * 5,
-        "\e[2K\e[1G",
+        output_helper("What number?", choices[0..3], "2", ["2"], init: true, nav: true,
+          hint: "Use arrow keys, press Space to select and Enter to finish"),
+        output_helper("What number?", choices[4..7], "6", ["2"], nav: true),
+        output_helper("What number?", choices[8..9], "10", ["2"], nav: true),
+        output_helper("What number?", choices[4..7], "6", ["2"], nav: true),
+        output_helper("What number?", choices[4..7], "6", ["2", "6"], nav: true),
         "What number? \e[32m2, 6\e[0m\n\e[?25h",
       ].join
 
@@ -553,62 +465,14 @@ RSpec.describe TTY::Prompt do
       expect(answer).to eq(['2', '1'])
 
       expected_output = [
-        "\e[?25lWhat number? 2 \e[90m(Use arrow keys, press Space to select and Enter to finish)\e[0m\n",
-        "  #{symbols[:radio_off]} 1\n",
-        "#{symbols[:pointer]} \e[32m#{symbols[:radio_on]}\e[0m 2\n",
-        "  #{symbols[:radio_off]} 3\n",
-        "  #{symbols[:radio_off]} 4\n",
-        "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
-        "\e[2K\e[1G\e[1A" * 5,
-        "\e[2K\e[1G",
-        "What number? 2\n",
-        "  #{symbols[:radio_off]} 1\n",
-        "  \e[32m#{symbols[:radio_on]}\e[0m 2\n",
-        "#{symbols[:pointer]} #{symbols[:radio_off]} 3\n",
-        "  #{symbols[:radio_off]} 4\n",
-        "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
-        "\e[2K\e[1G\e[1A" * 5,
-        "\e[2K\e[1G",
-        "What number? 2\n",
-        "  #{symbols[:radio_off]} 5\n",
-        "  #{symbols[:radio_off]} 6\n",
-        "#{symbols[:pointer]} #{symbols[:radio_off]} 7\n",
-        "  #{symbols[:radio_off]} 8\n",
-        "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
-        "\e[2K\e[1G\e[1A" * 5,
-        "\e[2K\e[1G",
-        "What number? 2\n",
-        "  #{symbols[:radio_off]} 5\n",
-        "#{symbols[:pointer]} #{symbols[:radio_off]} 6\n",
-        "  #{symbols[:radio_off]} 7\n",
-        "  #{symbols[:radio_off]} 8\n",
-        "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
-        "\e[2K\e[1G\e[1A" * 5,
-        "\e[2K\e[1G",
-        "What number? 2\n",
-        "#{symbols[:pointer]} #{symbols[:radio_off]} 5\n",
-        "  #{symbols[:radio_off]} 6\n",
-        "  #{symbols[:radio_off]} 7\n",
-        "  #{symbols[:radio_off]} 8\n",
-        "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
-        "\e[2K\e[1G\e[1A" * 5,
-        "\e[2K\e[1G",
-        "What number? 2\n",
-        "#{symbols[:pointer]} #{symbols[:radio_off]} 1\n",
-        "  \e[32m#{symbols[:radio_on]}\e[0m 2\n",
-        "  #{symbols[:radio_off]} 3\n",
-        "  #{symbols[:radio_off]} 4\n",
-        "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
-        "\e[2K\e[1G\e[1A" * 5,
-        "\e[2K\e[1G",
-        "What number? 2, 1\n",
-        "#{symbols[:pointer]} \e[32m#{symbols[:radio_on]}\e[0m 1\n",
-        "  \e[32m#{symbols[:radio_on]}\e[0m 2\n",
-        "  #{symbols[:radio_off]} 3\n",
-        "  #{symbols[:radio_off]} 4\n",
-        "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
-        "\e[2K\e[1G\e[1A" * 5,
-        "\e[2K\e[1G",
+        output_helper("What number?", choices[0..3], "2", ["2"], init: true, nav: true,
+          hint: "Use arrow keys, press Space to select and Enter to finish"),
+        output_helper("What number?", choices[0..3], "3", ["2"], nav: true),
+        output_helper("What number?", choices[4..7], "7", ["2"], nav: true),
+        output_helper("What number?", choices[4..7], "6", ["2"], nav: true),
+        output_helper("What number?", choices[4..7], "5", ["2"], nav: true),
+        output_helper("What number?", choices[0..3], "1", ["2"], nav: true),
+        output_helper("What number?", choices[0..3], "1", ["2", "1"], nav: true),
         "What number? \e[32m2, 1\e[0m\n\e[?25h",
       ].join
 
