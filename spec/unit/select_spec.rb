@@ -470,6 +470,45 @@ RSpec.describe TTY::Prompt, '#select' do
 
       expect(prompt.output.string).to eq(expected_output)
     end
+
+    it "navigates pages up/down with disabled items" do
+      prompt = TTY::TestPrompt.new
+      prompt.on(:keypress) { |e|
+        prompt.trigger(:keyup)    if e.value == "k"
+        prompt.trigger(:keydown)  if e.value == "j"
+      }
+      choices = [
+        '1',
+        {name: '2', disabled: 'out'},
+        '3',
+        {name: '4', disabled: 'out'},
+        '5',
+        {name: '6', disabled: 'out'},
+        {name: '7', disabled: 'out'},
+        '8',
+        '9',
+        {name: '10', disabled: 'out'},
+      ]
+
+      prompt.input << "j" << "j" << "j" << "j" << "\r"
+      prompt.input.rewind
+
+      answer = prompt.select("What number?", choices, per_page: 4)
+
+      expect(answer).to eq('9')
+
+      expected_output = [
+        output_helper('What number?', choices[0..3], "1", init: true,
+                      hint: 'Use arrow keys, press Enter to select', nav: true),
+        output_helper('What number?', choices[0..3], "3", nav: true),
+        output_helper('What number?', choices[2..5], "5", nav: true),
+        output_helper('What number?', choices[5..8], "8", nav: true),
+        output_helper('What number?', choices[6..9], "9", nav: true),
+        "What number? \e[32m9\e[0m\n\e[?25h"
+      ].join('')
+
+      expect(prompt.output.string).to eq(expected_output)
+    end
   end
 
   context 'with :cycle option' do
