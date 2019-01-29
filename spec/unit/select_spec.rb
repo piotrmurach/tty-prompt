@@ -522,12 +522,14 @@ RSpec.describe TTY::Prompt, '#select' do
       value = prompt.select("What letter?", choices)
 
       expect(value).to eq("C")
-      expected_output =
-        output_helper("What letter?", choices, "A", init: true, hint: "Use arrow keys, press Enter to select") +
-        output_helper("What letter?", choices, "B") +
-        output_helper("What letter?", choices, "C") +
-        output_helper("What letter?", choices, "C") +
+      expected_output = [
+        output_helper("What letter?", choices, "A", init: true,
+                      hint: "Use arrow keys, press Enter to select"),
+        output_helper("What letter?", choices, "B"),
+        output_helper("What letter?", choices, "C"),
+        output_helper("What letter?", choices, "C"),
         "What letter? \e[32mC\e[0m\n\e[?25h"
+      ].join
       expect(prompt.output.string).to eq(expected_output)
     end
 
@@ -541,12 +543,14 @@ RSpec.describe TTY::Prompt, '#select' do
       answer = prompt.select("What letter?", choices, cycle: true)
 
       expect(answer).to eq("A")
-      expected_output =
-        output_helper("What letter?", choices, "A", init: true, hint: "Use arrow keys, press Enter to select") +
-        output_helper("What letter?", choices, "B") +
-        output_helper("What letter?", choices, "C") +
-        output_helper("What letter?", choices, "A") +
+      expected_output = [
+        output_helper("What letter?", choices, "A", init: true,
+                      hint: "Use arrow keys, press Enter to select"),
+        output_helper("What letter?", choices, "B"),
+        output_helper("What letter?", choices, "C"),
+        output_helper("What letter?", choices, "A"),
         "What letter? \e[32mA\e[0m\n\e[?25h"
+      ].join
       expect(prompt.output.string).to eq(expected_output)
     end
 
@@ -591,42 +595,12 @@ RSpec.describe TTY::Prompt, '#select' do
       expect(answer).to eq('10')
 
       expected_output = [
-        "\e[?25lWhat number? \e[90m(Use arrow keys, press Enter to select)\e[0m\n",
-        "  1\n",
-        "\e[32m#{symbols[:pointer]} 2\e[0m\n",
-        "  3\n",
-        "  4\n",
-        "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
-        "\e[2K\e[1G\e[1A" * 5,
-        "\e[2K\e[1G",
-        "What number? \n",
-        "  5\n",
-        "\e[32m#{symbols[:pointer]} 6\e[0m\n",
-        "  7\n",
-        "  8\n",
-        "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
-        "\e[2K\e[1G\e[1A" * 5,
-        "\e[2K\e[1G",
-        "What number? \n",
-        "  9\n",
-        "\e[32m#{symbols[:pointer]} 10\e[0m\n",
-        "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
-        "\e[2K\e[1G\e[1A" * 3,
-        "\e[2K\e[1G",
-        "What number? \n",
-        "  1\n",
-        "\e[32m#{symbols[:pointer]} 2\e[0m\n",
-        "  3\n",
-        "  4\n",
-        "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
-        "\e[2K\e[1G\e[1A" * 5,
-        "\e[2K\e[1G",
-        "What number? \n",
-        "  9\n",
-        "\e[32m#{symbols[:pointer]} 10\e[0m\n",
-        "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
-        "\e[2K\e[1G\e[1A" * 3,
-        "\e[2K\e[1G",
+        output_helper('What number?', choices[0..3], "2", init: true,
+                      hint: 'Use arrow keys, press Enter to select', nav: true),
+        output_helper('What number?', choices[4..7], "6", nav: true),
+        output_helper('What number?', choices[8..9], "10", nav: true),
+        output_helper('What number?', choices[0..3], "2", nav: true),
+        output_helper('What number?', choices[8..9], "10", nav: true),
         "What number? \e[32m10\e[0m\n\e[?25h",
       ].join
 
