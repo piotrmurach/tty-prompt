@@ -282,16 +282,20 @@ module TTY
       # adjust it to the last item, otherwise leave unchanged.
       def keyright(*)
         if (@active + page_size) <= @choices.size
-          @active += page_size
+          searchable = ((@active + page_size)..choices.length)
+          @active = search_choice_in(searchable)
         elsif @active <= @choices.size # last page shorter
           current   = @active % page_size
           remaining = @choices.size % page_size
           if current.zero? || (remaining > 0 && current > remaining)
-            @active = @choices.size
+            searchable = @choices.size.downto(0).to_a
+            @active = search_choice_in(searchable)
           elsif @cycle
-            @active = current.zero? ? page_size : current
+            searchable = ((current.zero? ? page_size : current)..choices.length)
+            @active = search_choice_in(searchable)
           end
         end
+
         @paging_changed = !@by_page
         @by_page = true
       end
@@ -299,9 +303,11 @@ module TTY
 
       def keyleft(*)
         if (@active - page_size) > 0
-          @active -= page_size
+          searchable = ((@active - page_size)..choices.length)
+          @active = search_choice_in(searchable)
         elsif @cycle
-          @active = @choices.size
+          searchable = @choices.size.downto(1).to_a
+          @active = search_choice_in(searchable)
         end
         @paging_changed = !@by_page
         @by_page = true

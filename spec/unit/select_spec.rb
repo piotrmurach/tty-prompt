@@ -509,6 +509,47 @@ RSpec.describe TTY::Prompt, '#select' do
 
       expect(prompt.output.string).to eq(expected_output)
     end
+
+    it "navigates pages left/right with disabled items" do
+      prompt = TTY::TestPrompt.new
+      prompt.on(:keypress) { |e|
+        prompt.trigger(:keyright) if e.value == "l"
+        prompt.trigger(:keyleft)  if e.value == "h"
+      }
+      choices = [
+        {name: '1', disabled: 'out'},
+        '2',
+        {name: '3', disabled: 'out'},
+        '4',
+        '5',
+        {name: '6', disabled: 'out'},
+        '7',
+        '8',
+        '9',
+        {name: '10', disabled: 'out'}
+      ]
+
+      prompt.input << "l" << "l" << "l" << "h" << "h" << "h" << "\r"
+      prompt.input.rewind
+
+      answer = prompt.select("What number?", choices, per_page: 4)
+
+      expect(answer).to eq('2')
+
+      expected_output = [
+        output_helper('What number?', choices[0..3], "2", init: true,
+                      hint: 'Use arrow keys, press Enter to select', nav: true),
+        output_helper('What number?', choices[4..7], "7", nav: true),
+        output_helper('What number?', choices[8..9], "9", nav: true),
+        output_helper('What number?', choices[8..9], "9", nav: true),
+        output_helper('What number?', choices[4..7], "5", nav: true),
+        output_helper('What number?', choices[0..3], "2", nav: true),
+        output_helper('What number?', choices[0..3], "2", nav: true),
+        "What number? \e[32m2\e[0m\n\e[?25h"
+      ].join('')
+
+      expect(prompt.output.string).to eq(expected_output)
+    end
   end
 
   context 'with :cycle option' do
@@ -603,6 +644,47 @@ RSpec.describe TTY::Prompt, '#select' do
         output_helper('What number?', choices[8..9], "10", nav: true),
         "What number? \e[32m10\e[0m\n\e[?25h",
       ].join
+
+      expect(prompt.output.string).to eq(expected_output)
+    end
+
+    it "cycles pages left/right with disabled items" do
+      prompt = TTY::TestPrompt.new
+      prompt.on(:keypress) { |e|
+        prompt.trigger(:keyright) if e.value == "l"
+        prompt.trigger(:keyleft)  if e.value == "h"
+      }
+      choices = [
+        {name: '1', disabled: 'out'},
+        '2',
+        {name: '3', disabled: 'out'},
+        '4',
+        '5',
+        {name: '6', disabled: 'out'},
+        '7',
+        '8',
+        '9',
+        {name: '10', disabled: 'out'}
+      ]
+
+      prompt.input << "l" << "l" << "l" << "h" << "h" << "h" << "\r"
+      prompt.input.rewind
+
+      answer = prompt.select("What number?", choices, per_page: 4, cycle: true)
+
+      expect(answer).to eq('2')
+
+      expected_output = [
+        output_helper('What number?', choices[0..3], "2", init: true,
+                      hint: 'Use arrow keys, press Enter to select', nav: true),
+        output_helper('What number?', choices[4..7], "7", nav: true),
+        output_helper('What number?', choices[8..9], "9", nav: true),
+        output_helper('What number?', choices[0..3], "2", nav: true),
+        output_helper('What number?', choices[8..9], "9", nav: true),
+        output_helper('What number?', choices[4..7], "5", nav: true),
+        output_helper('What number?', choices[0..3], "2", nav: true),
+        "What number? \e[32m2\e[0m\n\e[?25h"
+      ].join('')
 
       expect(prompt.output.string).to eq(expected_output)
     end
