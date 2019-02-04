@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative 'symbols'
-
 module TTY
   # A class responsible for shell prompt interactions.
   class Prompt
@@ -9,8 +7,6 @@ module TTY
     #
     # @api public
     class Slider
-      include Symbols
-
       HELP = '(Use arrow keys, press Enter to select)'.freeze
 
       FORMAT = ':slider %d'.freeze
@@ -27,7 +23,7 @@ module TTY
       # @option options [String] :format The display format
       #
       # @api public
-      def initialize(prompt, options = {})
+      def initialize(prompt, **options)
         @prompt       = prompt
         @prefix       = options.fetch(:prefix) { @prompt.prefix }
         @min          = options.fetch(:min) { 0 }
@@ -37,8 +33,19 @@ module TTY
         @active_color = options.fetch(:active_color) { @prompt.active_color }
         @help_color   = options.fetch(:help_color) { @prompt.help_color }
         @format       = options.fetch(:format) { FORMAT }
+        @symbols      = @prompt.symbols.merge(options.fetch(:symbols, {}))
         @first_render = true
         @done         = false
+      end
+
+      # Change symbols used by this prompt
+      #
+      # @param [Hash] new_symbols
+      #   the new symbols to use
+      #
+      # @api public
+      def symbols(new_symbols)
+        @symbols.merge!(new_symbols)
       end
 
       # Setup initial active position
@@ -180,9 +187,9 @@ module TTY
       #
       # @api private
       def render_slider
-        slider = (symbols[:line] * @active) +
-                 @prompt.decorate(symbols[:handle], @active_color) +
-                 (symbols[:line] * (range.size - @active - 1))
+        slider = (@symbols[:line] * @active) +
+                 @prompt.decorate(@symbols[:handle], @active_color) +
+                 (@symbols[:line] * (range.size - @active - 1))
         value = " #{range[@active]}"
         @format.gsub(':slider', slider) % [value]
       end

@@ -19,6 +19,7 @@ require_relative 'prompt/question'
 require_relative 'prompt/slider'
 require_relative 'prompt/statement'
 require_relative 'prompt/suggestion'
+require_relative 'prompt/symbols'
 require_relative 'prompt/utils'
 require_relative 'prompt/version'
 
@@ -70,6 +71,16 @@ module TTY
     # @api private
     attr_reader :active_color, :help_color, :error_color, :enabled_color
 
+    # The collection of display symbols
+    #
+    # @example
+    #   prompt = TTY::Prompt.new(symbols: {pointer: '>'})
+    #
+    # @return [Hash]
+    #
+    # @api private
+    attr_reader :symbols
+
     def_delegators :@pastel, :decorate, :strip
 
     def_delegators :@cursor, :clear_lines, :clear_line,
@@ -112,6 +123,8 @@ module TTY
     #   handling of Ctrl+C key out of :signal, :exit, :noop
     # @option options [Boolean] :track_history
     #   disable line history tracking, true by default
+    # @option options [Hash] :symbols
+    #   the symbols displayed in prompts such as :pointer, :cross
     #
     # @api public
     def initialize(*args)
@@ -126,6 +139,7 @@ module TTY
       @error_color   = options.fetch(:error_color)  { :red }
       @interrupt     = options.fetch(:interrupt)    { :error }
       @track_history = options.fetch(:track_history) { true }
+      @symbols       = Symbols.symbols.merge(options.fetch(:symbols, {}))
 
       @cursor = TTY::Cursor
       @pastel = Pastel.new(@enabled_color.nil? ? {} : { enabled: @enabled_color })
