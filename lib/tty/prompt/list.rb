@@ -5,7 +5,6 @@ require 'English'
 require_relative 'choices'
 require_relative 'paginator'
 require_relative 'block_paginator'
-require_relative 'symbols'
 
 module TTY
   class Prompt
@@ -14,8 +13,6 @@ module TTY
     #
     # @api private
     class List
-      include Symbols
-
       HELP = '(Use arrow%s keys, press Enter to select%s)'
 
       PAGE_HELP = '(Move up/down or left/right to reveal more choices)'
@@ -47,9 +44,10 @@ module TTY
         @choices      = Choices.new
         @active_color = options.fetch(:active_color) { @prompt.active_color }
         @help_color   = options.fetch(:help_color) { @prompt.help_color }
-        @marker       = options.fetch(:marker) { symbols[:pointer] }
+        @marker       = options.fetch(:marker) { @prompt.symbols[:pointer] }
         @cycle        = options.fetch(:cycle) { false }
         @filterable   = options.fetch(:filter) { false }
+        @symbols      = @prompt.symbols.merge(options.fetch(:symbols, {}))
         @filter       = []
         @help         = options[:help]
         @first_render = true
@@ -60,6 +58,16 @@ module TTY
         @block_paginator = BlockPaginator.new
         @by_page      = false
         @paging_changed = false
+      end
+
+      # Change symbols used by this prompt
+      #
+      # @param [Hash] new_symbols
+      #   the new symbols to use
+      #
+      # @api public
+      def symbols(new_symbols)
+        @symbols.merge!(new_symbols)
       end
 
       # Set marker
@@ -497,10 +505,10 @@ module TTY
         paginator.paginate(choices, @active, @per_page) do |choice, index|
           num = enumerate? ? (index + 1).to_s + @enum + ' ' : ''
           message = if index + 1 == @active && !choice.disabled?
-                      selected = "#{@marker} #{num}#{choice.name}"
+                      selected = "#{@symbols[:pointer]} #{num}#{choice.name}"
                       @prompt.decorate(selected.to_s, @active_color)
                     elsif choice.disabled?
-                      @prompt.decorate(symbols[:cross], :red) +
+                      @prompt.decorate(@symbols[:cross], :red) +
                         " #{num}#{choice.name} #{choice.disabled}"
                     else
                       "  #{num}#{choice.name}"
