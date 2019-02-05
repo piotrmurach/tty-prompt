@@ -1,7 +1,6 @@
 ---
 language: ruby
 sudo: false
-cache: bundler
 before_install: "gem install bundler -v '< 2.0'"
 bundler_args: --without tools
 script: "bundle exec rake ci"
