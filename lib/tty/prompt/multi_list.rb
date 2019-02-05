@@ -17,7 +17,7 @@ module TTY
       # @param [Hash] options
       #
       # @api public
-      def initialize(prompt, options)
+      def initialize(prompt, **options)
         super
         @selected = []
         @help = options[:help]
@@ -99,16 +99,16 @@ module TTY
         sync_paginators if @paging_changed
         paginator.paginate(choices, @active, @per_page) do |choice, index|
           num = enumerate? ? (index + 1).to_s + @enum + ' ' : ''
-          indicator = (index + 1 == @active) ?  @marker : ' '
+          indicator = (index + 1 == @active) ?  @symbols[:pointer] : ' '
           indicator += ' '
           message = if @selected.include?(choice) && !choice.disabled?
-                      selected = @prompt.decorate(symbols[:radio_on], @active_color)
+                      selected = @prompt.decorate(@symbols[:radio_on], @active_color)
                       "#{selected} #{num}#{choice.name}"
                     elsif choice.disabled?
-                      @prompt.decorate(symbols[:cross], :red) +
+                      @prompt.decorate(@symbols[:cross], :red) +
                         " #{num}#{choice.name} #{choice.disabled}"
                     else
-                      "#{symbols[:radio_off]} #{num}#{choice.name}"
+                      "#{@symbols[:radio_off]} #{num}#{choice.name}"
                     end
           end_index = paginated? ? paginator.end_index : choices.size - 1
           newline = (index == end_index) ? '' : "\n"

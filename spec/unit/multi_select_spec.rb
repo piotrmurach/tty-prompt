@@ -147,6 +147,7 @@ RSpec.describe TTY::Prompt do
     prompt.input << " \r"
     prompt.input.rewind
     value = prompt.multi_select("Select drinks?") do |menu|
+              menu.symbols pointer: '>', radio_off: '-', radio_on: '='
               menu.enum ')'
 
               menu.choice :vodka, {score: 1}
@@ -157,18 +158,18 @@ RSpec.describe TTY::Prompt do
     expect(value).to eq([{score: 1}])
     expect(prompt.output.string).to eq([
       "\e[?25lSelect drinks? \e[90m(Use arrow or number (1-5) keys, press Space to select and Enter to finish)\e[0m\n",
-      "#{symbols[:pointer]} #{symbols[:radio_off]} 1) vodka\n",
-      "  #{symbols[:radio_off]} 2) beer\n",
-      "  #{symbols[:radio_off]} 3) wine\n",
-      "  #{symbols[:radio_off]} 4) whisky\n",
-      "  #{symbols[:radio_off]} 5) bourbon",
+      "> - 1) vodka\n",
+      "  - 2) beer\n",
+      "  - 3) wine\n",
+      "  - 4) whisky\n",
+      "  - 5) bourbon",
       "\e[2K\e[1G\e[1A" * 5, "\e[2K\e[1G",
       "Select drinks? vodka\n",
-      "#{symbols[:pointer]} \e[32m#{symbols[:radio_on]}\e[0m 1) vodka\n",
-      "  #{symbols[:radio_off]} 2) beer\n",
-      "  #{symbols[:radio_off]} 3) wine\n",
-      "  #{symbols[:radio_off]} 4) whisky\n",
-      "  #{symbols[:radio_off]} 5) bourbon",
+      "> \e[32m=\e[0m 1) vodka\n",
+      "  - 2) beer\n",
+      "  - 3) wine\n",
+      "  - 4) whisky\n",
+      "  - 5) bourbon",
       "\e[2K\e[1G\e[1A" * 5, "\e[2K\e[1G",
       "Select drinks? \e[32mvodka\e[0m\n\e[?25h"
     ].join)
@@ -253,7 +254,7 @@ RSpec.describe TTY::Prompt do
     choices = %w(vodka beer wine whisky bourbon)
     prompt.input << "\r"
     prompt.input.rewind
-    options = {default: [1], active_color: :blue, marker: '>'}
+    options = {default: [1], active_color: :blue, symbols: {pointer: '>'}}
     expect(prompt.multi_select("Select drinks?", choices, options)). to eq(['vodka'])
     expect(prompt.output.string).to eq([
       "\e[?25lSelect drinks? vodka \e[90m(Use arrow keys, press Space to select and Enter to finish)\e[0m\n",

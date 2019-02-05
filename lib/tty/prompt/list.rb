@@ -44,7 +44,6 @@ module TTY
         @choices      = Choices.new
         @active_color = options.fetch(:active_color) { @prompt.active_color }
         @help_color   = options.fetch(:help_color) { @prompt.help_color }
-        @marker       = options.fetch(:marker) { @prompt.symbols[:pointer] }
         @cycle        = options.fetch(:cycle) { false }
         @filterable   = options.fetch(:filter) { false }
         @symbols      = @prompt.symbols.merge(options.fetch(:symbols, {}))
@@ -68,13 +67,6 @@ module TTY
       # @api public
       def symbols(new_symbols)
         @symbols.merge!(new_symbols)
-      end
-
-      # Set marker
-      #
-      # @api public
-      def marker(value)
-        @marker = value
       end
 
       # Set default option selected
