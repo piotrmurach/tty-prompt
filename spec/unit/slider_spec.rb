@@ -120,8 +120,7 @@ RSpec.describe TTY::Prompt, '#slider' do
   end
 
   it "changes all display symbols per instance" do
-    prompt = TTY::TestPrompt.new(symbols: {
-    })
+    prompt = TTY::TestPrompt.new
     prompt.input << "\r"
     prompt.input.rewind
 
