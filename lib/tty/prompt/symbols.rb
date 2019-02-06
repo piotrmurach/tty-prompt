@@ -16,7 +16,7 @@ module TTY
         pointer: '‣',
         line: '─',
         pipe: '|',
-        handle: 'O',
+        handle: '●',
         ellipsis: '…',
         radio_on: '⬢',
         radio_off: '⬡',
