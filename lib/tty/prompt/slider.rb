@@ -44,7 +44,8 @@ module TTY
       #   the new symbols to use
       #
       # @api public
-      def symbols(new_symbols)
+      def symbols(new_symbols = (not_set = true))
+        return @symbols if not_set
         @symbols.merge!(new_symbols)
       end
 
