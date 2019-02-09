@@ -1338,16 +1338,16 @@ prompt = TTY::Prompt.new(symbols: {pointer: '>'})
 
 The following symbols can be overwritten:
 
-| Symbols     | ASCII | Unicode |
-| ----------- |:-----:|:-------:|
-|  pointer    | `>`   | `‣`     |
-|  radio_on   | `(*)` | `⬢'`    |
-|  radio_off  | `( )` | `⬡`     |
-|  dot        | `.`   | `•`     |
-|  tick       | `√`   | `✓`     |
-|  cross      | `x`   | `✘`     |
-|  handle     | `O`   | `●`     |
-|  line       | `-`   | `─`     |
+| Symbols     | Unicode | ASCII |
+| ----------- |:-------:|:-----:|
+|  pointer    | `‣`     | `>`   |
+|  radio_on   | `⬢`     | `(*)` |
+|  radio_off  | `⬡`     | `( )` |
+|  dot        | `•`     | `.`   |
+|  tick       | `✓`     | `√`   |
+|  cross      | `✘`     | `x`   |
+|  handle     | `●`     | `O`   |
+|  line       | `─`     | `-`   |
 
 ### 3.2 active_color
 
