@@ -93,4 +93,20 @@ RSpec.describe TTY::Prompt::Choice, '#from' do
     expect(choice.value).to eq(:none)
     expect(choice.disabled?).to eq(true)
   end
+
+  it "creates choice from an arbitrary object that responds to to_s call" do
+    stub_const("Size", Class.new do
+      def to_s
+        'large'
+      end
+    end)
+    size = Size.new
+    expected_choice = described_class.new(size, size)
+    choice = described_class.from(size)
+
+    expect(choice).to eq(expected_choice)
+    expect(choice.name).to eq(size)
+    expect(choice.value).to eq(size)
+    expect(choice.disabled?).to eq(false)
+  end
 end
