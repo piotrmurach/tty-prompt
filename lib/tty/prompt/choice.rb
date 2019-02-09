@@ -30,8 +30,6 @@ module TTY
         case val
         when Choice
           val
-        when String, Symbol
-          new(val, val)
         when Array
           name, value, options = *val
           if name.is_a?(Hash)
@@ -42,7 +40,7 @@ module TTY
         when Hash
           convert_hash(val)
         else
-          raise ArgumentError, "#{val} cannot be coerced into Choice"
+          new(val, val)
         end
       end
 
