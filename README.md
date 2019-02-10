@@ -98,13 +98,13 @@ Or install it yourself as:
     * [2.11.3 error](#2113-error)
   * [2.12 keyboard events](#212-keyboard-events)
 * [3. settings](#3-settings)
-  * [3.1 symbols](#31-symbols)
-  * [3.2 active_color](#32-active_color)
-  * [3.3 enable_color](#33-enable-color)
-  * [3.4 help_color](#34-help_color)
-  * [3.5 interrupt](#35-interrupt)
-  * [3.6 prefix](#36-prefix)
-  * [3.7 track_history](#37-track_history)
+  * [3.1 :symbols](#31-symbols)
+  * [3.2 :active_color](#32-active_color)
+  * [3.3 :enable_color](#33-enable-color)
+  * [3.4 :help_color](#34-help_color)
+  * [3.5 :interrupt](#35-interrupt)
+  * [3.6 :prefix](#36-prefix)
+  * [3.7 :track_history](#37-track_history)
 
 ## 1. Usage
 
@@ -1328,7 +1328,7 @@ The available events are:
 
 ## 3 settings
 
-### 3.1. symbols
+### 3.1. `:symbols`
 
 Many prompts use symbols to display information. You can overwrite the default symbols for all the prompts using the `:symbols` key and hash of symbol names as value:
 
@@ -1349,7 +1349,7 @@ The following symbols can be overwritten:
 |  handle     | `●`     | `O`   |
 |  line       | `─`     | `-`   |
 
-### 3.2 active_color
+### 3.2 `:active_color`
 
 All prompt types support `:active_color` option. In case of `select`, `multi_select`, `enum_select` or `expand` this color is used to highlight the currently selected choice. All the resulted inputs provided by user that are read in by the prompt as answer are highlighted with this color. This option can be applied either globally for all prompts or individually.
 
@@ -1365,7 +1365,7 @@ prompt.select('What size?', %w(Large Medium Small), active_color: :cyan)
 
 Please [see pastel](https://github.com/piotrmurach/pastel#3-supported-colors) for all supported colors.
 
-### 3.3 enable_color
+### 3.3 `:enable_color`
 
 If you wish to disable coloring for a prompt simply pass `:enable_color` option
 
@@ -1373,7 +1373,7 @@ If you wish to disable coloring for a prompt simply pass `:enable_color` option
 prompt = TTY::Prompt.new(enable_color: true)
 ```
 
-### 3.4 help_color
+### 3.4 `:help_color`
 
 Prompts such as `select`, `multi_select`, `expand` support `:help_color` which is used to customize the help text. This option can be applied either globally for all prompts or individually.
 
@@ -1387,7 +1387,7 @@ or per individual input do:
 prompt.select('What size?', %w(Large Medium Small), help_color: :cyan)
 ```
 
-### 3.5 interrupt
+### 3.5 `:interrupt`
 
 By default `InputInterrupt` error will be raised when the user hits the interrupt key(Control-C). However, you can customise this behaviour by passing the `:interrupt` option. The available options are:
 
@@ -1402,7 +1402,7 @@ For example, to send interrupt signal do:
 prompt = TTY::Prompt.new(interrupt: :signal)
 ```
 
-### 3.6 prefix
+### 3.6 `:prefix`
 
 You can prefix each question asked using the `:prefix` option. This option can be applied either globally for all prompts or individual for each one:
 
@@ -1410,7 +1410,7 @@ You can prefix each question asked using the `:prefix` option. This option can b
 prompt = TTY::Prompt.new(prefix: '[?] ')
 ```
 
-### 3.7 track_history
+### 3.7 `:track_history`
 
 The prompts that accept line input such as `multiline` or `ask` provide history buffer that tracks all the lines entered during `TTY::Prompt.new` interactions. The history buffer provides previous or next lines when user presses up/down arrows respectively. However, if you wish to disable this behaviour use `:track_history` option like so:
 
