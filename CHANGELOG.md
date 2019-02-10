@@ -11,6 +11,7 @@
 * Change #enum_select to set default choice when navigating by page
 * Change #select & #multi_select to allow navigation by page with left/right keys
 * Change to remove test artifacts from the gem bundle
+* Change Choice#from to allow any object coercible to string
 
 ## [v0.18.1] - 2018-12-29
 
