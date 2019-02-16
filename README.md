@@ -1343,7 +1343,7 @@ The following symbols can be overwritten:
 |  pointer    | `‣`     | `>`   |
 |  radio_on   | `⬢`     | `(*)` |
 |  radio_off  | `⬡`     | `( )` |
-|  dot        | `•`     | `.`   |
+|  mask       | `•`     | `.`   |
 |  tick       | `✓`     | `√`   |
 |  cross      | `✘`     | `x`   |
 |  handle     | `●`     | `O`   |
