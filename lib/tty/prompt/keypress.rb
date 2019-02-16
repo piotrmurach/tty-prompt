@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require_relative 'question'
-require_relative 'symbols'
 require_relative 'timeout'
 
 module TTY
