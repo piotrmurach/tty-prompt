@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require_relative 'question'
-require_relative 'symbols'
 
 module TTY
   class Prompt
@@ -12,9 +11,9 @@ module TTY
       # @option options [String] :mask
       #
       # @api public
-      def initialize(prompt, options = {})
+      def initialize(prompt, **options)
         super
-        @mask        = options.fetch(:mask) { Symbols.symbols[:dot] }
+        @mask        = options.fetch(:mask) { @prompt.symbols[:dot] }
         @done_masked = false
         @failure     = false
       end

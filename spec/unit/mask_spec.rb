@@ -96,11 +96,11 @@ RSpec.describe TTY::Prompt, '#mask' do
   end
 
   it "validates input" do
+    prompt = TTY::TestPrompt.new(symbols: {dot: '*'})
     prompt.input << "no\nyes\n"
     prompt.input.rewind
     answer = prompt.mask('What is your password?') do |q|
       q.echo true
-      q.mask '*'
       q.validate(/[a-z]{3,4}/)
       q.messages[:valid?] = 'Not valid'
     end
