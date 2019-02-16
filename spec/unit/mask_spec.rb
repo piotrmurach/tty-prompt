@@ -14,17 +14,17 @@ RSpec.describe TTY::Prompt, '#mask' do
     expect(prompt.output.string).to eq([
       "What is your password? ",
       "\e[2K\e[1G",
-      "What is your password? #{symbols[:dot]}",
+      "What is your password? #{symbols[:mask]}",
       "\e[2K\e[1G",
-      "What is your password? #{symbols[:dot] * 2}",
+      "What is your password? #{symbols[:mask] * 2}",
       "\e[2K\e[1G",
-      "What is your password? #{symbols[:dot] * 3}",
+      "What is your password? #{symbols[:mask] * 3}",
       "\e[2K\e[1G",
-      "What is your password? #{symbols[:dot] * 4}",
+      "What is your password? #{symbols[:mask] * 4}",
       "\e[2K\e[1G",
-      "What is your password? \e[32m#{symbols[:dot] * 4}\e[0m\n",
+      "What is your password? \e[32m#{symbols[:mask] * 4}\e[0m\n",
       "\e[1A\e[2K\e[1G",
-      "What is your password? \e[32m#{symbols[:dot] * 4}\e[0m\n"
+      "What is your password? \e[32m#{symbols[:mask] * 4}\e[0m\n"
     ].join)
   end
 
@@ -96,7 +96,7 @@ RSpec.describe TTY::Prompt, '#mask' do
   end
 
   it "validates input" do
-    prompt = TTY::TestPrompt.new(symbols: {dot: '*'})
+    prompt = TTY::TestPrompt.new(symbols: {mask: '*'})
     prompt.input << "no\nyes\n"
     prompt.input.rewind
     answer = prompt.mask('What is your password?') do |q|
