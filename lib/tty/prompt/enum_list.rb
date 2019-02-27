@@ -5,7 +5,6 @@ require 'English'
 require_relative 'choices'
 require_relative 'block_paginator'
 require_relative 'paginator'
-require_relative 'symbols'
 
 module TTY
   class Prompt
@@ -14,14 +13,12 @@ module TTY
     #
     # @api private
     class EnumList
-      include Symbols
-
       PAGE_HELP = '(Press tab/right or left to reveal more choices)'
 
       # Create instance of EnumList menu.
       #
       # @api public
-      def initialize(prompt, options = {})
+      def initialize(prompt, **options)
         @prompt       = prompt
         @prefix       = options.fetch(:prefix) { @prompt.prefix }
         @enum         = options.fetch(:enum) { ')' }
@@ -30,6 +27,7 @@ module TTY
         @help_color   = options.fetch(:help_color)   { @prompt.help_color }
         @error_color  = options.fetch(:error_color)  { @prompt.error_color }
         @cycle        = options.fetch(:cycle) { false }
+        @symbols      = @prompt.symbols.merge(options.fetch(:symbols, {}))
         @input        = nil
         @done         = false
         @first_render = true
@@ -40,6 +38,17 @@ module TTY
         @page_help    = options[:page_help] || PAGE_HELP
         @paginator    = BlockPaginator.new
         @page_active  = @default
+      end
+
+      # Change symbols used by this prompt
+      #
+      # @param [Hash] new_symbols
+      #   the new symbols to use
+      #
+      # @api public
+      def symbols(new_symbols = (not_set = true))
+        return @symbols if not_set
+        @symbols.merge!(new_symbols)
       end
 
       # Set default option selected
@@ -363,7 +372,7 @@ module TTY
           output << if index + 1 == @active && !choice.disabled?
                       (' ' * 2) + @prompt.decorate(selected, @active_color)
                     elsif choice.disabled?
-                      @prompt.decorate(symbols[:cross], :red) + ' ' +
+                      @prompt.decorate(@symbols[:cross], :red) + ' ' +
                       selected + ' ' + choice.disabled.to_s
                     else
                       (' ' * 2) + selected

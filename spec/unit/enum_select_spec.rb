@@ -159,6 +159,53 @@ RSpec.describe TTY::Prompt do
     expect(prompt.output.string).to eq(expected_output)
   end
 
+  it "changes global symbols" do
+    prompt = TTY::TestPrompt.new(symbols: {cross: 'x'})
+    choices = ['A', {name: 'B', disabled: '(out)'}, 'C']
+    prompt.input << "\n"
+    prompt.input.rewind
+    answer = prompt.enum_select("What letter?", choices)
+    expect(answer).to eq("A")
+
+    expected_output = [
+      "What letter? \n",
+      "  \e[32m1) A\e[0m\n",
+      "\e[31mx\e[0m 2) B (out)\n",
+      "  3) C\n",
+      "  Choose 1-3 [1]: ",
+      "\e[2K\e[1G\e[1A" * 4,
+      "\e[2K\e[1G\e[J",
+      "What letter? \e[32mA\e[0m\n",
+    ].join
+
+    expect(prompt.output.string).to eq(expected_output)
+  end
+
+  it "changes global symbols through DSL" do
+    prompt = TTY::TestPrompt.new
+    choices = ['A', {name: 'B', disabled: '(out)'}, 'C']
+    prompt.input << "\n"
+    prompt.input.rewind
+    answer = prompt.enum_select("What letter?", choices) do |menu|
+               menu.symbols cross: 'x'
+               menu.choices choices
+             end
+    expect(answer).to eq("A")
+
+    expected_output = [
+      "What letter? \n",
+      "  \e[32m1) A\e[0m\n",
+      "\e[31mx\e[0m 2) B (out)\n",
+      "  3) C\n",
+      "  Choose 1-3 [1]: ",
+      "\e[2K\e[1G\e[1A" * 4,
+      "\e[2K\e[1G\e[J",
+      "What letter? \e[32mA\e[0m\n",
+    ].join
+
+    expect(prompt.output.string).to eq(expected_output)
+  end
+
   it "displays error with unrecognized input" do
     choices = %w(/bin/nano /usr/bin/vim.basic /usr/bin/vim.tiny)
     prompt = TTY::TestPrompt.new
