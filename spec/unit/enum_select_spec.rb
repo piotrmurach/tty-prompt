@@ -60,9 +60,10 @@ RSpec.describe TTY::Prompt do
     answer = prompt.enum_select("Select an editor?", choices)
     expect(answer).to eq('/bin/nano')
 
-    expected_output =
-      output_helper("Select an editor?", choices, "/bin/nano") +
+    expected_output = [
+      output_helper("Select an editor?", choices, "/bin/nano"),
       exit_message("Select an editor?", "/bin/nano")
+    ].join
 
     expect(prompt.output.string).to eq(expected_output)
   end
@@ -76,10 +77,11 @@ RSpec.describe TTY::Prompt do
     answer = prompt.enum_select("Select an editor?", choices, default: 2)
     expect(answer).to eq('/usr/bin/vim.tiny')
 
-    expected_output =
-      output_helper("Select an editor?", choices, "/usr/bin/vim.basic", default: 2) +
-      output_helper("Select an editor?", choices, "/usr/bin/vim.tiny", default: 2, input: '3') +
+    expected_output = [
+      output_helper("Select an editor?", choices, "/usr/bin/vim.basic", default: 2),
+      output_helper("Select an editor?", choices, "/usr/bin/vim.tiny", default: 2, input: '3'),
       exit_message("Select an editor?", "/usr/bin/vim.tiny")
+    ].join
 
     expect(prompt.output.string).to eq(expected_output)
   end
@@ -99,10 +101,11 @@ RSpec.describe TTY::Prompt do
     end
     expect(answer).to eq('/bin/nano')
 
-    expected_output =
-      output_helper("Select an editor?", choices, "/usr/bin/vim.basic", default: 2, enum: '.') +
-      output_helper("Select an editor?", choices, "/bin/nano", default: 2, enum: '.', input: 1) +
+    expected_output = [
+      output_helper("Select an editor?", choices, "/usr/bin/vim.basic", default: 2, enum: '.'),
+      output_helper("Select an editor?", choices, "/bin/nano", default: 2, enum: '.', input: 1),
       exit_message("Select an editor?", "/bin/nano")
+    ].join
 
     expect(prompt.output.string).to eq(expected_output)
   end
@@ -123,9 +126,10 @@ RSpec.describe TTY::Prompt do
 
     expect(answer).to eq('/usr/bin/vim')
 
-    expected_output =
-      output_helper("Select an editor?", choices, "vim", default: 2) +
+    expected_output = [
+      output_helper("Select an editor?", choices, "vim", default: 2),
       exit_message("Select an editor?", "vim")
+    ].join
 
     expect(prompt.output.string).to eq(expected_output)
   end
@@ -136,8 +140,12 @@ RSpec.describe TTY::Prompt do
     prompt.input << "\n"
     prompt.input.rewind
     options = {active_color: :red, help_color: :blue, error_color: :green}
-    expect(prompt.enum_select("Select an editor?", choices, options)).to eq('/bin/nano')
-    expect(prompt.output.string).to eq([
+
+    answer = prompt.enum_select("Select an editor?", choices, options)
+
+    expect(answer).to eq('/bin/nano')
+
+    expected_output = [
       "Select an editor? \n",
       "  \e[31m1) /bin/nano\e[0m\n",
       "  2) /usr/bin/vim.basic\n",
@@ -146,7 +154,9 @@ RSpec.describe TTY::Prompt do
       "\e[2K\e[1G\e[1A" * 4,
       "\e[2K\e[1G\e[J",
       "Select an editor? \e[31m/bin/nano\e[0m\n"
-    ].join)
+    ].join
+
+    expect(prompt.output.string).to eq(expected_output)
   end
 
   it "displays error with unrecognized input" do
@@ -158,13 +168,14 @@ RSpec.describe TTY::Prompt do
     answer = prompt.enum_select("Select an editor?", choices)
     expect(answer).to eq('/usr/bin/vim.basic')
 
-    expected_output =
-      output_helper("Select an editor?", choices, "/bin/nano") +
-      output_helper("Select an editor?", choices, "/bin/nano", input: '1') +
-      output_helper("Select an editor?", choices, "/bin/nano", input: '11') +
-      output_helper("Select an editor?", choices, "/bin/nano", error: 'Please enter a valid number', input: '') +
-      output_helper("Select an editor?", choices, "/usr/bin/vim.basic", error: 'Please enter a valid number', input: '2') +
+    expected_output = [
+      output_helper("Select an editor?", choices, "/bin/nano"),
+      output_helper("Select an editor?", choices, "/bin/nano", input: '1'),
+      output_helper("Select an editor?", choices, "/bin/nano", input: '11'),
+      output_helper("Select an editor?", choices, "/bin/nano", error: 'Please enter a valid number', input: ''),
+      output_helper("Select an editor?", choices, "/usr/bin/vim.basic", error: 'Please enter a valid number', input: '2'),
       exit_message("Select an editor?", "/usr/bin/vim.basic")
+    ].join
 
     expect(prompt.output.string).to eq(expected_output)
   end
@@ -354,6 +365,7 @@ RSpec.describe TTY::Prompt do
               menu.choices choices
             end
     expect(value).to eq("A")
+
     expect(prompt.output.string).to eq([
       "What letter? \n",
       "  \e[32m1) A\e[0m\n",
@@ -405,12 +417,13 @@ RSpec.describe TTY::Prompt do
       answer = prompt.enum_select("What letter?", choices)
       expect(answer).to eq("C")
 
-      expected_output =
-        output_helper("What letter?", choices, 'A') +
-        output_helper("What letter?", choices, 'A', input: '2') +
-        output_helper("What letter?", choices, 'A', input: '', error: 'Please enter a valid number') +
-        output_helper("What letter?", choices, 'C', input: '3', error: 'Please enter a valid number') +
+      expected_output = [
+        output_helper("What letter?", choices, 'A'),
+        output_helper("What letter?", choices, 'A', input: '2'),
+        output_helper("What letter?", choices, 'A', input: '', error: 'Please enter a valid number'),
+        output_helper("What letter?", choices, 'C', input: '3', error: 'Please enter a valid number'),
         exit_message("What letter?", "C")
+      ].join
 
       expect(prompt.output.string).to eq(expected_output)
     end
@@ -431,14 +444,15 @@ RSpec.describe TTY::Prompt do
       answer = prompt.enum_select("What letter?", choices)
       expect(answer).to eq("D")
 
-      expected_output =
-        output_helper("What letter?", choices, 'A') +
-        output_helper("What letter?", choices, 'A', input: '2') +
-        output_helper("What letter?", choices, 'A', input: '') +
-        output_helper("What letter?", choices, 'A', input: '3') +
-        output_helper("What letter?", choices, 'A', input: '') +
-        output_helper("What letter?", choices, 'D', input: '4') +
+      expected_output = [
+        output_helper("What letter?", choices, 'A'),
+        output_helper("What letter?", choices, 'A', input: '2'),
+        output_helper("What letter?", choices, 'A', input: ''),
+        output_helper("What letter?", choices, 'A', input: '3'),
+        output_helper("What letter?", choices, 'A', input: ''),
+        output_helper("What letter?", choices, 'D', input: '4'),
         exit_message("What letter?", "D")
+      ].join
 
       expect(prompt.output.string).to eq(expected_output)
     end
