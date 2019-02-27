@@ -134,7 +134,7 @@ module TTY
       end
 
       def keypress(event)
-        if [:backspace, :delete].include?(event.key.name)
+        if %i[backspace delete].include?(event.key.name)
           return if @input.empty?
           @input.chop!
           mark_choice_as_active
