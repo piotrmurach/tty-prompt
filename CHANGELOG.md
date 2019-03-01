@@ -1,6 +1,6 @@
 # Change log
 
-## [v0.19.0] - 2019-01-x
+## [v0.19.0] - 2019-03-x
 
 ### Added
 * Add Prompt#debug to allow displaying values in terminal's top right corner
@@ -12,6 +12,8 @@
 * Change #select & #multi_select to allow navigation by page with left/right keys
 * Change to remove test artifacts from the gem bundle
 * Change Choice#from to allow any object coercible to string
+* Change Timeout to use monotonic clock and to calculate intervals without dependency
+* Change to remove timers dependency
 
 ## [v0.18.1] - 2018-12-29
 
