@@ -6,7 +6,7 @@ Gem::Specification.new do |spec|
   spec.name          = "tty-prompt"
   spec.version       = TTY::Prompt::VERSION
   spec.authors       = ["Piotr Murach"]
-  spec.email         = [""]
+  spec.email         = ["me@piotrmurach.com"]
   spec.summary       = %q{A beautiful and powerful interactive command line prompt.}
   spec.description   = %q{A beautiful and powerful interactive command line prompt with a robust API for getting and validating complex inputs.}
   spec.homepage      = "https://piotrmurach.github.io/tty"
@@ -23,7 +23,6 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'necromancer',  '~> 0.4.0'
   spec.add_dependency 'pastel',       '~> 0.7.0'
-  spec.add_dependency 'timers',       '~> 4.0'
   spec.add_dependency 'tty-cursor',   '~> 0.6.0'
   spec.add_dependency 'tty-reader',   '~> 0.5.0'
 
