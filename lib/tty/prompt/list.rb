@@ -48,6 +48,7 @@ module TTY
         @filterable   = options.fetch(:filter) { false }
         @symbols      = @prompt.symbols.merge(options.fetch(:symbols, {}))
         @filter       = []
+        @filter_cache = {}
         @help         = options[:help]
         @first_render = true
         @done         = false
@@ -171,6 +172,7 @@ module TTY
       #
       # @api public
       def choice(*value, &block)
+        @filter_cache = {}
         if block
           @choices << (value << block)
         else
@@ -190,12 +192,14 @@ module TTY
           if !filterable? || @filter.empty?
             @choices
           else
-            @choices.select do |choice|
+            filter_value = @filter.join.downcase
+            @filter_cache[filter_value] ||= @choices.select do |choice|
               !choice.disabled? &&
-                choice.name.downcase.include?(@filter.join.downcase)
+                choice.name.downcase.include?(filter_value)
             end
           end
         else
+          @filter_cache = {}
           values.each { |val| @choices << val }
         end
       end
