@@ -8,7 +8,7 @@ module TTY
       # @api private
       def initialize(**options)
         @interval_handler = options.fetch(:interval_handler) { -> {} }
-        @running = true
+        @running = false
       end
 
       # Evalute block and time it
@@ -27,6 +27,7 @@ module TTY
       #
       # @api public
       def timeout(max_time, interval, &job)
+        @running = true
         input_thread  = Thread.new { job.() }
         timing_thread = measure_intervals(max_time, interval, input_thread)
         [input_thread, timing_thread].each(&:join)
