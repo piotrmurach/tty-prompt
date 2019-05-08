@@ -12,7 +12,7 @@ module TTY
       # @param [Hash] options
       #
       # @api public
-      def initialize(prompt, options = {})
+      def initialize(prompt, **options)
         super
         @echo    = options.fetch(:echo) { false }
         @keys    = options.fetch(:keys) { UndefinedSetting }
@@ -21,7 +21,7 @@ module TTY
           (@timeout != UndefinedSetting && @timeout < 1) ? @timeout : 1
         }
         @countdown = @timeout
-        @interval_handler = proc { |time|
+        @interval_handler = -> (time) {
           unless @done
             question = render_question
             line_size = question.size
