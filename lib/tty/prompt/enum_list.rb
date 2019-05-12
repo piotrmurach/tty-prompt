@@ -22,7 +22,7 @@ module TTY
         @prompt       = prompt
         @prefix       = options.fetch(:prefix) { @prompt.prefix }
         @enum         = options.fetch(:enum) { ')' }
-        @default      = options.fetch(:default) { 1 }
+        @default      = options.fetch(:default) { -1 }
         @active_color = options.fetch(:active_color) { @prompt.active_color }
         @help_color   = options.fetch(:help_color)   { @prompt.help_color }
         @error_color  = options.fetch(:error_color)  { @prompt.error_color }
@@ -56,6 +56,15 @@ module TTY
       # @api public
       def default(default)
         @default = default
+      end
+
+      # Check if default value is set
+      #
+      # @return [Boolean]
+      #
+      # @api public
+      def default?
+        @default > 0
       end
 
       # Set number of items per page
@@ -178,6 +187,7 @@ module TTY
 
       private
 
+
       # Find active choice or set to default
       #
       # @return [nil]
@@ -215,6 +225,9 @@ module TTY
       #
       # @api private
       def setup_defaults
+        if !default?
+          @default = (0..choices.length).find {|i| !choices[i].disabled? } + 1
+        end
         validate_defaults
         mark_choice_as_active
       end

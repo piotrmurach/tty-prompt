@@ -450,9 +450,20 @@ RSpec.describe TTY::Prompt do
       prompt = TTY::TestPrompt.new
       choices = [{name: 'A', disabled: true}, 'B', 'C', 'D', 'E']
       expect {
-        prompt.enum_select("What letter?", choices)
+        prompt.enum_select("What letter?", choices, default: 1)
       }.to raise_error(TTY::Prompt::ConfigurationError,
         /default index 1 matches disabled choice item/)
+    end
+
+    it "finds first non-disabled index" do
+      prompt = TTY::TestPrompt.new
+      choices = [{name: 'A', disabled: true}, {name:'B', disabled: true}, 'C', 'D']
+      prompt = TTY::TestPrompt.new
+      prompt.input << "\n"
+      prompt.input.rewind
+
+      answer = prompt.enum_select("What letter?", choices)
+      expect(answer).to eq('C')
     end
 
     it "doesn't allow to choose disabled choice and defaults" do
