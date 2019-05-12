@@ -88,6 +88,8 @@ Or install it yourself as:
       * [2.6.3.2 :echo](#2632-echo)
       * [2.6.3.3 :filter](#2633-filter)
     * [2.6.4 enum_select](#264-enum_select)
+      * [2.6.4.1 :per_page](#2641-per_page)
+      * [2.6.4.1 :disabled](#2641-disabled)
   * [2.7 expand](#27-expand)
   * [2.8 collect](#28-collect)
   * [2.9 suggest](#29-suggest)
@@ -1034,6 +1036,8 @@ end
 # Select an editor? /usr/bin/vim
 ```
 
+#### 2.6.4.1 `:per_page`
+
 By default the menu is paginated if selection grows beyond `6` items. To change this setting use `:per_page` configuration.
 
 ```ruby
@@ -1047,6 +1051,37 @@ prompt.enum_select("Choose your letter?", letters, per_page: 4)
 #   4) D
 #   Choose 1-26 [1]:
 # (Press tab/right or left to reveal more choices)
+```
+
+#### 2.6.4.2 `:disabled`
+
+To make a choice unavailable use the `:disabled` option and, if you wish, as value provide a reason:
+
+```ruby
+choices = [
+  {name: "Emacs", disabled: '(not installed)'},
+  "Atom",
+  "GNU nano",
+  {name: "Notepad++", disabled: '(not installed)'},
+  "Sublime",
+  "Vim"
+]
+```
+
+The disabled choice will be displayed with a cross ✘ character next to it and followed by an explanation:
+
+
+```ruby
+prompt.enum_select('Select an editor', choices)
+# =>
+# Select an editor
+# ✘ 1) Emacs (not installed)
+#   2) Atom
+#   3) GNU nano
+# ✘ 4) Notepad++ (not installed)
+#   5) Sublime
+#   6) Vim
+#   Choose 1-6 [2]:
 ```
 
 ### 2.7 expand
