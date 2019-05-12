@@ -680,7 +680,7 @@ You can configure help message and/or marker like so
 
 ```ruby
 choices = %w(Scorpion Kano Jax)
-prompt.select("Choose your destiny?", choices, help: "(Bash keyboard)", marker: '>')
+prompt.select("Choose your destiny?", choices, help: "(Bash keyboard)", symbols: {marker: '>'})
 # =>
 # Choose your destiny? (Bash keyboard)
 # > Scorpion
@@ -1223,12 +1223,12 @@ prompt.suggest('b', possible, indent: 4, single_text: 'Perhaps you meant?')
 
 If you have constrained range of numbers for user to choose from you may consider using `slider`.
 
-The slider provides easy visual way of picking a value marked by `O` marker. You can set `:min`(defaults to 0), `:max` and `:step`(defaults to 1) options to configure slider range:
+The slider provides easy visual way of picking a value marked by `●` symbol. You can set `:min`(defaults to 0), `:max` and `:step`(defaults to 1) options to configure slider range:
 
 ```ruby
 prompt.slider('Volume', max: 100, step: 5)
 # =>
-# Volume ──────────O────────── 50
+# Volume ──────────●────────── 50
 # (Use arrow keys, press Enter to select)
 ```
 
@@ -1237,16 +1237,16 @@ By default the slider is configured to pick middle of the range as a start value
 ```ruby
 prompt.slider('Volume', max: 100, step: 5, default: 75)
 # =>
-# Volume ───────────────O───── 75
+# Volume ───────────────●────── 75
 # (Use arrow keys, press Enter to select)
 ```
 
-You can also change the default slider formatting using the `:format`. The value must contain the `:slider` token for placing the actual animation and any `sprintf` compatible flag for number display, in our case `%d`:
+You can also change the default slider formatting using the `:format`. The value must contain the `:slider` token to show current value and any `sprintf` compatible flag for number display, in our case `%d`:
 
 ```ruby
 prompt.slider('Volume', max: 100, step: 5, default: 75, format: "|:slider| %d%")
 # =>
-# Volume |───────────────O─────| 75%
+# Volume |───────────────●──────| 75%
 # (Use arrow keys, press Enter to select)
 ```
 
@@ -1255,7 +1255,16 @@ You can also specify slider range with decimal numbers. For example, to have a s
 ```ruby
 prompt.slider("Volume", max: 10, step: 0.5, default: 5, format: "|:slider| %.1f")
 # =>
-# Volume |───────────────O─────| 7.5
+# Volume |───────────────●──────| 7.5
+# (Use arrow keys, press Enter to select)
+```
+
+If you wish to change the slider handle and the slider range display use `:symbols` option:
+
+```ruby
+prompt.slider("Volume", max: 100, step: 5, default: 75, symbols: {handle: 'x', line: '_'})
+# =>
+# Volume _______________x______ 75%
 # (Use arrow keys, press Enter to select)
 ```
 
@@ -1269,13 +1278,13 @@ prompt.slider('What size?') do |range|
   range.format "|:slider| %d%"
 end
 # =>
-# Volume |───────────────O─────| 75%
+# Volume |───────────────●──────| 75%
 # (Use arrow keys, press Enter to select)
 ```
 
 ### 2.11 say
 
-To simply print message out to stdout use `say` like so:
+To simply print message out to standard output use `say` like so:
 
 ```ruby
 prompt.say(...)
@@ -1368,14 +1377,14 @@ The available events are:
 Many prompts use symbols to display information. You can overwrite the default symbols for all the prompts using the `:symbols` key and hash of symbol names as value:
 
 ```ruby
-prompt = TTY::Prompt.new(symbols: {pointer: '>'})
+prompt = TTY::Prompt.new(symbols: {marker: '>'})
 ```
 
 The following symbols can be overwritten:
 
 | Symbols     | Unicode | ASCII |
 | ----------- |:-------:|:-----:|
-|  pointer    | `‣`     | `>`   |
+|  marker     | `‣`     | `>`   |
 |  radio_on   | `⬢`     | `(*)` |
 |  radio_off  | `⬡`     | `( )` |
 |  mask       | `•`     | `.`   |
