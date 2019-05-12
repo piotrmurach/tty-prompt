@@ -8,6 +8,7 @@
 ### Changed
 * Change Paginator to expose #start_index & #end_index
 * Change Paginator to figure out #start_index based on per page size and adjust boundaries to match active selection
+* Change #ask prompt to allow no question
 * Change #enum_select to automatically assigned non-disabled default option
 * Change #enum_select to set default choice when navigating by page
 * Change #select & #multi_select to allow navigation by page with left/right keys
