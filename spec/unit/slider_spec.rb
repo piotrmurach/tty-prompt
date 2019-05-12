@@ -125,7 +125,7 @@ RSpec.describe TTY::Prompt, '#slider' do
     prompt.input.rewind
 
     answer = prompt.slider('What size?', min: 32, max: 54, step: 2) do |range|
-      range.symbols({handle: 'x', line: '_' })
+      range.symbols handle: 'x', line: '_'
     end
 
     expect(answer).to eq(44)
