@@ -11,6 +11,12 @@ module TTY
       # The 0-based index of the last item on this page
       attr_reader :end_index
 
+      # The 0-based index of the active item on this page
+      attr_reader :current_index
+
+      # The 0-based index of the previously active item on this page
+      attr_reader :last_index
+
       # Create a Paginator
       #
       # @api private
