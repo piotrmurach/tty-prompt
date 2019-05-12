@@ -14,16 +14,25 @@ RSpec.describe TTY::Prompt, '#ask' do
   end
 
   it 'asks an empty question ' do
-    prompt.ask('')
-    expect(prompt.output.string).to eql('')
+    prompt = TTY::TestPrompt.new
+    prompt.input << "\r"
+    prompt.input.rewind
+
+    answer = prompt.ask
+    expect(answer).to eq(nil)
+
+    expect(prompt.output.string).to eql(" \e[2K\e[1G \n\e[1A\e[2K\e[1G \n")
   end
 
   it 'asks an empty question and returns nil if EOF is sent to stdin' do
+    prompt = TTY::TestPrompt.new
     prompt.input << nil
     prompt.input.rewind
+
     answer = prompt.ask('')
+
     expect(answer).to eql(nil)
-    expect(prompt.output.string).to eq('')
+    expect(prompt.output.string).to eq(" \e[1A\e[2K\e[1G \n")
   end
 
   it "asks a question with a prefix [?]" do

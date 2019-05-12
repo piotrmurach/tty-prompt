@@ -161,8 +161,7 @@ module TTY
     # @return [String]
     #
     # @api public
-    def invoke_question(object, message, *args, &block)
-      options = Utils.extract_options!(args)
+    def invoke_question(object, message, **options, &block)
       options[:messages] = self.class.messages
       question = object.new(self, options)
       question.(message, &block)
@@ -185,8 +184,8 @@ module TTY
     # @return [TTY::Prompt::Question]
     #
     # @api public
-    def ask(message, *args, &block)
-      invoke_question(Question, message, *args, &block)
+    def ask(message = '', **options, &block)
+      invoke_question(Question, message, **options, &block)
     end
 
     # Ask a question with a keypress answer
@@ -194,8 +193,8 @@ module TTY
     # @see #ask
     #
     # @api public
-    def keypress(message, *args, &block)
-      invoke_question(Keypress, message, *args, &block)
+    def keypress(message = '', **options, &block)
+      invoke_question(Keypress, message, **options, &block)
     end
 
     # Ask a question with a multiline answer
@@ -206,8 +205,8 @@ module TTY
     # @return [Array[String]]
     #
     # @api public
-    def multiline(message, *args, &block)
-      invoke_question(Multiline, message, *args, &block)
+    def multiline(message = '', **options, &block)
+      invoke_question(Multiline, message, **options, &block)
     end
 
     # Invoke a list type of prompt
@@ -247,8 +246,8 @@ module TTY
     # @return [TTY::Prompt::MaskQuestion]
     #
     # @api public
-    def mask(message, *args, &block)
-      invoke_question(MaskQuestion, message, *args, &block)
+    def mask(message = '', **options, &block)
+      invoke_question(MaskQuestion, message, **options, &block)
     end
 
     # Ask a question with a list of options
