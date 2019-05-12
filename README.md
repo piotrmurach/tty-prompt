@@ -424,7 +424,7 @@ The `multiline` uses similar options to those supported by `ask` prompt. For exa
 prompt.multiline("Description?", default: 'A super sweet prompt.')
 ```
 
-or using DSL:
+Or using DSL:
 
 ```ruby
 prompt.multiline("Description?") do |q|
@@ -442,12 +442,12 @@ prompt.mask('What is your secret?')
 # => What is your secret? ••••
 ```
 
-The masking character can be changed by passing `:mask` option:
+The masking character can be changed by passing `:symbols` option with `:mask` key:
 
 ```ruby
 heart = prompt.decorate('❤ ', :magenta)
-prompt.mask('What is your secret?', mask: heart)
-# => What is your secret? ❤  ❤  ❤  ❤  ❤ 
+prompt.mask('What is your secret?', symbols: {mask: heart})
+# => What is your secret? ❤  ❤  ❤  ❤  ❤
 ```
 
 If you don't wish to show any output use `:echo` option like so:
