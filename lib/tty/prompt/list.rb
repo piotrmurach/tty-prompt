@@ -502,7 +502,7 @@ module TTY
         paginator.paginate(choices, @active, @per_page) do |choice, index|
           num = enumerate? ? (index + 1).to_s + @enum + ' ' : ''
           message = if index + 1 == @active && !choice.disabled?
-                      selected = "#{@symbols[:pointer]} #{num}#{choice.name}"
+                      selected = "#{@symbols[:marker]} #{num}#{choice.name}"
                       @prompt.decorate(selected.to_s, @active_color)
                     elsif choice.disabled?
                       @prompt.decorate(@symbols[:cross], :red) +

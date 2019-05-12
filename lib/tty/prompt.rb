@@ -74,7 +74,7 @@ module TTY
     # The collection of display symbols
     #
     # @example
-    #   prompt = TTY::Prompt.new(symbols: {pointer: '>'})
+    #   prompt = TTY::Prompt.new(symbols: {marker: '>'})
     #
     # @return [Hash]
     #
@@ -124,7 +124,7 @@ module TTY
     # @option options [Boolean] :track_history
     #   disable line history tracking, true by default
     # @option options [Hash] :symbols
-    #   the symbols displayed in prompts such as :pointer, :cross
+    #   the symbols displayed in prompts such as :marker, :cross
     #
     # @api public
     def initialize(*args)

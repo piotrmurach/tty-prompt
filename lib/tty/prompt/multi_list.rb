@@ -99,7 +99,7 @@ module TTY
         sync_paginators if @paging_changed
         paginator.paginate(choices, @active, @per_page) do |choice, index|
           num = enumerate? ? (index + 1).to_s + @enum + ' ' : ''
-          indicator = (index + 1 == @active) ?  @symbols[:pointer] : ' '
+          indicator = (index + 1 == @active) ?  @symbols[:marker] : ' '
           indicator += ' '
           message = if @selected.include?(choice) && !choice.disabled?
                       selected = @prompt.decorate(@symbols[:radio_on], @active_color)

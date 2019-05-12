@@ -25,7 +25,7 @@ RSpec.describe TTY::Prompt, '#select' do
       if disabled
         "\e[31m#{symbols[:cross]}\e[0m #{num}#{name} #{disabled}"
       elsif name == active
-        "\e[32m#{symbols[:pointer]} #{num}#{name}\e[0m"
+        "\e[32m#{symbols[:marker]} #{num}#{name}\e[0m"
       else
         "  #{num}#{name}"
       end
@@ -55,7 +55,7 @@ RSpec.describe TTY::Prompt, '#select' do
     expect(prompt.select('What size?', choices)).to eq(:Large)
     expected_output = [
       "\e[?25lWhat size? \e[90m(Use arrow keys, press Enter to select)\e[0m\n",
-      "\e[32m#{symbols[:pointer]} Large\e[0m\n",
+      "\e[32m#{symbols[:marker]} Large\e[0m\n",
       "  Medium\n",
       "  Small",
       "\e[2K\e[1G\e[1A" * 3,
@@ -76,14 +76,14 @@ RSpec.describe TTY::Prompt, '#select' do
     expect { prompt.select('What size?', choices) }.not_to output.to_stderr
     expect(prompt.output.string).to eq([
       "\e[?25lWhat size? \e[90m(Use arrow keys, press Enter to select)\e[0m\n",
-      "\e[32m#{symbols[:pointer]} Large\e[0m\n",
+      "\e[32m#{symbols[:marker]} Large\e[0m\n",
       "  Medium\n",
       "  Small",
       "\e[2K\e[1G\e[1A" * 3,
       "\e[2K\e[1G",
       "What size? \n",
       "  Large\n",
-      "\e[32m#{symbols[:pointer]} Medium\e[0m\n",
+      "\e[32m#{symbols[:marker]} Medium\e[0m\n",
       "  Small",
       "\e[2K\e[1G\e[1A" * 3,
       "\e[2K\e[1G",
@@ -98,7 +98,7 @@ RSpec.describe TTY::Prompt, '#select' do
     expect(prompt.select('What size?', choices, default: 1)).to eq(1)
     expect(prompt.output.string).to eq([
       "\e[?25lWhat size? \e[90m(Use arrow keys, press Enter to select)\e[0m\n",
-      "\e[32m#{symbols[:pointer]} large\e[0m\n",
+      "\e[32m#{symbols[:marker]} large\e[0m\n",
       "  medium\n",
       "  small",
       "\e[2K\e[1G\e[1A" * 3,
@@ -111,7 +111,7 @@ RSpec.describe TTY::Prompt, '#select' do
     prompt.input << " "
     prompt.input.rewind
     value = prompt.select('What size?') do |menu|
-              menu.symbols pointer: '>'
+              menu.symbols marker: '>'
 
               menu.choice "Large"
               menu.choice "Medium"
@@ -130,7 +130,7 @@ RSpec.describe TTY::Prompt, '#select' do
   end
 
   it "sets choice name & value through DSL" do
-    prompt = TTY::TestPrompt.new(symbols: {pointer: '>'})
+    prompt = TTY::TestPrompt.new(symbols: {marker: '>'})
     prompt.input << " "
     prompt.input.rewind
     value = prompt.select('What size?') do |menu|
@@ -160,7 +160,7 @@ RSpec.describe TTY::Prompt, '#select' do
     expect(value).to eq('Large')
     expect(prompt.output.string).to eq([
       "\e[?25lWhat size? \e[90m(Use arrow keys, press Enter to select)\e[0m\n",
-      "\e[32m#{symbols[:pointer]} Large\e[0m\n",
+      "\e[32m#{symbols[:marker]} Large\e[0m\n",
       "  Medium\n",
       "  Small",
       "\e[2K\e[1G\e[1A" * 3,
@@ -184,7 +184,7 @@ RSpec.describe TTY::Prompt, '#select' do
     expect(prompt.output.string).to eq([
       "\e[?25lWhat size? \e[90m(Use arrow or number (1-3) keys, press Enter to select)\e[0m\n",
       "  1. large\n",
-      "\e[32m#{symbols[:pointer]} 2. medium\e[0m\n",
+      "\e[32m#{symbols[:marker]} 2. medium\e[0m\n",
       "  3. small",
       "\e[2K\e[1G\e[1A" * 3,
       "\e[2K\e[1G",
@@ -204,7 +204,7 @@ RSpec.describe TTY::Prompt, '#select' do
     expect(prompt.output.string).to eq([
       "\e[?25lWhat size? \e[90m(Use arrow or number (1-3) keys, press Enter to select)\e[0m\n",
       "  1) large\n",
-      "\e[32m#{symbols[:pointer]} 2) medium\e[0m\n",
+      "\e[32m#{symbols[:marker]} 2) medium\e[0m\n",
       "  3) small",
       "\e[2K\e[1G\e[1A" * 3,
       "\e[2K\e[1G",
@@ -220,7 +220,7 @@ RSpec.describe TTY::Prompt, '#select' do
     expect(prompt.output.string).to eq([
       "\e[?25lWhat size? \e[90m(Use arrow or number (1-3) keys, press Enter to select)\e[0m\n",
       "  1. Large\n",
-      "\e[32m#{symbols[:pointer]} 2. Medium\e[0m\n",
+      "\e[32m#{symbols[:marker]} 2. Medium\e[0m\n",
       "  3. Small",
       "\e[2K\e[1G\e[1A" * 3,
       "\e[2K\e[1G",
@@ -228,12 +228,12 @@ RSpec.describe TTY::Prompt, '#select' do
     ].join)
   end
 
-  it "changes selected item color & pointer" do
+  it "changes selected item color & marker" do
     choices = %w(Large Medium Small)
-    prompt = TTY::TestPrompt.new(symbols: {pointer: '>'})
+    prompt = TTY::TestPrompt.new(symbols: {marker: '>'})
     prompt.input << " "
     prompt.input.rewind
-    options = {active_color: :blue, help_color: :red, symbols: {pointer: '>' }}
+    options = {active_color: :blue, help_color: :red, symbols: {marker: '>' }}
 
     value = prompt.select('What size?', choices, options)
 
@@ -257,7 +257,7 @@ RSpec.describe TTY::Prompt, '#select' do
     expect(value).to eq('Large')
     expect(prompt.output.string).to eq([
       "\e[?25lWhat size? \e[90m(Bash keyboard)\e[0m\n",
-      "\e[32m#{symbols[:pointer]} Large\e[0m\n",
+      "\e[32m#{symbols[:marker]} Large\e[0m\n",
       "  Medium\n",
       "  Small",
       "\e[2K\e[1G\e[1A" * 3,
@@ -277,7 +277,7 @@ RSpec.describe TTY::Prompt, '#select' do
     expect(value).to eq('Large')
     expect(prompt.output.string).to eq([
       "\e[?25lWhat size? \e[90m(Bash keyboard)\e[0m\n",
-      "\e[32m#{symbols[:pointer]} Large\e[0m\n",
+      "\e[32m#{symbols[:marker]} Large\e[0m\n",
       "  Medium\n",
       "  Small",
       "\e[2K\e[1G\e[1A" * 3,
@@ -294,7 +294,7 @@ RSpec.describe TTY::Prompt, '#select' do
     expect(prompt.select('What size?', choices)).to eq('Large')
     expect(prompt.output.string).to eq([
       "\e[?25l[?] What size? \e[90m(Use arrow keys, press Enter to select)\e[0m\n",
-      "\e[32m#{symbols[:pointer]} Large\e[0m\n",
+      "\e[32m#{symbols[:marker]} Large\e[0m\n",
       "  Medium\n",
       "  Small",
       "\e[2K\e[1G\e[1A" * 3,
@@ -314,7 +314,7 @@ RSpec.describe TTY::Prompt, '#select' do
       expect(answer).to eq('D')
       expected_output = [
         "\e[?25lWhat letter? \e[90m(Use arrow keys, press Enter to select)\e[0m\n",
-        "\e[32m#{symbols[:pointer]} D\e[0m\n",
+        "\e[32m#{symbols[:marker]} D\e[0m\n",
         "  E\n",
         "  F\n",
         "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
@@ -336,7 +336,7 @@ RSpec.describe TTY::Prompt, '#select' do
       expect(answer).to eq(4)
       expected_output = [
         "\e[?25lWhat letter? \e[90m(Use arrow keys, press Enter to select)\e[0m\n",
-        "\e[32m#{symbols[:pointer]} D\e[0m\n",
+        "\e[32m#{symbols[:marker]} D\e[0m\n",
         "  E\n",
         "  F\n",
         "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
@@ -364,7 +364,7 @@ RSpec.describe TTY::Prompt, '#select' do
       expect(answer).to eq('D')
       expected_output = [
         "\e[?25lWhat letter? \e[90m(Use arrow keys, press Enter to select)\e[0m\n",
-        "\e[32m#{symbols[:pointer]} D\e[0m\n",
+        "\e[32m#{symbols[:marker]} D\e[0m\n",
         "  E\n",
         "  F\n",
         "\e[90m(Wiggle thy finger up or down to see more)\e[0m",
@@ -717,7 +717,7 @@ RSpec.describe TTY::Prompt, '#select' do
 
     expect(prompt.output.string).to eq([
       "\e[?25lWhat letter? \e[90m(Use arrow keys, press Enter to select)\e[0m\n",
-      "\e[32m#{symbols[:pointer]} A\e[0m\n",
+      "\e[32m#{symbols[:marker]} A\e[0m\n",
       "  B\n",
       "  C\n",
       "  D",

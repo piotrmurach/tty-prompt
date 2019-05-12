@@ -23,7 +23,7 @@ RSpec.describe TTY::Prompt do
       disabled = choice.is_a?(Hash) ? choice[:disabled] : false
       num = (i + 1).to_s + enum if enum
 
-      prefix = name == active ? "#{symbols[:pointer]} " : "  "
+      prefix = name == active ? "#{symbols[:marker]} " : "  "
       prefix += if disabled
                   "\e[31m#{symbols[:cross]}\e[0m #{num}#{name} #{disabled}"
                 elsif selected.include?(name)
@@ -57,7 +57,7 @@ RSpec.describe TTY::Prompt do
     expect(prompt.multi_select("Select drinks?", choices)). to eq([])
     expect(prompt.output.string).to eq([
       "\e[?25lSelect drinks? \e[90m(Use arrow keys, press Space to select and Enter to finish)\e[0m\n",
-      "#{symbols[:pointer]} #{symbols[:radio_off]} vodka\n",
+      "#{symbols[:marker]} #{symbols[:radio_off]} vodka\n",
       "  #{symbols[:radio_off]} beer\n",
       "  #{symbols[:radio_off]} wine\n",
       "  #{symbols[:radio_off]} whisky\n",
@@ -75,14 +75,14 @@ RSpec.describe TTY::Prompt do
     expect(prompt.multi_select("Select drinks?", choices)). to eq(['vodka'])
     expect(prompt.output.string).to eq([
       "\e[?25lSelect drinks? \e[90m(Use arrow keys, press Space to select and Enter to finish)\e[0m\n",
-      "#{symbols[:pointer]} #{symbols[:radio_off]} vodka\n",
+      "#{symbols[:marker]} #{symbols[:radio_off]} vodka\n",
       "  #{symbols[:radio_off]} beer\n",
       "  #{symbols[:radio_off]} wine\n",
       "  #{symbols[:radio_off]} whisky\n",
       "  #{symbols[:radio_off]} bourbon",
       "\e[2K\e[1G\e[1A" * 5, "\e[2K\e[1G",
       "Select drinks? vodka\n",
-      "#{symbols[:pointer]} \e[32m#{symbols[:radio_on]}\e[0m vodka\n",
+      "#{symbols[:marker]} \e[32m#{symbols[:radio_on]}\e[0m vodka\n",
       "  #{symbols[:radio_off]} beer\n",
       "  #{symbols[:radio_off]} wine\n",
       "  #{symbols[:radio_off]} whisky\n",
@@ -100,14 +100,14 @@ RSpec.describe TTY::Prompt do
     expect(prompt.multi_select("Select drinks?", choices, echo: false)). to eq(['vodka'])
     expect(prompt.output.string).to eq([
       "\e[?25lSelect drinks? \e[90m(Use arrow keys, press Space to select and Enter to finish)\e[0m\n",
-      "#{symbols[:pointer]} #{symbols[:radio_off]} vodka\n",
+      "#{symbols[:marker]} #{symbols[:radio_off]} vodka\n",
       "  #{symbols[:radio_off]} beer\n",
       "  #{symbols[:radio_off]} wine\n",
       "  #{symbols[:radio_off]} whisky\n",
       "  #{symbols[:radio_off]} bourbon",
       "\e[2K\e[1G\e[1A" * 5, "\e[2K\e[1G",
       "Select drinks? \n",
-      "#{symbols[:pointer]} \e[32m#{symbols[:radio_on]}\e[0m vodka\n",
+      "#{symbols[:marker]} \e[32m#{symbols[:radio_on]}\e[0m vodka\n",
       "  #{symbols[:radio_off]} beer\n",
       "  #{symbols[:radio_off]} wine\n",
       "  #{symbols[:radio_off]} whisky\n",
@@ -125,14 +125,14 @@ RSpec.describe TTY::Prompt do
     expect(prompt.multi_select("Select drinks?", choices)).to eq([1])
     expect(prompt.output.string).to eq([
       "\e[?25lSelect drinks? \e[90m(Use arrow keys, press Space to select and Enter to finish)\e[0m\n",
-      "#{symbols[:pointer]} #{symbols[:radio_off]} vodka\n",
+      "#{symbols[:marker]} #{symbols[:radio_off]} vodka\n",
       "  #{symbols[:radio_off]} beer\n",
       "  #{symbols[:radio_off]} wine\n",
       "  #{symbols[:radio_off]} whisky\n",
       "  #{symbols[:radio_off]} bourbon",
       "\e[2K\e[1G\e[1A" * 5, "\e[2K\e[1G",
       "Select drinks? vodka\n",
-      "#{symbols[:pointer]} \e[32m#{symbols[:radio_on]}\e[0m vodka\n",
+      "#{symbols[:marker]} \e[32m#{symbols[:radio_on]}\e[0m vodka\n",
       "  #{symbols[:radio_off]} beer\n",
       "  #{symbols[:radio_off]} wine\n",
       "  #{symbols[:radio_off]} whisky\n",
@@ -147,7 +147,7 @@ RSpec.describe TTY::Prompt do
     prompt.input << " \r"
     prompt.input.rewind
     value = prompt.multi_select("Select drinks?") do |menu|
-              menu.symbols pointer: '>', radio_off: '-', radio_on: '='
+              menu.symbols marker: '>', radio_off: '-', radio_on: '='
               menu.enum ')'
 
               menu.choice :vodka, {score: 1}
@@ -195,7 +195,7 @@ RSpec.describe TTY::Prompt do
       "  \e[32m#{symbols[:radio_on]}\e[0m beer\n",
       "  #{symbols[:radio_off]} wine\n",
       "  #{symbols[:radio_off]} whisky\n",
-      "#{symbols[:pointer]} \e[32m#{symbols[:radio_on]}\e[0m bourbon",
+      "#{symbols[:marker]} \e[32m#{symbols[:radio_on]}\e[0m bourbon",
       "\e[2K\e[1G\e[1A" * 5, "\e[2K\e[1G",
       "Select drinks? \e[32mbeer, bourbon\e[0m\n\e[?25h",
     ].join)
@@ -239,7 +239,7 @@ RSpec.describe TTY::Prompt do
     expect(prompt.multi_select("Select drinks?", choices)). to eq([])
     expect(prompt.output.string).to eq([
       "\e[?25l[?] Select drinks? \e[90m(Use arrow keys, press Space to select and Enter to finish)\e[0m\n",
-      "#{symbols[:pointer]} #{symbols[:radio_off]} vodka\n",
+      "#{symbols[:marker]} #{symbols[:radio_off]} vodka\n",
       "  #{symbols[:radio_off]} beer\n",
       "  #{symbols[:radio_off]} wine\n",
       "  #{symbols[:radio_off]} whisky\n",
@@ -254,7 +254,7 @@ RSpec.describe TTY::Prompt do
     choices = %w(vodka beer wine whisky bourbon)
     prompt.input << "\r"
     prompt.input.rewind
-    options = {default: [1], active_color: :blue, symbols: {pointer: '>'}}
+    options = {default: [1], active_color: :blue, symbols: {marker: '>'}}
     expect(prompt.multi_select("Select drinks?", choices, options)). to eq(['vodka'])
     expect(prompt.output.string).to eq([
       "\e[?25lSelect drinks? vodka \e[90m(Use arrow keys, press Space to select and Enter to finish)\e[0m\n",
@@ -276,7 +276,7 @@ RSpec.describe TTY::Prompt do
     expect(prompt.multi_select("Select drinks?", choices, help: '(Bash keyboard)')). to eq([])
     expect(prompt.output.string).to eq([
       "\e[?25lSelect drinks? \e[90m(Bash keyboard)\e[0m\n",
-      "#{symbols[:pointer]} #{symbols[:radio_off]} vodka\n",
+      "#{symbols[:marker]} #{symbols[:radio_off]} vodka\n",
       "  #{symbols[:radio_off]} beer\n",
       "  #{symbols[:radio_off]} wine\n",
       "  #{symbols[:radio_off]} whisky\n",
@@ -298,7 +298,7 @@ RSpec.describe TTY::Prompt do
       expect(answer).to eq(['D'])
       expected_output = [
         "\e[?25lWhat letter? D \e[90m(Use arrow keys, press Space to select and Enter to finish)\e[0m\n",
-        "#{symbols[:pointer]} \e[32m#{symbols[:radio_on]}\e[0m D\n",
+        "#{symbols[:marker]} \e[32m#{symbols[:radio_on]}\e[0m D\n",
         "  #{symbols[:radio_off]} E\n",
         "  #{symbols[:radio_off]} F\n",
         "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
@@ -319,7 +319,7 @@ RSpec.describe TTY::Prompt do
       expect(answer).to eq([4])
       expected_output = [
         "\e[?25lWhat letter? D \e[90m(Use arrow keys, press Space to select and Enter to finish)\e[0m\n",
-        "#{symbols[:pointer]} \e[32m#{symbols[:radio_on]}\e[0m D\n",
+        "#{symbols[:marker]} \e[32m#{symbols[:radio_on]}\e[0m D\n",
         "  #{symbols[:radio_off]} E\n",
         "  #{symbols[:radio_off]} F\n",
         "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
@@ -345,7 +345,7 @@ RSpec.describe TTY::Prompt do
       expect(answer).to eq(['D'])
       expected_output = [
         "\e[?25lWhat letter? D \e[90m(Use arrow keys, press Space to select and Enter to finish)\e[0m\n",
-        "#{symbols[:pointer]} \e[32m#{symbols[:radio_on]}\e[0m D\n",
+        "#{symbols[:marker]} \e[32m#{symbols[:radio_on]}\e[0m D\n",
         "  #{symbols[:radio_off]} E\n",
         "  #{symbols[:radio_off]} F\n",
         "\e[90m(Wiggle thy finger up or down to see more)\e[0m",
@@ -365,7 +365,7 @@ RSpec.describe TTY::Prompt do
 
       expect(prompt.output.string).to eq([
         "\e[?25lWhat letter? A \e[90m(Use arrow keys, press Space to select and Enter to finish)\e[0m\n",
-        "#{symbols[:pointer]} \e[32m#{symbols[:radio_on]}\e[0m A\n",
+        "#{symbols[:marker]} \e[32m#{symbols[:radio_on]}\e[0m A\n",
         "  #{symbols[:radio_off]} B\n",
         "  #{symbols[:radio_off]} C\n",
         "  #{symbols[:radio_off]} D",
@@ -539,7 +539,7 @@ RSpec.describe TTY::Prompt do
       expected_output = [
         "\e[?25lWhat number? 2 \e[90m(Use arrow keys, press Space to select and Enter to finish)\e[0m\n",
         "  #{symbols[:radio_off]} 1\n",
-        "#{symbols[:pointer]} \e[32m#{symbols[:radio_on]}\e[0m 2\n",
+        "#{symbols[:marker]} \e[32m#{symbols[:radio_on]}\e[0m 2\n",
         "  #{symbols[:radio_off]} 3\n",
         "  #{symbols[:radio_off]} 4\n",
         "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
@@ -547,7 +547,7 @@ RSpec.describe TTY::Prompt do
         "\e[2K\e[1G",
         "What number? 2\n",
         "  #{symbols[:radio_off]} 5\n",
-        "#{symbols[:pointer]} #{symbols[:radio_off]} 6\n",
+        "#{symbols[:marker]} #{symbols[:radio_off]} 6\n",
         "  #{symbols[:radio_off]} 7\n",
         "  #{symbols[:radio_off]} 8\n",
         "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
@@ -555,13 +555,13 @@ RSpec.describe TTY::Prompt do
         "\e[2K\e[1G",
         "What number? 2\n",
         "  #{symbols[:radio_off]} 9\n",
-        "#{symbols[:pointer]} #{symbols[:radio_off]} 10\n",
+        "#{symbols[:marker]} #{symbols[:radio_off]} 10\n",
         "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
         "\e[2K\e[1G\e[1A" * 3,
         "\e[2K\e[1G",
         "What number? 2\n",
         "  #{symbols[:radio_off]} 1\n",
-        "#{symbols[:pointer]} \e[32m#{symbols[:radio_on]}\e[0m 2\n",
+        "#{symbols[:marker]} \e[32m#{symbols[:radio_on]}\e[0m 2\n",
         "  #{symbols[:radio_off]} 3\n",
         "  #{symbols[:radio_off]} 4\n",
         "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
@@ -569,13 +569,13 @@ RSpec.describe TTY::Prompt do
         "\e[2K\e[1G",
         "What number? 2\n",
         "  #{symbols[:radio_off]} 9\n",
-        "#{symbols[:pointer]} #{symbols[:radio_off]} 10\n",
+        "#{symbols[:marker]} #{symbols[:radio_off]} 10\n",
         "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
         "\e[2K\e[1G\e[1A" * 3,
         "\e[2K\e[1G",
         "What number? 2, 10\n",
         "  #{symbols[:radio_off]} 9\n",
-        "#{symbols[:pointer]} \e[32m#{symbols[:radio_on]}\e[0m 10\n",
+        "#{symbols[:marker]} \e[32m#{symbols[:radio_on]}\e[0m 10\n",
         "\e[90m(Move up/down or left/right to reveal more choices)\e[0m",
         "\e[2K\e[1G\e[1A" * 3,
         "\e[2K\e[1G",
