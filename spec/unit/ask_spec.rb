@@ -21,10 +21,10 @@ RSpec.describe TTY::Prompt, '#ask' do
     answer = prompt.ask
     expect(answer).to eq(nil)
 
-    expect(prompt.output.string).to eql(" \e[2K\e[1G \n\e[1A\e[2K\e[1G \n")
+    expect(prompt.output.string).to eql("\e[2K\e[1G\n\e[1A\e[2K\e[1G\n")
   end
 
-  it 'asks an empty question and returns nil if EOF is sent to stdin' do
+  it "asks an empty question and returns nil if EOF is sent to stdin" do
     prompt = TTY::TestPrompt.new
     prompt.input << nil
     prompt.input.rewind
@@ -32,7 +32,39 @@ RSpec.describe TTY::Prompt, '#ask' do
     answer = prompt.ask('')
 
     expect(answer).to eql(nil)
-    expect(prompt.output.string).to eq(" \e[1A\e[2K\e[1G \n")
+    expect(prompt.output.string).to eq("\e[1A\e[2K\e[1G\n")
+  end
+
+  it "asks an empty question with prepopulated value" do
+    prompt = TTY::TestPrompt.new
+    prompt.input << "\n"
+    prompt.input.rewind
+
+    answer = prompt.ask value: "yes"
+
+    expect(answer).to eq("yes")
+    expect(prompt.output.string).to eq([
+      "yes\e[2K\e[1G",
+      "yes\n\e[1A\e[2K\e[1G",
+      "\e[32myes\e[0m\n"
+    ].join)
+  end
+
+  it "asks question with prepopulated value" do
+    prompt = TTY::TestPrompt.new prefix: "> "
+    prompt.input << "\n"
+    prompt.input.rewind
+
+    answer = prompt.ask("Say?") do |q|
+      q.value "yes"
+    end
+
+    expect(answer).to eq("yes")
+    expect(prompt.output.string).to eq([
+      "> Say? yes\e[2K\e[1G",
+      "> Say? yes\n\e[1A\e[2K\e[1G",
+      "> Say? \e[32myes\e[0m\n"
+    ].join)
   end
 
   it "asks a question with a prefix [?]" do

@@ -47,8 +47,10 @@ module TTY
         @active_color = options.fetch(:active_color) { @prompt.active_color }
         @help_color = options.fetch(:help_color) { @prompt.help_color }
         @error_color = options.fetch(:error_color) { :red }
+        @value      = options.fetch(:value) { UndefinedSetting }
         @messages   = Utils.deep_copy(options.fetch(:messages) { { } })
         @done       = false
+        @first_render = true
         @input      = nil
 
         @evaluator = Evaluator.new(self)
@@ -130,7 +132,10 @@ module TTY
       #
       # @api private
       def render_question
-        header = ["#{@prefix}#{message} "]
+        header = []
+        if !Utils.blank?(@prefix) || !Utils.blank?(message)
+          header << "#{@prefix}#{message} "
+        end
         if !echo?
           header
         elsif @done
@@ -157,7 +162,12 @@ module TTY
       #
       # @api private
       def read_input(question)
-        @prompt.read_line(question, echo: echo).chomp
+        options = {echo: echo}
+        if value? && @first_render
+          options[:value] = @value
+          @first_render = false
+        end
+        @prompt.read_line(question, options).chomp
       end
 
       # Handle error condition
@@ -263,6 +273,21 @@ module TTY
       def validate(value = nil, message = nil, &block)
         messages[:valid?] = message if message
         @validation = (value || block)
+      end
+
+      # Prepopulate input with custom content
+      #
+      # @api public
+      def value(val)
+        return @value if val.nil?
+        @value = val
+      end
+
+      # Check if custom value is present
+      #
+      # @api private
+      def value?
+        @value != UndefinedSetting
       end
 
       def validation?
