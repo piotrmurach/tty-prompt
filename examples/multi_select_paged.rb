@@ -6,4 +6,4 @@ prompt = TTY::Prompt.new
 
 alfabet = ('A'..'Z').to_a
 
-prompt.multi_select('Which letter?', alfabet, per_page: 5)
+prompt.multi_select('Which letter?', alfabet, per_page: 7, max: 3)
