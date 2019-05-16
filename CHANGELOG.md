@@ -4,6 +4,7 @@
 
 ### Added
 * Add Prompt#debug to allow displaying values in terminal's top right corner
+* Add :max to limit number of choices in #multi_select prompt
 
 ### Changed
 * Change Paginator to expose #start_index & #end_index
