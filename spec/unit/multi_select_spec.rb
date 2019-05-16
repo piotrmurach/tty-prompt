@@ -13,6 +13,7 @@ RSpec.describe TTY::Prompt do
     out = []
     out << "\e[?25l" if init
     out << prompt << " "
+    out << "(max. #{options[:max]}) " if options[:max]
     out << selected.join(', ')
     out << " " if init && !selected.empty?
     out << "\e[90m" if init
@@ -691,6 +692,38 @@ RSpec.describe TTY::Prompt do
         output_helper("Select drinks?", choices, "vodka", [], enum: ') ') +
         output_helper("Select drinks?", choices, "vodka", %w[vodka], enum: ') ') +
         exit_message("Select drinks?", %w[vodka])
+
+      expect(prompt.output.string).to eq(expected_output)
+    end
+  end
+
+  context "with :max" do
+    it "limits number of choices" do
+      prompt = TTY::TestPrompt.new
+      choices = %w(A B C)
+      prompt.on(:keypress) { |e|
+        prompt.trigger(:keyup)   if e.value == "k"
+        prompt.trigger(:keydown) if e.value == "j"
+      }
+      prompt.input << " " << "j" << " " <<  "j" << " " << "k" << " " << "j" << " "  << "\r"
+      prompt.input.rewind
+
+      value = prompt.multi_select("What letter?", choices, max: 2, per_page: 100)
+      expect(value).to eq(["A", "C"])
+
+      expected_output =
+        output_helper("What letter?", choices, "A", [], init: true, max: 2,
+          hint: "Use arrow keys, press Space to select and Enter to finish") +
+        output_helper("What letter?", choices, "A", %w[A], max: 2) +
+        output_helper("What letter?", choices, "B", %w[A], max: 2) +
+        output_helper("What letter?", choices, "B", %w[A B], max: 2) +
+        output_helper("What letter?", choices, "C", %w[A B], max: 2) +
+        output_helper("What letter?", choices, "C", %w[A B], max: 2) +
+        output_helper("What letter?", choices, "B", %w[A B], max: 2) +
+        output_helper("What letter?", choices, "B", %w[A], max: 2) +
+        output_helper("What letter?", choices, "C", %w[A], max: 2) +
+        output_helper("What letter?", choices, "C", %w[A C], max: 2) +
+        exit_message("What letter?", %w[A C])
 
       expect(prompt.output.string).to eq(expected_output)
     end

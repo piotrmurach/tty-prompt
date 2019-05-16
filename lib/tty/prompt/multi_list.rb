@@ -22,6 +22,14 @@ module TTY
         @selected = []
         @help = options[:help]
         @echo = options.fetch(:echo, true)
+        @max  = options[:max]
+      end
+
+      # Set a maximum number of choices
+      #
+      # @api public
+      def max(value)
+        @max = value
       end
 
       # Callback fired when space key is pressed
@@ -32,6 +40,7 @@ module TTY
         if @selected.include?(active_choice)
           @selected.delete(active_choice)
         else
+          return if @max && @selected.size >= @max
           @selected << active_choice
         end
       end
@@ -62,20 +71,34 @@ module TTY
         @selected.map(&:name).join(', ')
       end
 
+      # Header part showing the maximum number of choices
+      #
+      # @return [String]
+      #
+      # @api private
+      def max_help
+        "(max. #{@max}) "
+      end
+
       # Render initial help text and then currently selected choices
       #
       # @api private
       def render_header
         instructions = @prompt.decorate(help, :bright_black)
+        max_suffix = @max ? max_help : ""
+
         if @done && @echo
           @prompt.decorate(selected_names, @active_color)
         elsif @selected.size.nonzero? && @echo
           help_suffix = filterable? && @filter.any? ? " #{filter_help}" : ""
-          selected_names + (@first_render ? " #{instructions}" : help_suffix)
+          max_suffix + selected_names +
+            (@first_render ? " #{instructions}" : help_suffix)
         elsif @first_render
-          instructions
+          max_suffix + instructions
         elsif filterable? && @filter.any?
-          filter_help
+          max_suffix + filter_help
+        elsif @max
+          max_help
         end
       end
 
