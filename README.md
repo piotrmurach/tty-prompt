@@ -65,12 +65,13 @@ Or install it yourself as:
   * [2.1 ask](#21-ask)
     * [2.1.1 convert](#211-convert)
     * [2.1.2 default](#212-default)
-    * [2.1.3 echo](#213-echo)
-    * [2.1.4 error messages](#214-error-messages)
-    * [2.1.5 in](#215-in)
-    * [2.1.6 modify](#216-modify)
-    * [2.1.7 required](#217-required)
-    * [2.1.8 validate](#218-validate)
+    * [2.1.3 value](#213-value)
+    * [2.1.4 echo](#214-echo)
+    * [2.1.5 error messages](#215-error-messages)
+    * [2.1.6 in](#216-in)
+    * [2.1.7 modify](#217-modify)
+    * [2.1.8 required](#218-required)
+    * [2.1.9 validate](#219-validate)
   * [2.2 keypress](#22-keypress)
     * [2.2.1 :timeout](#221-timeout)
   * [2.3 multiline](#23-multiline)
@@ -279,7 +280,17 @@ prompt.ask('What is your name?', default: 'Anonymous')
 # What is your name? (Anonymous)
 ```
 
-#### 2.1.3 echo
+#### 2.1.3 value
+
+To pre-populate the input line for editing use `:value` option:
+
+```ruby
+prompt.ask("What is your name?", value: "Piotr")
+# =>
+# What is your name? Piotr
+```
+
+#### 2.1.4 echo
 
 To control whether the input is shown back in terminal or not use `:echo` option like so:
 
@@ -287,7 +298,7 @@ To control whether the input is shown back in terminal or not use `:echo` option
 prompt.ask('password:', echo: false)
 ```
 
-#### 2.1.4 error messages
+#### 2.1.5 error messages
 
 By default `tty-prompt` comes with predefined error messages for `required`, `in`, `validate` options.
 
@@ -299,7 +310,7 @@ prompt.ask('What is your email?') do |q|
 end
 ```
 
-or change the `messages` key entry out of `:required?`, `:valid?`, `:range?`:
+Or change the `messages` key entry out of `:required?`, `:valid?`, `:range?`:
 
 ```ruby
 prompt.ask('What is your email?') do |q|
@@ -308,7 +319,7 @@ prompt.ask('What is your email?') do |q|
 end
 ```
 
-to change default range validation error message do:
+To change default range validation error message do:
 
 ```ruby
 prompt.ask('How spicy on scale (1-5)? ') do |q|
@@ -317,7 +328,7 @@ prompt.ask('How spicy on scale (1-5)? ') do |q|
 end
 ```
 
-#### 2.1.5 in
+#### 2.1.6 in
 
 In order to check that provided input falls inside a range of inputs use the `in` option. For example, if we wanted to ask a user for a single digit in given range we may do following:
 
@@ -325,7 +336,7 @@ In order to check that provided input falls inside a range of inputs use the `in
 ask("Provide number in range: 0-9?") { |q| q.in('0-9') }
 ```
 
-#### 2.1.6 modify
+#### 2.1.7 modify
 
 Set the `:modify` option if you want to handle whitespace or letter capitalization.
 
@@ -350,7 +361,7 @@ Available whitespace settings are:
 :remove   # remove all whitespace
 ```
 
-#### 2.1.7 required
+#### 2.1.8 required
 
 To ensure that input is provided use `:required` option:
 
@@ -360,7 +371,7 @@ prompt.ask("What's your phone number?", required: true)
 # >> Value must be provided
 ```
 
-#### 2.1.8 validate
+#### 2.1.9 validate
 
 In order to validate that input matches a given patter you can pass the `validate` option. Validate setting accepts `Regex`, `Proc` or `Symbol`.
 
