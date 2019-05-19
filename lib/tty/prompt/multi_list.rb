@@ -9,7 +9,7 @@ module TTY
     #
     # @api private
     class MultiList < List
-      HELP = '(Use arrow%s keys, press Space to select and Enter to finish%s)'
+      HELP = '(Use %s arrow%s keys, press Space to select and Enter to finish%s)'
 
       # Create instance of TTY::Prompt::MultiList menu.
       #
