@@ -23,7 +23,11 @@ module TTY
         checkbox_on: '☒',
         checkbox_off: '☐',
         circle_on: 'ⓧ',
-        circle_off: 'Ⓘ'
+        circle_off: 'Ⓘ',
+        arrow_up: '↑',
+        arrow_down: '↓',
+        arrow_left: '←',
+        arrow_right: '→'
       }.freeze
 
       WIN_KEYS = {
@@ -43,7 +47,11 @@ module TTY
         checkbox_on: '[×]',
         checkbox_off: '[ ]',
         circle_on: '(x)',
-        circle_off: '( )'
+        circle_off: '( )',
+        arrow_up: '↑',
+        arrow_down: '↓',
+        arrow_left: '←',
+        arrow_right: '→'
       }.freeze
 
       def symbols
