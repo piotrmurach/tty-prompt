@@ -35,11 +35,13 @@ RSpec.describe TTY::Prompt, '#expand' do
     result = prompt.expand('Overwrite Gemfile?', choices)
     expect(result).to eq(:yes)
 
-    expect(prompt.output.string).to eq([
+    expected_output = [
       "Overwrite Gemfile? (enter \"h\" for help) [\e[32my\e[0m,n,a,d,q,h] ",
       "\e[2K\e[1G",
       "Overwrite Gemfile? \e[32mOverwrite\e[0m\n"
-    ].join)
+    ].join
+
+    expect(prompt.output.string).to eq(expected_output)
   end
 
   it "changes default option" do
@@ -49,11 +51,13 @@ RSpec.describe TTY::Prompt, '#expand' do
     result = prompt.expand('Overwrite Gemfile?', choices, default: 3)
     expect(result).to eq(:all)
 
-    expect(prompt.output.string).to eq([
+    expected_output = [
       "Overwrite Gemfile? (enter \"h\" for help) [y,n,\e[32ma\e[0m,d,q,h] ",
       "\e[2K\e[1G",
       "Overwrite Gemfile? \e[32mOverwrite all\e[0m\n"
-    ].join)
+    ].join
+
+    expect(prompt.output.string).to eq(expected_output)
   end
 
   it "expands chosen option with extra information" do
@@ -63,7 +67,7 @@ RSpec.describe TTY::Prompt, '#expand' do
     result = prompt.expand('Overwrite Gemfile?', choices)
     expect(result).to eq(:all)
 
-    expect(prompt.output.string).to eq([
+    expected_output = [
       "Overwrite Gemfile? (enter \"h\" for help) [\e[32my\e[0m,n,a,d,q,h] ",
       "\e[2K\e[1G",
       "Overwrite Gemfile? (enter \"h\" for help) [y,n,\e[32ma\e[0m,d,q,h] ",
@@ -75,7 +79,9 @@ RSpec.describe TTY::Prompt, '#expand' do
       "\e[2K\e[1G",
       "\e[A\e[1G",
       "Overwrite Gemfile? \e[32mOverwrite all\e[0m\n"
-    ].join)
+    ].join
+
+    expect(prompt.output.string).to eq(expected_output)
   end
 
   it "expands help option and then defaults" do
@@ -85,7 +91,7 @@ RSpec.describe TTY::Prompt, '#expand' do
     result = prompt.expand('Overwrite Gemfile?', choices)
     expect(result).to eq(:diff)
 
-    expect(prompt.output.string).to eq([
+    expected_output = [
       "Overwrite Gemfile? (enter \"h\" for help) [\e[32my\e[0m,n,a,d,q,h] ",
       "\e[2K\e[1G",
       "Overwrite Gemfile? (enter \"h\" for help) [y,n,a,d,q,\e[32mh\e[0m] h\n",
@@ -116,7 +122,9 @@ RSpec.describe TTY::Prompt, '#expand' do
       "\e[2K\e[1G\e[1A" * 7,
       "\e[2K\e[1G",
       "Overwrite Gemfile? \e[32mShow diff\e[0m\n",
-    ].join)
+    ].join
+
+    expect(prompt.output.string).to eq(expected_output)
   end
 
   it "automatically expands hint" do
@@ -215,11 +223,13 @@ RSpec.describe TTY::Prompt, '#expand' do
 
     expect(result).to eq(:diff)
 
-    expect(prompt.output.string).to eq([
+    expected_output = [
       "Overwrite Gemfile? (enter \"h\" for help) [y,n,a,\e[32md\e[0m,q,h] ",
       "\e[2K\e[1G",
       "Overwrite Gemfile? \e[32mShow diff\e[0m\n"
-    ].join)
+    ].join
+
+    expect(prompt.output.string).to eq(expected_output)
   end
 
   it "specifies options through DSL and executes value" do
@@ -236,11 +246,13 @@ RSpec.describe TTY::Prompt, '#expand' do
 
     expect(result).to eq(:ok)
 
-    expect(prompt.output.string).to eq([
+    expected_output = [
       "Overwrite Gemfile? (enter \"h\" for help) [\e[32my\e[0m,n,a,d,q,h] ",
       "\e[2K\e[1G",
       "Overwrite Gemfile? \e[32mOverwrite\e[0m\n"
-    ].join)
+    ].join
+
+    expect(prompt.output.string).to eq(expected_output)
   end
 
   it "fails to expand due to lack of key attribute" do
