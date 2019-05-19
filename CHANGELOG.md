@@ -6,6 +6,7 @@
 * Add Prompt#debug to allow displaying values in terminal's top right corner
 * Add :max to limit number of choices in #multi_select prompt
 * Add :value to pre populate #ask prompt line content
+* Add :auto_hint to expand default hint in #expand prompt by Ewoudt Kellerman(@hellola)
 
 ### Changed
 * Change Paginator to expose #start_index & #end_index
