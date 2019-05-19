@@ -22,6 +22,7 @@ module TTY
         @prompt       = prompt
         @prefix       = options.fetch(:prefix) { @prompt.prefix }
         @default      = options.fetch(:default) { 1 }
+        @auto_hint    = options.fetch(:auto_hint) { false }
         @active_color = options.fetch(:active_color) { @prompt.active_color }
         @help_color   = options.fetch(:help_color) { @prompt.help_color }
         @choices      = Choices.new
@@ -29,7 +30,6 @@ module TTY
         @done         = false
         @status       = :collapsed
         @hint         = nil
-        @auto_hint = options.fetch(:auto_hint) { false }
         @default_key  = false
       end
 
@@ -63,6 +63,7 @@ module TTY
         elsif selected
           @done = true
           @selected = selected
+          @hint = nil
         else
           @input = ''
         end
@@ -78,9 +79,16 @@ module TTY
         elsif event.value =~ /^[^\e\n\r]/
           @input += event.value
         end
+
         @selected = select_choice(@input)
         if @selected && !@default_key && collapsed?
           @hint = @selected.name
+        elsif @selected.nil? && @auto_hint && collapsed?
+          if @input.empty?
+            @hint = @choices[@default - 1].name
+          else
+            @hint = "invalid option"
+          end
         end
       end
 
@@ -222,9 +230,8 @@ module TTY
       end
 
       def load_auto_hint
-        if @hint.nil?
-          default_choice = select_choice(@choices[@default - 1].key)
-          @hint = default_choice.name
+        if @hint.nil? && collapsed?
+          @hint = @choices[@default - 1].name
         end
       end
 
@@ -244,8 +251,8 @@ module TTY
       #
       # @api private
       def refresh(lines)
-        if @hint && (!@selected || @done)
-          @hint = nil
+        if (@hint && (!@selected || @done)) || @auto_hint
+          @hint = nil if !@auto_hint
           @prompt.clear_lines(lines, :down) +
             @prompt.cursor.prev_line
         elsif expanded?

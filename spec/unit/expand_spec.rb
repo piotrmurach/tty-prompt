@@ -119,6 +119,86 @@ RSpec.describe TTY::Prompt, '#expand' do
     ].join)
   end
 
+  it "automatically expands hint" do
+    prompt.input << "d\n"
+    prompt.input.rewind
+
+    result = prompt.expand('Overwrite Gemfile?', choices, auto_hint: true)
+    expect(result).to eq(:diff)
+
+    expected_output = [
+      "Overwrite Gemfile? (enter \"h\" for help) [\e[32my\e[0m,n,a,d,q,h] ",
+      "\n\e[32m>> \e[0mOverwrite",
+      "\e[A\e[1G\e[54C",
+      "\e[2K\e[1G",
+      "\e[1B",
+      "\e[2K\e[1G",
+      "\e[A\e[1G",
+      "Overwrite Gemfile? (enter \"h\" for help) [y,n,a,\e[32md\e[0m,q,h] ",
+      "d\n",
+      "\e[32m>> \e[0mShow diff",
+      "\e[A\e[1G\e[55C",
+      "\e[2K\e[1G",
+      "\e[1B",
+      "\e[2K\e[1G",
+      "\e[A\e[1G",
+      "Overwrite Gemfile? \e[32mShow diff\e[0m\n",
+      "\e[32m>> \e[0mShow diff",
+      "\e[A\e[1G\e[28C\n"
+    ].join
+
+    expect(prompt.output.string).to eq(expected_output)
+  end
+
+  it "informs about invalid input when automatically expanding hint" do
+    prompt = TTY::TestPrompt.new
+    prompt.on(:keypress) { |e| prompt.trigger(:keybackspace) if e.value == "w" }
+    prompt.input << "y" << "y" << "\u007F" << "\r"
+    prompt.input.rewind
+
+    result = prompt.expand('Overwrite Gemfile?', choices, defualt: 1, auto_hint: true)
+    expect(result).to eq(:yes)
+
+    expected_output = [
+      "Overwrite Gemfile? (enter \"h\" for help) [\e[32my\e[0m,n,a,d,q,h] ",
+      "\n\e[32m>> \e[0mOverwrite",
+      "\e[A\e[1G\e[54C",
+      "\e[2K\e[1G",
+      "\e[1B",
+      "\e[2K\e[1G",
+      "\e[A\e[1G",
+      "Overwrite Gemfile? (enter \"h\" for help) [\e[32my\e[0m,n,a,d,q,h] ",
+      "y\n",
+      "\e[32m>> \e[0mOverwrite",
+      "\e[A\e[1G\e[55C",
+      "\e[2K\e[1G",
+      "\e[1B",
+      "\e[2K\e[1G",
+      "\e[A\e[1G",
+      "Overwrite Gemfile? (enter \"h\" for help) [y,n,a,d,q,h] ",
+      "yy\n",
+      "\e[32m>> \e[0minvalid option",
+      "\e[A\e[1G\e[56C",
+      "\e[2K\e[1G",
+      "\e[1B",
+      "\e[2K\e[1G",
+      "\e[A\e[1G",
+      "Overwrite Gemfile? (enter \"h\" for help) [\e[32my\e[0m,n,a,d,q,h] ",
+      "y\n",
+      "\e[32m>> \e[0mOverwrite",
+      "\e[A\e[1G\e[55C",
+      "\e[2K\e[1G",
+      "\e[1B",
+      "\e[2K\e[1G",
+      "\e[A\e[1G",
+      "Overwrite Gemfile? \e[32mOverwrite\e[0m\n",
+      "\e[32m>> \e[0mOverwrite",
+      "\e[A\e[1G\e[28C\n"
+    ].join
+
+    expect(prompt.output.string).to eq(expected_output)
+  end
+
   it "specifies options through DSL" do
     prompt.input << "\n"
     prompt.input.rewind
