@@ -93,6 +93,7 @@ Or install it yourself as:
       * [2.6.4.1 :per_page](#2641-per_page)
       * [2.6.4.1 :disabled](#2641-disabled)
   * [2.7 expand](#27-expand)
+    * [2.7.1 auto_hint](#271-auto_hint)
   * [2.8 collect](#28-collect)
   * [2.9 suggest](#29-suggest)
   * [2.10 slider](#210-slider)
@@ -1116,7 +1117,7 @@ prompt.enum_select('Select an editor', choices)
 
 The `expand` provides a compact way to ask a question with many options.
 
-As first argument `expand` takes the message to display and as a second an array of choices. Compared to the `select`, `multi_select` and `enum_select`, the choices need to be objects that include `:key`, `:name` and `:value` keys. The `:key` must be a single character. The help choice is added automatically as the last option and the key `h`.
+As first argument `expand` takes the message to display and as a second an array of choices. Compared to the `select`, `multi_select` and `enum_select`, the choices need to be objects that include `:key`, `:name` and `:value` keys. The `:key` must be a single character. The help choice is added automatically as the last option under the key `h`.
 
 ```ruby
 choices = [
@@ -1175,6 +1176,17 @@ If user types `h` and presses enter, an expanded view will be shown which furthe
 ```
 
 Run `examples/expand.rb` to see the prompt in action.
+
+#### 2.7.1 `:auto_hint`
+
+To show hint by default use `:auto_hint` option:
+
+```ruby
+prompt.expand('Overwrite Gemfile?', choices, auto_hint: true)
+# =>
+# Overwrite Gemfile? (enter "h" for help) [y,n,q,h]
+# >> overwrite this file
+```
 
 ### 2.8 collect
 
