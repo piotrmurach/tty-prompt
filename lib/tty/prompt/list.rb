@@ -13,9 +13,7 @@ module TTY
     #
     # @api private
     class List
-      HELP = '(Use arrow%s keys, press Enter to select%s)'
-
-      PAGE_HELP = '(Move up/down or left/right to reveal more choices)'
+      HELP = '(Use %s arrow%s keys, press Enter to select%s)'
 
       # Allowed keys for filter, along with backspace and canc.
       FILTER_KEYS_MATCHER = /\A([[:alnum:]]|[[:punct:]])\Z/.freeze
@@ -53,7 +51,6 @@ module TTY
         @first_render = true
         @done         = false
         @per_page     = options[:per_page]
-        @page_help    = options[:page_help] || PAGE_HELP
         @paginator    = Paginator.new
         @block_paginator = BlockPaginator.new
         @by_page      = false
@@ -124,13 +121,6 @@ module TTY
         choices.size > page_size
       end
 
-      # @param [String] text
-      #   the help text to display per page
-      # @api pbulic
-      def page_help(text)
-        @page_help = text
-      end
-
       # Provide help information
       #
       # @param [String] value
@@ -143,6 +133,21 @@ module TTY
         return @help if !@help.nil? && not_set
 
         @help = (@help.nil? && !not_set) ? value : default_help
+      end
+
+      # Information about arrow keys
+      #
+      # @return [String]
+      #
+      # @api private
+      def arrows_help
+        up_down = @symbols[:arrow_up] + "/" + @symbols[:arrow_down]
+        left_right = @symbols[:arrow_left] + "/" + @symbols[:arrow_right]
+
+        arrows = [up_down]
+        arrows << " and " if paginated?
+        arrows << left_right if paginated?
+        arrows.join
       end
 
       # Default help text
@@ -158,7 +163,7 @@ module TTY
                    ['', '']
                  end
 
-        format(self.class::HELP, *tokens)
+        format(self.class::HELP, arrows_help, *tokens)
       end
 
       # Set selecting active index using number pad
@@ -451,7 +456,6 @@ module TTY
         @first_render = false
         unless @done
           header << render_menu
-          header << render_footer
         end
         header.join
       end
@@ -516,18 +520,6 @@ module TTY
         end
 
         output.join
-      end
-
-      # Render page info footer
-      #
-      # @return [String]
-      #
-      # @api private
-      def render_footer
-        return '' unless paginated?
-
-        colored_footer = @prompt.decorate(@page_help, @help_color)
-        "\n" + colored_footer
       end
     end # List
   end # Prompt
