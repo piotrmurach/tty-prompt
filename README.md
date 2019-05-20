@@ -1427,11 +1427,15 @@ The following symbols can be overwritten:
 |  marker     | `‣`     | `>`   |
 |  radio_on   | `⬢`     | `(*)` |
 |  radio_off  | `⬡`     | `( )` |
-|  mask       | `•`     | `.`   |
+|  dot        | `•`     | `.`   |
 |  tick       | `✓`     | `√`   |
 |  cross      | `✘`     | `x`   |
 |  handle     | `●`     | `O`   |
 |  line       | `─`     | `-`   |
+|  arrow_up   | '↑'     | '↑'   |
+|  arrow_down | '↓'     | '↓'   |
+|  arrow_left | '←'     | '←'   |
+|  arrow_right| '→'     | '→'   |
 
 ### 3.2 `:active_color`
 
