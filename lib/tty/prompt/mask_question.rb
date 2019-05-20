@@ -13,7 +13,7 @@ module TTY
       # @api public
       def initialize(prompt, **options)
         super
-        @mask        = options.fetch(:mask) { @prompt.symbols[:mask] }
+        @mask        = options.fetch(:mask) { @prompt.symbols[:dot] }
         @done_masked = false
         @failure     = false
       end

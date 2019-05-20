@@ -9,29 +9,33 @@ RSpec.describe TTY::Prompt, '#mask' do
   it "masks output by default" do
     prompt.input << "pass\r"
     prompt.input.rewind
+
     answer = prompt.mask("What is your password?")
+
     expect(answer).to eql("pass")
     expect(prompt.output.string).to eq([
       "What is your password? ",
       "\e[2K\e[1G",
-      "What is your password? #{symbols[:mask]}",
+      "What is your password? #{symbols[:dot]}",
       "\e[2K\e[1G",
-      "What is your password? #{symbols[:mask] * 2}",
+      "What is your password? #{symbols[:dot] * 2}",
       "\e[2K\e[1G",
-      "What is your password? #{symbols[:mask] * 3}",
+      "What is your password? #{symbols[:dot] * 3}",
       "\e[2K\e[1G",
-      "What is your password? #{symbols[:mask] * 4}",
+      "What is your password? #{symbols[:dot] * 4}",
       "\e[2K\e[1G",
-      "What is your password? \e[32m#{symbols[:mask] * 4}\e[0m\n",
+      "What is your password? \e[32m#{symbols[:dot] * 4}\e[0m\n",
       "\e[1A\e[2K\e[1G",
-      "What is your password? \e[32m#{symbols[:mask] * 4}\e[0m\n"
+      "What is your password? \e[32m#{symbols[:dot] * 4}\e[0m\n"
     ].join)
   end
 
   it 'masks output with custom character' do
     prompt.input << "pass\r"
     prompt.input.rewind
+
     answer = prompt.mask("What is your password?") { |q| q.mask('*') }
+
     expect(answer).to eql("pass")
     expect(prompt.output.string).to eq([
       "What is your password? ",
@@ -53,7 +57,9 @@ RSpec.describe TTY::Prompt, '#mask' do
   it "masks with unicode character" do
     prompt.input << "lov\n"
     prompt.input.rewind
+
     answer = prompt.mask("What is your password?", mask: "\u2665")
+
     expect(answer).to eql("lov")
     expect(prompt.output.string).to eq([
       "What is your password? ",
@@ -73,10 +79,12 @@ RSpec.describe TTY::Prompt, '#mask' do
   it 'ignores mask if echo is off' do
     prompt.input << "pass\n"
     prompt.input.rewind
+
     answer = prompt.mask('What is your password?') do |q|
       q.echo false
       q.mask '*'
     end
+
     expect(answer).to eql("pass")
     expect(prompt.output.string).to eq([
       "What is your password? ",
@@ -96,7 +104,7 @@ RSpec.describe TTY::Prompt, '#mask' do
   end
 
   it "validates input" do
-    prompt = TTY::TestPrompt.new(symbols: {mask: '*'})
+    prompt = TTY::TestPrompt.new(symbols: {dot: '*'})
     prompt.input << "no\nyes\n"
     prompt.input.rewind
     answer = prompt.mask('What is your password?') do |q|
