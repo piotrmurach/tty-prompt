@@ -119,7 +119,7 @@ In order to start asking questions on the command line, create prompt:
 prompt = TTY::Prompt.new
 ```
 
-and then call `ask` with the question for simple input:
+And then call `ask` with the question for simple input:
 
 ```ruby
 prompt.ask('What is your name?', default: ENV['USER'])
@@ -458,7 +458,7 @@ prompt.mask('What is your secret?')
 The masking character can be changed by passing `:symbols` option with `:mask` key:
 
 ```ruby
-heart = prompt.decorate('❤ ', :magenta)
+heart = prompt.decorate(prompt.symbols[:heart] + ' ', :magenta)
 prompt.mask('What is your secret?', symbols: {mask: heart})
 # => What is your secret? ❤  ❤  ❤  ❤  ❤
 ```
