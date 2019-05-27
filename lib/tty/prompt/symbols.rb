@@ -13,21 +13,25 @@ module TTY
         square: '◼',
         square_empty: '◻',
         dot: '•',
+        bullet: '●',
+        bullet_empty: '○',
         marker: '‣',
         line: '─',
         pipe: '|',
-        handle: '●',
         ellipsis: '…',
         radio_on: '⬢',
         radio_off: '⬡',
         checkbox_on: '☒',
         checkbox_off: '☐',
+        circle: '◯',
         circle_on: 'ⓧ',
         circle_off: 'Ⓘ',
         arrow_up: '↑',
         arrow_down: '↓',
+        arrow_up_down: '↕',
         arrow_left: '←',
-        arrow_right: '→'
+        arrow_right: '→',
+        arrow_left_right: '↔'
       }.freeze
 
       WIN_KEYS = {
@@ -37,21 +41,25 @@ module TTY
         square: '[█]',
         square_empty: '[ ]',
         dot: '.',
+        bullet: 'O',
+        bullet_empty: '○',
         marker: '>',
         line: '-',
         pipe: '|',
-        handle: 'O',
         ellipsis: '...',
         radio_on: '(*)',
         radio_off: '( )',
         checkbox_on: '[×]',
         checkbox_off: '[ ]',
+        circle: '( )',
         circle_on: '(x)',
         circle_off: '( )',
         arrow_up: '↑',
         arrow_down: '↓',
+        arrow_up_down: '↕',
         arrow_left: '←',
-        arrow_right: '→'
+        arrow_right: '→',
+        arrow_left_right: '↔'
       }.freeze
 
       def symbols
