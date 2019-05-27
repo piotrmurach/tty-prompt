@@ -1300,7 +1300,7 @@ prompt.slider("Volume", max: 10, step: 0.5, default: 5, format: "|:slider| %.1f"
 If you wish to change the slider handle and the slider range display use `:symbols` option:
 
 ```ruby
-prompt.slider("Volume", max: 100, step: 5, default: 75, symbols: {handle: 'x', line: '_'})
+prompt.slider("Volume", max: 100, step: 5, default: 75, symbols: {bullet: 'x', line: '_'})
 # =>
 # Volume _______________x______ 75%
 # (Use arrow keys, press Enter to select)
@@ -1422,14 +1422,14 @@ The following symbols can be overwritten:
 
 | Symbols     | Unicode | ASCII |
 | ----------- |:-------:|:-----:|
-|  marker     | `‣`     | `>`   |
-|  radio_on   | `⬢`     | `(*)` |
-|  radio_off  | `⬡`     | `( )` |
-|  dot        | `•`     | `.`   |
 |  tick       | `✓`     | `√`   |
 |  cross      | `✘`     | `x`   |
-|  handle     | `●`     | `O`   |
+|  marker     | `‣`     | `>`   |
+|  dot        | `•`     | `.`   |
+|  bullet     | `●`     | `O`   |
 |  line       | `─`     | `-`   |
+|  radio_on   | `⬢`     | `(*)` |
+|  radio_off  | `⬡`     | `( )` |
 |  arrow_up   | `↑`     | `↑`   |
 |  arrow_down | `↓`     | `↓`   |
 |  arrow_left | `←`     | `←`   |
