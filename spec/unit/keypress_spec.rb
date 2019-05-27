@@ -61,6 +61,6 @@ RSpec.describe TTY::Prompt::Question, '#keypress' do
 
     prompt.keypress("Press any key or continue in :countdown", timeout: 0.01)
 
-    expect(prompt.output.string).to include("Press any key or continue in 0 ")
+    expect(prompt.output.string).to include("Press any key or continue in 0.00")
   end
 end
