@@ -1,12 +1,13 @@
 # Change log
 
-## [v0.19.0] - 2019-05-x
+## [v0.19.0] - 2019-05-27
 
 ### Added
 * Add Prompt#debug to allow displaying values in terminal's top right corner
 * Add :max to limit number of choices in #multi_select prompt
 * Add :value to pre populate #ask prompt line content
 * Add :auto_hint to expand default hint in #expand prompt by Ewoudt Kellerman(@hellola)
+* Add Timer to track and timeout code execution
 
 ### Changed
 * Change Paginator to expose #start_index & #end_index
@@ -15,10 +16,11 @@
 * Change #enum_select to automatically assigned non-disabled default option
 * Change #enum_select to set default choice when navigating by page
 * Change #select & #multi_select to allow navigation by page with left/right keys
-* Change to remove test artifacts from the gem bundle
+* Change #keypress to use Timer
 * Change Choice#from to allow any object coercible to string
-* Change Timeout to use monotonic clock and to calculate intervals without dependency
+* Change to remove test artifacts from the gem bundle
 * Change to remove timers dependency
+* Change to update tty-reader dependency
 
 ## [v0.18.1] - 2018-12-29
 
@@ -324,6 +326,7 @@
 
 * Initial implementation and release
 
+[v0.19.0]: https://github.com/piotrmurach/tty-prompt/compare/v0.18.1...v0.19.0
 [v0.18.1]: https://github.com/piotrmurach/tty-prompt/compare/v0.18.0...v0.18.1
 [v0.18.0]: https://github.com/piotrmurach/tty-prompt/compare/v0.17.2...v0.18.0
 [v0.17.2]: https://github.com/piotrmurach/tty-prompt/compare/v0.17.1...v0.17.2
