@@ -31,7 +31,11 @@ module TTY
         arrow_up_down: '↕',
         arrow_left: '←',
         arrow_right: '→',
-        arrow_left_right: '↔'
+        arrow_left_right: '↔',
+        heart: '♥',
+        diamond: '♦',
+        club: '♣',
+        spade: '♠'
       }.freeze
 
       WIN_KEYS = {
@@ -59,7 +63,11 @@ module TTY
         arrow_up_down: '↕',
         arrow_left: '←',
         arrow_right: '→',
-        arrow_left_right: '↔'
+        arrow_left_right: '↔',
+        heart: '♥',
+        diamond: '♦',
+        club: '♣',
+        spade: '♠'
       }.freeze
 
       def symbols
