@@ -13,7 +13,7 @@ RSpec.describe TTY::Prompt, '#slider' do
     expect(prompt.output.string).to eq([
       "\e[?25lWhat size? ",
       symbols[:line] * 6,
-      "\e[32m#{symbols[:handle]}\e[0m",
+      "\e[32m#{symbols[:bullet]}\e[0m",
       "#{symbols[:line] * 5} 44",
       "\n\e[90m(Use arrow keys, press Enter to select)\e[0m",
       "\e[2K\e[1G\e[1A\e[2K\e[1G",
@@ -28,7 +28,7 @@ RSpec.describe TTY::Prompt, '#slider' do
     expect(prompt.output.string).to eq([
       "\e[?25lWhat size? ",
       symbols[:line] * 3,
-      "\e[32m#{symbols[:handle]}\e[0m",
+      "\e[32m#{symbols[:bullet]}\e[0m",
       "#{symbols[:line] * 8} 38",
       "\n\e[90m(Use arrow keys, press Enter to select)\e[0m",
       "\e[2K\e[1G\e[1A\e[2K\e[1G",
@@ -50,7 +50,7 @@ RSpec.describe TTY::Prompt, '#slider' do
     expect(prompt.output.string).to eq([
       "\e[?25lWhat size? ",
       symbols[:pipe] + symbols[:line] * 3,
-      "\e[32m#{symbols[:handle]}\e[0m",
+      "\e[32m#{symbols[:bullet]}\e[0m",
       "#{symbols[:line] * 7 + symbols[:pipe]} 6%",
       "\n\e[90m(Use arrow keys, press Enter to select)\e[0m",
       "\e[2K\e[1G\e[1A\e[2K\e[1G",
@@ -66,7 +66,7 @@ RSpec.describe TTY::Prompt, '#slider' do
     expect(prompt.output.string).to eq([
       "\e[?25lWhat size? ",
       symbols[:line] * 5,
-      "\e[31m#{symbols[:handle]}\e[0m",
+      "\e[31m#{symbols[:bullet]}\e[0m",
       "#{symbols[:line] * 5} 5",
       "\n\e[36m(Use arrow keys, press Enter to select)\e[0m",
       "\e[2K\e[1G\e[1A\e[2K\e[1G",
@@ -87,12 +87,12 @@ RSpec.describe TTY::Prompt, '#slider' do
     expect(prompt.output.string).to eq([
       "\e[?25lWhat size? ",
       symbols[:line] * 10,
-      "\e[32m#{symbols[:handle]}\e[0m 10",
+      "\e[32m#{symbols[:bullet]}\e[0m 10",
       "\n\e[90m(Use arrow keys, press Enter to select)\e[0m",
       "\e[2K\e[1G\e[1A\e[2K\e[1G",
       "What size? ",
       symbols[:line] * 10,
-      "\e[32m#{symbols[:handle]}\e[0m 10",
+      "\e[32m#{symbols[:bullet]}\e[0m 10",
       "\e[2K\e[1G",
       "What size? \e[32m10\e[0m\n\e[?25h"
     ].join)
@@ -100,7 +100,7 @@ RSpec.describe TTY::Prompt, '#slider' do
 
   it "changes all display symbols" do
     prompt = TTY::TestPrompt.new(symbols: {
-      handle: 'x',
+      bullet: 'x',
       line: '_'
     })
     prompt.input << "\r"
@@ -125,7 +125,7 @@ RSpec.describe TTY::Prompt, '#slider' do
     prompt.input.rewind
 
     answer = prompt.slider('What size?', min: 32, max: 54, step: 2) do |range|
-      range.symbols handle: 'x', line: '_'
+      range.symbols bullet: 'x', line: '_'
     end
 
     expect(answer).to eq(44)
