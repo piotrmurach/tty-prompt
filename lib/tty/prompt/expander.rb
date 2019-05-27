@@ -83,12 +83,6 @@ module TTY
         @selected = select_choice(@input)
         if @selected && !@default_key && collapsed?
           @hint = @selected.name
-        elsif @selected.nil? && @auto_hint && collapsed?
-          if @input.empty?
-            @hint = @choices[@default - 1].name
-          else
-            @hint = "invalid option"
-          end
         end
       end
 
@@ -231,7 +225,15 @@ module TTY
 
       def load_auto_hint
         if @hint.nil? && collapsed?
-          @hint = @choices[@default - 1].name
+          if @selected
+            @hint = @selected.name
+          else
+            if @input.empty?
+              @hint = @choices[@default - 1].name
+            else
+              @hint = "invalid option"
+            end
+          end
         end
       end
 
@@ -251,8 +253,8 @@ module TTY
       #
       # @api private
       def refresh(lines)
-        if (@hint && (!@selected || @done)) || @auto_hint
-          @hint = nil if !@auto_hint
+        if (@hint && (!@selected || @done)) || (@auto_hint && collapsed?)
+          @hint = nil
           @prompt.clear_lines(lines, :down) +
             @prompt.cursor.prev_line
         elsif expanded?
