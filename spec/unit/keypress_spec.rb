@@ -59,14 +59,8 @@ RSpec.describe TTY::Prompt::Question, '#keypress' do
   it "timeouts when no key provided" do
     prompt = TTY::TestPrompt.new(interrupt: :exit)
 
-    prompt.keypress("Press any key or continue in :countdown", timeout: 0.1)
+    prompt.keypress("Press any key or continue in :countdown", timeout: 0.01)
 
-    expect(prompt.output.string).to eq([
-      "Press any key or continue in 0.1 ",
-      "\e[2K\e[1G",
-      "Press any key or continue in 0 ",
-      "\e[2K\e[1G",
-      "Press any key or continue in 0 \n"
-    ].join)
+    expect(prompt.output.string).to include("Press any key or continue in 0 ")
   end
 end

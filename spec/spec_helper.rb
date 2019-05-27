@@ -17,6 +17,12 @@ end
 
 require 'tty-prompt'
 
+class StringIO
+  def wait_readable(*)
+    true
+  end
+end
+
 module Helpers
   def diff_output(actual_output, expected_output)
     puts "ACTUAL: #{actual_output.inspect}"

@@ -2,6 +2,7 @@
 
 require_relative 'question'
 require_relative 'timeout'
+require_relative 'timer'
 
 module TTY
   class Prompt
@@ -70,12 +71,16 @@ module TTY
       end
 
       def process_input(question)
-        time do
-          @prompt.print(render_question)
-          until @done
-            @input = @prompt.read_keypress
-          end
+        time = timeout? ? Float(@timeout) : nil
+        timer = Timer.new(time, Float(@interval))
+
+        @prompt.print(render_question)
+        timer.while_remaining do |remaining|
+          break if @done
+          @interval_handler.(remaining.round) if timeout?
+          @input = @prompt.read_keypress(nonblock: true)
         end
+
         @evaluator.(@input)
       end
 
