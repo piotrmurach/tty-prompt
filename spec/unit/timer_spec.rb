@@ -24,6 +24,6 @@ RSpec.describe TTY::Prompt::Timer do
       # busy work
     end
 
-    expect(yielded.size).to be >= 3
+    expect(yielded.size).to be >= 2
   end
 end
