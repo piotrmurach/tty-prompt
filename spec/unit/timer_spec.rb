@@ -7,14 +7,11 @@ RSpec.describe TTY::Prompt::Timer do
     yielded = []
 
     timer.while_remaining do |remaining|
+      expect(remaining).to be_within(0.01).of(timer.duration - yielded.size * 0.01)
       yielded << remaining
       sleep(0.01)
     end
 
-    expect(yielded).to match_array([
-      be_within(0.01).of(0.03),
-      be_within(0.01).of(0.02),
-      be_within(0.01).of(0.01)
-    ])
+    expect(yielded.size).to be_between(2, 3)
   end
 end
