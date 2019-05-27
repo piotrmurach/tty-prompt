@@ -5,10 +5,16 @@ module TTY
     class Timer
       attr_reader :duration
 
+      attr_reader :total
+
+      attr_reader :interval
+
       def initialize(duration, interval)
         @duration = duration
         @interval = interval
+        @total = 0.0
         @current = nil
+        @events = []
       end
 
       def start
@@ -27,12 +33,22 @@ module TTY
         time_now - @current
       end
 
+      def on_tick(&block)
+        @events << block
+      end
+
       def while_remaining
         start
         remaining = duration
 
         if @duration
-          while remaining > 0.0
+          while remaining >= 0.0
+            if runtime >= total
+              tick = duration - @total
+              @events.each { |block| block.(tick) }
+              @total += @interval
+            end
+
             yield(remaining)
             remaining = duration - runtime
           end
