@@ -9,7 +9,7 @@ RSpec.describe TTY::Prompt, '#slider' do
   it "specifies ranges & step" do
     prompt.input << "\r"
     prompt.input.rewind
-    expect(prompt.slider('What size?', min: 32, max: 54, step: 2)).to eq(44)
+    expect(prompt.slider("What size?", min: 32, max: 54, step: 2)).to eq(44)
     expect(prompt.output.string).to eq([
       "\e[?25lWhat size? ",
       symbols[:line] * 6,
@@ -24,7 +24,7 @@ RSpec.describe TTY::Prompt, '#slider' do
   it "obeys quiet mode" do
     prompt.input << "\r"
     prompt.input.rewind
-    expect(prompt.slider('What size?', min: 32, max: 54, step: 2, quiet: true)).to eq(44)
+    expect(prompt.slider("What size?", min: 32, max: 54, step: 2, quiet: true)).to eq(44)
     expect(prompt.output.string).to eq([
       "\e[?25lWhat size? ",
       symbols[:line] * 6,
@@ -32,14 +32,14 @@ RSpec.describe TTY::Prompt, '#slider' do
       "#{symbols[:line] * 5} 44",
       "\n\e[90m(Use arrow keys, press Enter to select)\e[0m",
       "\e[2K\e[1G\e[1A\e[2K\e[1G",
-	  "\e[?25h"
+      "\e[?25h"
     ].join)
   end
 
   it "specifies default value" do
     prompt.input << "\r"
     prompt.input.rewind
-    expect(prompt.slider('What size?', min: 32, max: 54, step: 2, default: 38)).to eq(38)
+    expect(prompt.slider("What size?", min: 32, max: 54, step: 2, default: 38)).to eq(38)
     expect(prompt.output.string).to eq([
       "\e[?25lWhat size? ",
       symbols[:line] * 3,
@@ -54,7 +54,7 @@ RSpec.describe TTY::Prompt, '#slider' do
   it "specifies range through DSL" do
     prompt.input << "\r"
     prompt.input.rewind
-    value = prompt.slider('What size?') do |range|
+    value = prompt.slider("What size?") do |range|
               range.default 6
               range.min 0
               range.max 20
@@ -77,7 +77,7 @@ RSpec.describe TTY::Prompt, '#slider' do
     prompt.input << "\r"
     prompt.input.rewind
     options = {active_color: :red, help_color: :cyan}
-    expect(prompt.slider('What size?', options)).to eq(5)
+    expect(prompt.slider("What size?", options)).to eq(5)
     expect(prompt.output.string).to eq([
       "\e[?25lWhat size? ",
       symbols[:line] * 5,
@@ -97,7 +97,7 @@ RSpec.describe TTY::Prompt, '#slider' do
         prompt.trigger(:keyright)
       end
     end
-    res = prompt.slider('What size?', min: 0, max: 10, step: 1, default: 10)
+    res = prompt.slider("What size?", min: 0, max: 10, step: 1, default: 10)
     expect(res).to eq(10)
     expect(prompt.output.string).to eq([
       "\e[?25lWhat size? ",
@@ -121,7 +121,7 @@ RSpec.describe TTY::Prompt, '#slider' do
     prompt.input << "\r"
     prompt.input.rewind
 
-    expect(prompt.slider('What size?', min: 32, max: 54, step: 2)).to eq(44)
+    expect(prompt.slider("What size?", min: 32, max: 54, step: 2)).to eq(44)
 
     expect(prompt.output.string).to eq([
       "\e[?25lWhat size? ",
@@ -139,7 +139,7 @@ RSpec.describe TTY::Prompt, '#slider' do
     prompt.input << "\r"
     prompt.input.rewind
 
-    answer = prompt.slider('What size?', min: 32, max: 54, step: 2) do |range|
+    answer = prompt.slider("What size?", min: 32, max: 54, step: 2) do |range|
       range.symbols bullet: 'x', line: '_'
     end
 

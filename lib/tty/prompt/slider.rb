@@ -105,7 +105,6 @@ module TTY
         @quiet = value
       end
 
-
       # Call the slider by passing question
       #
       # @param [String] question

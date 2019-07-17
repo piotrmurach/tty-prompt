@@ -4,7 +4,7 @@ RSpec.describe TTY::Prompt::Question, '#default' do
 
   subject(:prompt) { TTY::TestPrompt.new(quiet: true) }
 
-  it 'obeys quiet mode' do
+  it "obeys quiet mode" do
     name = 'Anonymous'
     prompt.input << "\n"
     prompt.input.rewind

@@ -59,6 +59,28 @@ RSpec.describe TTY::Prompt, '#expand' do
     expect(prompt.output.string).to eq(expected_output)
   end
 
+  it "sets quiet mode through DSL" do
+    prompt.input << "\n"
+    prompt.input.rewind
+
+    result = prompt.expand('Overwrite Gemfile?') do |q|
+      q.choice key: 'y', name: 'Overwrite',      value: :yes
+      q.choice key: 'n', name: 'Skip',          value: :no
+      q.choice key: 'a', name: 'Overwrite all', value: :all
+      q.choice key: 'd', name: 'Show diff',     value: :diff
+      q.choice key: 'q', name: 'Quit',          value: :quit
+      q.quiet true
+    end
+    expect(result).to eq(:yes)
+
+    expected_output = [
+      "Overwrite Gemfile? (enter \"h\" for help) [\e[32my\e[0m,n,a,d,q,h] ",
+      "\e[2K\e[1G"
+    ].join
+
+    expect(prompt.output.string).to eq(expected_output)
+  end
+
   it "changes default option" do
     prompt.input << "\n"
     prompt.input.rewind

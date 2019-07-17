@@ -15,7 +15,6 @@ module TTY
       def initialize(prompt, **options)
         super
         @mask        = options.fetch(:mask) { @prompt.symbols[:dot] }
-        @quiet       = options.fetch(:quiet) { @prompt.quiet }
         @done_masked = false
         @failure     = false
       end
@@ -30,13 +29,6 @@ module TTY
       def mask(char = (not_set = true))
         return @mask if not_set
         @mask = char
-      end
-
-      # Set quiet mode.
-      #
-      # @api public
-      def quiet(value)
-        @quiet = value
       end
 
       def keyreturn(event)

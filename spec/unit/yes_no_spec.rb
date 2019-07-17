@@ -4,8 +4,8 @@ RSpec.describe TTY::Prompt, 'confirmation' do
 
   subject(:prompt) { TTY::TestPrompt.new }
 
-  context '#yes?' do
-    it 'agrees with question' do
+  context "#yes?" do
+    it "agrees with question" do
       prompt.input << 'yes'
       prompt.input.rewind
       expect(prompt.yes?("Are you a human?")).to eq(true)
@@ -19,7 +19,7 @@ RSpec.describe TTY::Prompt, 'confirmation' do
       ].join)
     end
 
-    it 'disagrees with question' do
+    it "disagrees with question" do
       prompt.input << 'no'
       prompt.input.rewind
       expect(prompt.yes?("Are you a human?")).to eq(false)
@@ -32,7 +32,7 @@ RSpec.describe TTY::Prompt, 'confirmation' do
       ].join)
     end
 
-    it 'assumes default true' do
+    it "assumes default true" do
       prompt.input << "\r"
       prompt.input.rewind
       expect(prompt.yes?("Are you a human?")).to eq(true)
@@ -44,7 +44,7 @@ RSpec.describe TTY::Prompt, 'confirmation' do
       ].join)
     end
 
-    it 'obeys quiet mode' do
+    it "obeys quiet mode" do
       prompt.input << "\r"
       prompt.input.rewind
       expect(prompt.yes?("Are you a human?", quiet: true)).to eq(true)
@@ -55,7 +55,7 @@ RSpec.describe TTY::Prompt, 'confirmation' do
       ].join)
     end
 
-    it 'changes default' do
+    it "changes default" do
       prompt.input << "\n"
       prompt.input.rewind
       expect(prompt.yes?("Are you a human?", default: false)).to eq(false)
@@ -164,8 +164,8 @@ RSpec.describe TTY::Prompt, 'confirmation' do
     end
   end
 
-  context '#no?' do
-    it 'agrees with question' do
+  context "#no?" do
+    it "agrees with question" do
       prompt.input << 'no'
       prompt.input.rewind
       expect(prompt.no?("Are you a human?")).to eq(true)
@@ -178,7 +178,7 @@ RSpec.describe TTY::Prompt, 'confirmation' do
       ].join)
     end
 
-    it 'disagrees with question' do
+    it "disagrees with question" do
       prompt.input << 'yes'
       prompt.input.rewind
       expect(prompt.no?("Are you a human?")).to eq(false)
@@ -192,7 +192,7 @@ RSpec.describe TTY::Prompt, 'confirmation' do
       ].join)
     end
 
-    it 'assumes default false' do
+    it "assumes default false" do
       prompt.input << "\r"
       prompt.input.rewind
       expect(prompt.no?("Are you a human?")).to eq(true)
@@ -204,7 +204,7 @@ RSpec.describe TTY::Prompt, 'confirmation' do
       ].join)
     end
 
-    it 'changes default' do
+    it "changes default" do
       prompt.input << "\r"
       prompt.input.rewind
       expect(prompt.no?("Are you a human?", default: true)).to eq(false)

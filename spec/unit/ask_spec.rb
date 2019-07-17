@@ -21,6 +21,16 @@ RSpec.describe TTY::Prompt, '#ask' do
     ].join)
   end
 
+  it 'sets quiet mode through DSL' do
+    prompt.ask('What is your name?') do |q|
+		q.quiet true
+	end
+    expect(prompt.output.string).to eq([
+      "What is your name? ",
+      "\e[1A\e[2K\e[1G"
+    ].join)
+  end
+
   it 'asks an empty question ' do
     prompt = TTY::TestPrompt.new
     prompt.input << "\r"
