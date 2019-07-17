@@ -109,7 +109,8 @@ Or install it yourself as:
   * [3.4 :help_color](#34-help_color)
   * [3.5 :interrupt](#35-interrupt)
   * [3.6 :prefix](#36-prefix)
-  * [3.7 :track_history](#37-track_history)
+  * [3.7 :quiet](#37-quiet)
+  * [3.8 :track_history](#38-track_history)
 
 ## 1. Usage
 
@@ -1010,7 +1011,7 @@ In order to ask for standard selection from indexed list you can use `enum_selec
 
 ```ruby
 choices = %w(emacs nano vim)
-prompt.enum_select("Select an editor?")
+prompt.enum_select("Select an editor?", choices)
 # =>
 #
 # Select an editor?
@@ -1023,7 +1024,6 @@ prompt.enum_select("Select an editor?")
 Similar to `select` and `multi_select`, you can provide question options through DSL using `choice` method and/or `choices` like so:
 
 ```ruby
-choices = %w(nano vim emacs)
 prompt.enum_select("Select an editor?") do |menu|
   menu.choice :nano,  '/bin/nano'
   menu.choice :vim,   '/usr/bin/vim'
@@ -1043,7 +1043,6 @@ end
 You can change the indexed numbers by passing `enum` option and the default option by using `default` like so
 
 ```ruby
-choices = %w(nano vim emacs)
 prompt.enum_select("Select an editor?") do |menu|
   menu.default 2
   menu.enum '.'
@@ -1456,7 +1455,7 @@ Please [see pastel](https://github.com/piotrmurach/pastel#3-supported-colors) fo
 If you wish to disable coloring for a prompt simply pass `:enable_color` option
 
 ```ruby
-prompt = TTY::Prompt.new(enable_color: true)
+prompt = TTY::Prompt.new(enable_color: false)
 ```
 
 ### 3.4 `:help_color`
@@ -1496,7 +1495,19 @@ You can prefix each question asked using the `:prefix` option. This option can b
 prompt = TTY::Prompt.new(prefix: '[?] ')
 ```
 
-### 3.7 `:track_history`
+### 3.7 `:quiet`
+
+Prompts such as `select`, `multi_select`, `expand`, `slider` support `:quiet` which is used to disable re-echoing of the question and answer after selection is done. This option can be applied either globally for all prompts or individually.
+
+```ruby
+# global
+prompt = TTY::Prompt.new(quiet: true)
+
+# single prompt
+prompt.select("What is your favorite color?", %w( blue yellow orange ))
+```
+
+### 3.8 `:track_history`
 
 The prompts that accept line input such as `multiline` or `ask` provide history buffer that tracks all the lines entered during `TTY::Prompt.new` interactions. The history buffer provides previous or next lines when user presses up/down arrows respectively. However, if you wish to disable this behaviour use `:track_history` option like so:
 

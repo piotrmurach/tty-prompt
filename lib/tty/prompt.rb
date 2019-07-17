@@ -1,3 +1,4 @@
+# vim: set nosta noet expandtab: ts=2 sw=2:
 # frozen_string_literal: true
 
 require 'forwardable'
@@ -71,6 +72,11 @@ module TTY
     # @api private
     attr_reader :active_color, :help_color, :error_color, :enabled_color
 
+    # Quiet mode
+    #
+    # @api private
+    attr_reader :quiet
+
     # The collection of display symbols
     #
     # @example
@@ -123,6 +129,8 @@ module TTY
     #   handling of Ctrl+C key out of :signal, :exit, :noop
     # @option options [Boolean] :track_history
     #   disable line history tracking, true by default
+    # @option options [Boolean] :quiet
+    #   enable quiet mode, don't re-echo the question
     # @option options [Hash] :symbols
     #   the symbols displayed in prompts such as :marker, :cross
     #
@@ -134,11 +142,12 @@ module TTY
       @env    = options.fetch(:env) { ENV }
       @prefix = options.fetch(:prefix) { '' }
       @enabled_color = options[:enable_color]
-      @active_color  = options.fetch(:active_color) { :green }
-      @help_color    = options.fetch(:help_color)   { :bright_black }
-      @error_color   = options.fetch(:error_color)  { :red }
-      @interrupt     = options.fetch(:interrupt)    { :error }
+      @active_color  = options.fetch(:active_color)  { :green }
+      @help_color    = options.fetch(:help_color)    { :bright_black }
+      @error_color   = options.fetch(:error_color)   { :red }
+      @interrupt     = options.fetch(:interrupt)     { :error }
       @track_history = options.fetch(:track_history) { true }
+      @quiet         = options.fetch(:quiet)         { false }
       @symbols       = Symbols.symbols.merge(options.fetch(:symbols, {}))
 
       @cursor = TTY::Cursor
@@ -566,6 +575,7 @@ module TTY
         input: input,
         output: output,
         prefix: prefix,
+        quiet: quiet,
         active_color: active_color,
         error_color: error_color,
         enabled_color: enabled_color,

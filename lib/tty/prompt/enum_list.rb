@@ -1,3 +1,4 @@
+# vim: set nosta noet expandtab: ts=2 sw=2:
 # frozen_string_literal: true
 
 require 'English'
@@ -27,6 +28,7 @@ module TTY
         @help_color   = options.fetch(:help_color)   { @prompt.help_color }
         @error_color  = options.fetch(:error_color)  { @prompt.error_color }
         @cycle        = options.fetch(:cycle) { false }
+        @quiet        = options.fetch(:quiet) { @prompt.quiet }
         @symbols      = @prompt.symbols.merge(options.fetch(:symbols, {}))
         @input        = nil
         @done         = false
@@ -99,6 +101,13 @@ module TTY
       # @api public
       def enum(value)
         @enum = value
+      end
+
+      # Set quiet mode
+      #
+      # @api public
+      def quiet(value)
+        @quiet = value
       end
 
       # Add a single choice
@@ -253,7 +262,7 @@ module TTY
           question_lines = question.split($INPUT_RECORD_SEPARATOR, -1)
           @prompt.print(refresh(question_lines_count(question_lines)))
         end
-        @prompt.print(render_question)
+        @prompt.print(render_question) unless @quiet
         answer
       end
 

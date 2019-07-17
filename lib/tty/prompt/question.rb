@@ -1,3 +1,4 @@
+# vim: set nosta noet expandtab: ts=2 sw=2:
 # frozen_string_literal: true
 
 require_relative 'converters'
@@ -35,23 +36,24 @@ module TTY
       #
       # @api public
       def initialize(prompt, **options)
-        @prompt     = prompt
-        @prefix     = options.fetch(:prefix) { @prompt.prefix }
-        @default    = options.fetch(:default) { UndefinedSetting }
-        @required   = options.fetch(:required) { false }
-        @echo       = options.fetch(:echo) { true }
-        @in         = options.fetch(:in) { UndefinedSetting }
-        @modifier   = options.fetch(:modifier) { [] }
-        @validation = options.fetch(:validation) { UndefinedSetting }
-        @convert    = options.fetch(:convert) { UndefinedSetting }
+        @prompt       = prompt
+        @prefix       = options.fetch(:prefix) { @prompt.prefix }
+        @default      = options.fetch(:default) { UndefinedSetting }
+        @required     = options.fetch(:required) { false }
+        @echo         = options.fetch(:echo) { true }
+        @in           = options.fetch(:in) { UndefinedSetting }
+        @modifier     = options.fetch(:modifier) { [] }
+        @validation   = options.fetch(:validation) { UndefinedSetting }
+        @convert      = options.fetch(:convert) { UndefinedSetting }
         @active_color = options.fetch(:active_color) { @prompt.active_color }
-        @help_color = options.fetch(:help_color) { @prompt.help_color }
-        @error_color = options.fetch(:error_color) { :red }
-        @value      = options.fetch(:value) { UndefinedSetting }
-        @messages   = Utils.deep_copy(options.fetch(:messages) { { } })
-        @done       = false
+        @help_color   = options.fetch(:help_color) { @prompt.help_color }
+        @error_color  = options.fetch(:error_color) { :red }
+        @value        = options.fetch(:value) { UndefinedSetting }
+        @quiet        = options.fetch(:quiet) { @prompt.quiet }
+        @messages     = Utils.deep_copy(options.fetch(:messages) { { } })
+        @done         = false
         @first_render = true
-        @input      = nil
+        @input        = nil
 
         @evaluator = Evaluator.new(self)
 
@@ -122,7 +124,7 @@ module TTY
           total_lines = @prompt.count_screen_lines(input_line)
           @prompt.print(refresh(question.lines.count, total_lines))
         end
-        @prompt.print(render_question)
+        @prompt.print(render_question) unless @quiet
         convert_result(result.value)
       end
 
@@ -249,6 +251,13 @@ module TTY
       # @api public
       def default?
         @default != UndefinedSetting
+      end
+
+      # Set quiet mode.
+      #
+      # @api public
+      def quiet(value)
+        @quiet = value
       end
 
       # Ensure that passed argument is present or not

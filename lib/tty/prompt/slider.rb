@@ -1,3 +1,4 @@
+# vim: set nosta noet expandtab: ts=2 sw=2:
 # frozen_string_literal: true
 
 module TTY
@@ -33,6 +34,7 @@ module TTY
         @active_color = options.fetch(:active_color) { @prompt.active_color }
         @help_color   = options.fetch(:help_color) { @prompt.help_color }
         @format       = options.fetch(:format) { FORMAT }
+        @quiet        = options.fetch(:quiet) { @prompt.quiet }
         @symbols      = @prompt.symbols.merge(options.fetch(:symbols, {}))
         @first_render = true
         @done         = false
@@ -91,9 +93,18 @@ module TTY
         @step = value
       end
 
+      # @api public
       def format(value)
         @format = value
       end
+
+      # Set quiet mode.
+      #
+      # @api public
+      def quiet(value)
+        @quiet = value
+      end
+
 
       # Call the slider by passing question
       #
@@ -139,7 +150,7 @@ module TTY
           @prompt.read_keypress
           refresh(question.lines.count)
         end
-        @prompt.print(render_question)
+        @prompt.print(render_question) unless @quiet
         answer
       ensure
         @prompt.print(@prompt.show)

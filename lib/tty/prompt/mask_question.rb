@@ -1,3 +1,4 @@
+# vim: set nosta noet expandtab: ts=2 sw=2:
 # frozen_string_literal: true
 
 require_relative 'question'
@@ -14,6 +15,7 @@ module TTY
       def initialize(prompt, **options)
         super
         @mask        = options.fetch(:mask) { @prompt.symbols[:dot] }
+        @quiet       = options.fetch(:quiet) { @prompt.quiet }
         @done_masked = false
         @failure     = false
       end
@@ -28,6 +30,13 @@ module TTY
       def mask(char = (not_set = true))
         return @mask if not_set
         @mask = char
+      end
+
+      # Set quiet mode.
+      #
+      # @api public
+      def quiet(value)
+        @quiet = value
       end
 
       def keyreturn(event)
@@ -85,6 +94,7 @@ module TTY
           @prompt.print(render_question)
         end
         @prompt.puts
+        @prompt.print(@prompt.clear_lines(total_lines)) if @quiet
         @input
       end
     end # MaskQuestion

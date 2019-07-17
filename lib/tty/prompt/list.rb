@@ -1,3 +1,4 @@
+# vim: set nosta noet expandtab: ts=2 sw=2:
 # frozen_string_literal: true
 
 require 'English'
@@ -44,6 +45,7 @@ module TTY
         @help_color   = options.fetch(:help_color) { @prompt.help_color }
         @cycle        = options.fetch(:cycle) { false }
         @filterable   = options.fetch(:filter) { false }
+        @quiet        = options.fetch(:quiet) { @prompt.quiet }
         @symbols      = @prompt.symbols.merge(options.fetch(:symbols, {}))
         @filter       = []
         @filter_cache = {}
@@ -171,6 +173,13 @@ module TTY
       # @api public
       def enum(value)
         @enum = value
+      end
+
+      # Set whether selected answers are echoed
+      #
+      # @api public
+      def quiet(value)
+        @quiet = value
       end
 
       # Add a single choice
@@ -411,7 +420,7 @@ module TTY
 
           @prompt.print(refresh(question_lines_count(question_lines)))
         end
-        @prompt.print(render_question)
+        @prompt.print(render_question) unless @quiet
         answer
       ensure
         @prompt.print(@prompt.show)

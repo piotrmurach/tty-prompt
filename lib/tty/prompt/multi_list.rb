@@ -1,3 +1,4 @@
+# vim: set nosta noet expandtab: ts=2 sw=2:
 # frozen_string_literal: true
 
 require_relative 'list'
@@ -20,9 +21,9 @@ module TTY
       def initialize(prompt, **options)
         super
         @selected = []
-        @help = options[:help]
-        @echo = options.fetch(:echo, true)
-        @max  = options[:max]
+        @help     = options[:help]
+        @echo     = options.fetch(:echo, true)
+        @max      = options[:max]
       end
 
       # Set a maximum number of choices

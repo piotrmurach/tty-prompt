@@ -1,3 +1,4 @@
+# vim: set nosta noet expandtab: ts=2 sw=2:
 # frozen_string_literal: true
 
 require_relative 'choices'
@@ -25,6 +26,7 @@ module TTY
         @auto_hint    = options.fetch(:auto_hint) { false }
         @active_color = options.fetch(:active_color) { @prompt.active_color }
         @help_color   = options.fetch(:help_color) { @prompt.help_color }
+        @quiet        = options.fetch(:quiet) { @prompt.quiet }
         @choices      = Choices.new
         @selected     = nil
         @done         = false
@@ -103,6 +105,13 @@ module TTY
         @default = value
       end
 
+      # Set quiet mode.
+      #
+      # @api public
+      def quiet(value)
+        @quiet = value
+      end
+
       # Add a single choice
       #
       # @api public
@@ -166,7 +175,7 @@ module TTY
           read_input
           @prompt.print(refresh(question.lines.count))
         end
-        @prompt.print(render_question)
+        @prompt.print(render_question) unless @quiet
         answer
       end
 
