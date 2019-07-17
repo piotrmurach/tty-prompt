@@ -31,6 +31,20 @@ RSpec.describe TTY::Prompt::Question, '#multiline' do
     ].join)
   end
 
+  it "obeys quiet mode" do
+    prompt = TTY::TestPrompt.new(quiet: true)
+    prompt.input << "\C-d"
+    prompt.input.rewind
+
+    answer = prompt.multiline("Description?", default: 'A super sweet prompt')
+
+    expect(answer).to eq([])
+    expect(prompt.output.string).to eq([
+      "Description? \e[90m(Press CTRL-D or CTRL-Z to finish)\e[0m\n",
+      "\e[2K\e[1G\e[1A\e[2K\e[1G"
+    ].join)
+  end
+
   it "changes help text" do
     prompt = TTY::TestPrompt.new
     prompt.input << "\C-d"

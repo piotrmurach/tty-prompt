@@ -21,6 +21,21 @@ RSpec.describe TTY::Prompt, '#slider' do
     ].join)
   end
 
+  it "obeys quiet mode" do
+    prompt.input << "\r"
+    prompt.input.rewind
+    expect(prompt.slider('What size?', min: 32, max: 54, step: 2, quiet: true)).to eq(44)
+    expect(prompt.output.string).to eq([
+      "\e[?25lWhat size? ",
+      symbols[:line] * 6,
+      "\e[32m#{symbols[:bullet]}\e[0m",
+      "#{symbols[:line] * 5} 44",
+      "\n\e[90m(Use arrow keys, press Enter to select)\e[0m",
+      "\e[2K\e[1G\e[1A\e[2K\e[1G",
+	  "\e[?25h"
+    ].join)
+  end
+
   it "specifies default value" do
     prompt.input << "\r"
     prompt.input.rewind

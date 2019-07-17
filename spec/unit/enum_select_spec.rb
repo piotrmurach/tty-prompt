@@ -68,6 +68,22 @@ RSpec.describe TTY::Prompt do
     expect(prompt.output.string).to eq(expected_output)
   end
 
+  it "obeys quiet mode" do
+    choices = %w(/bin/nano /usr/bin/vim.basic /usr/bin/vim.tiny)
+    prompt = TTY::TestPrompt.new(quiet: true)
+    prompt.input << "\n"
+    prompt.input.rewind
+
+    answer = prompt.enum_select("Select an editor?", choices)
+    expect(answer).to eq('/bin/nano')
+
+    expected_output = [
+      output_helper("Select an editor?", choices, "/bin/nano")
+    ].join
+
+    expect(prompt.output.string).to eq(expected_output)
+  end
+
   it "selects option by index from the list" do
     choices = %w(/bin/nano /usr/bin/vim.basic /usr/bin/vim.tiny)
     prompt = TTY::TestPrompt.new

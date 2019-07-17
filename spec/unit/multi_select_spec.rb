@@ -68,6 +68,27 @@ RSpec.describe TTY::Prompt do
     expect(prompt.output.string).to eq(expected_output)
   end
 
+  it "obeys quiet mode" do
+    prompt = TTY::TestPrompt.new(quiet: true)
+    choices = %i(vodka beer wine whisky bourbon)
+    prompt.input << "\r"
+    prompt.input.rewind
+
+    expect(prompt.multi_select("Select drinks?", choices)). to eq([])
+
+    expected_output = [
+      "\e[?25lSelect drinks? \e[90m(Use #{up_down} arrow keys, press Space to select and Enter to finish)\e[0m\n",
+      "#{symbols[:marker]} #{symbols[:radio_off]} vodka\n",
+      "  #{symbols[:radio_off]} beer\n",
+      "  #{symbols[:radio_off]} wine\n",
+      "  #{symbols[:radio_off]} whisky\n",
+      "  #{symbols[:radio_off]} bourbon",
+      "\e[2K\e[1G\e[1A" * 5, "\e[2K\e[1G",
+	  "\e[?25h"
+    ].join
+    expect(prompt.output.string).to eq(expected_output)
+  end
+
   it "selects item when space pressed" do
     prompt = TTY::TestPrompt.new
     choices = %w(vodka beer wine whisky bourbon)

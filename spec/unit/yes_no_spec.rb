@@ -44,6 +44,17 @@ RSpec.describe TTY::Prompt, 'confirmation' do
       ].join)
     end
 
+    it 'obeys quiet mode' do
+      prompt.input << "\r"
+      prompt.input.rewind
+      expect(prompt.yes?("Are you a human?", quiet: true)).to eq(true)
+      expect(prompt.output.string).to eq([
+        "Are you a human? \e[90m(Y/n)\e[0m ",
+        "\e[2K\e[1GAre you a human? \e[90m(Y/n)\e[0m \n",
+        "\e[1A\e[2K\e[1G"
+      ].join)
+    end
+
     it 'changes default' do
       prompt.input << "\n"
       prompt.input.rewind
