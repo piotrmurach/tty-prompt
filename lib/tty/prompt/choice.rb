@@ -35,7 +35,7 @@ module TTY
           if name.is_a?(Hash)
             convert_hash(name)
           else
-            new(name.to_s, value || name.to_s, options || {})
+            new(name.to_s, (value.nil? ? name.to_s : value), options || {})
           end
         when Hash
           convert_hash(val)

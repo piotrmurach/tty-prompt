@@ -34,6 +34,24 @@ RSpec.describe TTY::Prompt::Choice, '#from' do
     expect(choice.value).to eq(1)
   end
 
+  it "creates choice from array with false" do
+    expected_choice = described_class.new('large', false)
+    choice = described_class.from([:large, false])
+
+    expect(choice).to eq(expected_choice)
+    expect(choice.name).to eq('large')
+    expect(choice.value).to eq(false)
+  end
+
+  it "defaults value to name if value is nil" do
+    expected_choice = described_class.new('large', 'large')
+    choice = described_class.from([:large, nil])
+
+    expect(choice).to eq(expected_choice)
+    expect(choice.name).to eq('large')
+    expect(choice.value).to eq('large')
+  end
+
   it "creates choice from hash value" do
     expected_choice = described_class.new('large', 1)
     choice = described_class.from({large: 1})
