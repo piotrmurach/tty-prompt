@@ -116,6 +116,8 @@ Or install it yourself as:
 In order to start asking questions on the command line, create prompt:
 
 ```ruby
+require "tty-prompt"
+
 prompt = TTY::Prompt.new
 ```
 
