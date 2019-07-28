@@ -1,5 +1,10 @@
 # Change log
 
+## [v0.19.1] - 2019-07-xx
+
+### Fixed
+* Fix Choice#from to differentiate between nil and false by Katelyn Schiesser(@slowbro)
+
 ## [v0.19.0] - 2019-05-27
 
 ### Added
