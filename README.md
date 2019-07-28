@@ -718,14 +718,20 @@ prompt.select("Choose your letter?", letters, per_page: 4)
 #   D
 ```
 
-You can also customise page navigation text using `:page_help` option:
+You can also customise page navigation text using `:help` option:
 ```ruby
 letters = ('A'..'Z').to_a
 prompt.select("Choose your letter?") do |menu|
   menu.per_page 4
-  menu.page_help '(Wiggle thy finger up or down to see more)'
+  menu.help '(Wiggle thy finger up/down and left/right to see more)'
   menu.choices letters
 end
+# =>
+# Which letter? (Wiggle thy finger up/down and left/right to see more)
+# ‣ A
+#   B
+#   C
+#   D
 ```
 
 #### 2.6.2.2 `:disabled`
