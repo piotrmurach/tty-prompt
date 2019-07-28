@@ -11,7 +11,16 @@ Gem::Specification.new do |spec|
   spec.description   = %q{A beautiful and powerful interactive command line prompt with a robust API for getting and validating complex inputs.}
   spec.homepage      = "https://piotrmurach.github.io/tty"
   spec.license       = "MIT"
-
+  if spec.respond_to?(:metadata=)
+    spec.metadata = {
+      "allowed_push_host" => "https://rubygems.org",
+      "bug_tracker_uri"   => "https://github.com/piotrmurach/tty-prompt/issues",
+      "changelog_uri"     => "https://github.com/piotrmurach/tty-prompt/blob/master/CHANGELOG.md",
+      "documentation_uri" => "https://www.rubydoc.info/gems/tty-prompt",
+      "homepage_uri"      => spec.homepage,
+      "source_code_uri"   => "https://github.com/piotrmurach/tty-prompt"
+    }
+  end
   spec.files         = Dir['{lib,spec,examples}/**/*.rb']
   spec.files        += Dir['tasks/*', 'tty-prompt.gemspec']
   spec.files        += Dir['README.md', 'CHANGELOG.md', 'LICENSE.txt', 'Rakefile']
