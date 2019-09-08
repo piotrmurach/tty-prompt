@@ -376,7 +376,7 @@ prompt.ask("What's your phone number?", required: true)
 
 #### 2.1.9 validate
 
-In order to validate that input matches a given patter you can pass the `validate` option. Validate setting accepts `Regex`, `Proc` or `Symbol`.
+In order to validate that input matches a given pattern you can pass the `validate` option. Validate setting accepts `Regex`, `Proc` or `Symbol`.
 
 ```ruby
 prompt.ask('What is your username?') do |q|
