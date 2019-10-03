@@ -85,21 +85,30 @@ module TTY
 
       protected
 
+      # Decide how to handle input from user
+      #
+      # @api private
+      def process_input(question)
+        @input = read_input(question)
+        if Utils.blank?(@input)
+          @input = default ? positive : negative
+        end
+        @evaluator.(@input)
+      end
+
       # @api private
       def setup_defaults
+        @convert = conversion
         return if suffix? && positive?
 
         if suffix? && (!positive? || !negative?)
           parts = @suffix.split('/')
           @positive = parts[0]
           @negative = parts[1]
-          @convert = conversion
         elsif !suffix? && positive?
           @suffix = create_suffix
-          @convert = conversion
         else
           create_default_labels
-          @convert = :bool
         end
       end
 
@@ -108,6 +117,8 @@ module TTY
         @suffix   = default ? 'Y/n' : 'y/N'
         @positive = default ? 'Yes' : 'yes'
         @negative = default ? 'no' : 'No'
+        @validation = /^(y(es)?|no?)$/i
+        @messages[ :valid? ] = "Invalid input."
       end
 
       # @api private
