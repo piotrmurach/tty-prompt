@@ -32,6 +32,23 @@ RSpec.describe TTY::Prompt, 'confirmation' do
       ].join)
     end
 
+    it 'warns about invalid entry when using defaults' do
+      prompt.input << "test"
+      prompt.input.rewind
+      prompt.yes?("Are you a human?")
+      expect(prompt.output.string).to eq([
+        "Are you a human? \e[90m(Y/n)\e[0m ",
+        "\e[2K\e[1GAre you a human? \e[90m(Y/n)\e[0m t",
+        "\e[2K\e[1GAre you a human? \e[90m(Y/n)\e[0m te",
+        "\e[2K\e[1GAre you a human? \e[90m(Y/n)\e[0m tes",
+        "\e[2K\e[1GAre you a human? \e[90m(Y/n)\e[0m test",
+        "\e[31m>>\e[0m Invalid input.\e[1A",
+        "\e[2K\e[1GAre you a human? \e[90m(Y/n)\e[0m ",
+        "\e[2K\e[1G\e[1A\e[2K\e[1G",
+        "Are you a human? \e[32mYes\e[0m\n"
+      ].join)
+    end
+
     it 'assumes default true' do
       prompt.input << "\r"
       prompt.input.rewind
@@ -178,6 +195,23 @@ RSpec.describe TTY::Prompt, 'confirmation' do
         "\e[2K\e[1GAre you a human? \e[90m(y/N)\e[0m yes",
         "\e[1A\e[2K\e[1G",
         "Are you a human? \e[32myes\e[0m\n"
+      ].join)
+    end
+
+    it 'warns about invalid entry when using defaults' do
+      prompt.input << "test"
+      prompt.input.rewind
+      prompt.no?("Are you a human?")
+      expect(prompt.output.string).to eq([
+        "Are you a human? \e[90m(y/N)\e[0m ",
+        "\e[2K\e[1GAre you a human? \e[90m(y/N)\e[0m t",
+        "\e[2K\e[1GAre you a human? \e[90m(y/N)\e[0m te",
+        "\e[2K\e[1GAre you a human? \e[90m(y/N)\e[0m tes",
+        "\e[2K\e[1GAre you a human? \e[90m(y/N)\e[0m test",
+        "\e[31m>>\e[0m Invalid input.\e[1A",
+        "\e[2K\e[1GAre you a human? \e[90m(y/N)\e[0m ",
+        "\e[2K\e[1G\e[1A\e[2K\e[1G",
+        "Are you a human? \e[32mNo\e[0m\n"
       ].join)
     end
 
