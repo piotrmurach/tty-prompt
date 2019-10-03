@@ -93,7 +93,7 @@ module TTY
         if Utils.blank?(@input)
           @input = default ? positive : negative
         end
-        @evaluator.(@input)
+        @evaluator.call(@input)
       end
 
       # @api private
@@ -118,7 +118,7 @@ module TTY
         @positive = default ? 'Yes' : 'yes'
         @negative = default ? 'no' : 'No'
         @validation = /^(y(es)?|no?)$/i
-        @messages[ :valid? ] = "Invalid input."
+        @messages[:valid?] = "Invalid input."
       end
 
       # @api private
