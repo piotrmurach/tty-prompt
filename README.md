@@ -386,7 +386,7 @@ end
 
 The **TTY::Prompt** comes with built-in validations for `:email` and you can use them directly like so:
 
-```prompt
+```ruby
 prompt.ask('What is your email?') { |q| q.validate :email }
 ```
 
@@ -1218,7 +1218,7 @@ end
 
 In order to collect _mutliple values_ for a given key in a loop, chain `values` onto the `key` desired:
 
-```rb
+```ruby
 result = prompt.collect do
   key(:name).ask('Name?')
 
