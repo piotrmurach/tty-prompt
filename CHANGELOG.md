@@ -1,9 +1,10 @@
 # Change log
 
-## [v0.19.1] - 2019-07-xx
+## [v0.19.1] - 2019-11-xx
 
 ### Fixed
 * Fix Choice#from to differentiate between nil and false by Katelyn Schiesser(@slowbro)
+* Fix yes? and no? prompts to stop raising on invalid/blank input by Katelyn Schiesser(@slowbro)
 
 ## [v0.19.0] - 2019-05-27
 
@@ -331,6 +332,7 @@
 
 * Initial implementation and release
 
+[v0.19.1]: https://github.com/piotrmurach/tty-prompt/compare/v0.19.0...v0.19.1
 [v0.19.0]: https://github.com/piotrmurach/tty-prompt/compare/v0.18.1...v0.19.0
 [v0.18.1]: https://github.com/piotrmurach/tty-prompt/compare/v0.18.0...v0.18.1
 [v0.18.0]: https://github.com/piotrmurach/tty-prompt/compare/v0.17.2...v0.18.0
