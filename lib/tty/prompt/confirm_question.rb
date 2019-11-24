@@ -14,7 +14,7 @@ module TTY
       # @option options [String] :negative
       #
       # @api public
-      def initialize(prompt, options = {})
+      def initialize(prompt, **options)
         super
         @suffix   = options.fetch(:suffix)   { UndefinedSetting }
         @positive = options.fetch(:positive) { UndefinedSetting }

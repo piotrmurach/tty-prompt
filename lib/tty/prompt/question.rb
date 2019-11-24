@@ -167,7 +167,7 @@ module TTY
           options[:value] = @value
           @first_render = false
         end
-        @prompt.read_line(question, options).chomp
+        @prompt.read_line(question, **options).chomp
       end
 
       # Handle error condition

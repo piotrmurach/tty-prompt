@@ -35,7 +35,7 @@ module TTY
           if name.is_a?(Hash)
             convert_hash(name)
           else
-            new(name.to_s, (value.nil? ? name.to_s : value), options || {})
+            new(name.to_s, (value.nil? ? name.to_s : value), **(options || {}))
           end
         when Hash
           convert_hash(val)
@@ -49,9 +49,9 @@ module TTY
       # @api public
       def self.convert_hash(val)
         if val.key?(:name) && val.key?(:value)
-          new(val[:name].to_s, val[:value], val)
+          new(val[:name].to_s, val[:value], **val)
         elsif val.key?(:name)
-          new(val[:name].to_s, val[:name].to_s, val)
+          new(val[:name].to_s, val[:name].to_s, **val)
         else
           new(val.keys.first.to_s, val.values.first)
         end

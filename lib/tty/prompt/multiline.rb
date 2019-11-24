@@ -11,7 +11,7 @@ module TTY
     class Multiline < Question
       HELP = '(Press CTRL-D or CTRL-Z to finish)'.freeze
 
-      def initialize(prompt, options = {})
+      def initialize(prompt, **options)
         super
         @help         = options[:help] || self.class::HELP
         @first_render = true

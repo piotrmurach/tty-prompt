@@ -3,7 +3,7 @@
 RSpec.describe TTY::Prompt::BlockPaginator, '#paginate' do
   it "ignores per_page when equal items " do
     list = %w(a b c d)
-    paginator = described_class.new({per_page: 4})
+    paginator = described_class.new(per_page: 4)
 
     expect(paginator.paginate(list, 1).to_a).to eq([
       ['a',0],['b',1],['c',2],['d',3]])
@@ -11,7 +11,7 @@ RSpec.describe TTY::Prompt::BlockPaginator, '#paginate' do
 
   it "ignores per_page when less items " do
     list = %w(a b c d)
-    paginator = described_class.new({per_page: 5})
+    paginator = described_class.new(per_page: 5)
 
     expect(paginator.paginate(list, 1).to_a).to eq([
       ['a',0],['b',1],['c',2],['d',3]])
@@ -19,7 +19,7 @@ RSpec.describe TTY::Prompt::BlockPaginator, '#paginate' do
 
   it "paginates items matching per_page count" do
     list = %w(a b c d e f)
-    paginator = described_class.new({per_page: 3})
+    paginator = described_class.new(per_page: 3)
 
     expect(paginator.paginate(list, 1).to_a).to eq([['a',0], ['b',1], ['c',2]])
     expect(paginator.paginate(list, 2).to_a).to eq([['a',0], ['b',1], ['c',2]])
@@ -32,7 +32,7 @@ RSpec.describe TTY::Prompt::BlockPaginator, '#paginate' do
 
   it "paginates items not matching per_page count" do
     list = %w(a b c d e f g)
-    paginator = described_class.new({per_page: 3})
+    paginator = described_class.new(per_page: 3)
 
     expect(paginator.paginate(list, 1).to_a).to eq([['a',0], ['b',1], ['c',2]])
     expect(paginator.paginate(list, 2).to_a).to eq([['a',0], ['b',1], ['c',2]])
@@ -46,7 +46,7 @@ RSpec.describe TTY::Prompt::BlockPaginator, '#paginate' do
 
   it "finds both start and end index for current selection" do
     list = %w(a b c d e f g)
-    paginator = described_class.new({per_page: 3, default: 0})
+    paginator = described_class.new(per_page: 3, default: 0)
 
     paginator.paginate(list, 3)
     expect(paginator.start_index).to eq(0)
@@ -67,7 +67,7 @@ RSpec.describe TTY::Prompt::BlockPaginator, '#paginate' do
 
   it "starts with default selection" do
     list = %w(a b c d e f g)
-    paginator = described_class.new({per_page: 3, default: 3})
+    paginator = described_class.new(per_page: 3, default: 3)
 
     expect(paginator.paginate(list, 4).to_a).to eq([['d',3], ['e',4], ['f',5]])
   end
@@ -75,7 +75,7 @@ RSpec.describe TTY::Prompt::BlockPaginator, '#paginate' do
   it "doesn't accept invalid pagination" do
     list = %w(a b c d e f g)
 
-    paginator = described_class.new({per_page: 0})
+    paginator = described_class.new(per_page: 0)
 
     expect {
       paginator.paginate(list, 4)

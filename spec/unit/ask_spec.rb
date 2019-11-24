@@ -99,7 +99,7 @@ RSpec.describe TTY::Prompt, '#ask' do
     prompt.input << ''
     prompt.input.rewind
     options = {default: 'Piotr', help_color: :red, active_color: :cyan}
-    answer = prompt.ask("What is your name?", options)
+    answer = prompt.ask("What is your name?", **options)
     expect(answer).to eq('Piotr')
     expect(prompt.output.string).to eq([
       "What is your name? \e[31m(Piotr)\e[0m ",
@@ -147,7 +147,7 @@ RSpec.describe TTY::Prompt, '#ask' do
     prompt.input << "Piotr\r"
     prompt.input.rewind
     local_settings = {prefix: ':-) ', active_color: :blue, help_color: :magenta}
-    prompt.ask('What is your name?', local_settings)
+    prompt.ask('What is your name?', **local_settings)
 
     expect(prompt.output.string).to eq([
       "[?] What is your name? ",

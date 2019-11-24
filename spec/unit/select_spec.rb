@@ -233,7 +233,7 @@ RSpec.describe TTY::Prompt, '#select' do
     prompt.input.rewind
     options = {active_color: :blue, help_color: :red, symbols: {marker: '>' }}
 
-    value = prompt.select('What size?', choices, options)
+    value = prompt.select('What size?', choices, **options)
 
     expect(value).to eq('Large')
     expect(prompt.output.string).to eq([

@@ -86,7 +86,7 @@ module TTY
     def_delegators :@cursor, :clear_lines, :clear_line,
                    :show, :hide
 
-    def_delegators :@reader, :read_char, :read_line, :read_keypress,
+    def_delegators :@reader, :read_char, :read_keypress, # :read_line,
                    :read_multiline, :on, :subscribe, :unsubscribe, :trigger,
                    :count_screen_lines
 
@@ -98,6 +98,11 @@ module TTY
         valid?: 'Your answer is invalid (must match %{valid})',
         required?: 'Value must be provided'
       }
+    end
+
+    # This fixes Forwardable module keyword arguments warning
+    def read_line(message, **options)
+      @reader.read_line(message, **options)
     end
 
     # Initialize a Prompt
@@ -163,7 +168,7 @@ module TTY
     # @api public
     def invoke_question(object, message, **options, &block)
       options[:messages] = self.class.messages
-      question = object.new(self, options)
+      question = object.new(self, **options)
       question.(message, &block)
     end
 
@@ -233,7 +238,7 @@ module TTY
                   args.flatten
                 end
 
-      list = object.new(self, options)
+      list = object.new(self, **options)
       list.(question, choices, &block)
     end
 
@@ -330,7 +335,7 @@ module TTY
       options  = Utils.extract_options!(args)
       options.merge!(defaults.reject { |k, _| options.key?(k) })
 
-      question = ConfirmQuestion.new(self, options)
+      question = ConfirmQuestion.new(self, **options)
       question.call(message, &block)
     end
 
@@ -350,7 +355,7 @@ module TTY
       options  = Utils.extract_options!(args)
       options.merge!(defaults.reject { |k, _| options.key?(k) })
 
-      question = ConfirmQuestion.new(self, options)
+      question = ConfirmQuestion.new(self, **options)
       !question.call(message, &block)
     end
 
@@ -391,7 +396,7 @@ module TTY
     # @api public
     def slider(question, *args, &block)
       options = Utils.extract_options!(args)
-      slider = Slider.new(self, options)
+      slider = Slider.new(self, **options)
       slider.call(question, &block)
     end
 
@@ -506,8 +511,8 @@ module TTY
     # @return [String]
     #
     # @api public
-    def suggest(message, possibilities, options = {})
-      suggestion = Suggestion.new(options)
+    def suggest(message, possibilities, **options)
+      suggestion = Suggestion.new(**options)
       say(suggestion.suggest(message, possibilities))
     end
 
@@ -522,8 +527,8 @@ module TTY
     #   the collection of answers
     #
     # @api public
-    def collect(options = {}, &block)
-      collector = AnswersCollector.new(self, options)
+    def collect(**options, &block)
+      collector = AnswersCollector.new(self, **options)
       collector.call(&block)
     end
 

@@ -6,7 +6,7 @@ module TTY
       # Initialize answer collector
       #
       # @api public
-      def initialize(prompt, options = {})
+      def initialize(prompt, **options)
         @prompt  = prompt
         @answers = options.fetch(:answers) { {} }
       end
@@ -69,8 +69,8 @@ module TTY
       private
 
       # @api private
-      def method_missing(method, *args, &block)
-        answer = @prompt.public_send(method, *args, &block)
+      def method_missing(method, *args, **options, &block)
+        answer = @prompt.public_send(method, *args, **options, &block)
         add_answer(answer)
       end
     end # AnswersCollector

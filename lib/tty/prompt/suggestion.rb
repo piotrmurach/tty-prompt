@@ -33,7 +33,7 @@ module TTY
       # Initialize a Suggestion
       #
       # @api public
-      def initialize(options = {})
+      def initialize(**options)
         @indent      = options.fetch(:indent) { DEFAULT_INDENT }
         @single_text = options.fetch(:single_text) { SINGLE_TEXT }
         @plural_text = options.fetch(:plural_text) { PLURAL_TEXT }
