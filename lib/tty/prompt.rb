@@ -481,11 +481,11 @@ module TTY
       longest = messages.max_by(&:length).size
       width = TTY::Screen.width - longest
       print cursor.save
-      messages.each_with_index do |msg, i|
-        print cursor.move_to(width, i)
-        print cursor.clear_line_after
+      messages.reverse_each.with_index do |msg, i|
+        print cursor.column(width) + cursor.up + cursor.clear_line_after
         print msg
       end
+    ensure
       print cursor.restore
     end
 
