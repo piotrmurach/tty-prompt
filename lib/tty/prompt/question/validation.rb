@@ -57,11 +57,11 @@ module TTY
         def call(input)
           if pattern.is_a?(String) || pattern.is_a?(Symbol)
             VALIDATORS.key?(pattern.to_sym)
-            !VALIDATORS[pattern.to_sym].match(input).nil?
+            !VALIDATORS[pattern.to_sym].match(input.to_s).nil?
           elsif pattern.is_a?(Regexp)
-            !pattern.match(input).nil?
+            !pattern.match(input.to_s).nil?
           elsif pattern.is_a?(Proc)
-            result = pattern.call(input)
+            result = pattern.call(input.to_s)
             result.nil? ? false : result
           else false
           end
