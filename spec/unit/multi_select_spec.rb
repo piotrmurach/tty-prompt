@@ -274,17 +274,17 @@ RSpec.describe TTY::Prompt do
     ].join)
   end
 
-  it "changes help text" do
+  it "changes help text and color" do
     prompt = TTY::TestPrompt.new
     choices = %w(vodka beer wine whisky bourbon)
     prompt.input << "\r"
     prompt.input.rewind
-
-    answer = prompt.multi_select("Select drinks?", choices, help: '(Bash keyboard)')
+    options = { help: '(Bash keyboard)', help_color: :cyan }
+    answer = prompt.multi_select("Select drinks?", choices, options)
 
     expect(answer).to eq([])
     expected_output = [
-      "\e[?25lSelect drinks? \e[90m(Bash keyboard)\e[0m\n",
+      "\e[?25lSelect drinks? \e[36m(Bash keyboard)\e[0m\n",
       "#{symbols[:marker]} #{symbols[:radio_off]} vodka\n",
       "  #{symbols[:radio_off]} beer\n",
       "  #{symbols[:radio_off]} wine\n",
