@@ -280,7 +280,7 @@ RSpec.describe TTY::Prompt do
     prompt.input << "\r"
     prompt.input.rewind
     options = { help: '(Bash keyboard)', help_color: :cyan }
-    answer = prompt.multi_select("Select drinks?", choices, options)
+    answer = prompt.multi_select('Select drinks?', choices, options)
 
     expect(answer).to eq([])
     expected_output = [
