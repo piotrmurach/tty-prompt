@@ -279,8 +279,8 @@ RSpec.describe TTY::Prompt do
     choices = %w(vodka beer wine whisky bourbon)
     prompt.input << "\r"
     prompt.input.rewind
-    options = { help: '(Bash keyboard)', help_color: :cyan }
-    answer = prompt.multi_select('Select drinks?', choices, options)
+    options = { help: "(Bash keyboard)", help_color: :cyan }
+    answer = prompt.multi_select("Select drinks?", choices, options)
 
     expect(answer).to eq([])
     expected_output = [
