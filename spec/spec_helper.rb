@@ -16,6 +16,7 @@ if ENV['COVERAGE'] || ENV['TRAVIS']
 end
 
 require 'tty-prompt'
+require 'stringio'
 
 class StringIO
   def wait_readable(*)
