@@ -84,7 +84,7 @@ module TTY
       #
       # @api private
       def render_header
-        instructions = @prompt.decorate(help, :bright_black)
+        instructions = @prompt.decorate(help, @help_color)
         max_suffix = @max ? max_help : ""
 
         if @done && @echo
