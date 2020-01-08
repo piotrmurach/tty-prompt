@@ -384,6 +384,12 @@ prompt.ask('What is your username?') do |q|
 end
 ```
 
+```ruby
+prompt.ask('What is your username?') do |q|
+  q.validate { |input| input =~ /^[^\.]+\.[^\.]+/ }
+end
+```
+
 The **TTY::Prompt** comes with built-in validations for `:email` and you can use them directly like so:
 
 ```ruby
