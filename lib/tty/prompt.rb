@@ -81,7 +81,7 @@ module TTY
     # @api private
     attr_reader :symbols
 
-    def_delegators :@pastel, :decorate, :strip
+    def_delegators :@pastel, :strip
 
     def_delegators :@cursor, :clear_lines, :clear_line,
                    :show, :hide
@@ -560,6 +560,33 @@ module TTY
     # @api private
     def stderr
       $stderr
+    end
+
+    # Decorate the values corresponding to styles
+    #
+    # @param [String] string
+    #   the string to decorate with styles
+    #
+    # @return [String]
+    #
+    # @api private
+    def decorate(string, *colors)
+        return string if blank?(string) || !@enabled_color || colors.empty?
+
+        if colors.size == 1 && colors.is_a?(::Pastel::Detached)
+            colors[0].call(string)
+        else
+            @pastel.decorate(string, colors)
+        end
+    end
+
+    # Check if value contains anything to style
+    #
+    # @return [Boolean]
+    #
+    # @api private
+    def blank?(value)
+      value.nil? || !value.respond_to?(:to_str) || value.to_s == ''
     end
 
     # Inspect class name and public attributes
