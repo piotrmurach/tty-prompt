@@ -571,13 +571,13 @@ module TTY
     #
     # @api private
     def decorate(string, *colors)
-        return string if blank?(string) || !@enabled_color || colors.empty?
+      return string if blank?(string) || !@enabled_color || colors.empty?
 
-        if colors.size == 1 && colors.is_a?(::Pastel::Detached)
-            colors[0].call(string)
-        else
-            @pastel.decorate(string, colors)
-        end
+      if colors.size == 1 && colors.is_a?(::Pastel::Detached)
+        colors[0].call(string)
+      else
+        @pastel.decorate(string, colors)
+      end
     end
 
     # Check if value contains anything to style
@@ -586,7 +586,7 @@ module TTY
     #
     # @api private
     def blank?(value)
-      value.nil? || !value.respond_to?(:to_str) || value.to_s == ''
+      value.nil? || !value.respond_to?(:to_str) || value.to_s == ""
     end
 
     # Inspect class name and public attributes
