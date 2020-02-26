@@ -14,6 +14,7 @@ RSpec.describe TTY::Prompt do
     out = []
     out << "\e[?25l" if init
     out << prompt << " "
+    out << "(min. #{options[:min]}) " if options[:min]
     out << "(max. #{options[:max]}) " if options[:max]
     out << selected.join(', ')
     out << " " if init && !selected.empty?
@@ -702,6 +703,32 @@ RSpec.describe TTY::Prompt do
         output_helper("Select drinks?", choices, "vodka", [], enum: ') ') +
         output_helper("Select drinks?", choices, "vodka", %w[vodka], enum: ') ') +
         exit_message("Select drinks?", %w[vodka])
+
+      expect(prompt.output.string).to eq(expected_output)
+    end
+  end
+
+  context "with :min" do
+    it "requires number of choices" do
+      prompt = TTY::TestPrompt.new
+      choices = %w(A B C)
+      prompt.on(:keypress) { |e|
+        prompt.trigger(:keydown) if e.value == "j"
+      }
+      prompt.input << " " << "\r" <<  "j" << " " << "\r"
+      prompt.input.rewind
+
+      value = prompt.multi_select("What letter?", choices, min: 2, per_page: 100)
+      expect(value).to eq(["A", "B"])
+
+      expected_output =
+        output_helper("What letter?", choices, "A", [], init: true, min: 2,
+          hint: "Use #{up_down} arrow keys, press Space to select and Enter to finish") +
+        output_helper("What letter?", choices, "A", %w[A], min: 2) +
+        output_helper("What letter?", choices, "A", %w[A], min: 2) +
+        output_helper("What letter?", choices, "B", %w[A], min: 2) +
+        output_helper("What letter?", choices, "B", %w[A B], min: 2) +
+        exit_message("What letter?", %w[A B])
 
       expect(prompt.output.string).to eq(expected_output)
     end
