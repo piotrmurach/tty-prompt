@@ -1016,7 +1016,7 @@ prompt.multi_select("Select drinks?", choices, min: 3)
 #   ⬢ beer
 #   ⬡ wine
 #   ⬡ wiskey
-# �� ⬡ bourbon
+# ‣ ⬡ bourbon
 ```
 
 #### 2.6.3.5 `:max`
