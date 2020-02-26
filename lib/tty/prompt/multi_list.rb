@@ -22,7 +22,15 @@ module TTY
         @selected = []
         @help = options[:help]
         @echo = options.fetch(:echo, true)
+        @min  = options[:min]
         @max  = options[:max]
+      end
+
+      # Set a minimum number of choices
+      #
+      # @api public
+      def min(value)
+        @min = value
       end
 
       # Set a maximum number of choices
@@ -31,6 +39,18 @@ module TTY
       def max(value)
         @max = value
       end
+
+      # Callback fired when enter/return key is pressed
+      #
+      # @api private
+      def keyenter(*)
+        if @min
+          super if @selected.size >= @min
+        else
+          super
+        end
+      end
+      alias keyreturn keyenter
 
       # Callback fired when space key is pressed
       #
@@ -71,13 +91,16 @@ module TTY
         @selected.map(&:name).join(', ')
       end
 
-      # Header part showing the maximum number of choices
+      # Header part showing the minimum/maximum number of choices
       #
       # @return [String]
       #
       # @api private
-      def max_help
-        "(max. #{@max}) "
+      def minmax_help
+        help = []
+        help << "min. #{@min}" if @min
+        help << "max. #{@max}" if @max
+        "(%s) " % [ help.join(' ') ]
       end
 
       # Render initial help text and then currently selected choices
@@ -85,20 +108,20 @@ module TTY
       # @api private
       def render_header
         instructions = @prompt.decorate(help, @help_color)
-        max_suffix = @max ? max_help : ""
+        minmax_suffix = @min || @max ? minmax_help : ""
 
         if @done && @echo
           @prompt.decorate(selected_names, @active_color)
         elsif @selected.size.nonzero? && @echo
           help_suffix = filterable? && @filter.any? ? " #{filter_help}" : ""
-          max_suffix + selected_names +
+          minmax_suffix + selected_names +
             (@first_render ? " #{instructions}" : help_suffix)
         elsif @first_render
-          max_suffix + instructions
+          minmax_suffix + instructions
         elsif filterable? && @filter.any?
-          max_suffix + filter_help
-        elsif @max
-          max_help
+          minmax_suffix + filter_help
+        elsif @min || @max
+          minmax_help
         end
       end
 
