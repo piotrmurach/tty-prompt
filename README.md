@@ -88,7 +88,8 @@ Or install it yourself as:
       * [2.6.3.1 :disabled](#2631-disabled)
       * [2.6.3.2 :echo](#2632-echo)
       * [2.6.3.3 :filter](#2633-filter)
-      * [2.6.3.4 :max](#2634-max)
+      * [2.6.3.4 :min](#2634-min)
+      * [2.6.3.5 :max](#2635-max)
     * [2.6.4 enum_select](#264-enum_select)
       * [2.6.4.1 :per_page](#2641-per_page)
       * [2.6.4.1 :disabled](#2641-disabled)
@@ -1002,9 +1003,25 @@ If the user changes or deletes a filter, the choices previously selected remain 
 
 The `filter` option is not compatible with `enum`.
 
-#### 2.6.3.4 `:max`
+#### 2.6.3.4 `:min`
 
-To limit the number of choices an user can select, use `:max` option:
+To force the minimum number of choices an user must select, use the `:min` option:
+
+```ruby
+choices = %w(vodka beer wine whisky bourbon)
+prompt.multi_select("Select drinks?", choices, min: 3)
+# =>
+# Select drinks? (min. 3) vodka, beer
+#   ⬢ vodka
+#   ⬢ beer
+#   ⬡ wine
+#   ⬡ wiskey
+# �� ⬡ bourbon
+```
+
+#### 2.6.3.5 `:max`
+
+To limit the number of choices an user can select, use the `:max` option:
 
 ```ruby
 choices = %w(vodka beer wine whisky bourbon)
