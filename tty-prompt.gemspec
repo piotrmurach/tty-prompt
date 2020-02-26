@@ -1,15 +1,13 @@
-lib = File.expand_path('../lib', __FILE__)
-$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'tty/prompt/version'
+require_relative "lib/tty/prompt/version"
 
 Gem::Specification.new do |spec|
   spec.name          = "tty-prompt"
   spec.version       = TTY::Prompt::VERSION
   spec.authors       = ["Piotr Murach"]
-  spec.email         = ["me@piotrmurach.com"]
+  spec.email         = ["piotr@piotrmurach.com"]
   spec.summary       = %q{A beautiful and powerful interactive command line prompt.}
   spec.description   = %q{A beautiful and powerful interactive command line prompt with a robust API for getting and validating complex inputs.}
-  spec.homepage      = "https://piotrmurach.github.io/tty"
+  spec.homepage      = "https://ttytoolkit.org"
   spec.license       = "MIT"
   if spec.respond_to?(:metadata=)
     spec.metadata = {
