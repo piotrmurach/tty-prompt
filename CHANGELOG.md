@@ -1,5 +1,16 @@
 # Change log
 
+## [v0.21.0] - 2019-03-08
+
+### Added
+* Add :min option to #multi_select prompt
+
+### Changed
+* Change gemspec to remove test artifacts
+
+### Fixed
+* Fix :help_color option for multi_selct prompt by @robbystk
+
 ## [v0.20.0] - 2019-11-24
 
 ### Changed
