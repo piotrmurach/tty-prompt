@@ -3,7 +3,7 @@
 ## [v0.21.0] - 2019-03-08
 
 ### Added
-* Add :min option to #multi_select prompt
+* Add :min option to #multi_select prompt by Katelyn Schiesser(@slowbro)
 
 ### Changed
 * Change gemspec to remove test artifacts
