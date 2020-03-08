@@ -358,9 +358,10 @@ Available letter casing settings are:
 ```
 
 Available whitespace settings are:
+
 ```ruby
 :trim     # remove whitespace from both ends of the input
-:strip    # idem
+:strip    # same as :trim
 :chomp    # remove whitespace at the end of input
 :collapse # reduce all whitespace to single character
 :remove   # remove all whitespace
