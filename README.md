@@ -360,6 +360,7 @@ Available letter casing settings are:
 Available whitespace settings are:
 ```ruby
 :trim     # remove whitespace from both ends of the input
+:strip    # idem
 :chomp    # remove whitespace at the end of input
 :collapse # reduce all whitespace to single character
 :remove   # remove all whitespace
@@ -670,7 +671,7 @@ end
 # ‣ Jax
 ```
 
-You can navigate the choices using the arrow keys or define your own key mappings (see [keyboard events](#212-keyboard-events). When reaching the top/bottom of the list, the selection does not cycle around by default. If you wish to enable cycling, you can pass `cycle: true` to `select` and `mutli_select`:
+You can navigate the choices using the arrow keys or define your own key mappings (see [keyboard events](#212-keyboard-events). When reaching the top/bottom of the list, the selection does not cycle around by default. If you wish to enable cycling, you can pass `cycle: true` to `select` and `multi_select`:
 
 ```ruby
 prompt.select("Choose your destiny?", %w(Scorpion Kano Jax), cycle: true)
