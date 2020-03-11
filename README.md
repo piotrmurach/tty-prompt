@@ -328,7 +328,7 @@ To change default range validation error message do:
 ```ruby
 prompt.ask('How spicy on scale (1-5)? ') do |q|
   q.in '1-5'
-  q.messages[:range?] = '%{value} out of expected range #{in}'
+  q.messages[:range?] = '#{value} out of expected range #{in}'
 end
 ```
 
