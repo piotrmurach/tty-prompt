@@ -1315,7 +1315,7 @@ prompt.slider('Volume', max: 100, step: 5, default: 75)
 You can also change the default slider formatting using the `:format`. The value must contain the `:slider` token to show current value and any `sprintf` compatible flag for number display, in our case `%d`:
 
 ```ruby
-prompt.slider('Volume', max: 100, step: 5, default: 75, format: "|:slider| %d%")
+prompt.slider('Volume', max: 100, step: 5, default: 75, format: "|:slider| %d%%")
 # =>
 # Volume |───────────────●──────| 75%
 # (Use arrow keys, press Enter to select)
