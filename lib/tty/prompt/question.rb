@@ -42,7 +42,7 @@ module TTY
         @echo       = options.fetch(:echo) { true }
         @in         = options.fetch(:in) { UndefinedSetting }
         @modifier   = options.fetch(:modifier) { [] }
-        @validation = options.fetch(:validation) { UndefinedSetting }
+        @validation = options.fetch(:validate) { UndefinedSetting }
         @convert    = options.fetch(:convert) { UndefinedSetting }
         @active_color = options.fetch(:active_color) { @prompt.active_color }
         @help_color = options.fetch(:help_color) { @prompt.help_color }

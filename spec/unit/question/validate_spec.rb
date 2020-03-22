@@ -83,8 +83,7 @@ RSpec.describe TTY::Prompt::Question, '#validate' do
     prompt.input << "wrong\np@m.com"
     prompt.input.rewind
 
-    answer = prompt.ask('What is your email?') do |q|
-      q.validate :email
+    answer = prompt.ask('What is your email?', validate: :email) do |q|
       q.messages[:valid?] = 'Not an email!'
     end
 
