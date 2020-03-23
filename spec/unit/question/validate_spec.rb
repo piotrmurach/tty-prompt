@@ -45,6 +45,15 @@ RSpec.describe TTY::Prompt::Question, '#validate' do
     expect(answer).to eq('piotr@example.com')
   end
 
+  it 'deprecates :validation option' do
+    prompt.input << 'piotr@example.com'
+    prompt.input.rewind
+
+    expect do
+      prompt.ask('What is your email?', validation: :email)
+    end.to output(/`:validation` option is deprecated/).to_stderr
+  end
+
   it "provides default error message for wrong input" do
     prompt.input << "wrong\np@m.com\n"
     prompt.input.rewind
