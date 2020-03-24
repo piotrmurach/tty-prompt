@@ -35,23 +35,29 @@ module TTY
       #
       # @api public
       def initialize(prompt, **options)
-        @prompt     = prompt
-        @prefix     = options.fetch(:prefix) { @prompt.prefix }
-        @default    = options.fetch(:default) { UndefinedSetting }
-        @required   = options.fetch(:required) { false }
-        @echo       = options.fetch(:echo) { true }
-        @in         = options.fetch(:in) { UndefinedSetting }
-        @modifier   = options.fetch(:modifier) { [] }
-        @validation = options.fetch(:validation) { UndefinedSetting }
-        @convert    = options.fetch(:convert) { UndefinedSetting }
+        # Option deprecation
+        if options[:validation]
+          warn "[DEPRECATION] The `:validation` option is deprecated. Use `:validate` instead."
+          options[:validate] = options[:validation]
+        end
+
+        @prompt       = prompt
+        @prefix       = options.fetch(:prefix) { @prompt.prefix }
+        @default      = options.fetch(:default) { UndefinedSetting }
+        @required     = options.fetch(:required) { false }
+        @echo         = options.fetch(:echo) { true }
+        @in           = options.fetch(:in) { UndefinedSetting }
+        @modifier     = options.fetch(:modifier) { [] }
+        @validation   = options.fetch(:validate) { UndefinedSetting }
+        @convert      = options.fetch(:convert) { UndefinedSetting }
         @active_color = options.fetch(:active_color) { @prompt.active_color }
-        @help_color = options.fetch(:help_color) { @prompt.help_color }
-        @error_color = options.fetch(:error_color) { :red }
-        @value      = options.fetch(:value) { UndefinedSetting }
-        @messages   = Utils.deep_copy(options.fetch(:messages) { { } })
-        @done       = false
+        @help_color   = options.fetch(:help_color) { @prompt.help_color }
+        @error_color  = options.fetch(:error_color) { :red }
+        @value        = options.fetch(:value) { UndefinedSetting }
+        @messages     = Utils.deep_copy(options.fetch(:messages) { { } })
+        @done         = false
         @first_render = true
-        @input      = nil
+        @input        = nil
 
         @evaluator = Evaluator.new(self)
 
