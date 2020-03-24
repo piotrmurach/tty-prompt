@@ -36,13 +36,9 @@ module TTY
       # @api public
       def initialize(prompt, **options)
         # Option deprecation
-        if options.fetch(:validation) { nil }
-          warn <<-MSG.gsub(/[[:space:]]+/, " ").strip
-            [DEPRECATION] The `:validation` option is deprecated and
-            will be removed in a future release of tty-prompt
-            (use functionally identical `:validate` instead)
-          MSG
-          options[:validate] = options.fetch(:validation)
+        if options[:validation]
+          warn "[DEPRECATION] The `:validation` option is deprecated. Use `:validate` instead."
+          options[:validate] = options[:validation]
         end
 
         @prompt       = prompt
