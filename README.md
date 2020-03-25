@@ -1330,6 +1330,16 @@ prompt.slider("Volume", max: 10, step: 0.5, default: 5, format: "|:slider| %.1f"
 # (Use arrow keys, press Enter to select)
 ```
 
+You can alternatively provide a proc/lambda to customize your formatting even further:
+
+```ruby
+slider_format = -> (slider, value) { "|#{slider}| #{value.zero? ? "muted" : "%.1f"}" % value }
+prompt.slider("Volume", max: 10, step: 0.5, default: 0, format: slider_format)
+# =>
+# Volume |●─────────────────────| muted
+# (Use arrow keys, press Enter to select)
+```
+
 If you wish to change the slider handle and the slider range display use `:symbols` option:
 
 ```ruby
