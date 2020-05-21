@@ -86,7 +86,7 @@ module TTY
     def_delegators :@cursor, :clear_lines, :clear_line,
                    :show, :hide
 
-    def_delegators :@reader, :read_char, :read_keypress, # :read_line,
+    def_delegators :@reader, :read_char, :read_keypress, :read_line,
                    :read_multiline, :on, :subscribe, :unsubscribe, :trigger,
                    :count_screen_lines
 
@@ -99,11 +99,6 @@ module TTY
         required?: "Value must be provided",
         convert?: "Cannot convert `%{value}` to '%{type}' type"
       }
-    end
-
-    # This fixes Forwardable module keyword arguments warning
-    def read_line(message, **options)
-      @reader.read_line(message, **options)
     end
 
     # Initialize a Prompt
