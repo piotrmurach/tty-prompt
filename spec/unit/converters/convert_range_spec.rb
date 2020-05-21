@@ -13,10 +13,19 @@ RSpec.describe TTY::Prompt::Question, 'convert range' do
   end
 
   it "fails to convert to range" do
-    prompt.input << "abcd"
+    prompt.input << "x"
     prompt.input.rewind
-    expect {
-      prompt.ask('Which age group?', convert: :range)
-    }.to raise_error(TTY::Prompt::ConversionError)
+    prompt.ask('Which age group?', convert: :range)
+
+    expect(prompt.output.string).to eq([
+      "Which age group? ",
+      "\e[2K\e[1G",
+      "Which age group? x",
+      "\e[31m>>\e[0m Cannot convert `x` to 'range' type",
+      "\e[1A\e[2K\e[1G",
+      "Which age group? ",
+      "\e[2K\e[1G\e[1A\e[2K\e[1G",
+      "Which age group? \n"
+    ].join)
   end
 end

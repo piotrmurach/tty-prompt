@@ -9,8 +9,8 @@ module TTY
         @__converter_registry ||= ConverterRegistry.new
       end
 
-      def converter(name, &block)
-        converter_registry.register(name, &block)
+      def converter(*names, &block)
+        converter_registry.register(*names, &block)
       end
 
       def convert(name, input)

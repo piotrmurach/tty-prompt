@@ -66,6 +66,7 @@ module TTY
         @evaluator << CheckRange
         @evaluator << CheckValidation
         @evaluator << CheckModifier
+        @evaluator << CheckConversion
       end
 
       # Stores all the error messages displayed to user
@@ -129,7 +130,7 @@ module TTY
           @prompt.print(refresh(question.lines.count, total_lines))
         end
         @prompt.print(render_question)
-        convert_result(result.value)
+        result.value
       end
 
       # Render question
@@ -232,8 +233,12 @@ module TTY
       # Specify answer conversion
       #
       # @api public
-      def convert(value)
-        @convert = value
+      def convert(value = (not_set = true))
+        if not_set
+          @convert
+        else
+          @convert = value
+        end
       end
 
       # Check if conversion is set

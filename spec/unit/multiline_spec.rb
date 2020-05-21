@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-RSpec.describe TTY::Prompt::Question, '#multiline' do
-  it 'reads no lines' do
+RSpec.describe TTY::Prompt::Question, "#multiline" do
+  it "reads no lines" do
     prompt = TTY::TestPrompt.new
     prompt.input << "\C-d"
     prompt.input.rewind
@@ -21,7 +21,7 @@ RSpec.describe TTY::Prompt::Question, '#multiline' do
     prompt.input << "\C-d"
     prompt.input.rewind
 
-    answer = prompt.multiline("Description?", default: 'A super sweet prompt')
+    answer = prompt.multiline("Description?", default: "A super sweet prompt")
 
     expect(answer).to eq([])
     expect(prompt.output.string).to eq([
@@ -37,8 +37,8 @@ RSpec.describe TTY::Prompt::Question, '#multiline' do
     prompt.input.rewind
 
     answer = prompt.multiline("Description?") do |q|
-      q.default 'A super sweet prompt'
-      q.help '(Press thy ctrl-d to end)'
+      q.default "A super sweet prompt"
+      q.help "(Press thy ctrl-d to end)"
     end
 
     expect(answer).to eq([])
@@ -49,7 +49,7 @@ RSpec.describe TTY::Prompt::Question, '#multiline' do
     ].join)
   end
 
-  it 'reads multiple lines with empty lines' do
+  it "reads multiple lines with empty lines" do
     prompt = TTY::TestPrompt.new
     prompt.input << "aa\n\nbb\n\n\ncc\C-d"
     prompt.input.rewind

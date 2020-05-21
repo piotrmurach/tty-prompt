@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative "../const"
+
 module TTY
   class Prompt
     class Question
@@ -76,6 +78,21 @@ module TTY
           def self.call(question, value)
             if question.required? && !question.default? && value.nil?
               [value, question.message_for(:required?)]
+            else
+              [value]
+            end
+          end
+        end
+
+        class CheckConversion
+          def self.call(question, value)
+            if question.convert? && !Utils.blank?(value)
+              result = question.convert_result(value)
+              if result == Const::Undefined
+                [value, ["Cannot convert `#{value}` to '#{question.convert}' type"]]
+              else
+                [result]
+              end
             else
               [value]
             end

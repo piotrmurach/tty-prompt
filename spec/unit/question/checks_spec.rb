@@ -94,4 +94,22 @@ RSpec.describe TTY::Prompt::Question do
 
     expect(result).to eq([nil, ['Required input']])
   end
+
+  it "passes convert check" do
+    question = described_class.new(prompt)
+    question.convert :bool
+
+    result = TTY::Prompt::Question::Checks::CheckConversion.call(question, "t")
+
+    expect(result).to eq([true])
+  end
+
+  it "fails convert check" do
+    question = described_class.new(prompt, messages: TTY::Prompt.messages)
+    question.convert :bool
+
+    result = TTY::Prompt::Question::Checks::CheckConversion.call(question, "x")
+
+    expect(result).to eq(["x", ["Cannot convert `x` to 'bool' type"]])
+  end
 end

@@ -1,74 +1,105 @@
 # frozen_string_literal: true
 
-require 'pathname'
-require 'necromancer'
+require "necromancer"
 
-require_relative 'converter_dsl'
+require_relative "const"
+require_relative "converter_dsl"
 
 module TTY
   class Prompt
     module Converters
       extend ConverterDSL
 
-      # Delegate Necromancer errors
-      #
-      # @api private
-      def self.on_error
-        if block_given?
-          yield
-        else
-          raise ArgumentError, 'You need to provide a block argument.'
+      TRUE_VALUES = /^(t(rue)?|y(es)?|on|1)$/i.freeze
+      FALSE_VALUES = /^(f(alse)?|n(o)?|off|0)$/i.freeze
+
+      converter(:boolean, :bool) do |input|
+        case input.to_s
+        when TRUE_VALUES then true
+        when FALSE_VALUES then false
+        else Const::Undefined
         end
-      rescue Necromancer::ConversionTypeError => e
-        raise ConversionError, e.message
       end
 
-      converter(:bool) do |input|
-        on_error { Necromancer.convert(input).to(:boolean, strict: true) }
-      end
-
-      converter(:string) do |input|
+      converter(:string, :str) do |input|
         String(input).chomp
       end
 
-      converter(:symbol) do |input|
+      converter(:symbol, :sym) do |input|
         input.to_sym
       end
 
+      converter(:char) do |input|
+        String(input).chars.to_a[0]
+      end
+
       converter(:date) do |input|
-        on_error { Necromancer.convert(input).to(:date, strict: true) }
+        begin
+          require "date" unless defined?(::Date)
+          ::Date.parse(input)
+        rescue ArgumentError
+          Const::Undefined
+        end
       end
 
       converter(:datetime) do |input|
-        on_error { Necromancer.convert(input).to(:datetime, strict: true) }
+        begin
+          require "date" unless defined?(::Date)
+          ::DateTime.parse(input.to_s)
+        rescue ArgumentError
+          Const::Undefined
+        end
       end
 
-      converter(:int) do |input|
-        on_error { Necromancer.convert(input).to(:integer, strict: true) }
+      converter(:time) do |input|
+        begin
+          require "time"
+          ::Time.parse(input.to_s)
+        rescue ArgumentError
+          Const::Undefined
+        end
+      end
+
+      converter(:integer, :int) do |input|
+        begin
+          Integer(input)
+        rescue ArgumentError
+          Const::Undefined
+        end
       end
 
       converter(:float) do |input|
-        on_error { Necromancer.convert(input).to(:float, strict: true) }
+        begin
+          Float(input)
+        rescue TypeError, ArgumentError
+          Const::Undefined
+        end
       end
 
       converter(:range) do |input|
-        on_error { Necromancer.convert(input).to(:range, strict: true) }
+        begin
+          Necromancer.convert(input).to(:range, strict: true)
+        rescue Necromancer::ConversionTypeError
+          Const::Undefined
+        end
       end
 
       converter(:regexp) do |input|
         Regexp.new(input)
       end
 
-      converter(:file) do |input|
-        ::File.open(::File.join(Dir.pwd, input))
+      converter(:filepath, :file) do |input|
+        ::File.expand_path(input)
       end
 
-      converter(:path) do |input|
-        Pathname.new(::File.join(Dir.pwd, input))
+      converter(:pathname, :path) do |input|
+        require "pathname" unless defined?(::Pathname)
+        ::Pathname.new(input)
       end
 
-      converter(:char) do |input|
-        String(input).chars.to_a[0]
+      converter(:uri) do |input|
+        require "uri" unless defined?(::URI)
+        ::URI.parse(input)
       end
     end # Converters
   end # Prompt

@@ -1,21 +1,30 @@
 # frozen_string_literal: true
 
-RSpec.describe TTY::Prompt::Question, 'convert bool' do
+RSpec.describe TTY::Prompt::Question, "convert bool" do
 
   subject(:prompt) { TTY::TestPrompt.new}
 
-  it 'fails to convert boolean' do
-    prompt.input << 'invalid'
+  it "fails to convert boolean" do
+    prompt.input << "x"
     prompt.input.rewind
-    expect {
-      prompt.ask("Do you read books?", convert: :bool)
-    }.to raise_error(TTY::Prompt::ConversionError)
+    prompt.ask("Do you read books?", convert: :bool)
+
+    expect(prompt.output.string).to eq([
+      "Do you read books? ",
+      "\e[2K\e[1G",
+      "Do you read books? x",
+      "\e[31m>>\e[0m Cannot convert `x` to 'bool' type",
+      "\e[1A\e[2K\e[1G",
+      "Do you read books? ",
+      "\e[2K\e[1G\e[1A\e[2K\e[1G",
+      "Do you read books? \n"
+    ].join)
   end
 
   it "handles default values" do
     prompt.input << "\n"
     prompt.input.rewind
-    response = prompt.ask('Do you read books?', convert: :bool, default: true)
+    response = prompt.ask("Do you read books?", convert: :bool, default: true)
     expect(response).to eql(true)
     expect(prompt.output.string).to eq([
       "Do you read books? \e[90m(true)\e[0m ",
@@ -35,24 +44,24 @@ RSpec.describe TTY::Prompt::Question, 'convert bool' do
     expect(response).to eq(true)
   end
 
-  it 'converts negative boolean' do
-    prompt.input << 'No'
+  it "converts negative boolean" do
+    prompt.input << "No"
     prompt.input.rewind
-    response = prompt.ask('Do you read books?', convert: :bool)
+    response = prompt.ask("Do you read books?", convert: :bool)
     expect(response).to eq(false)
   end
 
-  it 'converts positive boolean' do
-    prompt.input << 'Yes'
+  it "converts positive boolean" do
+    prompt.input << "Yes"
     prompt.input.rewind
     response = prompt.ask("Do you read books?", convert: :bool)
     expect(response).to eq(true)
   end
 
-  it 'converts single positive boolean' do
-    prompt.input << 'y'
+  it "converts single positive boolean" do
+    prompt.input << "y"
     prompt.input.rewind
-    response = prompt.ask('Do you read books?', convert: :bool)
+    response = prompt.ask("Do you read books?", convert: :bool)
     expect(response).to eq(true)
   end
 end
