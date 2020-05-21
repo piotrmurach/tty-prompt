@@ -217,8 +217,13 @@ module TTY
       #
       # @api private
       def convert_result(value)
-        if convert? & !Utils.blank?(value)
-          Converters.convert(@convert, value)
+        if convert? && !Utils.blank?(value)
+          case @convert
+          when Proc
+            @convert.call(value)
+          else
+            Converters.convert(@convert, value)
+          end
         else
           value
         end

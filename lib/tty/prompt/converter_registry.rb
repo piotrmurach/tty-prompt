@@ -12,49 +12,47 @@ module TTY
       #
       # @api private
       def initialize(registry = {})
-        @_registry = registry.dup.freeze
-        freeze
+        @__registry = registry.dup
       end
 
-      # Register converter
+      # Check if conversion is available
+      #
+      # @param [String] name
+      #
+      # @return [Boolean]
+      #
+      # @api public
+      def contain?(name)
+        conv_name = name.to_s.downcase.to_sym
+        @__registry.key?(conv_name)
+      end
+
+      # Register a conversion
       #
       # @param [Symbol] name
       #   the converter name
       #
       # @api public
-      def register(name, contents = nil, &block)
-        item = block_given? ? block : contents
-
-        if key?(name)
-          raise ArgumentError,
-                "Converter for #{name.inspect} already registered"
+      def register(*names, &block)
+        names.each do |name|
+          if contain?(name)
+            raise ArgumentError,
+                  "converter for #{name.inspect} is already registered"
+          end
+          @__registry[name] = block
         end
-        self.class.new(@_registry.merge(name => item))
-      end
-
-      # Check if converter is registered
-      #
-      # @return [Boolean]
-      #
-      # @api public
-      def key?(key)
-        @_registry.key?(key)
       end
 
       # Execute converter
       #
       # @api public
-      def call(name, input)
-        if name.respond_to?(:call)
-          converter = name
-        else
-          converter = @_registry.fetch(name) do
-            raise ArgumentError, "#{name.inspect} is not registered"
-          end
+      def [](name)
+        conv_name = name.to_s.downcase.to_sym
+        @__registry.fetch(conv_name) do
+          raise ArgumentError, "converter #{conv_name.inspect} is not registered"
         end
-        converter[input]
       end
-      alias [] call
+      alias fetch []
 
       def inspect
         @_registry.inspect

@@ -75,7 +75,7 @@ module TTY
         if !@done
           header += @prompt.decorate("(#{@suffix})", @help_color) + ' '
         else
-          answer = convert_result(@input)
+          answer = conversion.call(@input)
           label  = answer ? @positive : @negative
           header += @prompt.decorate(label, @active_color)
         end
@@ -131,12 +131,12 @@ module TTY
       #
       # @api private
       def conversion
-        proc { |input|
+        ->(input) do
           positive_word   = Regexp.escape(positive)
           positive_letter = Regexp.escape(positive[0])
-          pattern = Regexp.new("^#{positive_word}|#{positive_letter}$", true)
+          pattern = Regexp.new("^(#{positive_word}|#{positive_letter})$", true)
           !input.match(pattern).nil?
-        }
+        end
       end
     end # ConfirmQuestion
   end # Prompt
