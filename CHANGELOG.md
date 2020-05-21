@@ -1,6 +1,18 @@
 # Change log
 
-## [v0.21.0] - 2019-03-08
+## [v0.22.0] - 2020-05-xx
+
+### Added
+* Add ability to customize slider format with a proc by Sven Pchnit(@2called-chaos)
+* Add ability to customize convert message
+* Add :uri converter
+
+### Changed
+* Changed question :validation option to :validate by Sven Pachnit(@2called-chaos)
+* Change ConverterRegistry to store only proc values and simplify interface
+* Change Converters to stop raising errors and print console error messages instead
+
+## [v0.21.0] - 2020-03-08
 
 ### Added
 * Add :min option to #multi_select prompt by Katelyn Schiesser(@slowbro)
@@ -349,6 +361,8 @@
 
 * Initial implementation and release
 
+[v0.22.0]: https://github.com/piotrmurach/tty-prompt/compare/v0.21.0...v0.22.0
+[v0.21.0]: https://github.com/piotrmurach/tty-prompt/compare/v0.20.0...v0.21.0
 [v0.20.0]: https://github.com/piotrmurach/tty-prompt/compare/v0.19.0...v0.20.0
 [v0.19.0]: https://github.com/piotrmurach/tty-prompt/compare/v0.18.1...v0.19.0
 [v0.18.1]: https://github.com/piotrmurach/tty-prompt/compare/v0.18.0...v0.18.1
