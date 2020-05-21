@@ -58,6 +58,27 @@ RSpec.describe TTY::Prompt, '#slider' do
     ].join)
   end
 
+  it "formats via proc" do
+    prompt.input << "\r"
+    prompt.input.rewind
+    value = prompt.slider('What size?') do |range|
+              range.default 6
+              range.max 20
+              range.step 2
+              range.format ->(slider, value) { "|#{slider}| %d%%" % value }
+            end
+    expect(value).to eq(6)
+    expect(prompt.output.string).to eq([
+      "\e[?25lWhat size? ",
+      symbols[:pipe] + symbols[:line] * 3,
+      "\e[32m#{symbols[:bullet]}\e[0m",
+      "#{symbols[:line] * 7 + symbols[:pipe]} 6%",
+      "\n\e[90m(Use arrow keys, press Enter to select)\e[0m",
+      "\e[2K\e[1G\e[1A\e[2K\e[1G",
+      "What size? \e[32m6\e[0m\n\e[?25h"
+    ].join)
+  end
+
   it "changes display colors" do
     prompt.input << "\r"
     prompt.input.rewind
