@@ -4,4 +4,6 @@ require_relative "../lib/tty-prompt"
 
 prompt = TTY::Prompt.new
 
-prompt.yes?('Do you like Ruby?')
+answer = prompt.yes?("Do you like Ruby?")
+
+puts "Answer: #{answer}"
