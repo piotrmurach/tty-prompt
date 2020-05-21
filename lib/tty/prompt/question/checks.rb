@@ -89,7 +89,8 @@ module TTY
             if question.convert? && !Utils.blank?(value)
               result = question.convert_result(value)
               if result == Const::Undefined
-                [value, ["Cannot convert `#{value}` to '#{question.convert}' type"]]
+                tokens = {value: value, type: question.convert}
+                [value, question.message_for(:convert?, tokens)]
               else
                 [result]
               end

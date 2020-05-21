@@ -94,9 +94,10 @@ module TTY
 
     def self.messages
       {
-        range?: 'Value %{value} must be within the range %{in}',
-        valid?: 'Your answer is invalid (must match %{valid})',
-        required?: 'Value must be provided'
+        range?: "Value %{value} must be within the range %{in}",
+        valid?: "Your answer is invalid (must match %{valid})",
+        required?: "Value must be provided",
+        convert?: "Cannot convert `%{value}` to '%{type}' type"
       }
     end
 

@@ -233,7 +233,8 @@ module TTY
       # Specify answer conversion
       #
       # @api public
-      def convert(value = (not_set = true))
+      def convert(value = (not_set = true), message = nil)
+        messages[:convert?] = message if message
         if not_set
           @convert
         else

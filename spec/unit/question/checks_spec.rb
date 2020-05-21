@@ -112,4 +112,13 @@ RSpec.describe TTY::Prompt::Question do
 
     expect(result).to eq(["x", ["Cannot convert `x` to 'bool' type"]])
   end
+
+  it "fails convert check with custom message" do
+    question = described_class.new(prompt)
+    question.convert :bool, "Wrong conversion value of `%{value}` for %{type}"
+
+    result = TTY::Prompt::Question::Checks::CheckConversion.call(question, "x")
+
+    expect(result).to eq(["x", ["Wrong conversion value of `x` for bool"]])
+  end
 end
