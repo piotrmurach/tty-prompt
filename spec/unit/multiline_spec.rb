@@ -23,7 +23,7 @@ RSpec.describe TTY::Prompt::Question, "#multiline" do
 
     answer = prompt.multiline("Description?", default: "A super sweet prompt")
 
-    expect(answer).to eq([])
+    expect(answer).to eq("A super sweet prompt")
     expect(prompt.output.string).to eq([
       "Description? \e[90m(Press CTRL-D or CTRL-Z to finish)\e[0m\n",
       "\e[2K\e[1G\e[1A\e[2K\e[1G",
@@ -41,7 +41,7 @@ RSpec.describe TTY::Prompt::Question, "#multiline" do
       q.help "(Press thy ctrl-d to end)"
     end
 
-    expect(answer).to eq([])
+    expect(answer).to eq("A super sweet prompt")
     expect(prompt.output.string).to eq([
       "Description? \e[90m(Press thy ctrl-d to end)\e[0m\n",
       "\e[2K\e[1G\e[1A\e[2K\e[1G",

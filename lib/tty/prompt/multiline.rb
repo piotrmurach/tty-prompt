@@ -55,8 +55,9 @@ module TTY
         @prompt.print(question)
         @lines = read_input
         @input = "#{@lines.first.strip} ..." unless @lines.first.to_s.empty?
-        if Utils.blank?(@input)
-          @input = default? ? default : nil
+        if Utils.blank?(@input) && default?
+          @input = default
+          @lines = default
         end
         @evaluator.(@lines)
       end
