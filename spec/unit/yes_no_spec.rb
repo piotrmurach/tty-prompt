@@ -73,6 +73,26 @@ RSpec.describe TTY::Prompt, 'confirmation' do
       ].join)
     end
 
+    it "infers default value from a word" do
+      prompt.input << "\n"
+      prompt.input.rewind
+      expect(prompt.yes?("Are you a human?", default: "no")).to eq(false)
+      expect(prompt.output.string).to eq([
+        "Are you a human? \e[90m(y/N)\e[0m ",
+        "\e[2K\e[1GAre you a human? \e[90m(y/N)\e[0m \n",
+        "\e[1A\e[2K\e[1G",
+        "Are you a human? \e[32mNo\e[0m\n"
+      ].join)
+    end
+
+    it "fails to infer default value from a word" do
+      prompt.input << "\n"
+      prompt.input.rewind
+      expect {
+        prompt.yes?("Are you a human?", default: "unknown")
+      }.to raise_error(ArgumentError, "default needs to be `true` or `false`")
+    end
+
     it "defaults suffix and converter" do
       prompt.input << "Nope\n"
       prompt.input.rewind

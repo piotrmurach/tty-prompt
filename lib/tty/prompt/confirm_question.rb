@@ -98,6 +98,7 @@ module TTY
 
       # @api private
       def setup_defaults
+        infer_default
         @convert = conversion
         return if suffix? && positive?
 
@@ -109,6 +110,16 @@ module TTY
           @suffix = create_suffix
         else
           create_default_labels
+        end
+      end
+
+      # @api private
+      def infer_default
+        converted = Converters.convert(:bool, default.to_s)
+        if converted == Const::Undefined
+          raise ArgumentError, "default needs to be `true` or `false`"
+        else
+          default(converted)
         end
       end
 
