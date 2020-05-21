@@ -242,19 +242,17 @@ The `convert` property is used to convert input to a required type.
 
 By default no conversion is performed. The following conversions are provided:
 
-```ruby
-:bool       # true or false for strings such as "Yes", "No"
-:date       # date type
-:datetime   # datetime type
-:file       # File object
-:float      # decimal or error if cannot convert
-:int        # integer or error if cannot convert
-:path       # Pathname object
-:range      # range type
-:regexp     # regex expression
-:string     # string
-:symbol     # symbol
-```
+* `:boolean`|`:bool` - e.g. 'yes/1/y/t/' becomes `true`, 'no/0/n/f' becomes `false`
+* `:date` - parses dates formats "28/03/2020", "March 28th 2020"
+* `:time` - parses time formats "11:20:03"
+* `:float` - e.g. `-1` becomes `-1.0`
+* `:int`|`:integer` - e.g. `+1` becomes `1`
+* `:sym`|`:symbol` - e.g. "foo" becomes `:foo`
+* `:filepath` - converts to file path
+* `:path`|`:pathname` - converts to `Pathname` object
+* `:range` - e.g. '1-10' becomes `1..10` range object
+* `:regexp` - e.g. "foo|bar" becomes `/foo|bar/`
+* `:uri` - converts to `URI` object
 
 For example, if you are interested in range type as answer do the following:
 
@@ -262,6 +260,25 @@ For example, if you are interested in range type as answer do the following:
 prompt.ask("Provide range of numbers?", convert: :range)
 # Provide range of numbers? 1-10
 # => 1..10
+```
+
+If a user provides a wrong type for conversion an error message will be printed in the console:
+
+```
+prompt.ask("Provide digit:", convert: float)
+# Provide digit: x
+# >> Cannot convert `x` into 'float' type
+```
+
+You can further customize error message:
+
+```ruby
+prompt.ask("Provide digit:", convert: float) do |q|
+  q.convert(:float, "Wrong value of %{value} for %{type} conversion"
+  # or
+  q.convert :float
+  q.messages[:convert?] = "Wrong value of %{value} for %{type} conversion"
+end
 ```
 
 You can also provide a custom conversion like so:
