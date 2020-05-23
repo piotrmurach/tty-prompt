@@ -617,7 +617,7 @@ The `:disabled` key indicates to display a choice as currently unavailable to se
 ```ruby
 choices = [
   {name: 'small', value: 1},
-  {name: 'medium', value: 2, disabled: '(out of stock)'}
+  {name: 'medium', value: 2, disabled: '(out of stock)'},
   {name: 'large', value: 3}
 ]
 ```
