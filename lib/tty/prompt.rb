@@ -81,7 +81,7 @@ module TTY
     # @api private
     attr_reader :symbols
 
-    def_delegators :@pastel, :decorate, :strip
+    def_delegators :@pastel, :strip
 
     def_delegators :@cursor, :clear_lines, :clear_line,
                    :show, :hide
@@ -143,7 +143,7 @@ module TTY
       @symbols       = Symbols.symbols.merge(options.fetch(:symbols, {}))
 
       @cursor = TTY::Cursor
-      @pastel = Pastel.new(@enabled_color.nil? ? {} : { enabled: @enabled_color })
+      @pastel = @enabled_color.nil? ? Pastel.new : Pastel.new(enabled: @enabled_color)
       @reader = TTY::Reader.new(
         input: @input,
         output: @output,
@@ -151,6 +151,27 @@ module TTY
         track_history: @track_history,
         env: @env
       )
+    end
+
+    # Decorate a string with colors
+    #
+    # @param [String] :string
+    #   the string to color
+    # @param [Array<Proc|Symbol>] :colors
+    #   collection of color symbols or callable object
+    #
+    # @api public
+    def decorate(string, *colors)
+      if Utils.blank?(string) || @enabled_color == false || colors.empty?
+        return string
+      end
+
+      coloring = colors.first
+      if coloring.respond_to?(:call)
+        coloring.call(string)
+      else
+        @pastel.decorate(string, *colors)
+      end
     end
 
     # Invoke a question type of prompt
