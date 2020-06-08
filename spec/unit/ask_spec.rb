@@ -140,7 +140,7 @@ RSpec.describe TTY::Prompt, '#ask' do
     active = ->(str) { Pastel.new.cyan(str) }
     help = Pastel.new.red.detach
     global_settings = {prefix: "[?] ", active_color: active, help_color: help}
-    prompt = TTY::TestPrompt.new(global_settings)
+    prompt = TTY::TestPrompt.new(**global_settings)
 
     prompt.input << "Piotr\r"
     prompt.input.rewind

@@ -5,7 +5,7 @@ require_relative 'prompt'
 module TTY
   # Used for initializing test cases
   class TestPrompt < Prompt
-    def initialize(options = {})
+    def initialize(**options)
       @input  = StringIO.new
       @output = StringIO.new
       options.merge!({
