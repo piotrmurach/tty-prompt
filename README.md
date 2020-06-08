@@ -1497,13 +1497,34 @@ The following symbols can be overwritten:
 
 ### 3.2 `:active_color`
 
-All prompt types support `:active_color` option. In case of `select`, `multi_select`, `enum_select` or `expand` this color is used to highlight the currently selected choice. All the resulted inputs provided by user that are read in by the prompt as answer are highlighted with this color. This option can be applied either globally for all prompts or individually.
+All prompt types support `:active_color` option. By default it's set to `:green` value.
+
+The `select`, `multi_select`, `enum_select` and `expand` prompts use the active color to highlight the currently selected choice.
+
+The answer provided by the user is also highlighted with the active color.
+
+This `:active_color` as value accepts either a color symbol or callable object.
+
+For example, to change all prompts active color to `:cyan` do:
 
 ```ruby
 prompt = TTY::Prompt.new(active_color: :cyan)
 ```
 
-or per individual input do:
+You could also use `pastel`:
+
+```ruby
+notice = Pastel.new.cyan.on_blue.detach
+prompt = TTY::Prompt.new(active_color: notice)
+````
+
+Or use coloring of your own choice:
+
+```
+prompt = TTY::Prompt.new(active_color: ->(str) { my-color-gem(str) })
+```
+
+This option can be applied either globally for all prompts or individually:
 
 ```ruby
 prompt.select('What size?', %w(Large Medium Small), active_color: :cyan)
@@ -1521,17 +1542,38 @@ prompt = TTY::Prompt.new(enable_color: true)
 
 ### 3.4 `:help_color`
 
-Prompts such as `select`, `multi_select`, `expand` support `:help_color` which is used to customize the help text. This option can be applied either globally for all prompts or individually.
+The `:help_color` option is used to customize the display color for all the help text. By default it's set to `:bright_black` value.
+
+Prompts such as `select`, `multi_select`, `expand` support `:help_color`. This option can be applied either globally for all prompts or individually.
+
+The `:help_color` option as value accepts either a color symbol or callable object.
+
+For example, to change all prompts help color to `:cyan` do:
 
 ```ruby
 prompt = TTY::Prompt.new(help_color: :cyan)
 ```
 
-or per individual input do:
+You could also use `pastel`:
 
 ```ruby
-prompt.select('What size?', %w(Large Medium Small), help_color: :cyan)
+notice = Pastel.new.cyan.on_blue.detach
+prompt = TTY::Prompt.new(help_color: notice)
+````
+
+Or use coloring of your own choice:
+
 ```
+prompt = TTY::Prompt.new(help_color: ->(str) { my-color-gem(str) })
+```
+
+Or configure `:help_color` for an individual prompt:
+
+```ruby
+prompt.select("What size?", %w(Large Medium Small), help_color: :cyan)
+```
+
+Please [see pastel](https://github.com/piotrmurach/pastel#3-supported-colors) for all supported colors.
 
 ### 3.5 `:interrupt`
 
