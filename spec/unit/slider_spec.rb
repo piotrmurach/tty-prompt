@@ -83,7 +83,7 @@ RSpec.describe TTY::Prompt, '#slider' do
     prompt.input << "\r"
     prompt.input.rewind
     options = {active_color: :red, help_color: :cyan}
-    expect(prompt.slider('What size?', options)).to eq(5)
+    expect(prompt.slider('What size?', **options)).to eq(5)
     expect(prompt.output.string).to eq([
       "\e[?25lWhat size? ",
       symbols[:line] * 5,

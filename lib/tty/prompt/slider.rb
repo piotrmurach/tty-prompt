@@ -7,9 +7,9 @@ module TTY
     #
     # @api public
     class Slider
-      HELP = '(Use arrow keys, press Enter to select)'.freeze
+      HELP = "(Use arrow keys, press Enter to select)"
 
-      FORMAT = ':slider %d'.freeze
+      FORMAT = ":slider %d"
 
       # Initailize a Slider
       #
@@ -46,6 +46,7 @@ module TTY
       # @api public
       def symbols(new_symbols = (not_set = true))
         return @symbols if not_set
+
         @symbols.merge!(new_symbols)
       end
 
@@ -196,7 +197,7 @@ module TTY
         when Proc
           @format.call(slider, value)
         else
-          @format.gsub(':slider', slider) % [value]
+          @format.gsub(":slider", slider) % [value]
         end
       end
     end # Slider

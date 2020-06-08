@@ -398,7 +398,7 @@ module TTY
     #
     # @example
     #   prompt = TTY::Prompt.new
-    #   prompt.slider('What size?', min: 32, max: 54, step: 2)
+    #   prompt.slider("What size?", min: 32, max: 54, step: 2)
     #
     # @param [String] question
     #   the question to ask
@@ -406,8 +406,7 @@ module TTY
     # @return [String]
     #
     # @api public
-    def slider(question, *args, &block)
-      options = Utils.extract_options!(args)
+    def slider(question, **options, &block)
       slider = Slider.new(self, **options)
       slider.call(question, &block)
     end
