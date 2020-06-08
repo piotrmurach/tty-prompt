@@ -29,9 +29,7 @@ module TTY
     #
     # @api public
     def blank?(value)
-      value.nil? ||
-      value.respond_to?(:empty?) && value.empty? ||
-      BLANK_REGEX === value
+      value.nil? || BLANK_REGEX === value
     end
 
     # Deep copy object
