@@ -35,7 +35,7 @@ Style/LambdaCall:
   - braces
 
 Style/StringLiterals:
-  EnforcedStyle: single_quotes
+  EnforcedStyle: double_quotes
 
 Style/TrivialAccessors:
   Enabled: false
