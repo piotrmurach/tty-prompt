@@ -423,11 +423,11 @@ module TTY
     # @return [String]
     #
     # @api public
-    def say(message = '', options = {})
+    def say(message = "", **options)
       message = message.to_s
       return if message.empty?
 
-      statement = Statement.new(self, options)
+      statement = Statement.new(self, **options)
       statement.call(message)
     end
 
@@ -442,9 +442,9 @@ module TTY
     # @return [Array] messages
     #
     # @api public
-    def ok(*args)
-      options = Utils.extract_options!(args)
-      args.each { |message| say message, options.merge(color: :green) }
+    def ok(*args, **options)
+      opts = { color: :green }.merge(options)
+      args.each { |message| say(message, **opts) }
     end
 
     # Print statement(s) out in yellow color.
@@ -458,9 +458,9 @@ module TTY
     # @return [Array] messages
     #
     # @api public
-    def warn(*args)
-      options = Utils.extract_options!(args)
-      args.each { |message| say message, options.merge(color: :yellow) }
+    def warn(*args, **options)
+      opts = { color: :yellow }.merge(options)
+      args.each { |message| say(message, **opts) }
     end
 
     # Print statement(s) out in red color.
@@ -474,9 +474,9 @@ module TTY
     # @return [Array] messages
     #
     # @api public
-    def error(*args)
-      options = Utils.extract_options!(args)
-      args.each { |message| say message, options.merge(color: :red) }
+    def error(*args, **options)
+      opts = { color: :red }.merge(options)
+      args.each { |message| say(message, **opts) }
     end
 
     # Print debug information in terminal top right corner

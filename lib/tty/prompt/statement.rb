@@ -28,10 +28,10 @@ module TTY
       #   change the message display to color
       #
       # @api public
-      def initialize(prompt, options = {})
+      def initialize(prompt, newline: true, color: false)
         @prompt  = prompt
-        @newline = options.fetch(:newline) { true }
-        @color   = options.fetch(:color) { false }
+        @newline = newline
+        @color   = color
       end
 
       # Output the message to the prompt
