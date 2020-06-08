@@ -348,12 +348,9 @@ module TTY
     # @return [Boolean]
     #
     # @api public
-    def yes?(message, *args, &block)
-      defaults = { default: true }
-      options  = Utils.extract_options!(args)
-      options.merge!(defaults.reject { |k, _| options.key?(k) })
-
-      question = ConfirmQuestion.new(self, **options)
+    def yes?(message, **options, &block)
+      opts = { default: true }.merge(options)
+      question = ConfirmQuestion.new(self, **opts)
       question.call(message, &block)
     end
 
@@ -368,12 +365,9 @@ module TTY
     # @return [Boolean]
     #
     # @api public
-    def no?(message, *args, &block)
-      defaults = { default: false }
-      options  = Utils.extract_options!(args)
-      options.merge!(defaults.reject { |k, _| options.key?(k) })
-
-      question = ConfirmQuestion.new(self, **options)
+    def no?(message, **options, &block)
+      opts = { default: false }.merge(options)
+      question = ConfirmQuestion.new(self, **opts)
       !question.call(message, &block)
     end
 
