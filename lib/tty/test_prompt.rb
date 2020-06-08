@@ -14,7 +14,7 @@ module TTY
         env: { "TTY_TEST" => true },
         enable_color: options.fetch(:enable_color) { true }
       })
-      super(options)
+      super(**options)
     end
   end # TestPrompt
 end # TTY

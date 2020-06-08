@@ -103,53 +103,54 @@ module TTY
 
     # Initialize a Prompt
     #
-    # @param [Hash] options
-    # @option options [IO] :input
+    # @param [IO] :input
     #   the input stream
-    # @option options [IO] :output
+    # @param [IO] :output
     #   the output stream
-    # @option options [Hash] :env
+    # @param [Hash] :env
     #   the environment variables
-    # @option options [String] :prefix
-    #   the prompt prefix, by default empty
-    # @option options [Boolean] :enable_color
-    #   enable color support, true by default
-    # @option options [String] :active_color
-    #   the color used for selected option
-    # @option options [String] :help_color
-    #   the color used for help text
-    # @option options [String] :error_color
-    #   the color used for displaying error messages
-    # @option options [Symbol] :interrupt
-    #   handling of Ctrl+C key out of :signal, :exit, :noop
-    # @option options [Boolean] :track_history
-    #   disable line history tracking, true by default
-    # @option options [Hash] :symbols
+    # @param [Hash] :symbols
     #   the symbols displayed in prompts such as :marker, :cross
+    # @param [String] :prefix
+    #   the prompt prefix, by default empty
+    # @param [Symbol] :interrupt
+    #   handling of Ctrl+C key out of :signal, :exit, :noop
+    # @param [Boolean] :track_history
+    #   disable line history tracking, true by default
+    # @param [Boolean] :enable_color
+    #   enable color support, true by default
+    # @param [String,Proc] :active_color
+    #   the color used for selected option
+    # @param [String,Proc] :help_color
+    #   the color used for help text
+    # @param [String] :error_color
+    #   the color used for displaying error messages
     #
     # @api public
-    def initialize(*args)
-      options = Utils.extract_options!(args)
-      @input  = options.fetch(:input) { $stdin }
-      @output = options.fetch(:output) { $stdout }
-      @env    = options.fetch(:env) { ENV }
-      @prefix = options.fetch(:prefix) { '' }
-      @enabled_color = options[:enable_color]
-      @active_color  = options.fetch(:active_color) { :green }
-      @help_color    = options.fetch(:help_color)   { :bright_black }
-      @error_color   = options.fetch(:error_color)  { :red }
-      @interrupt     = options.fetch(:interrupt)    { :error }
-      @track_history = options.fetch(:track_history) { true }
-      @symbols       = Symbols.symbols.merge(options.fetch(:symbols, {}))
+    def initialize(input: $stdin, output: $stdout, env: ENV, symbols: {},
+                   prefix: "", interrupt: :error, track_history: true,
+                   enable_color: nil, active_color: :green,
+                   help_color: :bright_black, error_color: :red)
+      @input  = input
+      @output = output
+      @env    = env
+      @prefix = prefix
+      @enabled_color = enable_color
+      @active_color  = active_color
+      @help_color    = help_color
+      @error_color   = error_color
+      @interrupt     = interrupt
+      @track_history = track_history
+      @symbols       = Symbols.symbols.merge(symbols)
 
       @cursor = TTY::Cursor
-      @pastel = @enabled_color.nil? ? Pastel.new : Pastel.new(enabled: @enabled_color)
+      @pastel = enabled_color.nil? ? Pastel.new : Pastel.new(enabled: enabled_color)
       @reader = TTY::Reader.new(
-        input: @input,
-        output: @output,
-        interrupt: @interrupt,
-        track_history: @track_history,
-        env: @env
+        input: input,
+        output: output,
+        interrupt: interrupt,
+        track_history: track_history,
+        env: env
       )
     end
 
