@@ -44,11 +44,11 @@ module TTY
       #
       # @api private
       def keyenter(*)
-        if @min
-          super if @selected.size >= @min
-        else
-          super
-        end
+        valid = true
+        valid = @min <= @selected.size if @min
+        valid = @selected.size <= @max if @max
+
+        super if valid
       end
       alias keyreturn keyenter
 
@@ -63,6 +63,14 @@ module TTY
           return if @max && @selected.size >= @max
           @selected << active_choice
         end
+      end
+
+      # Selects all choices when Ctrl+A is pressed
+      #
+      # @api private
+      def keyctrl_a(*)
+        return if @max && @max < choices.size
+        @selected = choices.select { |choice| !choice.disabled? }
       end
 
       private
