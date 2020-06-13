@@ -1317,7 +1317,7 @@ The slider provides easy visual way of picking a value marked by `●` symbol. Y
 prompt.slider('Volume', max: 100, step: 5)
 # =>
 # Volume ──────────●────────── 50
-# (Use arrow keys, press Enter to select)
+# (Use ←/→ arrow keys, press Enter to select)
 ```
 
 By default the slider is configured to pick middle of the range as a start value, you can change this by using the `:default` option:
@@ -1326,7 +1326,7 @@ By default the slider is configured to pick middle of the range as a start value
 prompt.slider('Volume', max: 100, step: 5, default: 75)
 # =>
 # Volume ───────────────●────── 75
-# (Use arrow keys, press Enter to select)
+# (Use ←/→ arrow keys, press Enter to select)
 ```
 
 You can also change the default slider formatting using the `:format`. The value must contain the `:slider` token to show current value and any `sprintf` compatible flag for number display, in our case `%d`:
@@ -1335,7 +1335,7 @@ You can also change the default slider formatting using the `:format`. The value
 prompt.slider('Volume', max: 100, step: 5, default: 75, format: "|:slider| %d%%")
 # =>
 # Volume |───────────────●──────| 75%
-# (Use arrow keys, press Enter to select)
+# (Use ←/→ arrow keys, press Enter to select)
 ```
 
 You can also specify slider range with decimal numbers. For example, to have a step of `0.5` and display each value with a single decimal place use `%f` as format:
@@ -1344,7 +1344,7 @@ You can also specify slider range with decimal numbers. For example, to have a s
 prompt.slider("Volume", max: 10, step: 0.5, default: 5, format: "|:slider| %.1f")
 # =>
 # Volume |───────────────●──────| 7.5
-# (Use arrow keys, press Enter to select)
+# (Use ←/→ arrow keys, press Enter to select)
 ```
 
 You can alternatively provide a proc/lambda to customize your formatting even further:
@@ -1354,7 +1354,7 @@ slider_format = -> (slider, value) { "|#{slider}| #{value.zero? ? "muted" : "%.1
 prompt.slider("Volume", max: 10, step: 0.5, default: 0, format: slider_format)
 # =>
 # Volume |●─────────────────────| muted
-# (Use arrow keys, press Enter to select)
+# (Use ←/→ arrow keys, press Enter to select)
 ```
 
 If you wish to change the slider handle and the slider range display use `:symbols` option:
@@ -1363,7 +1363,16 @@ If you wish to change the slider handle and the slider range display use `:symbo
 prompt.slider("Volume", max: 100, step: 5, default: 75, symbols: {bullet: 'x', line: '_'})
 # =>
 # Volume _______________x______ 75%
-# (Use arrow keys, press Enter to select)
+# (Use ←/→ arrow keys, press Enter to select)
+```
+
+You can configure help message like so:
+
+```ruby
+prompt.slider("Volume", max: 10, default: 7, help: "(Move arrows left and right to set value)")
+# =>
+# Volume ───────────────●────── 7
+# (Move arrows left and right to set value)
 ```
 
 Slider can be configured through DSL as well:
@@ -1377,7 +1386,7 @@ prompt.slider('What size?') do |range|
 end
 # =>
 # Volume |───────────────●──────| 75%
-# (Use arrow keys, press Enter to select)
+# (Use ←/→ arrow keys, press Enter to select)
 ```
 
 ### 2.11 say
