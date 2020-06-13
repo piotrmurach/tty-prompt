@@ -7,7 +7,7 @@ module TTY
     #
     # @api public
     class Slider
-      HELP = "(Use arrow keys, press Enter to select)"
+      HELP = "(Use %s arrow keys, press Enter to select)"
 
       FORMAT = ":slider %d"
 
@@ -33,6 +33,7 @@ module TTY
         @active_color = options.fetch(:active_color) { @prompt.active_color }
         @help_color   = options.fetch(:help_color) { @prompt.help_color }
         @format       = options.fetch(:format) { FORMAT }
+        @help         = options[:help]
         @symbols      = @prompt.symbols.merge(options.fetch(:symbols, {}))
         @first_render = true
         @done         = false
@@ -63,11 +64,30 @@ module TTY
         end
       end
 
+      # Default help text
+      #
+      # @api public
+      def default_help
+        arrows = @symbols[:arrow_left] + "/" + @symbols[:arrow_right]
+        sprintf(HELP, arrows)
+      end
+
+      # Set help text
+      #
+      # @param [String] text
+      #
+      # @api private
+      def help(text = (not_set = true))
+        return @help if !@help.nil? && not_set
+
+        @help = (@help.nil? && not_set) ? default_help : text
+      end
+
       # Range of numbers to render
       #
       # @return [Array[Integer]]
       #
-      # @apip private
+      # @api private
       def range
         (@min..@max).step(@step).to_a
       end
@@ -177,7 +197,7 @@ module TTY
           header << render_slider
         end
         if @first_render
-          header << "\n" + @prompt.decorate(HELP, @help_color)
+          header << "\n" + @prompt.decorate(help, @help_color)
           @first_render = false
         end
         header.join
