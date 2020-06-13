@@ -1,12 +1,14 @@
 # Change log
 
-## [v0.22.0] - 2020-05-xx
+## [v0.22.0] - 2020-06-xx
 
 ### Added
-* Add ability to customize slider format with a proc by Sven Pchnit(@2called-chaos)
+* Add ability to customize #slider format with a proc by Sven Pchnit(@2called-chaos)
 * Add ability to customize convert message
 * Add :uri converter
 * Add ability to allow :active_color and :help_color to be callable objects
+* Add ability to select all choices in #multi_select prompt
+* Add ability to configure :help text in #slider prompt
 
 ### Changed
 * Changed question :validation option to :validate by Sven Pachnit(@2called-chaos)
@@ -14,9 +16,11 @@
 * Change Converters to stop raising errors and print console error messages instead
 * Change yes?/no? prompt to infer default value from words and raise when
   no boolean can be deduced
+* Change Prompt#new to use keyword arguments
 
 ### Fixed
 * Fix multiline prompt to return default value when no input provided
+* Fix color option overriding in say, ok, error and warn prompts
 
 ## [v0.21.0] - 2020-03-08
 
