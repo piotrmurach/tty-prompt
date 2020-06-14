@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require 'English'
+require "English"
 
-require_relative 'choices'
-require_relative 'paginator'
-require_relative 'block_paginator'
+require_relative "choices"
+require_relative "paginator"
+require_relative "block_paginator"
 
 module TTY
   class Prompt
@@ -13,7 +13,7 @@ module TTY
     #
     # @api private
     class List
-      HELP = '(Use %s arrow%s keys, press Enter to select%s)'
+      HELP = "(Use %s arrow%s keys, press Enter to select%s)"
 
       # Allowed keys for filter, along with backspace and canc.
       FILTER_KEYS_MATCHER = /\A([[:alnum:]]|[[:punct:]])\Z/.freeze
@@ -156,11 +156,11 @@ module TTY
       def default_help
         # Note that enumeration and filter are mutually exclusive
         tokens = if enumerate?
-                   [" or number (1-#{choices.size})", '']
+                   [" or number (1-#{choices.size})", ""]
                  elsif filterable?
-                   ['', ', and letter keys to filter']
+                   ["", ", and letter keys to filter"]
                  else
-                   ['', '']
+                   ["", ""]
                  end
 
         format(self.class::HELP, arrows_help, *tokens)
@@ -504,7 +504,7 @@ module TTY
 
         sync_paginators if @paging_changed
         paginator.paginate(choices, @active, @per_page) do |choice, index|
-          num = enumerate? ? (index + 1).to_s + @enum + ' ' : ''
+          num = enumerate? ? (index + 1).to_s + @enum + " " : ""
           message = if index + 1 == @active && !choice.disabled?
                       selected = "#{@symbols[:marker]} #{num}#{choice.name}"
                       @prompt.decorate(selected.to_s, @active_color)
@@ -515,7 +515,7 @@ module TTY
                       "  #{num}#{choice.name}"
                     end
           end_index = paginated? ? paginator.end_index : choices.size - 1
-          newline = (index == end_index) ? '' : "\n"
+          newline = (index == end_index) ? "" : "\n"
           output << (message + newline)
         end
 

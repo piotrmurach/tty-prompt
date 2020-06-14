@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require 'English'
+require "English"
 
-require_relative 'choices'
-require_relative 'block_paginator'
-require_relative 'paginator'
+require_relative "choices"
+require_relative "block_paginator"
+require_relative "paginator"
 
 module TTY
   class Prompt
@@ -13,7 +13,7 @@ module TTY
     #
     # @api private
     class EnumList
-      PAGE_HELP = '(Press tab/right or left to reveal more choices)'
+      PAGE_HELP = "(Press tab/right or left to reveal more choices)"
 
       # Create instance of EnumList menu.
       #
@@ -21,7 +21,7 @@ module TTY
       def initialize(prompt, **options)
         @prompt       = prompt
         @prefix       = options.fetch(:prefix) { @prompt.prefix }
-        @enum         = options.fetch(:enum) { ')' }
+        @enum         = options.fetch(:enum) { ")" }
         @default      = options.fetch(:default) { -1 }
         @active_color = options.fetch(:active_color) { @prompt.active_color }
         @help_color   = options.fetch(:help_color)   { @prompt.help_color }
@@ -162,7 +162,7 @@ module TTY
         if choice_in_range && !choice_disabled || @input.empty?
           @done = true
         else
-          @input = ''
+          @input = ""
           @failure = true
         end
       end
@@ -241,7 +241,7 @@ module TTY
       #
       # @api private
       def render
-        @input = ''
+        @input = ""
         until @done
           question = render_question
           @prompt.print(question)
@@ -308,8 +308,8 @@ module TTY
       #
       # @api private
       def error_message
-        error = 'Please enter a valid number'
-        "\n" + @prompt.decorate('>>', @error_color) + ' ' + error
+        error = "Please enter a valid number"
+        "\n" + @prompt.decorate(">>", @error_color) + " " + error
       end
 
       # Render error message and return cursor to position of input
@@ -332,8 +332,8 @@ module TTY
       #
       # @api private
       def render_header
-        return '' unless @done
-        return '' unless @active
+        return "" unless @done
+        return "" unless @active
         selected_item = @choices[@active - 1].name.to_s
         @prompt.decorate(selected_item, @active_color)
       end
@@ -353,7 +353,7 @@ module TTY
       #
       # @api private
       def page_help_message
-        return '' unless paginated?
+        return "" unless paginated?
         "\n" + @prompt.decorate(@page_help, @help_color)
       end
 
@@ -380,15 +380,15 @@ module TTY
         output = []
 
         @paginator.paginate(@choices, @page_active, @per_page) do |choice, index|
-          num = (index + 1).to_s + @enum + ' '
+          num = (index + 1).to_s + @enum + " "
           selected = num.to_s + choice.name.to_s
           output << if index + 1 == @active && !choice.disabled?
-                      (' ' * 2) + @prompt.decorate(selected, @active_color)
+                      (" " * 2) + @prompt.decorate(selected, @active_color)
                     elsif choice.disabled?
-                      @prompt.decorate(@symbols[:cross], :red) + ' ' +
-                      selected + ' ' + choice.disabled.to_s
+                      @prompt.decorate(@symbols[:cross], :red) + " " +
+                      selected + " " + choice.disabled.to_s
                     else
-                      (' ' * 2) + selected
+                      (" " * 2) + selected
                     end
           output << "\n"
         end

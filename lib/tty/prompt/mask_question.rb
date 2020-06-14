@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'question'
+require_relative "question"
 
 module TTY
   class Prompt
@@ -75,7 +75,7 @@ module TTY
       def read_input(question)
         @done_masked = false
         @failure = false
-        @input = ''
+        @input = ""
         @prompt.print(question)
         until @done_masked
           @prompt.read_keypress

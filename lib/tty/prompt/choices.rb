@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require 'forwardable'
+require "forwardable"
 
-require_relative 'choice'
+require_relative "choice"
 
 module TTY
   class Prompt
@@ -94,7 +94,7 @@ module TTY
       # Find a matching choice
       #
       # @exmaple
-      #   choices.find_by(:name, 'small')
+      #   choices.find_by(:name, "small")
       #
       # @param [Symbol] attr
       #   the attribute name

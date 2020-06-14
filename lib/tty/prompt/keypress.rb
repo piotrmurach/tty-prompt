@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require_relative 'question'
-require_relative 'timer'
+require_relative "question"
+require_relative "timer"
 
 module TTY
   class Prompt
@@ -20,7 +20,7 @@ module TTY
         @interval = options.fetch(:interval) {
           (@timeout != UndefinedSetting && @timeout < 1) ? @timeout : 1
         }
-        @decimals = (@interval.to_s.split('.')[1] || []).size
+        @decimals = (@interval.to_s.split(".")[1] || []).size
         @countdown = @timeout
         time = timeout? ? Float(@timeout) : nil
         @timer = Timer.new(time, Float(@interval))

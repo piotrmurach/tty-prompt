@@ -1,27 +1,27 @@
 # frozen_string_literal: true
 
-require 'forwardable'
-require 'pastel'
-require 'tty-cursor'
-require 'tty-reader'
-require 'tty-screen'
+require "forwardable"
+require "pastel"
+require "tty-cursor"
+require "tty-reader"
+require "tty-screen"
 
-require_relative 'prompt/answers_collector'
-require_relative 'prompt/confirm_question'
-require_relative 'prompt/expander'
-require_relative 'prompt/enum_list'
-require_relative 'prompt/keypress'
-require_relative 'prompt/list'
-require_relative 'prompt/multi_list'
-require_relative 'prompt/multiline'
-require_relative 'prompt/mask_question'
-require_relative 'prompt/question'
-require_relative 'prompt/slider'
-require_relative 'prompt/statement'
-require_relative 'prompt/suggestion'
-require_relative 'prompt/symbols'
-require_relative 'prompt/utils'
-require_relative 'prompt/version'
+require_relative "prompt/answers_collector"
+require_relative "prompt/confirm_question"
+require_relative "prompt/expander"
+require_relative "prompt/enum_list"
+require_relative "prompt/keypress"
+require_relative "prompt/list"
+require_relative "prompt/multi_list"
+require_relative "prompt/multiline"
+require_relative "prompt/mask_question"
+require_relative "prompt/question"
+require_relative "prompt/slider"
+require_relative "prompt/statement"
+require_relative "prompt/suggestion"
+require_relative "prompt/symbols"
+require_relative "prompt/utils"
+require_relative "prompt/version"
 
 module TTY
   # A main entry for asking prompt questions.
@@ -74,7 +74,7 @@ module TTY
     # The collection of display symbols
     #
     # @example
-    #   prompt = TTY::Prompt.new(symbols: {marker: '>'})
+    #   prompt = TTY::Prompt.new(symbols: {marker: ">"})
     #
     # @return [Hash]
     #
@@ -207,7 +207,7 @@ module TTY
     # @return [TTY::Prompt::Question]
     #
     # @api public
-    def ask(message = '', **options, &block)
+    def ask(message = "", **options, &block)
       invoke_question(Question, message, **options, &block)
     end
 
@@ -216,19 +216,19 @@ module TTY
     # @see #ask
     #
     # @api public
-    def keypress(message = '', **options, &block)
+    def keypress(message = "", **options, &block)
       invoke_question(Keypress, message, **options, &block)
     end
 
     # Ask a question with a multiline answer
     #
     # @example
-    #   prompt.multiline('Description?')
+    #   prompt.multiline("Description?")
     #
     # @return [Array[String]]
     #
     # @api public
-    def multiline(message = '', **options, &block)
+    def multiline(message = "", **options, &block)
       invoke_question(Multiline, message, **options, &block)
     end
 
@@ -269,7 +269,7 @@ module TTY
     # @return [TTY::Prompt::MaskQuestion]
     #
     # @api public
-    def mask(message = '', **options, &block)
+    def mask(message = "", **options, &block)
       invoke_question(MaskQuestion, message, **options, &block)
     end
 
@@ -338,11 +338,11 @@ module TTY
     end
 
     # A shortcut method to ask the user positive question and return
-    # true for 'yes' reply, false for 'no'.
+    # true for "yes" reply, false for "no".
     #
     # @example
     #   prompt = TTY::Prompt.new
-    #   prompt.yes?('Are you human?')
+    #   prompt.yes?("Are you human?")
     #   # => Are you human? (Y/n)
     #
     # @return [Boolean]
@@ -355,11 +355,11 @@ module TTY
     end
 
     # A shortcut method to ask the user negative question and return
-    # true for 'no' reply.
+    # true for "no" reply.
     #
     # @example
     #   prompt = TTY::Prompt.new
-    #   prompt.no?('Are you alien?') # => true
+    #   prompt.no?("Are you alien?") # => true
     #   # => Are you human? (y/N)
     #
     # @return [Boolean]
@@ -376,15 +376,15 @@ module TTY
     # @example
     #   prompt = TTY::Prompt.new
     #   choices = [{
-    #     key: 'Y',
-    #     name: 'Overwrite',
+    #     key: "Y",
+    #     name: "Overwrite",
     #     value: :yes
     #   }, {
-    #     key: 'n',
-    #     name: 'Skip',
+    #     key: "n",
+    #     name: "Skip",
     #     value: :no
     #   }]
-    #   prompt.expand('Overwirte Gemfile?', choices)
+    #   prompt.expand("Overwirte Gemfile?", choices)
     #
     # @return [Object]
     #   the user specified value
@@ -492,7 +492,7 @@ module TTY
       longest = messages.max_by(&:length).size
       width = TTY::Screen.width - longest
       print cursor.save
-      messages.reverse_each.with_index do |msg, i|
+      messages.reverse_each do |msg|
         print cursor.column(width) + cursor.up + cursor.clear_line_after
         print msg
       end
@@ -504,7 +504,7 @@ module TTY
     # matches to suggest an unambigous string
     #
     # @example
-    #   prompt.suggest('sta', ['status', 'stage', 'commit', 'branch'])
+    #   prompt.suggest("sta", ["status", "stage", "commit", "branch"])
     #   # => "status, stage"
     #
     # @param [String] message
@@ -531,7 +531,7 @@ module TTY
     #
     # @example
     #   prompt.collect do
-    #     key(:name).ask('Name?')
+    #     key(:name).ask("Name?")
     #   end
     #
     # @return [Hash]

@@ -40,7 +40,7 @@ module TTY
       #
       # @api private
       def check_page_size!
-        raise InvalidArgument, 'per_page must be > 0' if @per_page < 1
+        raise InvalidArgument, "per_page must be > 0" if @per_page < 1
       end
 
       # Paginate collection given an active index

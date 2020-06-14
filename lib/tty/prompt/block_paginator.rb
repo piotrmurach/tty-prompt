@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'paginator'
+require_relative "paginator"
 
 module TTY
   class Prompt

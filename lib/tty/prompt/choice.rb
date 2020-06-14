@@ -15,7 +15,7 @@ module TTY
       #   Choice.from([:foo, 1])
       #   # => <TTY::Prompt::Choice @key=nil @name="foo" @value=1 @disabled=false>
       #
-      #   Choice.from({name: :foo, value: 1, key: 'f'}
+      #   Choice.from({name: :foo, value: 1, key: "f"}
       #   # => <TTY::Prompt::Choice @key="f" @name="foo" @value=1 @disabled=false>
       #
       # @param [Object] val

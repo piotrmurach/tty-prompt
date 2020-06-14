@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'list'
+require_relative "list"
 
 module TTY
   class Prompt
@@ -9,7 +9,7 @@ module TTY
     #
     # @api private
     class MultiList < List
-      HELP = '(Use %s arrow%s keys, press Space to select and Enter to finish%s)'
+      HELP = "(Use %s arrow%s keys, press Space to select and Enter to finish%s)"
 
       # Create instance of TTY::Prompt::MultiList menu.
       #
@@ -96,7 +96,7 @@ module TTY
       #
       # @api private
       def selected_names
-        @selected.map(&:name).join(', ')
+        @selected.map(&:name).join(", ")
       end
 
       # Header part showing the minimum/maximum number of choices
@@ -108,7 +108,7 @@ module TTY
         help = []
         help << "min. #{@min}" if @min
         help << "max. #{@max}" if @max
-        "(%s) " % [ help.join(' ') ]
+        "(%s) " % [ help.join(" ") ]
       end
 
       # Render initial help text and then currently selected choices
@@ -152,9 +152,9 @@ module TTY
 
         sync_paginators if @paging_changed
         paginator.paginate(choices, @active, @per_page) do |choice, index|
-          num = enumerate? ? (index + 1).to_s + @enum + ' ' : ''
-          indicator = (index + 1 == @active) ?  @symbols[:marker] : ' '
-          indicator += ' '
+          num = enumerate? ? (index + 1).to_s + @enum + " " : ""
+          indicator = (index + 1 == @active) ?  @symbols[:marker] : " "
+          indicator += " "
           message = if @selected.include?(choice) && !choice.disabled?
                       selected = @prompt.decorate(@symbols[:radio_on], @active_color)
                       "#{selected} #{num}#{choice.name}"
@@ -165,7 +165,7 @@ module TTY
                       "#{@symbols[:radio_off]} #{num}#{choice.name}"
                     end
           end_index = paginated? ? paginator.end_index : choices.size - 1
-          newline = (index == end_index) ? '' : "\n"
+          newline = (index == end_index) ? "" : "\n"
           output << indicator + message + newline
         end
 

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'choices'
+require_relative "choices"
 
 module TTY
   class Prompt
@@ -10,8 +10,8 @@ module TTY
     # @api private
     class Expander
       HELP_CHOICE = {
-        key: 'h',
-        name: 'print help',
+        key: "h",
+        name: "print help",
         value: :help
       }.freeze
 
@@ -56,16 +56,16 @@ module TTY
 
         selected = select_choice(@input)
 
-        if selected && selected.key.to_s == 'h'
+        if selected && selected.key.to_s == "h"
           expand
           @selected = nil
-          @input = ''
+          @input = ""
         elsif selected
           @done = true
           @selected = selected
           @hint = nil
         else
-          @input = ''
+          @input = ""
         end
       end
       alias keyreturn keyenter
@@ -154,12 +154,12 @@ module TTY
         elsif @input.to_s.empty? && default_key
           keys[@default - 1] = @prompt.decorate(default_key, @active_color)
         end
-        keys.join(',')
+        keys.join(",")
       end
 
       # @api private
       def render
-        @input = ''
+        @input = ""
         until @done
           question = render_question
           @prompt.print(question)
@@ -199,7 +199,7 @@ module TTY
       #
       # @api private
       def render_hint
-        "\n" + @prompt.decorate('>> ', @active_color) +
+        "\n" + @prompt.decorate(">> ", @active_color) +
           @hint +
           @prompt.cursor.prev_line +
           @prompt.cursor.forward(@prompt.strip(render_header).size)
@@ -274,7 +274,7 @@ module TTY
           if @selected && @selected.key == choice.key
             chosen = @prompt.decorate(chosen, @active_color)
           end
-          output << '  ' + chosen + "\n"
+          output << "  " + chosen + "\n"
         end
         output.join
       end
@@ -294,7 +294,7 @@ module TTY
           if choice.key.length != 1
             errors << "Choice key `#{choice.key}` is more than one character long."
           end
-          if choice.key.to_s == 'h'
+          if choice.key.to_s == "h"
             errors << "Choice key `#{choice.key}` is reserved for help menu."
           end
           if keys.include?(choice.key)

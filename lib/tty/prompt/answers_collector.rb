@@ -25,7 +25,7 @@ module TTY
       # Create answer entry
       #
       # @example
-      #   key(:name).ask('Name?')
+      #   key(:name).ask("Name?")
       #
       # @api public
       def key(name, &block)
@@ -40,7 +40,7 @@ module TTY
       # Change to collect all values for a key
       #
       # @example
-      #   key(:colors).values.ask('Color?')
+      #   key(:colors).values.ask("Color?")
       #
       # @api public
       def values(&block)

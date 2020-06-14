@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require_relative 'question'
-require_relative 'utils'
+require_relative "question"
+require_relative "utils"
 
 module TTY
   class Prompt
@@ -73,7 +73,7 @@ module TTY
       def render_question
         header = "#{@prefix}#{message} "
         if !@done
-          header += @prompt.decorate("(#{@suffix})", @help_color) + ' '
+          header += @prompt.decorate("(#{@suffix})", @help_color) + " "
         else
           answer = conversion.call(@input)
           label  = answer ? @positive : @negative
@@ -103,7 +103,7 @@ module TTY
         return if suffix? && positive?
 
         if suffix? && (!positive? || !negative?)
-          parts = @suffix.split('/')
+          parts = @suffix.split("/")
           @positive = parts[0]
           @negative = parts[1]
         elsif !suffix? && positive?
@@ -125,16 +125,16 @@ module TTY
 
       # @api private
       def create_default_labels
-        @suffix   = default ? 'Y/n' : 'y/N'
-        @positive = default ? 'Yes' : 'yes'
-        @negative = default ? 'no' : 'No'
+        @suffix   = default ? "Y/n" : "y/N"
+        @positive = default ? "Yes" : "yes"
+        @negative = default ? "no" : "No"
         @validation = /^(y(es)?|no?)$/i
         @messages[:valid?] = "Invalid input."
       end
 
       # @api private
       def create_suffix
-        (default ? positive.capitalize : positive.downcase) + '/' +
+        (default ? positive.capitalize : positive.downcase) + "/" +
           (default ? negative.downcase : negative.capitalize)
       end
 

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'distance'
+require_relative "distance"
 
 module TTY
   # A class responsible for terminal prompt interactions.
@@ -11,9 +11,9 @@ module TTY
     class Suggestion
       DEFAULT_INDENT = 8
 
-      SINGLE_TEXT    = 'Did you mean this?'
+      SINGLE_TEXT    = "Did you mean this?"
 
-      PLURAL_TEXT    = 'Did you mean one of these?'
+      PLURAL_TEXT    = "Did you mean one of these?"
 
       # Number of spaces
       #
@@ -97,14 +97,14 @@ module TTY
 
       # @api private
       def build_single_suggestion
-        single_text + "\n" + (' ' * indent) + @suggestions.first
+        single_text + "\n" + (" " * indent) + @suggestions.first
       end
 
       # @api private
       def build_multiple_suggestions
         plural_text + "\n" +
         @suggestions.map do |sugest|
-          ' ' * indent + sugest
+          " " * indent + sugest
         end.join("\n")
       end
     end # Suggestion

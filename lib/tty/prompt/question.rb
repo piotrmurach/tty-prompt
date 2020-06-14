@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-require_relative 'converters'
-require_relative 'evaluator'
-require_relative 'question/modifier'
-require_relative 'question/validation'
-require_relative 'question/checks'
-require_relative 'utils'
+require_relative "converters"
+require_relative "evaluator"
+require_relative "question/modifier"
+require_relative "question/validation"
+require_relative "question/checks"
+require_relative "utils"
 
 module TTY
   # A class responsible for shell prompt interactions.
@@ -92,7 +92,7 @@ module TTY
         if template && !template.match(/\%\{/).nil?
           [template % tokens]
         else
-          [template || '']
+          [template || ""]
         end
       end
 
@@ -103,7 +103,7 @@ module TTY
       # @return [self]
       #
       # @api public
-      def call(message = '', &block)
+      def call(message = "", &block)
         @message = message
         block.call(self) if block
         @prompt.subscribe(self) do
@@ -148,7 +148,7 @@ module TTY
         elsif @done
           header << @prompt.decorate(@input.to_s, @active_color)
         elsif default? && !Utils.blank?(@default)
-          header << @prompt.decorate("(#{default})", @help_color) + ' '
+          header << @prompt.decorate("(#{default})", @help_color) + " "
         end
         header << "\n" if @done
         header.join
@@ -184,7 +184,7 @@ module TTY
       # @api private
       def render_error(errors)
         errors.reduce([]) do |acc, err|
-          acc << @prompt.decorate('>>', :red) + ' ' + err
+          acc << @prompt.decorate(">>", :red) + " " + err
           acc
         end.join("\n")
       end
