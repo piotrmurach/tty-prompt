@@ -512,6 +512,35 @@ RSpec.describe TTY::Prompt do
 
       expect(prompt.output.string).to eq(expected_output)
     end
+
+    it "reverts selection accross pages with Ctrl+r" do
+      prompt = TTY::TestPrompt.new
+      choices = ("1".."12").to_a
+      prompt.on(:keypress) { |e|
+        prompt.trigger(:keyctrl_r) if e.value == "r"
+        prompt.trigger(:keydown) if e.value == "j"
+      }
+      prompt.input << " " << "j" << " " << "j" << " " << "r" << "\r"
+      prompt.input.rewind
+
+      answer = prompt.multi_select("What number?", choices, per_page: 4)
+
+      expect(answer).to eq(("4".."12").to_a)
+
+      expected_output = [
+        output_helper("What number?", choices[0..3], "1", [], init: true,
+          hint: "Use #{up_down} and #{left_right} arrow keys, press Space to select and Enter to finish"),
+        output_helper("What number?", choices[0..3], "1", ["1"]),
+        output_helper("What number?", choices[0..3], "2", ["1"]),
+        output_helper("What number?", choices[0..3], "2", ["1", "2"]),
+        output_helper("What number?", choices[0..3], "3", ["1", "2"]),
+        output_helper("What number?", choices[0..3], "3", ["1", "2", "3"]),
+        output_helper("What number?", choices[0..3], "3", ("4".."12").to_a),
+        "What number? \e[32m#{("4".."12").to_a.join(", ")}\e[0m\n\e[?25h",
+      ].join
+
+      expect(prompt.output.string).to eq(expected_output)
+    end
   end
 
   context "with :cycle" do
@@ -737,8 +766,11 @@ RSpec.describe TTY::Prompt do
         {name: 'E'}
       ]
       prompt = TTY::TestPrompt.new
-      prompt.on(:keypress) { |e| prompt.trigger(:keyctrl_a) if e.value == "a" }
-      prompt.input << "a" << "\r"
+      prompt.on(:keypress) { |e|
+        prompt.trigger(:keyctrl_a) if e.value == "a"
+        prompt.trigger(:keyctrl_r) if e.value == "r"
+      }
+      prompt.input << "a" << "r" << "a" << "\r"
       prompt.input.rewind
 
       answer = prompt.multi_select("What letter?", choices)
@@ -747,6 +779,8 @@ RSpec.describe TTY::Prompt do
       expected_output =
         output_helper("What letter?", choices, "A", [], init: true,
           hint: "Use #{up_down} arrow keys, press Space to select and Enter to finish") +
+        output_helper("What letter?", choices, "A", %w[A D E]) +
+        output_helper("What letter?", choices, "A", %w[]) +
         output_helper("What letter?", choices, "A", %w[A D E]) +
         exit_message("What letter?", %w[A D E])
 
@@ -811,14 +845,15 @@ RSpec.describe TTY::Prompt do
       expect(prompt.output.string).to eq(expected_output)
     end
 
-    it "disables Ctrl+A selection of all choices when :max option is specified" do
+    it "disables Ctrl+a/Ctrl+r selection when :max option is specified" do
       prompt = TTY::TestPrompt.new
       choices = %w(A B C D E F G)
       prompt.on(:keypress) { |e|
         prompt.trigger(:keyctrl_a) if e.value == "a"
+        prompt.trigger(:keyctrl_r) if e.value == "r"
         prompt.trigger(:keydown) if e.value == "j"
       }
-      prompt.input << "a" << "j" << " " <<  "j" << " " << "\r"
+      prompt.input << "a" << "j" << " "<< "r" <<  "j" << " " << "\r"
       prompt.input.rewind
 
       value = prompt.multi_select("What letter?", choices, max: 2, per_page: 100)
@@ -829,6 +864,7 @@ RSpec.describe TTY::Prompt do
           hint: "Use #{up_down} arrow keys, press Space to select and Enter to finish") +
         output_helper("What letter?", choices, "A", %w[], max: 2) +
         output_helper("What letter?", choices, "B", %w[], max: 2) +
+        output_helper("What letter?", choices, "B", %w[B], max: 2) +
         output_helper("What letter?", choices, "B", %w[B], max: 2) +
         output_helper("What letter?", choices, "C", %w[B], max: 2) +
         output_helper("What letter?", choices, "C", %w[B C], max: 2) +

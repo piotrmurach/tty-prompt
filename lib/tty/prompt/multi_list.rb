@@ -73,6 +73,14 @@ module TTY
         @selected = choices.select { |choice| !choice.disabled? }
       end
 
+      # Revert currently selected choices when Ctrl+I is pressed
+      #
+      # @api private
+      def keyctrl_r(*)
+        return if @max && @max < choices.size
+        @selected = choices.select { |choice| !choice.disabled? } - @selected
+      end
+
       private
 
       # Setup default options and active selection
