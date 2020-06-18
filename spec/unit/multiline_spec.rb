@@ -10,7 +10,7 @@ RSpec.describe TTY::Prompt::Question, "#multiline" do
 
     expect(answer).to eq([])
     expect(prompt.output.string).to eq([
-      "Description? \e[90m(Press CTRL-D or CTRL-Z to finish)\e[0m\n",
+      "Description? \e[90m(Press Ctrl+D or Ctrl+Z to finish)\e[0m\n",
       "\e[2K\e[1G\e[1A\e[2K\e[1G",
       "Description? \n"
     ].join)
@@ -25,7 +25,7 @@ RSpec.describe TTY::Prompt::Question, "#multiline" do
 
     expect(answer).to eq("A super sweet prompt")
     expect(prompt.output.string).to eq([
-      "Description? \e[90m(Press CTRL-D or CTRL-Z to finish)\e[0m\n",
+      "Description? \e[90m(Press Ctrl+D or Ctrl+Z to finish)\e[0m\n",
       "\e[2K\e[1G\e[1A\e[2K\e[1G",
       "Description? \e[32mA super sweet prompt\e[0m\n"
     ].join)
@@ -57,7 +57,7 @@ RSpec.describe TTY::Prompt::Question, "#multiline" do
     answer = prompt.multiline("Description?")
     expect(answer).to eq(["aa\n", "bb\n", "cc"])
     expect(prompt.output.string).to eq([
-      "Description? \e[90m(Press CTRL-D or CTRL-Z to finish)\e[0m\n",
+      "Description? \e[90m(Press Ctrl+D or Ctrl+Z to finish)\e[0m\n",
       "\e[2K\e[1Ga",
       "\e[2K\e[1Gaa",
       "\e[2K\e[1Gaa\n",

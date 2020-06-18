@@ -9,7 +9,7 @@ module TTY
     #
     # @api private
     class Multiline < Question
-      HELP = "(Press CTRL-D or CTRL-Z to finish)".freeze
+      HELP = "(Press Ctrl+D or Ctrl+Z to finish)".freeze
 
       def initialize(prompt, **options)
         super
