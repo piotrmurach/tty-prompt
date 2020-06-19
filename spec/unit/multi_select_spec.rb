@@ -297,6 +297,20 @@ RSpec.describe TTY::Prompt do
     expect(prompt.output.string).to eq(expected_output)
   end
 
+  it "preserves the initial order of selected choices despite the order they were selected in" do
+      prompt = TTY::TestPrompt.new
+      choices = %w[A B C D]
+      prompt.on(:keypress) { |e|
+        prompt.trigger(:keyup)   if e.value == "k"
+        prompt.trigger(:keydown) if e.value == "j"
+      }
+      prompt.input << "j" << " " << "j" << "j" << " " << "k" << "k" << "k" << " " << "\r"
+      prompt.input.rewind
+
+      value = prompt.multi_select("What letter?", choices, preserve_order: true)
+      expect(value).to eq(%w[A B D])
+    end
+
   context "when paginated" do
     it "paginates long selections" do
       prompt = TTY::TestPrompt.new
@@ -475,7 +489,7 @@ RSpec.describe TTY::Prompt do
 
       answer = prompt.multi_select("What number?", choices, default: 2, per_page: 4)
 
-      expect(answer).to eq(["2", "1"])
+      expect(answer).to eq(["1", "2"])
 
       expected_output = [
         output_helper("What number?", choices[0..3], "2", ["2"], init: true,
@@ -485,8 +499,8 @@ RSpec.describe TTY::Prompt do
         output_helper("What number?", choices[4..7], "6", ["2"]),
         output_helper("What number?", choices[3..6], "5", ["2"]),
         output_helper("What number?", choices[0..3], "1", ["2"]),
-        output_helper("What number?", choices[0..3], "1", ["2", "1"]),
-        "What number? \e[32m2, 1\e[0m\n\e[?25h",
+        output_helper("What number?", choices[0..3], "1", ["1", "2"]),
+        "What number? \e[32m1, 2\e[0m\n\e[?25h",
       ].join
 
       expect(prompt.output.string).to eq(expected_output)
