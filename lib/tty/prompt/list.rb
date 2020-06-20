@@ -13,8 +13,6 @@ module TTY
     #
     # @api private
     class List
-      HELP = "(Press %s arrow%s to move, Enter to select%s)"
-
       # Allowed keys for filter, along with backspace and canc.
       FILTER_KEYS_MATCHER = /\A([[:alnum:]]|[[:punct:]])\Z/.freeze
 
@@ -152,18 +150,20 @@ module TTY
 
       # Default help text
       #
-      # @api public
+      # Note that enumeration and filter are mutually exclusive
+      #
+      # @a public
       def default_help
-        # Note that enumeration and filter are mutually exclusive
-        tokens = if enumerate?
-                   [" or 1-#{choices.size} number", ""]
-                 elsif filterable?
-                   ["", ", and letters to filter"]
-                 else
-                   ["", ""]
-                 end
-
-        format(self.class::HELP, arrows_help, *tokens)
+        str = []
+        str << "(Press "
+        str << "#{arrows_help} arrow"
+        str << " or 1-#{choices.size} number" if enumerate?
+        str << " to move"
+        str << (filterable? ? "," : " and")
+        str << " Enter to select"
+        str << " and letters to filter" if filterable?
+        str << ")"
+        str.join
       end
 
       # Set selecting active index using number pad
