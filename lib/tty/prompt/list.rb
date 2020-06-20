@@ -13,7 +13,7 @@ module TTY
     #
     # @api private
     class List
-      HELP = "(Use %s arrow%s keys, press Enter to select%s)"
+      HELP = "(Press %s arrow%s to move, Enter to select%s)"
 
       # Allowed keys for filter, along with backspace and canc.
       FILTER_KEYS_MATCHER = /\A([[:alnum:]]|[[:punct:]])\Z/.freeze
@@ -145,7 +145,7 @@ module TTY
         left_right = @symbols[:arrow_left] + "/" + @symbols[:arrow_right]
 
         arrows = [up_down]
-        arrows << " and " if paginated?
+        arrows << "/" if paginated?
         arrows << left_right if paginated?
         arrows.join
       end
@@ -156,9 +156,9 @@ module TTY
       def default_help
         # Note that enumeration and filter are mutually exclusive
         tokens = if enumerate?
-                   [" or number (1-#{choices.size})", ""]
+                   [" or 1-#{choices.size} number", ""]
                  elsif filterable?
-                   ["", ", and letter keys to filter"]
+                   ["", ", and letters to filter"]
                  else
                    ["", ""]
                  end

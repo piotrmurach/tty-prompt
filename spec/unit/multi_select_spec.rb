@@ -164,7 +164,7 @@ RSpec.describe TTY::Prompt do
             end
     expect(value).to eq([{score: 1}])
     expect(prompt.output.string).to eq([
-      "\e[?25lSelect drinks? \e[90m(Use #{up_down} arrow or number (1-5) keys, press Space to select and Enter to finish)\e[0m\n",
+      "\e[?25lSelect drinks? \e[90m(Use #{up_down} arrow or 1-5 number keys, press Space to select and Enter to finish)\e[0m\n",
       "> - 1) vodka\n",
       "  - 2) beer\n",
       "  - 3) wine\n",
@@ -308,7 +308,7 @@ RSpec.describe TTY::Prompt do
 
       expect(answer).to eq(['D'])
       expected_output = [
-        "\e[?25lWhat letter? D \e[90m(Use #{up_down} and #{left_right} arrow keys, press Space to select and Enter to finish)\e[0m\n",
+        "\e[?25lWhat letter? D \e[90m(Use #{up_down}/#{left_right} arrow keys, press Space to select and Enter to finish)\e[0m\n",
         "#{symbols[:marker]} \e[32m#{symbols[:radio_on]}\e[0m D\n",
         "  #{symbols[:radio_off]} E\n",
         "  #{symbols[:radio_off]} F",
@@ -330,7 +330,7 @@ RSpec.describe TTY::Prompt do
       expect(answer).to eq([4])
       expected_output = [
         "\e[?25lWhat letter? D ",
-        "\e[90m(Use #{up_down} and #{left_right} arrow keys, press Space to select and Enter to finish)\e[0m\n",
+        "\e[90m(Use #{up_down}/#{left_right} arrow keys, press Space to select and Enter to finish)\e[0m\n",
         "#{symbols[:marker]} \e[32m#{symbols[:radio_on]}\e[0m D\n",
         "  #{symbols[:radio_off]} E\n",
         "  #{symbols[:radio_off]} F",
@@ -355,7 +355,7 @@ RSpec.describe TTY::Prompt do
       expect(answer).to eq(['D'])
       expected_output = [
         "\e[?25lWhat letter? D ",
-        "\e[90m(Use #{up_down} and #{left_right} arrow keys, press Space to select and Enter to finish)\e[0m\n",
+        "\e[90m(Use #{up_down}/#{left_right} arrow keys, press Space to select and Enter to finish)\e[0m\n",
         "#{symbols[:marker]} \e[32m#{symbols[:radio_on]}\e[0m D\n",
         "  #{symbols[:radio_off]} E\n",
         "  #{symbols[:radio_off]} F",
@@ -399,7 +399,7 @@ RSpec.describe TTY::Prompt do
 
       expected_output = [
         output_helper("What number?", choices[0..3], "1", [], init: true,
-          hint: "Use #{up_down} and #{left_right} arrow keys, press Space to select and Enter to finish"),
+          hint: "Use #{up_down}/#{left_right} arrow keys, press Space to select and Enter to finish"),
         output_helper("What number?", choices[4..7], "5", []),
         output_helper("What number?", choices[8..11], "9", []),
         output_helper("What number?", choices[8..11], "9", []),
@@ -423,7 +423,7 @@ RSpec.describe TTY::Prompt do
 
       expected_output = [
         output_helper("What number?", choices[3..6], "4", ["4"], init: true,
-          hint: "Use #{up_down} and #{left_right} arrow keys, press Space to select and Enter to finish"),
+          hint: "Use #{up_down}/#{left_right} arrow keys, press Space to select and Enter to finish"),
         output_helper("What number?", choices[4..7], "8", ["4"]),
         output_helper("What number?", choices[8..9], "10", ["4"]),
         output_helper("What number?", choices[8..9], "10", ["4"]),
@@ -450,7 +450,7 @@ RSpec.describe TTY::Prompt do
 
       expected_output = [
         output_helper("What number?", choices[0..3], "2", ["2"], init: true,
-          hint: "Use #{up_down} and #{left_right} arrow keys, press Space to select and Enter to finish"),
+          hint: "Use #{up_down}/#{left_right} arrow keys, press Space to select and Enter to finish"),
         output_helper("What number?", choices[4..7], "6", ["2"]),
         output_helper("What number?", choices[8..9], "10", ["2"]),
         output_helper("What number?", choices[4..7], "6", ["2"]),
@@ -479,7 +479,7 @@ RSpec.describe TTY::Prompt do
 
       expected_output = [
         output_helper("What number?", choices[0..3], "2", ["2"], init: true,
-          hint: "Use #{up_down} and #{left_right} arrow keys, press Space to select and Enter to finish"),
+          hint: "Use #{up_down}/#{left_right} arrow keys, press Space to select and Enter to finish"),
         output_helper("What number?", choices[0..3], "3", ["2"]),
         output_helper("What number?", choices[4..7], "7", ["2"]),
         output_helper("What number?", choices[4..7], "6", ["2"]),
@@ -505,7 +505,7 @@ RSpec.describe TTY::Prompt do
 
       expected_output = [
         output_helper("What number?", choices[0..3], "1", [], init: true,
-          hint: "Use #{up_down} and #{left_right} arrow keys, press Space to select and Enter to finish"),
+          hint: "Use #{up_down}/#{left_right} arrow keys, press Space to select and Enter to finish"),
         output_helper("What number?", choices[0..3], "1", choices),
         "What number? \e[32m#{choices.join(", ")}\e[0m\n\e[?25h",
       ].join
@@ -529,7 +529,7 @@ RSpec.describe TTY::Prompt do
 
       expected_output = [
         output_helper("What number?", choices[0..3], "1", [], init: true,
-          hint: "Use #{up_down} and #{left_right} arrow keys, press Space to select and Enter to finish"),
+          hint: "Use #{up_down}/#{left_right} arrow keys, press Space to select and Enter to finish"),
         output_helper("What number?", choices[0..3], "1", ["1"]),
         output_helper("What number?", choices[0..3], "2", ["1"]),
         output_helper("What number?", choices[0..3], "2", ["1", "2"]),
@@ -602,7 +602,7 @@ RSpec.describe TTY::Prompt do
 
       expected_output = [
         "\e[?25lWhat number? 2 ",
-        "\e[90m(Use #{up_down} and #{left_right} arrow keys, press Space to select and Enter to finish)\e[0m\n",
+        "\e[90m(Use #{up_down}/#{left_right} arrow keys, press Space to select and Enter to finish)\e[0m\n",
         "  #{symbols[:radio_off]} 1\n",
         "#{symbols[:marker]} \e[32m#{symbols[:radio_on]}\e[0m 2\n",
         "  #{symbols[:radio_off]} 3\n",
@@ -660,7 +660,7 @@ RSpec.describe TTY::Prompt do
 
       expected_prompt_output =
         output_helper("What size?", %w(Tiny Medium Large Huge), "Tiny", %w(), init: true,
-          hint: "Use #{up_down} arrow keys, press Space to select and Enter to finish, and letter keys to filter") +
+          hint: "Use #{up_down} arrow keys, press Space to select and Enter to finish, and letters to filter") +
         output_helper("What size?", %w(Tiny Medium Large Huge), "Tiny", %w(Tiny)) +
         output_helper("What size?", %w(Large), "Large", %w(Tiny), hint: 'Filter: "a"') +
         output_helper("What size?", %w(Large), "Large", %w(Tiny Large), hint: 'Filter: "a"') +
@@ -749,7 +749,7 @@ RSpec.describe TTY::Prompt do
 
       expected_output =
         output_helper("Select drinks?", choices, "vodka", [], init: true, enum: ') ',
-          hint: "Use #{up_down} arrow or number (1-5) keys, press Space to select and Enter to finish") +
+          hint: "Use #{up_down} arrow or 1-5 number keys, press Space to select and Enter to finish") +
         output_helper("Select drinks?", choices, "vodka", [], enum: ') ') +
         output_helper("Select drinks?", choices, "vodka", %w[vodka], enum: ') ') +
         exit_message("Select drinks?", %w[vodka])
