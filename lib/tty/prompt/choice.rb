@@ -2,10 +2,12 @@
 
 module TTY
   class Prompt
-    # An immutable representation of a single choice option from select menu
+    # A representation of a single choice option from select menu
     #
     # @api public
     class Choice
+      attr_accessor :index
+
       # Create choice from value
       #
       # @examples
@@ -26,7 +28,7 @@ module TTY
       # @return [Choice]
       #
       # @api public
-      def self.from(val)
+      def self.from(val, index: nil)
         case val
         when Choice
           val
@@ -41,6 +43,8 @@ module TTY
           convert_hash(val)
         else
           new(val, val)
+        end.tap do |choice|
+          choice.index = index
         end
       end
 
@@ -80,7 +84,6 @@ module TTY
         @value = value
         @key   = options[:key]
         @disabled = options[:disabled].nil? ? false : options[:disabled]
-        freeze
       end
 
       # Check if this choice is disabled
@@ -114,6 +117,17 @@ module TTY
         name == other.name &&
         value == other.value &&
         key == other.key
+      end
+
+      # Object spaceship operator.
+      # Returns negative number if the index of the left operand is lower.
+      # Returns positive number if the index of the right operand is lower
+      #
+      # @return [Fixnum]
+      #
+      # @api public
+      def <=>(other)
+        index <=> other.index
       end
 
       # Object string representation

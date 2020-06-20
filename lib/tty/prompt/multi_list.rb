@@ -60,7 +60,7 @@ module TTY
         else
           return if @max && @selected.size >= @max
           @selected << active_choice
-          @selected.sort_by! { |choice| @choices.index(choice) }
+          @selected.sort!
         end
       end
 

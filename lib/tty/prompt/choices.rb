@@ -33,8 +33,9 @@ module TTY
       #
       # @api public
       def initialize(choices = [])
-        @choices = choices.map do |choice|
-          Choice.from(choice)
+        @choices = []
+        choices.map do |choice|
+          self << choice
         end
       end
 
@@ -54,10 +55,10 @@ module TTY
       #   the choice to add
       #
       # @api public
-      def <<(choice)
-        tap do
-          choices << Choice.from(choice)
-        end
+      def <<(val)
+        choice = Choice.from val, index: choices.size
+        choices << choice
+        self
       end
 
       # Access choice by index

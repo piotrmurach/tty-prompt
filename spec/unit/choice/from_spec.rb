@@ -127,4 +127,14 @@ RSpec.describe TTY::Prompt::Choice, '#from' do
     expect(choice.value).to eq(size)
     expect(choice.disabled?).to eq(false)
   end
+
+  it "sets an index to the instance if given" do
+    [
+      described_class.new(:foo, 1),
+      [:foo, 1],
+      { name: :foo, value: 1 }
+    ].each do |obj|
+      expect(described_class.from(obj, index: 42).index).to eq 42
+    end
+  end
 end
