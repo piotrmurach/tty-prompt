@@ -7,6 +7,6 @@ RSpec.describe TTY::Prompt::Choices, '#<<' do
     choice = TTY::Prompt::Choice.from([:label, 1])
     choices << [:label, 1]
     expect(choices.size).to eq(1)
-    expect(choices.to_ary).to eq([choice])
+    expect(choices).to eq([choice])
   end
 end
