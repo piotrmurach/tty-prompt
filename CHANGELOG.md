@@ -17,6 +17,7 @@
 * Change yes?/no? prompt to infer default value from words and raise when
   no boolean can be deduced
 * Change Prompt#new to use keyword arguments
+* Change #select/#multi_select prompts default help text
 
 ### Fixed
 * Fix multiline prompt to return default value when no input provided
