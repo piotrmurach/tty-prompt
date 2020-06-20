@@ -9,8 +9,6 @@ module TTY
     #
     # @api private
     class MultiList < List
-      HELP = "(Press %s arrow%s to move, Space/Ctrl+A|R to select (all|rev) and Enter to finish%s)"
-
       # Create instance of TTY::Prompt::MultiList menu.
       #
       # @param [Prompt] :prompt
@@ -117,6 +115,27 @@ module TTY
         help << "min. #{@min}" if @min
         help << "max. #{@max}" if @max
         "(%s) " % [ help.join(" ") ]
+      end
+
+      # Build a default help text
+      #
+      # @return [String]
+      #
+      # @api private
+      def default_help
+        str = []
+        str << "(Press "
+        str << "#{arrows_help} arrow"
+        str << " or 1-#{choices.size} number" if enumerate?
+        str << " to move, Space"
+        str << "/Ctrl+A|R" if @max.nil?
+        str << " to select"
+        str << " (all|rev)" if @max.nil?
+        str << (filterable? ? "," : " and")
+        str << " Enter to finish"
+        str << " and letters to filter" if filterable?
+        str << ")"
+        str.join
       end
 
       # Render initial help text and then currently selected choices

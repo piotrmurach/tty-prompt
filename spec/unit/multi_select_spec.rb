@@ -16,7 +16,7 @@ RSpec.describe TTY::Prompt do
     out << prompt << " "
     out << "(min. #{options[:min]}) " if options[:min]
     out << "(max. #{options[:max]}) " if options[:max]
-    out << selected.join(', ')
+    out << selected.join(", ")
     out << " " if init && !selected.empty?
     out << "\e[90m" if init
     out << (init ? "(#{hint})\e[0m" : " (#{hint})") if hint
@@ -42,7 +42,7 @@ RSpec.describe TTY::Prompt do
   end
 
   def exit_message(prompt, choices)
-    "#{prompt} \e[32m#{choices.join(', ')}\e[0m\n\e[?25h"
+    "#{prompt} \e[32m#{choices.join(", ")}\e[0m\n\e[?25h"
   end
 
   # Ensure a wide prompt on CI
@@ -74,7 +74,7 @@ RSpec.describe TTY::Prompt do
     choices = %w(vodka beer wine whisky bourbon)
     prompt.input << " \r"
     prompt.input.rewind
-    expect(prompt.multi_select("Select drinks?", choices)). to eq(['vodka'])
+    expect(prompt.multi_select("Select drinks?", choices)). to eq(["vodka"])
 
     expected_output = [
       "\e[?25lSelect drinks? \e[90m(Press #{up_down} arrow to move, Space/Ctrl+A|R to select (all|rev) and Enter to finish)\e[0m\n",
@@ -101,7 +101,7 @@ RSpec.describe TTY::Prompt do
     choices = %w(vodka beer wine whisky bourbon)
     prompt.input << " \r"
     prompt.input.rewind
-    expect(prompt.multi_select("Select drinks?", choices, echo: false)). to eq(['vodka'])
+    expect(prompt.multi_select("Select drinks?", choices, echo: false)). to eq(["vodka"])
 
     expected_output = [
       "\e[?25lSelect drinks? \e[90m(Press #{up_down} arrow to move, Space/Ctrl+A|R to select (all|rev) and Enter to finish)\e[0m\n",
@@ -154,8 +154,8 @@ RSpec.describe TTY::Prompt do
     prompt.input << " \r"
     prompt.input.rewind
     value = prompt.multi_select("Select drinks?") do |menu|
-              menu.symbols marker: '>', radio_off: '-', radio_on: '='
-              menu.enum ')'
+              menu.symbols marker: ">", radio_off: "-", radio_on: "="
+              menu.enum ")"
 
               menu.choice :vodka, {score: 1}
               menu.choice :beer, 2
@@ -239,7 +239,7 @@ RSpec.describe TTY::Prompt do
   end
 
   it "sets prompt prefix" do
-    prompt = TTY::TestPrompt.new(prefix: '[?] ')
+    prompt = TTY::TestPrompt.new(prefix: "[?] ")
     choices = %w(vodka beer wine whisky bourbon)
     prompt.input << "\r"
     prompt.input.rewind
@@ -261,8 +261,8 @@ RSpec.describe TTY::Prompt do
     choices = %w(vodka beer wine whisky bourbon)
     prompt.input << "\r"
     prompt.input.rewind
-    options = {default: [1], active_color: :blue, symbols: {marker: '>'}}
-    expect(prompt.multi_select("Select drinks?", choices, options)). to eq(['vodka'])
+    options = {default: [1], active_color: :blue, symbols: {marker: ">"}}
+    expect(prompt.multi_select("Select drinks?", choices, options)). to eq(["vodka"])
     expect(prompt.output.string).to eq([
       "\e[?25lSelect drinks? vodka \e[90m(Press #{up_down} arrow to move, Space/Ctrl+A|R to select (all|rev) and Enter to finish)\e[0m\n",
       "> \e[34m#{symbols[:radio_on]}\e[0m vodka\n",
@@ -306,7 +306,7 @@ RSpec.describe TTY::Prompt do
 
       answer = prompt.multi_select("What letter?", choices, per_page: 3, default: 4)
 
-      expect(answer).to eq(['D'])
+      expect(answer).to eq(["D"])
       expected_output = [
         "\e[?25lWhat letter? D \e[90m(Press #{up_down}/#{left_right} arrow to move, Space/Ctrl+A|R to select (all|rev) and Enter to finish)\e[0m\n",
         "#{symbols[:marker]} \e[32m#{symbols[:radio_on]}\e[0m D\n",
@@ -352,7 +352,7 @@ RSpec.describe TTY::Prompt do
                 menu.choices choices
               end
 
-      expect(answer).to eq(['D'])
+      expect(answer).to eq(["D"])
       expected_output = [
         "\e[?25lWhat letter? D ",
         "\e[90m(Press #{up_down}/#{left_right} arrow to move, Space/Ctrl+A|R to select (all|rev) and Enter to finish)\e[0m\n",
@@ -372,7 +372,7 @@ RSpec.describe TTY::Prompt do
       prompt.input << "\r"
       prompt.input.rewind
       value = prompt.multi_select("What letter?", choices, per_page: 4, default: 1)
-      expect(value).to eq(['A'])
+      expect(value).to eq(["A"])
 
       expect(prompt.output.string).to eq([
         "\e[?25lWhat letter? A ",
@@ -388,7 +388,7 @@ RSpec.describe TTY::Prompt do
 
     it "navigates evenly paged output with right arrow until end of selection" do
       prompt = TTY::TestPrompt.new
-      choices = ('1'..'12').to_a
+      choices = ("1".."12").to_a
       prompt.on(:keypress) { |e| prompt.trigger(:keyright) if e.value == "l" }
       prompt.input << "l" << "l" << "l" << " " << "\r"
       prompt.input.rewind
@@ -412,14 +412,14 @@ RSpec.describe TTY::Prompt do
 
     it "navigates unevenly paged output with right arrow until the end of selection" do
       prompt = TTY::TestPrompt.new
-      choices = ('1'..'10').to_a
+      choices = ("1".."10").to_a
       prompt.on(:keypress) { |e| prompt.trigger(:keyright) if e.value == "l" }
       prompt.input << "l" << "l" << "l" << " " << "\r"
       prompt.input.rewind
 
       answer = prompt.multi_select("What number?", choices, default: 4, per_page: 4)
 
-      expect(answer).to eq(['4', '10'])
+      expect(answer).to eq(["4", "10"])
 
       expected_output = [
         output_helper("What number?", choices[3..6], "4", ["4"], init: true,
@@ -436,7 +436,7 @@ RSpec.describe TTY::Prompt do
 
     it "navigates left and right" do
       prompt = TTY::TestPrompt.new
-      choices = ('1'..'10').to_a
+      choices = ("1".."10").to_a
       prompt.on(:keypress) { |e|
         prompt.trigger(:keyright) if e.value == "l"
         prompt.trigger(:keyleft) if e.value == "h"
@@ -446,7 +446,7 @@ RSpec.describe TTY::Prompt do
 
       answer = prompt.multi_select("What number?", choices, default: 2, per_page: 4)
 
-      expect(answer).to eq(['2', '6'])
+      expect(answer).to eq(["2", "6"])
 
       expected_output = [
         output_helper("What number?", choices[0..3], "2", ["2"], init: true,
@@ -463,7 +463,7 @@ RSpec.describe TTY::Prompt do
 
     it "combines up/down navigation with left/right" do
       prompt = TTY::TestPrompt.new
-      choices = ('1'..'11').to_a
+      choices = ("1".."11").to_a
       prompt.on(:keypress) { |e|
         prompt.trigger(:keyup)    if e.value == "k"
         prompt.trigger(:keydown)  if e.value == "j"
@@ -475,7 +475,7 @@ RSpec.describe TTY::Prompt do
 
       answer = prompt.multi_select("What number?", choices, default: 2, per_page: 4)
 
-      expect(answer).to eq(['2', '1'])
+      expect(answer).to eq(["2", "1"])
 
       expected_output = [
         output_helper("What number?", choices[0..3], "2", ["2"], init: true,
@@ -494,7 +494,7 @@ RSpec.describe TTY::Prompt do
 
     it "selects all paged choices with ctrl+a" do
       prompt = TTY::TestPrompt.new
-      choices = ('1'..'12').to_a
+      choices = ("1".."12").to_a
       prompt.on(:keypress) { |e| prompt.trigger(:keyctrl_a) if e.value == "a" }
       prompt.input << "a" << "\r"
       prompt.input.rewind
@@ -588,7 +588,7 @@ RSpec.describe TTY::Prompt do
 
     it "cycles choices using left/right arrows" do
       prompt = TTY::TestPrompt.new
-      choices = ('1'..'10').to_a
+      choices = ("1".."10").to_a
       prompt.on(:keypress) { |e|
         prompt.trigger(:keyright) if e.value == "l"
         prompt.trigger(:keyleft) if e.value == "h"
@@ -598,7 +598,7 @@ RSpec.describe TTY::Prompt do
 
       answer = prompt.multi_select("What number?", choices, default: 2, per_page: 4, cycle: true)
 
-      expect(answer).to eq(['2', '10'])
+      expect(answer).to eq(["2", "10"])
 
       expected_output = [
         "\e[?25lWhat number? 2 ",
@@ -660,10 +660,10 @@ RSpec.describe TTY::Prompt do
 
       expected_prompt_output =
         output_helper("What size?", %w(Tiny Medium Large Huge), "Tiny", %w(), init: true,
-          hint: "Press #{up_down} arrow to move, Space/Ctrl+A|R to select (all|rev) and Enter to finish, and letters to filter") +
+          hint: "Press #{up_down} arrow to move, Space/Ctrl+A|R to select (all|rev), Enter to finish and letters to filter") +
         output_helper("What size?", %w(Tiny Medium Large Huge), "Tiny", %w(Tiny)) +
-        output_helper("What size?", %w(Large), "Large", %w(Tiny), hint: 'Filter: "a"') +
-        output_helper("What size?", %w(Large), "Large", %w(Tiny Large), hint: 'Filter: "a"') +
+        output_helper("What size?", %w(Large), "Large", %w(Tiny), hint: "Filter: \"a\"") +
+        output_helper("What size?", %w(Large), "Large", %w(Tiny Large), hint: "Filter: \"a\"") +
         output_helper("What size?", %w(Tiny Medium Large Huge), "Tiny", %w(Tiny Large)) +
         exit_message("What size?", %w(Tiny Large))
 
@@ -675,8 +675,8 @@ RSpec.describe TTY::Prompt do
     it "fails when default item is also disabled" do
       prompt = TTY::TestPrompt.new
       choices = [
-        {name: 'vodka', disabled: true},
-        'beer', 'wine', 'whisky', 'bourbon'
+        {name: "vodka", disabled: true},
+        "beer", "wine", "whisky", "bourbon"
       ]
       expect {
         prompt.multi_select("Select drinks?", choices, default: 1)
@@ -686,24 +686,24 @@ RSpec.describe TTY::Prompt do
 
     it "adjusts active index to match first non-disabled choice" do
       choices = [
-        {name: 'vodka', disabled: true},
-        'beer', 'wine', 'whisky', 'bourbon'
+        {name: "vodka", disabled: true},
+        "beer", "wine", "whisky", "bourbon"
       ]
       prompt = TTY::TestPrompt.new
       prompt.input << " " << "\r"
       prompt.input.rewind
 
       answer = prompt.multi_select("Select drinks?", choices)
-      expect(answer).to eq(['beer'])
+      expect(answer).to eq(["beer"])
     end
 
     it "omits disabled choice when nagivating menu" do
       choices = [
-        {name: 'A'},
-        {name: 'B', disabled: '(out)'},
-        {name: 'C', disabled: '(out)'},
-        {name: 'D'},
-        {name: 'E'}
+        {name: "A"},
+        {name: "B", disabled: "(out)"},
+        {name: "C", disabled: "(out)"},
+        {name: "D"},
+        {name: "E"}
       ]
       prompt = TTY::TestPrompt.new
       prompt.on(:keypress) { |e| prompt.trigger(:keydown) if e.value == "j" }
@@ -727,17 +727,17 @@ RSpec.describe TTY::Prompt do
 
     it "omits disabled choice when number key is pressed" do
       choices = [
-        {name: 'vodka', value: 1},
-        {name: 'beer', value: 1, disabled: true},
-        {name: 'wine', value: 1},
-        {name: 'whisky', value: 1, disabled: true},
-        {name: 'bourbon', value: 1}
+        {name: "vodka", value: 1},
+        {name: "beer", value: 1, disabled: true},
+        {name: "wine", value: 1},
+        {name: "whisky", value: 1, disabled: true},
+        {name: "bourbon", value: 1}
       ]
       prompt = TTY::TestPrompt.new
       prompt.input << "2" << " \r"
       prompt.input.rewind
       answer = prompt.multi_select("Select drinks?") do |menu|
-                menu.enum ')'
+                menu.enum ")"
 
                 menu.choice :vodka, 1
                 menu.choice :beer, 2, disabled: true
@@ -748,10 +748,10 @@ RSpec.describe TTY::Prompt do
       expect(answer).to eq([1])
 
       expected_output =
-        output_helper("Select drinks?", choices, "vodka", [], init: true, enum: ') ',
+        output_helper("Select drinks?", choices, "vodka", [], init: true, enum: ") ",
           hint: "Press #{up_down} arrow or 1-5 number to move, Space/Ctrl+A|R to select (all|rev) and Enter to finish") +
-        output_helper("Select drinks?", choices, "vodka", [], enum: ') ') +
-        output_helper("Select drinks?", choices, "vodka", %w[vodka], enum: ') ') +
+        output_helper("Select drinks?", choices, "vodka", [], enum: ") ") +
+        output_helper("Select drinks?", choices, "vodka", %w[vodka], enum: ") ") +
         exit_message("Select drinks?", %w[vodka])
 
       expect(prompt.output.string).to eq(expected_output)
@@ -759,11 +759,11 @@ RSpec.describe TTY::Prompt do
 
     it "selects all non-disabled choices when ctrl+a is pressed" do
       choices = [
-        {name: 'A'},
-        {name: 'B', disabled: '(out)'},
-        {name: 'C', disabled: '(out)'},
-        {name: 'D'},
-        {name: 'E'}
+        {name: "A"},
+        {name: "B", disabled: "(out)"},
+        {name: "C", disabled: "(out)"},
+        {name: "D"},
+        {name: "E"}
       ]
       prompt = TTY::TestPrompt.new
       prompt.on(:keypress) { |e|
@@ -830,7 +830,7 @@ RSpec.describe TTY::Prompt do
 
       expected_output =
         output_helper("What letter?", choices, "A", [], init: true, max: 2,
-          hint: "Press #{up_down} arrow to move, Space/Ctrl+A|R to select (all|rev) and Enter to finish") +
+          hint: "Press #{up_down} arrow to move, Space to select and Enter to finish") +
         output_helper("What letter?", choices, "A", %w[A], max: 2) +
         output_helper("What letter?", choices, "B", %w[A], max: 2) +
         output_helper("What letter?", choices, "B", %w[A B], max: 2) +
@@ -861,7 +861,7 @@ RSpec.describe TTY::Prompt do
 
       expected_output =
         output_helper("What letter?", choices, "A", [], init: true, max: 2,
-          hint: "Press #{up_down} arrow to move, Space/Ctrl+A|R to select (all|rev) and Enter to finish") +
+          hint: "Press #{up_down} arrow to move, Space to select and Enter to finish") +
         output_helper("What letter?", choices, "A", %w[], max: 2) +
         output_helper("What letter?", choices, "B", %w[], max: 2) +
         output_helper("What letter?", choices, "B", %w[B], max: 2) +
