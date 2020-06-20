@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-if ENV['COVERAGE'] || ENV['TRAVIS']
-  require 'simplecov'
-  require 'coveralls'
+if ENV["COVERAGE"] || ENV["TRAVIS"]
+  require "simplecov"
+  require "coveralls"
 
   SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new([
     SimpleCov::Formatter::HTMLFormatter,
@@ -10,13 +10,13 @@ if ENV['COVERAGE'] || ENV['TRAVIS']
   ])
 
   SimpleCov.start do
-    command_name 'spec'
-    add_filter 'spec'
+    command_name "spec"
+    add_filter "spec"
   end
 end
 
-require 'tty-prompt'
-require 'stringio'
+require "tty-prompt"
+require "stringio"
 
 class StringIO
   def wait_readable(*)
@@ -24,17 +24,7 @@ class StringIO
   end
 end
 
-module Helpers
-  def diff_output(actual_output, expected_output)
-    puts "ACTUAL: #{actual_output.inspect}"
-    puts "--------------------------------\n"
-    puts "EXPECT: #{expected_output.inspect}"
-  end
-end
-
 RSpec.configure do |config|
-  config.include(Helpers)
-
   config.expect_with :rspec do |expectations|
     expectations.include_chain_clauses_in_custom_matcher_descriptions = true
     expectations.max_formatted_output_length = nil
@@ -52,7 +42,7 @@ RSpec.configure do |config|
   config.warnings = true
 
   if config.files_to_run.one?
-    config.default_formatter = 'doc'
+    config.default_formatter = "doc"
   end
 
   config.profile_examples = 2
