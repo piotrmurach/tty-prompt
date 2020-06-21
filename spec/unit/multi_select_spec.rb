@@ -182,6 +182,30 @@ RSpec.describe TTY::Prompt do
     ].join)
   end
 
+  it "sets default options through choice properties" do
+    prompt = TTY::TestPrompt.new
+    prompt.input << "\r"
+    prompt.input.rewind
+    value = prompt.multi_select("Select drinks?") do |menu|
+              menu.choice :vodka,   {score: 10}
+              menu.choice :beer,    {score: 20}, selected: true
+              menu.choice :wine,    {score: 30}
+              menu.choice :whisky,  {score: 40}
+              menu.choice :bourbon, {score: 50}, selected: true
+            end
+    expect(value).to match_array([{score: 20}, {score: 50}])
+    expect(prompt.output.string).to eq([
+      "\e[?25lSelect drinks? beer, bourbon \e[90m(Press #{up_down} arrow to move, Space/Ctrl+A|R to select (all|rev) and Enter to finish)\e[0m\n",
+      "  #{symbols[:radio_off]} vodka\n",
+      "  \e[32m#{symbols[:radio_on]}\e[0m beer\n",
+      "  #{symbols[:radio_off]} wine\n",
+      "  #{symbols[:radio_off]} whisky\n",
+      "#{symbols[:marker]} \e[32m#{symbols[:radio_on]}\e[0m bourbon",
+      "\e[2K\e[1G\e[1A" * 5, "\e[2K\e[1G",
+      "Select drinks? \e[32mbeer, bourbon\e[0m\n\e[?25h",
+    ].join)
+  end
+
   it "sets default options through DSL syntax" do
     prompt = TTY::TestPrompt.new
     prompt.input << "\r"

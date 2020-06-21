@@ -2,7 +2,7 @@
 
 module TTY
   class Prompt
-    # An immutable representation of a single choice option from select menu
+    # A representation of a single choice option from select menu
     #
     # @api public
     class Choice
@@ -72,6 +72,12 @@ module TTY
       # @api public
       attr_reader :disabled
 
+      # Denotes whether the choice is selected
+      #
+      # @api public
+      attr_accessor :selected
+      alias selected? selected
+
       # Create a Choice instance
       #
       # @api public
@@ -80,7 +86,7 @@ module TTY
         @value = value
         @key   = options[:key]
         @disabled = options[:disabled].nil? ? false : options[:disabled]
-        freeze
+        @selected = options[:selected].nil? ? false : options[:selected]
       end
 
       # Check if this choice is disabled

@@ -17,7 +17,6 @@ module TTY
       # @api public
       def initialize(prompt, **options)
         super
-        @selected = []
         @help = options[:help]
         @echo = options.fetch(:echo, true)
         @min  = options[:min]
@@ -43,8 +42,8 @@ module TTY
       # @api private
       def keyenter(*)
         valid = true
-        valid = @min <= @selected.size if @min
-        valid = @selected.size <= @max if @max
+        valid = @min <= choices.selected.size if @min
+        valid = @choices.selected.size <= @max if @max
 
         super if valid
       end
@@ -55,13 +54,7 @@ module TTY
       # @api private
       def keyspace(*)
         active_choice = choices[@active - 1]
-        if @selected.include?(active_choice)
-          @selected.delete(active_choice)
-        else
-          return if @max && @selected.size >= @max
-          @selected << active_choice
-          @selected.sort_by! { |choice| @choices.index(choice) }
-        end
+        toggle_choice(active_choice)
       end
 
       # Selects all choices when Ctrl+A is pressed
@@ -69,7 +62,7 @@ module TTY
       # @api private
       def keyctrl_a(*)
         return if @max && @max < choices.size
-        @selected = choices.select { |choice| !choice.disabled? }
+        @choices.enabled.each { |choice| choice.selected = true }
       end
 
       # Revert currently selected choices when Ctrl+I is pressed
@@ -77,24 +70,37 @@ module TTY
       # @api private
       def keyctrl_r(*)
         return if @max && @max < choices.size
-        @selected = choices.select { |choice| !choice.disabled? } - @selected
+
+        @choices.enabled.each { |choice| toggle_choice(choice) }
       end
 
       private
+
+      def toggle_choice(choice)
+        if choice.selected?
+          choice.selected = false
+        else
+          return if @max && @choices.selected.size >= @max
+          choice.selected = true
+        end
+      end
 
       # Setup default options and active selection
       #
       # @api private
       def setup_defaults
         validate_defaults
-        # At this stage, @choices matches all the visible choices.
-        @selected = @choices.values_at(*@default.map { |d| d - 1 })
-
-        if !@default.empty?
-          @active = @default.last
-        else
-          @active = @choices.index { |choice| !choice.disabled? } + 1
+        @default.each do |default_index|
+          @choices[default_index - 1].selected = true
         end
+
+        active_choice = if @choices.selected.empty?
+                          @choices.enabled.first
+                        else
+                          @choices.selected.last
+                        end
+
+        @active = @choices.index(active_choice) + 1
       end
 
       # Generate selected items names
@@ -103,7 +109,7 @@ module TTY
       #
       # @api private
       def selected_names
-        @selected.map(&:name).join(", ")
+        @choices.selected.map(&:name).join(", ")
       end
 
       # Header part showing the minimum/maximum number of choices
@@ -148,7 +154,7 @@ module TTY
 
         if @done && @echo
           @prompt.decorate(selected_names, @active_color)
-        elsif @selected.size.nonzero? && @echo
+        elsif @choices.selected.size.nonzero? && @echo
           help_suffix = filterable? && @filter.any? ? " #{filter_help}" : ""
           minmax_suffix + selected_names +
             (@first_render ? " #{instructions}" : help_suffix)
@@ -167,7 +173,7 @@ module TTY
       #
       # @api private
       def answer
-        @selected.map(&:value)
+        @choices.selected.map(&:value)
       end
 
       # Render menu with choices to select from
@@ -183,7 +189,7 @@ module TTY
           num = enumerate? ? (index + 1).to_s + @enum + " " : ""
           indicator = (index + 1 == @active) ?  @symbols[:marker] : " "
           indicator += " "
-          message = if @selected.include?(choice) && !choice.disabled?
+          message = if choice.selected? && !choice.disabled?
                       selected = @prompt.decorate(@symbols[:radio_on], @active_color)
                       "#{selected} #{num}#{choice.name}"
                     elsif choice.disabled?

@@ -48,6 +48,20 @@ module TTY
         end
       end
 
+      # Scope of choices which are not disabled
+      #
+      # @api public
+      def enabled
+        reject(&:disabled?)
+      end
+
+      # Scope of choices which are selected
+      #
+      # @api public
+      def selected
+        select(&:selected?)
+      end
+
       # Iterate over all choices in the collection
       #
       # @yield [Choice]
