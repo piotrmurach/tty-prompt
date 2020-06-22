@@ -68,7 +68,7 @@ module TTY
       # @api private
       def keyctrl_a(*)
         return if @max && @max < choices.size
-        @selected = choices.select { |choice| !choice.disabled? }
+        @selected = choices.enabled
       end
 
       # Revert currently selected choices when Ctrl+I is pressed
@@ -76,7 +76,7 @@ module TTY
       # @api private
       def keyctrl_r(*)
         return if @max && @max < choices.size
-        @selected = choices.select { |choice| !choice.disabled? } - @selected
+        @selected = choices.enabled - @selected
       end
 
       private
