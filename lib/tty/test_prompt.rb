@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "stringio"
+
 require_relative 'prompt'
 
 module TTY
