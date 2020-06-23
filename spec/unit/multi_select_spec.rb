@@ -437,7 +437,7 @@ RSpec.describe TTY::Prompt do
 
       answer = prompt.multi_select("What number?", choices, default: 2, per_page: 4)
 
-      expect(answer).to eq(["2", "1"])
+      expect(answer).to eq(["1", "2"])
 
       expected_output =
         output_helper("What number?", choices[0..3], "2", ["2"], init: true,
@@ -447,8 +447,8 @@ RSpec.describe TTY::Prompt do
         output_helper("What number?", choices[4..7], "6", ["2"]) +
         output_helper("What number?", choices[3..6], "5", ["2"]) +
         output_helper("What number?", choices[0..3], "1", ["2"]) +
-        output_helper("What number?", choices[0..3], "1", ["2", "1"]) +
-        exit_message("What number?", %w[2 1])
+        output_helper("What number?", choices[0..3], "1", ["1", "2"]) +
+        exit_message("What number?", %w[1 2])
 
       expect(prompt.output.string).to eq(expected_output)
     end
@@ -457,18 +457,19 @@ RSpec.describe TTY::Prompt do
       prompt = TTY::TestPrompt.new
       choices = ("1".."12").to_a
       prompt.on(:keypress) { |e| prompt.trigger(:keyctrl_a) if e.value == "a" }
-      prompt.input << "a" << "\r"
+      prompt.input << "a" << " " << "\r"
       prompt.input.rewind
 
       answer = prompt.multi_select("What number?", choices, per_page: 4)
 
-      expect(answer).to eq(choices)
+      expect(answer).to eq(choices - %w[1])
 
       expected_output =
         output_helper("What number?", choices[0..3], "1", [], init: true,
           hint: "Press #{up_down}/#{left_right} arrow to move, Space/Ctrl+A|R to select (all|rev) and Enter to finish") +
         output_helper("What number?", choices[0..3], "1", choices) +
-        exit_message("What number?", choices)
+        output_helper("What number?", choices[0..3], "1", choices - %w[1]) +
+        exit_message("What number?", choices - %w[1])
 
       expect(prompt.output.string).to eq(expected_output)
     end

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative "../../lib/tty/prompt/selected_choices"
-
 RSpec.describe TTY::Prompt::SelectedChoices do
   it "inserts choices by the index order" do
     choices = %w[A B C D E F]

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative "list"
+require_relative "selected_choices"
 
 module TTY
   class Prompt
@@ -17,7 +18,7 @@ module TTY
       # @api public
       def initialize(prompt, **options)
         super
-        @selected = []
+        @selected = SelectedChoices.new
         @help = options[:help]
         @echo = options.fetch(:echo, true)
         @min  = options[:min]
@@ -56,10 +57,10 @@ module TTY
       def keyspace(*)
         active_choice = choices[@active - 1]
         if @selected.include?(active_choice)
-          @selected.delete(active_choice)
+          @selected.delete_at(@active - 1)
         else
           return if @max && @selected.size >= @max
-          @selected << active_choice
+          @selected.insert(@active - 1, active_choice)
         end
       end
 
@@ -68,7 +69,7 @@ module TTY
       # @api private
       def keyctrl_a(*)
         return if @max && @max < choices.size
-        @selected = choices.enabled
+        @selected = SelectedChoices.new(choices.enabled, choices.enabled_indexes)
       end
 
       # Revert currently selected choices when Ctrl+I is pressed
@@ -76,7 +77,11 @@ module TTY
       # @api private
       def keyctrl_r(*)
         return if @max && @max < choices.size
-        @selected = choices.enabled - @selected
+        indexes = choices.each_with_index.reduce([]) do |acc, (choice, idx)|
+                    acc << idx if !choice.disabled? && !@selected.include?(choice)
+                    acc
+                  end
+        @selected = SelectedChoices.new(choices.enabled - @selected.to_a, indexes)
       end
 
       private
@@ -87,7 +92,9 @@ module TTY
       def setup_defaults
         validate_defaults
         # At this stage, @choices matches all the visible choices.
-        @selected = @choices.values_at(*@default.map { |d| d - 1 })
+        default_indexes = @default.map { |d| d - 1 }
+        @selected = SelectedChoices.new(@choices.values_at(*default_indexes),
+                                        default_indexes)
 
         if !@default.empty?
           @active = @default.last
@@ -114,7 +121,7 @@ module TTY
         help = []
         help << "min. #{@min}" if @min
         help << "max. #{@max}" if @max
-        "(%s) " % [ help.join(" ") ]
+        "(%s) " % [help.join(" ")]
       end
 
       # Build a default help text
