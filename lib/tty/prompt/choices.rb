@@ -55,6 +55,13 @@ module TTY
         reject(&:disabled?)
       end
 
+      def enabled_indexes
+        each_with_index.reduce([]) do |acc, (choice, idx)|
+          acc << idx unless choice.disabled?
+          acc
+        end
+      end
+
       # Iterate over all choices in the collection
       #
       # @yield [Choice]
