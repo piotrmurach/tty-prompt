@@ -4,7 +4,14 @@ RSpec.describe TTY::Prompt::Converters do
   context ":boolean" do
     {
       "t" => true,
+      "true" => true,
+      "y" => true,
+      "YES" => true,
+      "1" => true,
       "f" => false,
+      "FALSE" => false,
+      "no" => false,
+      "0" => false,
       "unknown"=> TTY::Prompt::Const::Undefined
     }.each do |input, value|
       it "converts #{input.inspect} to #{value.inspect}" do
