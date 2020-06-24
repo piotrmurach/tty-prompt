@@ -99,7 +99,15 @@ RSpec.describe TTY::Prompt::Converters do
 
   context ":range" do
     {
+      "1" => 1..1,
       "1-10" => 1..10,
+      "-5--1" => -5..-1,
+      "1 , 10" => 1..10,
+      "1..10" => 1..10,
+      "1...10" => 1...10,
+      "1 ... 10" => 1...10,
+      "a..z" => "a".."z",
+      "a ... z" => "a"..."z",
       "unknown"=> TTY::Prompt::Const::Undefined
     }.each do |input, value|
       it "converts #{input.inspect} to #{value.inspect}" do
