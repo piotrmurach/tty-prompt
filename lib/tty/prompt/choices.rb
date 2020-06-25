@@ -13,15 +13,8 @@ module TTY
       include Enumerable
       extend Forwardable
 
-      # The actual collection choices
-      #
-      # @return [Array[Choice]]
-      #
-      # @api public
-      attr_reader :choices
-
       def_delegators :choices, :length, :size, :to_ary, :empty?,
-                               :values_at, :index
+                     :values_at, :index, :==
 
       # Convenience for creating choices
       #
@@ -113,6 +106,16 @@ module TTY
       def find_by(attr, value)
         find { |choice| choice.public_send(attr) == value }
       end
+
+      protected
+
+      # The actual collection choices
+      #
+      # @return [Array[Choice]]
+      #
+      # @api private
+
+      attr_reader :choices
     end # Choices
   end # Prompt
 end # TTY
