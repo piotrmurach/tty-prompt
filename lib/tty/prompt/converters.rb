@@ -11,9 +11,15 @@ module TTY
       TRUE_VALUES = /^(t(rue)?|y(es)?|on|1)$/i.freeze
       FALSE_VALUES = /^(f(alse)?|n(o)?|off|0)$/i.freeze
 
-      SINGLE_DIGIT_MATCHER = /^(\-?\d+)$/.freeze
-      DIGIT_MATCHER = /^(-?\d+)\s*(\.{2,3}|-|,)\s*(-?\d+)$/.freeze
-      LETTER_MATCHER = /^(\w)\s*(\.{2,3}|-|,)\s*(\w)$/.freeze
+      SINGLE_DIGIT_MATCHER = /^(?<digit>\-?\d+)$/.freeze
+      DIGIT_MATCHER = /^(?<open>-?\d+(\.\d+)?)
+                       \s*(?<sep>(\.\s*){2,3}|-|,)\s*
+                       (?<close>-?\d+(\.\d+)?)$
+                      /x.freeze
+      LETTER_MATCHER = /^(?<open>\w)
+                        \s*(?<sep>(\.\s*){2,3}|-|,)\s*
+                        (?<close>\w)$
+                       /x.freeze
 
       converter(:boolean, :bool) do |input|
         case input.to_s
@@ -78,15 +84,29 @@ module TTY
         end
       end
 
+      # Convert string number to integer or float
+      #
+      # @return [Integer,Float,Const::Undefined]
+      #
+      # @api private
+      def cast_to_num(num)
+        ([convert(:int, num), convert(:float, num)] - [Const::Undefined]).first ||
+          Const::Undefined
+      end
+      module_function :cast_to_num
+
       converter(:range) do |input|
-        case input
-        when Range then input
-        when SINGLE_DIGIT_MATCHER
-          ::Range.new($1.to_i, $1.to_i)
-        when DIGIT_MATCHER
-          ::Range.new($1.to_i, $3.to_i, $2.gsub(/\s*/, "") == "...")
-        when LETTER_MATCHER
-          ::Range.new($1.to_s, $3.to_s, $2.gsub(/\s*/, "") == "...")
+        if input.is_a?(::Range)
+          input
+        elsif match = input.to_s.match(SINGLE_DIGIT_MATCHER)
+          ::Range.new(match[:digit].to_i, match[:digit].to_i)
+        elsif match = input.to_s.match(DIGIT_MATCHER)
+          open = cast_to_num(match[:open])
+          close = cast_to_num(match[:close])
+          ::Range.new(open, close, match[:sep].gsub(/\s*/, "") == "...")
+        elsif match = input.to_s.match(LETTER_MATCHER)
+          ::Range.new(match[:open], match[:close],
+                      match[:sep].gsub(/\s*/, "") == "...")
         else Const::Undefined
         end
       end
