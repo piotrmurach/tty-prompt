@@ -25,7 +25,6 @@ Gem::Specification.new do |spec|
 
   spec.required_ruby_version = ">= 2.0.0"
 
-  spec.add_dependency "necromancer",  "~> 0.6"
   # spec.add_dependency "pastel",       "~> 0.7.0"
   # spec.add_dependency "tty-reader",   "~> 0.7.0"
 

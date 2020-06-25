@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "necromancer"
-
 require_relative "const"
 require_relative "converter_dsl"
 
