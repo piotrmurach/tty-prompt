@@ -1,6 +1,6 @@
 # Change log
 
-## [v0.22.0] - 2020-06-xx
+## [v0.22.0] - 2020-07-xx
 
 ### Added
 * Add ability to customize #slider format with a proc by Sven Pchnit(@2called-chaos)
@@ -14,10 +14,13 @@
 * Changed question :validation option to :validate by Sven Pachnit(@2called-chaos)
 * Change ConverterRegistry to store only proc values and simplify interface
 * Change Converters to stop raising errors and print console error messages instead
+* Change :range conversion to handle float numbers
 * Change yes?/no? prompt to infer default value from words and raise when
   no boolean can be deduced
 * Change Prompt#new to use keyword arguments
 * Change #select/#multi_select prompts default help text
+* Change #multi_select to preserve original ordering in returned answers
+* Change to remove necromancer dependency
 
 ### Fixed
 * Fix multiline prompt to return default value when no input provided
