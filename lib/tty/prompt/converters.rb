@@ -11,7 +11,7 @@ module TTY
       TRUE_VALUES = /^(t(rue)?|y(es)?|on|1)$/i.freeze
       FALSE_VALUES = /^(f(alse)?|n(o)?|off|0)$/i.freeze
 
-      SINGLE_DIGIT_MATCHER = /^(?<digit>\-?\d+)$/.freeze
+      SINGLE_DIGIT_MATCHER = /^(?<digit>\-?\d+(\.\d+)?)$/.freeze
       DIGIT_MATCHER = /^(?<open>-?\d+(\.\d+)?)
                        \s*(?<sep>(\.\s*){2,3}|-|,)\s*
                        (?<close>-?\d+(\.\d+)?)$
@@ -99,7 +99,8 @@ module TTY
         if input.is_a?(::Range)
           input
         elsif match = input.to_s.match(SINGLE_DIGIT_MATCHER)
-          ::Range.new(match[:digit].to_i, match[:digit].to_i)
+          digit = cast_to_num(match[:digit])
+          ::Range.new(digit, digit)
         elsif match = input.to_s.match(DIGIT_MATCHER)
           open = cast_to_num(match[:open])
           close = cast_to_num(match[:close])
