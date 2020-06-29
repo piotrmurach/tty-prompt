@@ -1060,7 +1060,7 @@ In order to ask for standard selection from indexed list you can use `enum_selec
 
 ```ruby
 choices = %w(emacs nano vim)
-prompt.enum_select("Select an editor?")
+prompt.enum_select("Select an editor?", choices)
 # =>
 #
 # Select an editor?
@@ -1546,7 +1546,7 @@ Please [see pastel](https://github.com/piotrmurach/pastel#3-supported-colors) fo
 If you wish to disable coloring for a prompt simply pass `:enable_color` option
 
 ```ruby
-prompt = TTY::Prompt.new(enable_color: true)
+prompt = TTY::Prompt.new(enable_color: false)
 ```
 
 ### 3.4 `:help_color`
