@@ -71,6 +71,11 @@ module TTY
     # @api private
     attr_reader :active_color, :help_color, :error_color, :enabled_color
 
+    # Quiet mode
+    #
+    # @api private
+    attr_reader :quiet
+
     # The collection of display symbols
     #
     # @example
@@ -111,6 +116,8 @@ module TTY
     #   the environment variables
     # @param [Hash] :symbols
     #   the symbols displayed in prompts such as :marker, :cross
+    # @param options [Boolean] :quiet
+    #   enable quiet mode, don't re-echo the question
     # @param [String] :prefix
     #   the prompt prefix, by default empty
     # @param [Symbol] :interrupt
@@ -129,7 +136,7 @@ module TTY
     # @api public
     def initialize(input: $stdin, output: $stdout, env: ENV, symbols: {},
                    prefix: "", interrupt: :error, track_history: true,
-                   enable_color: nil, active_color: :green,
+                   quiet: false, enable_color: nil, active_color: :green,
                    help_color: :bright_black, error_color: :red)
       @input  = input
       @output = output
@@ -142,6 +149,7 @@ module TTY
       @interrupt     = interrupt
       @track_history = track_history
       @symbols       = Symbols.symbols.merge(symbols)
+      @quiet         = quiet
 
       @cursor = TTY::Cursor
       @pastel = enabled_color.nil? ? Pastel.new : Pastel.new(enabled: enabled_color)

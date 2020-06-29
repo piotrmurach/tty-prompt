@@ -284,6 +284,40 @@ RSpec.describe TTY::Prompt, "#select" do
     ].join)
   end
 
+  it "configures quiet mode" do
+    choices = { large: 1, medium: 2, small: 3 }
+    prompt.input << " "
+    prompt.input.rewind
+
+    expect(prompt.select("What size?", choices, default: 1, quiet: true)).to eq(1)
+
+    expected_output =
+      output_helper("What size?", choices.keys, :large, init: true,
+        hint: "Press #{up_down} arrow to move and Enter to select") +
+      "\e[?25h"
+
+    expect(prompt.output.string).to eq(expected_output)
+  end
+
+  it "sets quiet mode through DSL" do
+    prompt.input << " "
+    prompt.input.rewind
+
+    expect(prompt.select('What size?') do |q|
+           q.choice "Large"
+           q.choice "Medium"
+           q.choice "Small"
+           q.quiet true
+    end).to eq("Large")
+
+    expected_output =
+      output_helper("What size?", %w[Large Medium Small], "Large", init: true,
+        hint: "Press #{up_down} arrow to move and Enter to select") +
+      "\e[?25h"
+
+    expect(prompt.output.string).to eq(expected_output)
+  end
+
   it "sets prompt prefix" do
     prompt = TTY::TestPrompt.new(prefix: "[?] ")
     choices = %w(Large Medium Small)

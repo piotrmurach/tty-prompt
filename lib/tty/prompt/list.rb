@@ -43,6 +43,7 @@ module TTY
         @cycle        = options.fetch(:cycle) { false }
         @filterable   = options.fetch(:filter) { false }
         @symbols      = @prompt.symbols.merge(options.fetch(:symbols, {}))
+        @quiet        = options.fetch(:quiet) { @prompt.quiet }
         @filter       = []
         @filter_cache = {}
         @help         = options[:help]
@@ -171,6 +172,13 @@ module TTY
       # @api public
       def enum(value)
         @enum = value
+      end
+
+      # Set whether selected answers are echoed
+      #
+      # @api public
+      def quiet(value)
+        @quiet = value
       end
 
       # Add a single choice
@@ -410,7 +418,7 @@ module TTY
 
           @prompt.print(refresh(question_lines_count(question_lines)))
         end
-        @prompt.print(render_question)
+        @prompt.print(render_question) unless @quiet
         answer
       ensure
         @prompt.print(@prompt.show)
