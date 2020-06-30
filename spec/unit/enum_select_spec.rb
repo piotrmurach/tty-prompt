@@ -206,6 +206,44 @@ RSpec.describe TTY::Prompt do
     expect(prompt.output.string).to eq(expected_output)
   end
 
+ it "sets quiet mode" do
+    choices = %w(/bin/nano /usr/bin/vim.basic /usr/bin/vim.tiny)
+    prompt = TTY::TestPrompt.new(quiet: true)
+    prompt.input << "\n"
+    prompt.input.rewind
+
+    answer = prompt.enum_select("Select an editor?", choices)
+    expect(answer).to eq('/bin/nano')
+
+    expected_output =
+      output_helper("Select an editor?", choices, "/bin/nano")
+
+    expect(prompt.output.string).to eq(expected_output)
+  end
+
+  it "sets quiet mode through DSL" do
+    choices = %w(/bin/nano /usr/bin/vim.basic /usr/bin/vim.tiny)
+    prompt = TTY::TestPrompt.new
+    prompt.input << "1\n"
+    prompt.input.rewind
+    answer = prompt.enum_select("Select an editor?") do |menu|
+      menu.quiet true
+      menu.default 2
+      menu.enum '.'
+
+      menu.choice "/bin/nano"
+      menu.choice "/usr/bin/vim.basic"
+      menu.choice "/usr/bin/vim.tiny"
+    end
+    expect(answer).to eq('/bin/nano')
+
+    expected_output =
+      output_helper("Select an editor?", choices, "/usr/bin/vim.basic", default: 2, enum: '.') +
+      output_helper("Select an editor?", choices, "/bin/nano", default: 2, enum: '.', input: 1)
+
+    expect(prompt.output.string).to eq(expected_output)
+  end
+
   it "displays error with unrecognized input" do
     choices = %w(/bin/nano /usr/bin/vim.basic /usr/bin/vim.tiny)
     prompt = TTY::TestPrompt.new
