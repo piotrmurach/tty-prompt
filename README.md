@@ -110,7 +110,8 @@ Or install it yourself as:
   * [3.4 :help_color](#34-help_color)
   * [3.5 :interrupt](#35-interrupt)
   * [3.6 :prefix](#36-prefix)
-  * [3.7 :track_history](#37-track_history)
+  * [3.7 :quiet](#37-quiet)
+  * [3.8 :track_history](#38-track_history)
 
 ## 1. Usage
 
@@ -1607,7 +1608,18 @@ You can prefix each question asked using the `:prefix` option. This option can b
 prompt = TTY::Prompt.new(prefix: '[?] ')
 ```
 
-### 3.7 `:track_history`
+### 3.7 `:quiet`
+
+Prompts such as `select`, `multi_select`, `expand`, `slider` support `:quiet` which is used to disable re-echoing of the question and answer after selection is done. This option can be applied either globally for all prompts or individually.
+
+```ruby
+# global
+prompt = TTY::Prompt.new(quiet: true)
+# single prompt
+prompt.select("What is your favorite color?", %w(blue yellow orange))
+````
+
+### 3.8 `:track_history`
 
 The prompts that accept line input such as `multiline` or `ask` provide history buffer that tracks all the lines entered during `TTY::Prompt.new` interactions. The history buffer provides previous or next lines when user presses up/down arrows respectively. However, if you wish to disable this behaviour use `:track_history` option like so:
 
