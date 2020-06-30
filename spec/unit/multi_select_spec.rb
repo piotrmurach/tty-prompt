@@ -278,6 +278,21 @@ RSpec.describe TTY::Prompt do
     expect(prompt.output.string).to eq(expected_output)
   end
 
+  it "sets prompt to quiet mode" do
+    prompt = TTY::TestPrompt.new(quiet: true)
+    choices = %w(vodka beer wine whisky bourbon)
+    prompt.input << "\r"
+    prompt.input.rewind
+
+    expect(prompt.multi_select("Select drinks?", choices)). to eq([])
+
+    expected_output =
+      output_helper("Select drinks?", choices, "vodka", [], init: true,
+        hint: "Press #{up_down} arrow to move, Space/Ctrl+A|R to select (all|rev) and Enter to finish") +
+      "\e[?25h"
+    expect(prompt.output.string).to eq(expected_output)
+  end
+
   context "when paginated" do
     it "paginates long selections" do
       prompt = TTY::TestPrompt.new
