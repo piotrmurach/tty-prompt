@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe TTY::Prompt::Choice, '#==' do
+RSpec.describe TTY::Prompt::Choice, "#==" do
   it "is true with the same name and value attributes" do
     expect(described_class.new(:large, 1)).
       to eq(described_class.new(:large, 1))

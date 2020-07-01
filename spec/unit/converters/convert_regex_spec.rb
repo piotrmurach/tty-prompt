@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe TTY::Prompt::Question, 'convert regexp' do
+RSpec.describe TTY::Prompt::Question, "convert regexp" do
   it "converts regex" do
     prompt = TTY::TestPrompt.new
     prompt.input << "[a-z]*"

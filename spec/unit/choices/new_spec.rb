@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe TTY::Prompt::Choices, '.new' do
+RSpec.describe TTY::Prompt::Choices, ".new" do
   it "creates choices collection" do
     choice_1 = TTY::Prompt::Choice.from(:label1)
     choice_2 = TTY::Prompt::Choice.from(:label2)

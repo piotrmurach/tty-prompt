@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe TTY::Prompt::Choices, '#<<' do
+RSpec.describe TTY::Prompt::Choices, "#<<" do
   it "adds choice to collection" do
     choices = described_class.new
     expect(choices).to be_empty
