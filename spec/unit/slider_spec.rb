@@ -161,4 +161,42 @@ RSpec.describe TTY::Prompt, "#slider" do
       "What size? \e[32m44\e[0m\n\e[?25h"
     ].join)
   end
+
+  it "sets quiet mode" do
+    prompt.input << "\r"
+    prompt.input.rewind
+    expect(prompt.slider("What size?", min: 32, max: 54, step: 2, quiet: true)).to eq(44)
+    expect(prompt.output.string).to eq([
+      "\e[?25lWhat size? ",
+      symbols[:line] * 6,
+      "\e[32m#{symbols[:bullet]}\e[0m",
+      "#{symbols[:line] * 5} 44",
+      "\n\e[90m(Use #{left_right} arrow keys, press Enter to select)\e[0m",
+      "\e[2K\e[1G\e[1A\e[2K\e[1G",
+      "\e[?25h"
+    ].join)
+  end
+
+  it "specifies quiet mode through DSL" do
+    prompt.input << "\r"
+    prompt.input.rewind
+    value = prompt.slider("What size?") do |slider|
+              slider.quiet true
+              slider.default 6
+              slider.min 0
+              slider.max 20
+              slider.step 2
+              slider.format "|:slider| %d%%"
+            end
+    expect(value).to eq(6)
+    expect(prompt.output.string).to eq([
+      "\e[?25lWhat size? ",
+      symbols[:pipe] + symbols[:line] * 3,
+      "\e[32m#{symbols[:bullet]}\e[0m",
+      "#{symbols[:line] * 7 + symbols[:pipe]} 6%",
+      "\n\e[90m(Use #{left_right} arrow keys, press Enter to select)\e[0m",
+      "\e[2K\e[1G\e[1A\e[2K\e[1G",
+      "\e[?25h"
+    ].join)
+  end
 end
