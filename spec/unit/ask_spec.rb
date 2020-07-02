@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-RSpec.describe TTY::Prompt, '#ask' do
+RSpec.describe TTY::Prompt, "#ask" do
 
   subject(:prompt) { TTY::TestPrompt.new }
 
-  it 'asks question' do
-    prompt.ask('What is your name?')
+  it "asks question" do
+    prompt.ask("What is your name?")
     expect(prompt.output.string).to eq([
       "What is your name? ",
       "\e[1A\e[2K\e[1G",
@@ -13,7 +13,7 @@ RSpec.describe TTY::Prompt, '#ask' do
     ].join)
   end
 
-  it 'asks an empty question ' do
+  it "asks an empty question " do
     prompt = TTY::TestPrompt.new
     prompt.input << "\r"
     prompt.input.rewind
@@ -29,7 +29,7 @@ RSpec.describe TTY::Prompt, '#ask' do
     prompt.input << nil
     prompt.input.rewind
 
-    answer = prompt.ask('')
+    answer = prompt.ask("")
 
     expect(answer).to eql(nil)
     expect(prompt.output.string).to eq("\e[1A\e[2K\e[1G\n")
@@ -71,7 +71,7 @@ RSpec.describe TTY::Prompt, '#ask' do
     prompt = TTY::TestPrompt.new(prefix: "[?] ")
     prompt.input << "\r"
     prompt.input.rewind
-    answer = prompt.ask 'Are you Polish?'
+    answer = prompt.ask "Are you Polish?"
     expect(answer).to eq(nil)
     expect(prompt.output.string).to eq([
       "[?] Are you Polish? ",
@@ -81,13 +81,13 @@ RSpec.describe TTY::Prompt, '#ask' do
     ].join)
   end
 
-  it 'asks a question with block' do
-    prompt.input << ''
+  it "asks a question with block" do
+    prompt.input << ""
     prompt.input.rewind
     answer = prompt.ask "What is your name?" do |q|
-      q.default 'Piotr'
+      q.default "Piotr"
     end
-    expect(answer).to eq('Piotr')
+    expect(answer).to eq("Piotr")
     expect(prompt.output.string).to eq([
       "What is your name? \e[90m(Piotr)\e[0m ",
       "\e[1A\e[2K\e[1G",
@@ -96,11 +96,11 @@ RSpec.describe TTY::Prompt, '#ask' do
   end
 
   it "changes question color" do
-    prompt.input << ''
+    prompt.input << ""
     prompt.input.rewind
-    options = {default: 'Piotr', help_color: :red, active_color: :cyan}
+    options = {default: "Piotr", help_color: :red, active_color: :cyan}
     answer = prompt.ask("What is your name?", **options)
-    expect(answer).to eq('Piotr')
+    expect(answer).to eq("Piotr")
     expect(prompt.output.string).to eq([
       "What is your name? \e[31m(Piotr)\e[0m ",
       "\e[1A\e[2K\e[1G",
@@ -112,8 +112,8 @@ RSpec.describe TTY::Prompt, '#ask' do
     prompt.input << "\r"
     prompt.input.rewind
 
-    answer = prompt.ask("What is your name?", default: '')
-    expect(answer).to eq('')
+    answer = prompt.ask("What is your name?", default: "")
+    expect(answer).to eq("")
     expect(prompt.output.string).to eq([
       "What is your name? ",
       "\e[2K\e[1GWhat is your name? \n",
@@ -136,6 +136,24 @@ RSpec.describe TTY::Prompt, '#ask' do
     ].join)
   end
 
+  it "sets quiet mode" do
+    prompt.ask("What is your name?", quiet: true)
+    expect(prompt.output.string).to eq([
+      "What is your name? ",
+      "\e[1A\e[2K\e[1G"
+    ].join)
+  end
+
+  it "sets quiet mode through DSL" do
+    prompt.ask("What is your name?") do |q|
+      q.quiet true
+    end
+    expect(prompt.output.string).to eq([
+      "What is your name? ",
+      "\e[1A\e[2K\e[1G"
+    ].join)
+  end
+
   it "overwrites global settings" do
     active = ->(str) { Pastel.new.cyan(str) }
     help = Pastel.new.red.detach
@@ -144,12 +162,12 @@ RSpec.describe TTY::Prompt, '#ask' do
 
     prompt.input << "Piotr\r"
     prompt.input.rewind
-    prompt.ask('What is your name?')
+    prompt.ask("What is your name?")
 
     prompt.input << "Piotr\r"
     prompt.input.rewind
-    local_settings = {prefix: ':-) ', active_color: :blue, help_color: :magenta}
-    prompt.ask('What is your name?', **local_settings)
+    local_settings = {prefix: ":-) ", active_color: :blue, help_color: :magenta}
+    prompt.ask("What is your name?", **local_settings)
 
     expect(prompt.output.string).to eq([
       "[?] What is your name? ",

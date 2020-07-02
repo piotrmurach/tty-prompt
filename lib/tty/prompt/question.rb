@@ -54,6 +54,7 @@ module TTY
         @help_color   = options.fetch(:help_color) { @prompt.help_color }
         @error_color  = options.fetch(:error_color) { :red }
         @value        = options.fetch(:value) { UndefinedSetting }
+        @quiet        = options.fetch(:quiet) { @prompt.quiet }
         @messages     = Utils.deep_copy(options.fetch(:messages) { { } })
         @done         = false
         @first_render = true
@@ -129,7 +130,7 @@ module TTY
           total_lines = @prompt.count_screen_lines(input_line)
           @prompt.print(refresh(question.lines.count, total_lines))
         end
-        @prompt.print(render_question)
+        @prompt.print(render_question) unless @quiet
         result.value
       end
 
@@ -360,6 +361,13 @@ module TTY
       # @api public
       def in?
         @in != UndefinedSetting
+      end
+
+      # Set quiet mode.
+      #
+      # @api public
+      def quiet(value)
+        @quiet = value
       end
 
       # @api public
