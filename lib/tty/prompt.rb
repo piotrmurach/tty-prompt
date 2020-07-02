@@ -581,21 +581,24 @@ module TTY
       $stderr
     end
 
-    # Inspect class name and public attributes
+    # Inspect this instance public attributes
+    #
     # @return [String]
     #
     # @api public
     def inspect
-      attributes = {
-        input: input,
-        output: output,
-        prefix: prefix,
-        active_color: active_color,
-        error_color: error_color,
-        enabled_color: enabled_color,
-        help_color: help_color
-      }
-      "#<#{self.class}: #{attributes.each { |name, val| "@#{name}=#{val}" }}"
+      attributes = [
+        :prefix,
+        :quiet,
+        :enabled_color,
+        :active_color,
+        :error_color,
+        :help_color,
+        :input,
+        :output,
+      ]
+      name = self.class.name
+      "#<#{name}#{attributes.map { |attr| " #{attr}=#{send(attr).inspect}" }.join}>"
     end
   end # Prompt
 end # TTY
