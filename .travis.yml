@@ -15,11 +15,13 @@ rvm:
   - ruby-head
   - jruby-9.2.11.0
   - jruby-head
+  - truffleruby
 matrix:
   allow_failures:
     - rvm: ruby-head
     - rvm: jruby-head
     - rvm: jruby-9.2.11.0
+    - rvm: truffleruby
   fast_finish: true
 branches:
   only: master
