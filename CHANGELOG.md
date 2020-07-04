@@ -9,6 +9,7 @@
 * Add ability to allow :active_color and :help_color to be callable objects
 * Add ability to select all choices in #multi_select prompt
 * Add ability to configure :help text in #slider prompt
+* Add ability :quiet option to remove final prompt output by Katelyn Schiesser (@slowbro)
 
 ### Changed
 * Changed question :validation option to :validate by Sven Pachnit(@2called-chaos)
@@ -25,6 +26,7 @@
 ### Fixed
 * Fix multiline prompt to return default value when no input provided
 * Fix color option overriding in say, ok, error and warn prompts
+* Fix Prompt#inspect format to display all public attributes
 
 ## [v0.21.0] - 2020-03-08
 
