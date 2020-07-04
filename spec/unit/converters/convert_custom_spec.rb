@@ -2,7 +2,7 @@
 
 RSpec.describe TTY::Prompt::Question, "convert custom" do
 
-  subject(:prompt) { TTY::TestPrompt.new }
+  subject(:prompt) { TTY::Prompt::Test.new }
 
   it "converts response with custom conversion" do
     prompt.input << "one,two,three\n"

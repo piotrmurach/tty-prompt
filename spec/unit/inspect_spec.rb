@@ -2,10 +2,10 @@
 
 RSpec.describe TTY::Prompt, "#inspect" do
   it "inspects instance attributes" do
-    prompt = TTY::TestPrompt.new
+    prompt = TTY::Prompt::Test.new
 
     expect(prompt.inspect).to eq([
-      "#<TTY::TestPrompt",
+      "#<TTY::Prompt::Test",
       "prefix=\"\"",
       "quiet=false",
       "enabled_color=true",

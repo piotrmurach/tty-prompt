@@ -5,6 +5,8 @@ RSpec.describe TTY::Prompt do
   let(:up_down) { "#{symbols[:arrow_up]}/#{symbols[:arrow_down]}" }
   let(:left_right) { "#{symbols[:arrow_left]}/#{symbols[:arrow_right]}"}
 
+  subject(:prompt) { TTY::Prompt::Test.new }
+
   def output_helper(prompt, choices, active, selected, options = {})
     raise ":init requires :hint" if options[:init] && options[:hint].nil?
     hint = options[:hint]
@@ -53,7 +55,6 @@ RSpec.describe TTY::Prompt do
   before { allow(TTY::Screen).to receive(:width).and_return(200) }
 
   it "selects nothing when return pressed immediately" do
-    prompt = TTY::TestPrompt.new
     choices = %i(vodka beer wine whisky bourbon)
     prompt.input << "\r"
     prompt.input.rewind
@@ -69,7 +70,6 @@ RSpec.describe TTY::Prompt do
   end
 
   it "selects item when space pressed" do
-    prompt = TTY::TestPrompt.new
     choices = %w(vodka beer wine whisky bourbon)
     prompt.input << " \r"
     prompt.input.rewind
@@ -85,7 +85,6 @@ RSpec.describe TTY::Prompt do
   end
 
   it "selects item when space pressed but doesn't echo item if echo: false" do
-    prompt = TTY::TestPrompt.new
     choices = %w(vodka beer wine whisky bourbon)
     prompt.input << " \r"
     prompt.input.rewind
@@ -113,7 +112,6 @@ RSpec.describe TTY::Prompt do
   end
 
   it "sets choice custom values" do
-    prompt = TTY::TestPrompt.new
     choices = {vodka: 1, beer: 2, wine: 3, whisky: 4, bourbon: 5}
     prompt.input << " \r"
     prompt.input.rewind
@@ -130,7 +128,6 @@ RSpec.describe TTY::Prompt do
   end
 
   it "sets choice name and value through DSL" do
-    prompt = TTY::TestPrompt.new
     prompt.input << " \r"
     prompt.input.rewind
     value = prompt.multi_select("Select drinks?") do |menu|
@@ -163,7 +160,6 @@ RSpec.describe TTY::Prompt do
   end
 
   it "sets default options through DSL syntax" do
-    prompt = TTY::TestPrompt.new
     prompt.input << "\r"
     prompt.input.rewind
     value = prompt.multi_select("Select drinks?") do |menu|
@@ -189,7 +185,6 @@ RSpec.describe TTY::Prompt do
   end
 
   it "sets default options through hash syntax" do
-    prompt = TTY::TestPrompt.new
     prompt.input << "\r"
     prompt.input.rewind
     value = prompt.multi_select("Select drinks?", default: [2, 5]) do |menu|
@@ -203,7 +198,6 @@ RSpec.describe TTY::Prompt do
   end
 
   it "raises error for defaults out of range" do
-    prompt = TTY::TestPrompt.new
     prompt.input << "\r"
     prompt.input.rewind
     expect {
@@ -219,7 +213,7 @@ RSpec.describe TTY::Prompt do
   end
 
   it "sets prompt prefix" do
-    prompt = TTY::TestPrompt.new(prefix: "[?] ")
+    prompt = TTY::Prompt::Test.new(prefix: "[?] ")
     choices = %w(vodka beer wine whisky bourbon)
     prompt.input << "\r"
     prompt.input.rewind
@@ -237,7 +231,6 @@ RSpec.describe TTY::Prompt do
   end
 
   it "changes selected item color & marker" do
-    prompt = TTY::TestPrompt.new
     choices = %w(vodka beer wine whisky bourbon)
     prompt.input << "\r"
     prompt.input.rewind
@@ -256,7 +249,6 @@ RSpec.describe TTY::Prompt do
   end
 
   it "changes help text and color" do
-    prompt = TTY::TestPrompt.new
     choices = %w(vodka beer wine whisky bourbon)
     prompt.input << "\r"
     prompt.input.rewind
@@ -279,7 +271,7 @@ RSpec.describe TTY::Prompt do
   end
 
   it "sets prompt to quiet mode" do
-    prompt = TTY::TestPrompt.new(quiet: true)
+    prompt = TTY::Prompt::Test.new(quiet: true)
     choices = %w(vodka beer wine whisky bourbon)
     prompt.input << "\r"
     prompt.input.rewind
@@ -295,7 +287,6 @@ RSpec.describe TTY::Prompt do
 
   context "when paginated" do
     it "paginates long selections" do
-      prompt = TTY::TestPrompt.new
       choices = %w(A B C D E F G H)
       prompt.input << "\r"
       prompt.input.rewind
@@ -312,7 +303,6 @@ RSpec.describe TTY::Prompt do
     end
 
     it "paginates choices as hash object" do
-      prompt = TTY::TestPrompt.new
       choices = {A: 1, B: 2, C: 3, D: 4, E: 5, F: 6, G: 7, H: 8}
       prompt.input << "\r"
       prompt.input.rewind
@@ -329,7 +319,6 @@ RSpec.describe TTY::Prompt do
     end
 
     it "paginates long selections through DSL" do
-      prompt = TTY::TestPrompt.new
       choices = %w(A B C D E F G H)
       prompt.input << "\r"
       prompt.input.rewind
@@ -350,7 +339,6 @@ RSpec.describe TTY::Prompt do
     end
 
     it "doesn't paginate short selections" do
-      prompt = TTY::TestPrompt.new
       choices = %w(A B C D)
       prompt.input << "\r"
       prompt.input.rewind
@@ -367,7 +355,6 @@ RSpec.describe TTY::Prompt do
     end
 
     it "navigates evenly paged output with right arrow until end of selection" do
-      prompt = TTY::TestPrompt.new
       choices = ("1".."12").to_a
       prompt.on(:keypress) { |e| prompt.trigger(:keyright) if e.value == "l" }
       prompt.input << "l" << "l" << "l" << " " << "\r"
@@ -390,7 +377,6 @@ RSpec.describe TTY::Prompt do
     end
 
     it "navigates unevenly paged output with right arrow until the end of selection" do
-      prompt = TTY::TestPrompt.new
       choices = ("1".."10").to_a
       prompt.on(:keypress) { |e| prompt.trigger(:keyright) if e.value == "l" }
       prompt.input << "l" << "l" << "l" << " " << "\r"
@@ -413,7 +399,6 @@ RSpec.describe TTY::Prompt do
     end
 
     it "navigates left and right" do
-      prompt = TTY::TestPrompt.new
       choices = ("1".."10").to_a
       prompt.on(:keypress) { |e|
         prompt.trigger(:keyright) if e.value == "l"
@@ -439,7 +424,6 @@ RSpec.describe TTY::Prompt do
     end
 
     it "combines up/down navigation with left/right" do
-      prompt = TTY::TestPrompt.new
       choices = ("1".."11").to_a
       prompt.on(:keypress) { |e|
         prompt.trigger(:keyup)    if e.value == "k"
@@ -469,7 +453,6 @@ RSpec.describe TTY::Prompt do
     end
 
     it "selects all paged choices with ctrl+a" do
-      prompt = TTY::TestPrompt.new
       choices = ("1".."12").to_a
       prompt.on(:keypress) { |e| prompt.trigger(:keyctrl_a) if e.value == "a" }
       prompt.input << "a" << " " << "\r"
@@ -490,7 +473,6 @@ RSpec.describe TTY::Prompt do
     end
 
     it "reverts selection accross pages with Ctrl+r" do
-      prompt = TTY::TestPrompt.new
       choices = ("1".."12").to_a
       prompt.on(:keypress) { |e|
         prompt.trigger(:keyctrl_r) if e.value == "r"
@@ -520,7 +502,6 @@ RSpec.describe TTY::Prompt do
 
   context "with :cycle" do
     it "doesn't cycle by default" do
-      prompt = TTY::TestPrompt.new
       choices = %w(A B C)
       prompt.on(:keypress) { |e| prompt.trigger(:keydown) if e.value == "j" }
       prompt.input << "j" << "j" << "j" << " " << "\r"
@@ -542,7 +523,6 @@ RSpec.describe TTY::Prompt do
     end
 
     it "cycles when configured to do so" do
-      prompt = TTY::TestPrompt.new
       choices = %w(A B C)
       prompt.on(:keypress) { |e| prompt.trigger(:keydown) if e.value == "j" }
       prompt.input << "j" << "j" << "j" << " " << "\r"
@@ -564,7 +544,6 @@ RSpec.describe TTY::Prompt do
     end
 
     it "cycles choices using left/right arrows" do
-      prompt = TTY::TestPrompt.new
       choices = ("1".."10").to_a
       prompt.on(:keypress) { |e|
         prompt.trigger(:keyright) if e.value == "l"
@@ -594,7 +573,6 @@ RSpec.describe TTY::Prompt do
   context "with filter" do
     it "doesn't lose the selection when switching between filters" do
       choices = %w[Tiny Medium Large Huge]
-      prompt = TTY::TestPrompt.new
       prompt.on(:keypress) { |e| prompt.trigger(:keydelete) if e.value == "\r" }
       prompt.input << " "         # select `Tiny`
       prompt.input << "a" << " "  # match and select `Large`
@@ -620,7 +598,6 @@ RSpec.describe TTY::Prompt do
 
   context "with :disabled" do
     it "fails when default item is also disabled" do
-      prompt = TTY::TestPrompt.new
       choices = [
         {name: "vodka", disabled: true},
         "beer", "wine", "whisky", "bourbon"
@@ -636,7 +613,6 @@ RSpec.describe TTY::Prompt do
         {name: "vodka", disabled: true},
         "beer", "wine", "whisky", "bourbon"
       ]
-      prompt = TTY::TestPrompt.new
       prompt.input << " " << "\r"
       prompt.input.rewind
 
@@ -652,7 +628,6 @@ RSpec.describe TTY::Prompt do
         {name: "D"},
         {name: "E"}
       ]
-      prompt = TTY::TestPrompt.new
       prompt.on(:keypress) { |e| prompt.trigger(:keydown) if e.value == "j" }
       prompt.input << "j" << " " << "j" << " " << "\r"
       prompt.input.rewind
@@ -680,7 +655,6 @@ RSpec.describe TTY::Prompt do
         {name: "whisky", value: 1, disabled: true},
         {name: "bourbon", value: 1}
       ]
-      prompt = TTY::TestPrompt.new
       prompt.input << "2" << " \r"
       prompt.input.rewind
       answer = prompt.multi_select("Select drinks?") do |menu|
@@ -712,7 +686,6 @@ RSpec.describe TTY::Prompt do
         {name: "D"},
         {name: "E"}
       ]
-      prompt = TTY::TestPrompt.new
       prompt.on(:keypress) { |e|
         prompt.trigger(:keyctrl_a) if e.value == "a"
         prompt.trigger(:keyctrl_r) if e.value == "r"
@@ -737,7 +710,6 @@ RSpec.describe TTY::Prompt do
 
   context "with :min" do
     it "requires number of choices" do
-      prompt = TTY::TestPrompt.new
       choices = %w(A B C)
       prompt.on(:keypress) { |e|
         prompt.trigger(:keydown) if e.value == "j"
@@ -763,7 +735,6 @@ RSpec.describe TTY::Prompt do
 
   context "with :max" do
     it "limits number of choices" do
-      prompt = TTY::TestPrompt.new
       choices = %w(A B C)
       prompt.on(:keypress) { |e|
         prompt.trigger(:keyup)   if e.value == "k"
@@ -793,7 +764,6 @@ RSpec.describe TTY::Prompt do
     end
 
     it "disables Ctrl+a/Ctrl+r selection when :max option is specified" do
-      prompt = TTY::TestPrompt.new
       choices = %w(A B C D E F G)
       prompt.on(:keypress) { |e|
         prompt.trigger(:keyctrl_a) if e.value == "a"

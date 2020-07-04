@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe TTY::Prompt::Question::Modifier, '#whitespace' do
+RSpec.describe TTY::Prompt::Question::Modifier, "#whitespace" do
   context "string with whitespaces" do
     let(:string) { "  text\t \n  to\t   modify\r\n" }
 

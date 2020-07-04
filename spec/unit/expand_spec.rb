@@ -1,29 +1,29 @@
 # frozen_string_literal: true
 
-RSpec.describe TTY::Prompt, '#expand' do
+RSpec.describe TTY::Prompt, "#expand" do
 
-  subject(:prompt) { TTY::TestPrompt.new }
+  subject(:prompt) { TTY::Prompt::Test.new }
 
   let(:choices) {
     [{
-      key: 'y',
-      name: 'Overwrite',
+      key: "y",
+      name: "Overwrite",
       value: :yes
     }, {
-      key: 'n',
-      name: 'Skip',
+      key: "n",
+      name: "Skip",
       value: :no
     }, {
-      key: 'a',
-      name: 'Overwrite all',
+      key: "a",
+      name: "Overwrite all",
       value: :all
     }, {
-      key: 'd',
-      name: 'Show diff',
+      key: "d",
+      name: "Show diff",
       value: :diff
     }, {
-      key: 'q',
-      name: 'Quit',
+      key: "q",
+      name: "Quit",
       value: :quit
     }]
   }
@@ -32,7 +32,7 @@ RSpec.describe TTY::Prompt, '#expand' do
     prompt.input << "\n"
     prompt.input.rewind
 
-    result = prompt.expand('Overwrite Gemfile?', choices)
+    result = prompt.expand("Overwrite Gemfile?", choices)
     expect(result).to eq(:yes)
 
     expected_output = [
@@ -48,7 +48,7 @@ RSpec.describe TTY::Prompt, '#expand' do
     prompt.input << "\n"
     prompt.input.rewind
 
-    result = prompt.expand('Overwrite Gemfile?', choices, default: 3)
+    result = prompt.expand("Overwrite Gemfile?", choices, default: 3)
     expect(result).to eq(:all)
 
     expected_output = [
@@ -64,7 +64,7 @@ RSpec.describe TTY::Prompt, '#expand' do
     prompt.input << "\n"
     prompt.input.rewind
 
-    result = prompt.expand('Overwrite Gemfile?', choices, quiet: true)
+    result = prompt.expand("Overwrite Gemfile?", choices, quiet: true)
     expect(result).to eq(:yes)
 
     expected_output = [
@@ -79,12 +79,12 @@ RSpec.describe TTY::Prompt, '#expand' do
     prompt.input << "\n"
     prompt.input.rewind
 
-    result = prompt.expand('Overwrite Gemfile?') do |q|
-      q.choice key: 'y', name: 'Overwrite',      value: :yes
-      q.choice key: 'n', name: 'Skip',          value: :no
-      q.choice key: 'a', name: 'Overwrite all', value: :all
-      q.choice key: 'd', name: 'Show diff',     value: :diff
-      q.choice key: 'q', name: 'Quit',          value: :quit
+    result = prompt.expand("Overwrite Gemfile?") do |q|
+      q.choice key: "y", name: "Overwrite",      value: :yes
+      q.choice key: "n", name: "Skip",          value: :no
+      q.choice key: "a", name: "Overwrite all", value: :all
+      q.choice key: "d", name: "Show diff",     value: :diff
+      q.choice key: "q", name: "Quit",          value: :quit
       q.quiet true
     end
     expect(result).to eq(:yes)
@@ -101,7 +101,7 @@ RSpec.describe TTY::Prompt, '#expand' do
     prompt.input << "a\n"
     prompt.input.rewind
 
-    result = prompt.expand('Overwrite Gemfile?', choices)
+    result = prompt.expand("Overwrite Gemfile?", choices)
     expect(result).to eq(:all)
 
     expected_output = [
@@ -125,7 +125,7 @@ RSpec.describe TTY::Prompt, '#expand' do
     prompt.input << "h\nd\n"
     prompt.input.rewind
 
-    result = prompt.expand('Overwrite Gemfile?', choices)
+    result = prompt.expand("Overwrite Gemfile?", choices)
     expect(result).to eq(:diff)
 
     expected_output = [
@@ -168,7 +168,7 @@ RSpec.describe TTY::Prompt, '#expand' do
     prompt.input << "d\n"
     prompt.input.rewind
 
-    result = prompt.expand('Overwrite Gemfile?', choices, auto_hint: true)
+    result = prompt.expand("Overwrite Gemfile?", choices, auto_hint: true)
     expect(result).to eq(:diff)
 
     expected_output = [
@@ -196,12 +196,11 @@ RSpec.describe TTY::Prompt, '#expand' do
   end
 
   it "informs about invalid input when automatically expanding hint" do
-    prompt = TTY::TestPrompt.new
     prompt.on(:keypress) { |e| prompt.trigger(:keybackspace) if e.value == "w" }
     prompt.input << "y" << "y" << "\u007F" << "\r"
     prompt.input.rewind
 
-    result = prompt.expand('Overwrite Gemfile?', choices, defualt: 1, auto_hint: true)
+    result = prompt.expand("Overwrite Gemfile?", choices, defualt: 1, auto_hint: true)
     expect(result).to eq(:yes)
 
     expected_output = [
@@ -248,14 +247,14 @@ RSpec.describe TTY::Prompt, '#expand' do
     prompt.input << "\n"
     prompt.input.rewind
 
-    result = prompt.expand('Overwrite Gemfile?') do |q|
+    result = prompt.expand("Overwrite Gemfile?") do |q|
       q.default 4
 
-      q.choice key: 'y', name: 'Overwrite',     value: :yes
-      q.choice key: 'n', name: 'Skip',          value: :no
-      q.choice key: 'a', name: 'Overwrite all', value: :all
-      q.choice key: 'd', name: 'Show diff',     value: :diff
-      q.choice key: 'q', name: 'Quit',          value: :quit
+      q.choice key: "y", name: "Overwrite",     value: :yes
+      q.choice key: "n", name: "Skip",          value: :no
+      q.choice key: "a", name: "Overwrite all", value: :all
+      q.choice key: "d", name: "Show diff",     value: :diff
+      q.choice key: "q", name: "Quit",          value: :quit
     end
 
     expect(result).to eq(:diff)
@@ -273,12 +272,12 @@ RSpec.describe TTY::Prompt, '#expand' do
     prompt.input << "\n"
     prompt.input.rewind
 
-    result = prompt.expand('Overwrite Gemfile?') do |q|
-      q.choice key: 'y', name: 'Overwrite'      do :ok end
-      q.choice key: 'n', name: 'Skip',          value: :no
-      q.choice key: 'a', name: 'Overwrite all', value: :all
-      q.choice key: 'd', name: 'Show diff',     value: :diff
-      q.choice key: 'q', name: 'Quit',          value: :quit
+    result = prompt.expand("Overwrite Gemfile?") do |q|
+      q.choice key: "y", name: "Overwrite"      do :ok end
+      q.choice key: "n", name: "Skip",          value: :no
+      q.choice key: "a", name: "Overwrite all", value: :all
+      q.choice key: "d", name: "Show diff",     value: :diff
+      q.choice key: "q", name: "Quit",          value: :quit
     end
 
     expect(result).to eq(:ok)
@@ -293,35 +292,35 @@ RSpec.describe TTY::Prompt, '#expand' do
   end
 
   it "fails to expand due to lack of key attribute" do
-    choices = [{ name: 'Overwrite', value: :yes }]
+    choices = [{ name: "Overwrite", value: :yes }]
 
     expect {
-      prompt.expand('Overwrite Gemfile?', choices)
+      prompt.expand("Overwrite Gemfile?", choices)
     }.to raise_error(TTY::Prompt::ConfigurationError, /Choice Overwrite is missing a :key attribute/)
   end
 
   it "fails to expand due to wrong key length" do
-    choices = [{ key: 'long', name: 'Overwrite', value: :yes }]
+    choices = [{ key: "long", name: "Overwrite", value: :yes }]
 
     expect {
-      prompt.expand('Overwrite Gemfile?', choices)
+      prompt.expand("Overwrite Gemfile?", choices)
     }.to raise_error(TTY::Prompt::ConfigurationError, /Choice key `long` is more than one character long/)
   end
 
   it "fails to expand due to reserve key" do
-    choices = [{ key: 'h', name: 'Overwrite', value: :yes }]
+    choices = [{ key: "h", name: "Overwrite", value: :yes }]
 
     expect {
-      prompt.expand('Overwrite Gemfile?', choices)
+      prompt.expand("Overwrite Gemfile?", choices)
     }.to raise_error(TTY::Prompt::ConfigurationError, /Choice key `h` is reserved for help menu/)
   end
 
   it "fails to expand due to duplicate key" do
-    choices = [{ key: 'y', name: 'Overwrite', value: :yes },
-               { key: 'y', name: 'Change', value: :yes }]
+    choices = [{ key: "y", name: "Overwrite", value: :yes },
+               { key: "y", name: "Change", value: :yes }]
 
     expect {
-      prompt.expand('Overwrite Gemfile?', choices)
+      prompt.expand("Overwrite Gemfile?", choices)
     }.to raise_error(TTY::Prompt::ConfigurationError, /Choice key `y` is a duplicate/)
   end
 end

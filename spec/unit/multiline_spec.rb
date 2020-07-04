@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe TTY::Prompt::Question, "#multiline" do
+  subject(:prompt) { TTY::Prompt::Test.new }
+
   it "reads no lines" do
-    prompt = TTY::TestPrompt.new
     prompt.input << "\C-d"
     prompt.input.rewind
 
@@ -17,7 +18,6 @@ RSpec.describe TTY::Prompt::Question, "#multiline" do
   end
 
   it "uses defualt when no input" do
-    prompt = TTY::TestPrompt.new
     prompt.input << "\C-d"
     prompt.input.rewind
 
@@ -32,7 +32,6 @@ RSpec.describe TTY::Prompt::Question, "#multiline" do
   end
 
   it "changes help text" do
-    prompt = TTY::TestPrompt.new
     prompt.input << "\C-d"
     prompt.input.rewind
 
@@ -50,7 +49,7 @@ RSpec.describe TTY::Prompt::Question, "#multiline" do
   end
 
   it "sets quiet mode" do
-    prompt = TTY::TestPrompt.new(quiet: true)
+    prompt = TTY::Prompt::Test.new(quiet: true)
     prompt.input << "\C-d"
     prompt.input.rewind
 
@@ -64,7 +63,6 @@ RSpec.describe TTY::Prompt::Question, "#multiline" do
   end
 
   it "reads multiple lines with empty lines" do
-    prompt = TTY::TestPrompt.new
     prompt.input << "aa\n\nbb\n\n\ncc\C-d"
     prompt.input.rewind
 

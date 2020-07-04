@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe TTY::Prompt, "#say" do
-  subject(:prompt) { TTY::TestPrompt.new }
+  subject(:prompt) { TTY::Prompt::Test.new }
 
   it "prints an empty message" do
     prompt.say("")
@@ -56,7 +56,7 @@ RSpec.describe TTY::Prompt, "#say" do
 
   context "without color" do
     it "prints message without ansi" do
-      prompt = TTY::TestPrompt.new(enable_color: false)
+      prompt = TTY::Prompt::Test.new(enable_color: false)
 
       prompt.say("Hell yeah!", color: :green)
 

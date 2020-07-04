@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe TTY::Prompt::Question::Validation, '#coerce' do
+RSpec.describe TTY::Prompt::Question::Validation, "#coerce" do
   let(:instance) { described_class.new }
 
   it "coerces lambda into proc" do

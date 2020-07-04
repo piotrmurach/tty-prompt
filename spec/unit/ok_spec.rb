@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe TTY::Prompt, "#ok" do
-  subject(:prompt) { TTY::TestPrompt.new }
+  subject(:prompt) { TTY::Prompt::Test.new }
 
   it "prints text in green" do
     prompt.ok("All is fine")

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-RSpec.describe TTY::Prompt, '#collect' do
+RSpec.describe TTY::Prompt, "#collect" do
 
-  subject(:prompt) { TTY::TestPrompt.new }
+  subject(:prompt) { TTY::Prompt::Test.new }
 
   def collect(&block)
     prompt = subject
@@ -72,24 +72,24 @@ RSpec.describe TTY::Prompt, '#collect' do
     prompt.input.rewind
 
     result = prompt.collect do
-      key(:name).ask('Name?')
+      key(:name).ask("Name?")
 
-      key(:age).ask('Age?', convert: :int)
+      key(:age).ask("Age?", convert: :int)
 
       key(:address) do
-        key(:street).ask('Street?', required: true)
-        key(:city).ask('City?')
-        key(:zip).ask('Zip?', validate: /\A\d{3}\Z/)
+        key(:street).ask("Street?", required: true)
+        key(:city).ask("City?")
+        key(:zip).ask("Zip?", validate: /\A\d{3}\Z/)
       end
     end
 
     expect(result).to include({
-      name: 'Piotr',
+      name: "Piotr",
       age: 30,
       address: {
-        street: 'Street',
-        city: 'City',
-        zip: '123'
+        street: "Street",
+        city: "City",
+        zip: "123"
       }
     })
   end

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-RSpec.describe TTY::Prompt::Question, '#initialize' do
+RSpec.describe TTY::Prompt::Question, "#initialize" do
 
-  subject(:question) { described_class.new(TTY::TestPrompt.new)}
+  subject(:question) { described_class.new(TTY::Prompt::Test.new)}
 
   it { expect(question.echo).to eq(true) }
 

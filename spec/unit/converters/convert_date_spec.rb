@@ -2,7 +2,7 @@
 
 RSpec.describe TTY::Prompt::Question, "convert date" do
 
-  subject(:prompt) { TTY::TestPrompt.new}
+  subject(:prompt) { TTY::Prompt::Test.new}
 
   it "fails to convert date" do
     prompt.input << "x"

@@ -19,7 +19,7 @@ RSpec.describe TTY::Prompt::Result do
 
   it "checks value to be valid" do
     question = double(:question)
-    result = TTY::Prompt::Result.new(question, 'Piotr')
+    result = TTY::Prompt::Result.new(question, "Piotr")
 
     CheckRequired = Class.new do
       def self.call(quest, value)
@@ -34,7 +34,7 @@ RSpec.describe TTY::Prompt::Result do
     answer = result.with(CheckRequired)
     expect(answer).to be_a(TTY::Prompt::Result::Success)
     expect(answer.success?).to eq(true)
-    expect(answer.value).to eq('Piotr')
+    expect(answer.value).to eq("Piotr")
     expect(answer.errors).to eq([])
   end
 end

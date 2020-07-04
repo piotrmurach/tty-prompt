@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe TTY::Prompt, "#error" do
-  subject(:prompt) { TTY::TestPrompt.new }
+  subject(:prompt) { TTY::Prompt::Test.new }
 
   it "displays one message" do
     prompt.error "Nothing is fine!"

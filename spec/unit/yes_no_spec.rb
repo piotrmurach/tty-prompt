@@ -2,7 +2,7 @@
 
 RSpec.describe TTY::Prompt, "confirmation" do
 
-  subject(:prompt) { TTY::TestPrompt.new }
+  subject(:prompt) { TTY::Prompt::Test.new }
 
   context "#yes?" do
     it "agrees with question" do

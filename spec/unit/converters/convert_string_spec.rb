@@ -2,7 +2,7 @@
 
 RSpec.describe TTY::Prompt::Question, "convert string" do
   it "converts string" do
-    prompt = TTY::TestPrompt.new
+    prompt = TTY::Prompt::Test.new
     prompt.input << "Piotr"
     prompt.input.rewind
     answer = prompt.ask("What is your name?", convert: :string)
@@ -11,7 +11,7 @@ RSpec.describe TTY::Prompt::Question, "convert string" do
   end
 
   it "converts symbol" do
-    prompt = TTY::TestPrompt.new
+    prompt = TTY::Prompt::Test.new
     prompt.input << "Piotr"
     prompt.input.rewind
     answer = prompt.ask("What is your name?", convert: :symbol)

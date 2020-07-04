@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-RSpec.describe TTY::Prompt::Question, '#required' do
+RSpec.describe TTY::Prompt::Question, "#required" do
 
-  subject(:prompt) { TTY::TestPrompt.new }
+  subject(:prompt) { TTY::Prompt::Test.new }
 
-  it 'requires value to be present' do
+  it "requires value to be present" do
     prompt.input << "Piotr"
     prompt.input.rewind
-    prompt.ask('What is your name?') { |q| q.required(true) }
+    prompt.ask("What is your name?") { |q| q.required(true) }
     expect(prompt.output.string).to eq([
       "What is your name? ",
       "\e[2K\e[1GWhat is your name? P",
@@ -20,10 +20,10 @@ RSpec.describe TTY::Prompt::Question, '#required' do
     ].join)
   end
 
-  it 'requires value to be present with option' do
+  it "requires value to be present with option" do
     prompt.input << "  \nPiotr"
     prompt.input.rewind
-    prompt.ask('What is your name?', required: true)
+    prompt.ask("What is your name?", required: true)
     expect(prompt.output.string).to eq([
       "What is your name? ",
       "\e[2K\e[1GWhat is your name?  ",
@@ -44,22 +44,22 @@ RSpec.describe TTY::Prompt::Question, '#required' do
   end
 
   it "doesn't require value to be present" do
-    prompt.input << ''
+    prompt.input << ""
     prompt.input.rewind
-    answer = prompt.ask('What is your name?') { |q| q.required(false) }
+    answer = prompt.ask("What is your name?") { |q| q.required(false) }
     expect(answer).to be_nil
   end
 
   it "uses required in validation check" do
     prompt.input << "  \nexists\ntest\n"
     prompt.input.rewind
-    answer = prompt.ask('File name?') do |q|
+    answer = prompt.ask("File name?") do |q|
       q.required(true)
       q.validate { |v| !(v =~ /exists/) }
-      q.messages[:required?] = 'File name must not be empty!'
-      q.messages[:valid?]   = 'File already exists!'
+      q.messages[:required?] = "File name must not be empty!"
+      q.messages[:valid?]   = "File already exists!"
     end
-    expect(answer).to eq('test')
+    expect(answer).to eq("test")
     expect(prompt.output.string).to eq([
       "File name? ",
       "\e[2K\e[1GFile name?  ",
@@ -87,6 +87,6 @@ RSpec.describe TTY::Prompt::Question, '#required' do
       "\e[1A\e[2K\e[1G",
       "File name? \e[32mtest\e[0m\n",
     ].join)
-    expect(answer).to eq('test')
+    expect(answer).to eq("test")
   end
 end

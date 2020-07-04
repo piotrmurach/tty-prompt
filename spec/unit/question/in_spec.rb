@@ -1,27 +1,27 @@
 # frozen_string_literal: true
 
-RSpec.describe TTY::Prompt::Question, '#in' do
+RSpec.describe TTY::Prompt::Question, "#in" do
 
-  subject(:prompt) { TTY::TestPrompt.new }
+  subject(:prompt) { TTY::Prompt::Test.new }
 
   it "reads range from option" do
-    prompt.input << '8'
+    prompt.input << "8"
     prompt.input.rewind
 
-    answer = prompt.ask("How do you like it on scale 1-10?", in: '1-10')
+    answer = prompt.ask("How do you like it on scale 1-10?", in: "1-10")
 
-    expect(answer).to eq('8')
+    expect(answer).to eq("8")
   end
 
-  it 'reads number within string range' do
-    prompt.input << '8'
+  it "reads number within string range" do
+    prompt.input << "8"
     prompt.input.rewind
 
     answer = prompt.ask("How do you like it on scale 1-10?") do |q|
-      q.in('1-10')
+      q.in("1-10")
     end
 
-    expect(answer).to eq('8')
+    expect(answer).to eq("8")
     expect(prompt.output.string).to eq([
       "How do you like it on scale 1-10? ",
       "\e[2K\e[1GHow do you like it on scale 1-10? 8",
@@ -30,15 +30,15 @@ RSpec.describe TTY::Prompt::Question, '#in' do
     ].join)
   end
 
-  it 'reads number within digit range' do
-    prompt.input << '8.1'
+  it "reads number within digit range" do
+    prompt.input << "8.1"
     prompt.input.rewind
 
     answer = prompt.ask("How do you like it on scale 1-10?") do |q|
       q.in(1.0..11.5)
     end
 
-    expect(answer).to eq('8.1')
+    expect(answer).to eq("8.1")
     expect(prompt.output.string).to eq([
       "How do you like it on scale 1-10? ",
       "\e[2K\e[1GHow do you like it on scale 1-10? 8",
@@ -49,15 +49,15 @@ RSpec.describe TTY::Prompt::Question, '#in' do
     ].join)
   end
 
-  it 'reads letters within range' do
-    prompt.input << 'E'
+  it "reads letters within range" do
+    prompt.input << "E"
     prompt.input.rewind
 
     answer = prompt.ask("Your favourite vitamin? (A-K)") do |q|
-      q.in('A-K')
+      q.in("A-K")
     end
 
-    expect(answer).to eq('E')
+    expect(answer).to eq("E")
     expect(prompt.output.string).to eq([
       "Your favourite vitamin? (A-K) ",
       "\e[2K\e[1GYour favourite vitamin? (A-K) E",
@@ -70,9 +70,9 @@ RSpec.describe TTY::Prompt::Question, '#in' do
     prompt.input << "A\n2\n"
     prompt.input.rewind
 
-    answer = prompt.ask("How spicy on scale? (1-5)", in: '1-5')
+    answer = prompt.ask("How spicy on scale? (1-5)", in: "1-5")
 
-    expect(answer).to eq('2')
+    expect(answer).to eq("2")
     expect(prompt.output.string).to eq([
       "How spicy on scale? (1-5) ",
       "\e[2K\e[1GHow spicy on scale? (1-5) A",
@@ -93,11 +93,11 @@ RSpec.describe TTY::Prompt::Question, '#in' do
     prompt.input.rewind
 
     answer = prompt.ask("How spicy on scale? (1-5)") do |q|
-      q.in '1-5'
-      q.messages[:range?] = 'Ohh dear what is this %{value} doing in %{in}?'
+      q.in "1-5"
+      q.messages[:range?] = "Ohh dear what is this %{value} doing in %{in}?"
     end
 
-    expect(answer).to eq('2')
+    expect(answer).to eq("2")
     expect(prompt.output.string).to eq([
       "How spicy on scale? (1-5) ",
       "\e[2K\e[1GHow spicy on scale? (1-5) A",

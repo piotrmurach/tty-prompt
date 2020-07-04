@@ -1,10 +1,9 @@
 # frozen_string_literal: true
 
-RSpec.describe TTY::Prompt, '#mask' do
-
-  subject(:prompt) { TTY::TestPrompt.new }
-
+RSpec.describe TTY::Prompt, "#mask" do
   let(:symbols) { TTY::Prompt::Symbols.symbols }
+
+  subject(:prompt) { TTY::Prompt::Test.new }
 
   it "masks output by default" do
     prompt.input << "pass\r"
@@ -30,11 +29,11 @@ RSpec.describe TTY::Prompt, '#mask' do
     ].join)
   end
 
-  it 'masks output with custom character' do
+  it "masks output with custom character" do
     prompt.input << "pass\r"
     prompt.input.rewind
 
-    answer = prompt.mask("What is your password?") { |q| q.mask('*') }
+    answer = prompt.mask("What is your password?") { |q| q.mask("*") }
 
     expect(answer).to eql("pass")
     expect(prompt.output.string).to eq([
@@ -76,13 +75,13 @@ RSpec.describe TTY::Prompt, '#mask' do
     ].join)
   end
 
-  it 'ignores mask if echo is off' do
+  it "ignores mask if echo is off" do
     prompt.input << "pass\n"
     prompt.input.rewind
 
-    answer = prompt.mask('What is your password?') do |q|
+    answer = prompt.mask("What is your password?") do |q|
       q.echo false
-      q.mask '*'
+      q.mask "*"
     end
 
     expect(answer).to eql("pass")
@@ -104,15 +103,15 @@ RSpec.describe TTY::Prompt, '#mask' do
   end
 
   it "validates input" do
-    prompt = TTY::TestPrompt.new(symbols: {dot: '*'})
+    prompt = TTY::Prompt::Test.new(symbols: {dot: "*"})
     prompt.input << "no\nyes\n"
     prompt.input.rewind
-    answer = prompt.mask('What is your password?') do |q|
+    answer = prompt.mask("What is your password?") do |q|
       q.echo true
       q.validate(/[a-z]{3,4}/)
-      q.messages[:valid?] = 'Not valid'
+      q.messages[:valid?] = "Not valid"
     end
-    expect(answer).to eq('yes')
+    expect(answer).to eq("yes")
     expect(prompt.output.string).to eq([
       "What is your password? ",
       "\e[2K\e[1G",

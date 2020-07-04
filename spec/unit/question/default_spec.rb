@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
-RSpec.describe TTY::Prompt::Question, '#default' do
+RSpec.describe TTY::Prompt::Question, "#default" do
 
-  subject(:prompt) { TTY::TestPrompt.new }
+  subject(:prompt) { TTY::Prompt::Test.new }
 
-  it 'uses default value' do
-    name = 'Anonymous'
+  it "uses default value" do
+    name = "Anonymous"
     prompt.input << "\n"
     prompt.input.rewind
-    answer = prompt.ask('What is your name?', default: name)
+    answer = prompt.ask("What is your name?", default: name)
     expect(answer).to eq(name)
     expect(prompt.output.string).to eq([
       "What is your name? \e[90m(Anonymous)\e[0m ",
@@ -18,9 +18,9 @@ RSpec.describe TTY::Prompt::Question, '#default' do
     ].join)
   end
 
-  it 'uses default value in block' do
-    name = 'Anonymous'
-    answer = prompt.ask('What is your name?') { |q| q.default(name) }
+  it "uses default value in block" do
+    name = "Anonymous"
+    answer = prompt.ask("What is your name?") { |q| q.default(name) }
     expect(answer).to eq(name)
     expect(prompt.output.string).to eq([
       "What is your name? \e[90m(Anonymous)\e[0m ",

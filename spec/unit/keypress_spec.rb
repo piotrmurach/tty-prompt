@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
-RSpec.describe TTY::Prompt::Question, '#keypress' do
-  it 'receives line feed with echo on' do
-    prompt = TTY::TestPrompt.new
+RSpec.describe TTY::Prompt::Question, "#keypress" do
+  subject(:prompt) { TTY::Prompt::Test.new }
+
+  it "receives line feed with echo on" do
     prompt.input << "\n"
     prompt.input.rewind
 
@@ -16,8 +17,7 @@ RSpec.describe TTY::Prompt::Question, '#keypress' do
     ].join)
   end
 
-  it 'asks for a keypress with echo on' do
-    prompt = TTY::TestPrompt.new
+  it "asks for a keypress with echo on" do
     prompt.input << "abcd"
     prompt.input.rewind
 
@@ -31,8 +31,7 @@ RSpec.describe TTY::Prompt::Question, '#keypress' do
     ].join)
   end
 
-  it 'asks for a keypress with echo off' do
-    prompt = TTY::TestPrompt.new
+  it "asks for a keypress with echo off" do
     prompt.input << "abcd"
     prompt.input.rewind
 
@@ -47,7 +46,7 @@ RSpec.describe TTY::Prompt::Question, '#keypress' do
   end
 
   it "interrupts input" do
-    prompt = TTY::TestPrompt.new(interrupt: :exit)
+    prompt = TTY::Prompt::Test.new(interrupt: :exit)
     prompt.input << "\x03"
     prompt.input.rewind
 
@@ -57,7 +56,7 @@ RSpec.describe TTY::Prompt::Question, '#keypress' do
   end
 
   it "timeouts when no key provided" do
-    prompt = TTY::TestPrompt.new(interrupt: :exit)
+    prompt = TTY::Prompt::Test.new(interrupt: :exit)
 
     prompt.keypress("Press any key or continue in :countdown", timeout: 0.01)
 

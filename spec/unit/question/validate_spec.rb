@@ -1,18 +1,18 @@
 # frozen_string_literal: true
 
-RSpec.describe TTY::Prompt::Question, '#validate' do
+RSpec.describe TTY::Prompt::Question, "#validate" do
 
-  subject(:prompt) { TTY::TestPrompt.new }
+  subject(:prompt) { TTY::Prompt::Test.new }
 
-  it 'validates input with regex' do
-    prompt.input << 'p.m'
+  it "validates input with regex" do
+    prompt.input << "p.m"
     prompt.input.rewind
 
-    answer = prompt.ask('What is your username?') do |q|
+    answer = prompt.ask("What is your username?") do |q|
       q.validate(/^[^\.]+\.[^\.]+/)
     end
 
-    expect(answer).to eq('p.m')
+    expect(answer).to eq("p.m")
     expect(prompt.output.string).to eq([
       "What is your username? ",
       "\e[2K\e[1GWhat is your username? p",
@@ -23,34 +23,34 @@ RSpec.describe TTY::Prompt::Question, '#validate' do
     ].join)
   end
 
-  it 'validates input with proc' do
-    prompt.input << 'piotr.murach'
+  it "validates input with proc" do
+    prompt.input << "piotr.murach"
     prompt.input.rewind
 
-    answer = prompt.ask('What is your username?') do |q|
+    answer = prompt.ask("What is your username?") do |q|
       q.validate { |input| input =~ /^[^\.]+\.[^\.]+/ }
     end
 
-    expect(answer).to eq('piotr.murach')
+    expect(answer).to eq("piotr.murach")
   end
 
-  it 'understands custom validation like :email' do
-    prompt.input << 'piotr@example.com'
+  it "understands custom validation like :email" do
+    prompt.input << "piotr@example.com"
     prompt.input.rewind
 
-    answer = prompt.ask('What is your email?') do |q|
+    answer = prompt.ask("What is your email?") do |q|
       q.validate :email
     end
 
-    expect(answer).to eq('piotr@example.com')
+    expect(answer).to eq("piotr@example.com")
   end
 
-  it 'deprecates :validation option' do
-    prompt.input << 'piotr@example.com'
+  it "deprecates :validation option" do
+    prompt.input << "piotr@example.com"
     prompt.input.rewind
 
     expect do
-      prompt.ask('What is your email?', validation: :email)
+      prompt.ask("What is your email?", validation: :email)
     end.to output("[DEPRECATION] The `:validation` option is deprecated. Use `:validate` instead.\n").to_stderr
   end
 
@@ -58,11 +58,11 @@ RSpec.describe TTY::Prompt::Question, '#validate' do
     prompt.input << "wrong\np@m.com\n"
     prompt.input.rewind
 
-    answer = prompt.ask('What is your email?') do |q|
+    answer = prompt.ask("What is your email?") do |q|
       q.validate :email
     end
 
-    expect(answer).to eq('p@m.com')
+    expect(answer).to eq("p@m.com")
     expect(prompt.output.string).to eq([
       "What is your email? ",
       "\e[2K\e[1GWhat is your email? w",
@@ -92,11 +92,11 @@ RSpec.describe TTY::Prompt::Question, '#validate' do
     prompt.input << "wrong\np@m.com"
     prompt.input.rewind
 
-    answer = prompt.ask('What is your email?', validate: :email) do |q|
-      q.messages[:valid?] = 'Not an email!'
+    answer = prompt.ask("What is your email?", validate: :email) do |q|
+      q.messages[:valid?] = "Not an email!"
     end
 
-    expect(answer).to eq('p@m.com')
+    expect(answer).to eq("p@m.com")
     expect(prompt.output.string).to eq([
       "What is your email? ",
       "\e[2K\e[1GWhat is your email? w",

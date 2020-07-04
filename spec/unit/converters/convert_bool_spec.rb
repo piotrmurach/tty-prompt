@@ -2,7 +2,7 @@
 
 RSpec.describe TTY::Prompt::Question, "convert bool" do
 
-  subject(:prompt) { TTY::TestPrompt.new}
+  subject(:prompt) { TTY::Prompt::Test.new}
 
   it "fails to convert boolean" do
     prompt.input << "x"

@@ -2,7 +2,7 @@
 
 RSpec.describe TTY::Prompt::Question, "convert numbers" do
 
-  subject(:prompt) { TTY::TestPrompt.new }
+  subject(:prompt) { TTY::Prompt::Test.new }
 
   it "fails to convert integer" do
     prompt.input << "x"

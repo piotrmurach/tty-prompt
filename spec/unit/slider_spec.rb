@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe TTY::Prompt, "#slider" do
-  subject(:prompt) { TTY::TestPrompt.new }
+  subject(:prompt) { TTY::Prompt::Test.new }
 
   let(:symbols) { TTY::Prompt::Symbols.symbols }
   let(:left_right) { "#{symbols[:arrow_left]}/#{symbols[:arrow_right]}"}
@@ -121,7 +121,7 @@ RSpec.describe TTY::Prompt, "#slider" do
   end
 
   it "changes all display symbols" do
-    prompt = TTY::TestPrompt.new(symbols: {
+    prompt = TTY::Prompt::Test.new(symbols: {
       bullet: "x",
       line: "_"
     })
@@ -142,7 +142,6 @@ RSpec.describe TTY::Prompt, "#slider" do
   end
 
   it "changes all display symbols per instance" do
-    prompt = TTY::TestPrompt.new
     prompt.input << "\r"
     prompt.input.rewind
 

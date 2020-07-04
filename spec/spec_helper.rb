@@ -15,7 +15,8 @@ if ENV["COVERAGE"] || ENV["TRAVIS"]
   end
 end
 
-require "tty-prompt"
+require "tty/prompt"
+require "tty/prompt/test"
 require "stringio"
 
 class StringIO

@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-RSpec.describe TTY::Prompt::Question, '#echo' do
+RSpec.describe TTY::Prompt::Question, "#echo" do
 
-  subject(:prompt) { TTY::TestPrompt.new }
+  subject(:prompt) { TTY::Prompt::Test.new }
 
-  it 'asks with echo on' do
+  it "asks with echo on" do
     prompt.input << "password"
     prompt.input.rewind
     answer = prompt.ask("What is your password?") { |q| q.echo(true) }
@@ -24,7 +24,7 @@ RSpec.describe TTY::Prompt::Question, '#echo' do
     ].join)
   end
 
-  it 'asks with echo off' do
+  it "asks with echo off" do
     prompt.input << "password"
     prompt.input.rewind
     answer = prompt.ask("What is your password?", echo: false)

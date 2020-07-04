@@ -4,7 +4,7 @@ RSpec.describe TTY::Prompt::Question, "convert file" do
   it "converts to file" do
     ::File.write("test.txt", "foobar")
 
-    prompt = TTY::TestPrompt.new
+    prompt = TTY::Prompt::Test.new
     prompt.input << "test.txt"
     prompt.input.rewind
 

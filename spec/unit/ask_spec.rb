@@ -2,7 +2,7 @@
 
 RSpec.describe TTY::Prompt, "#ask" do
 
-  subject(:prompt) { TTY::TestPrompt.new }
+  subject(:prompt) { TTY::Prompt::Test.new }
 
   it "asks question" do
     prompt.ask("What is your name?")
@@ -14,7 +14,6 @@ RSpec.describe TTY::Prompt, "#ask" do
   end
 
   it "asks an empty question " do
-    prompt = TTY::TestPrompt.new
     prompt.input << "\r"
     prompt.input.rewind
 
@@ -25,7 +24,6 @@ RSpec.describe TTY::Prompt, "#ask" do
   end
 
   it "asks an empty question and returns nil if EOF is sent to stdin" do
-    prompt = TTY::TestPrompt.new
     prompt.input << nil
     prompt.input.rewind
 
@@ -36,7 +34,6 @@ RSpec.describe TTY::Prompt, "#ask" do
   end
 
   it "asks an empty question with prepopulated value" do
-    prompt = TTY::TestPrompt.new
     prompt.input << "\n"
     prompt.input.rewind
 
@@ -51,7 +48,7 @@ RSpec.describe TTY::Prompt, "#ask" do
   end
 
   it "asks question with prepopulated value" do
-    prompt = TTY::TestPrompt.new prefix: "> "
+    prompt = TTY::Prompt::Test.new prefix: "> "
     prompt.input << "\n"
     prompt.input.rewind
 
@@ -68,7 +65,7 @@ RSpec.describe TTY::Prompt, "#ask" do
   end
 
   it "asks a question with a prefix [?]" do
-    prompt = TTY::TestPrompt.new(prefix: "[?] ")
+    prompt = TTY::Prompt::Test.new(prefix: "[?] ")
     prompt.input << "\r"
     prompt.input.rewind
     answer = prompt.ask "Are you Polish?"
@@ -158,7 +155,7 @@ RSpec.describe TTY::Prompt, "#ask" do
     active = ->(str) { Pastel.new.cyan(str) }
     help = Pastel.new.red.detach
     global_settings = {prefix: "[?] ", active_color: active, help_color: help}
-    prompt = TTY::TestPrompt.new(**global_settings)
+    prompt = TTY::Prompt::Test.new(**global_settings)
 
     prompt.input << "Piotr\r"
     prompt.input.rewind

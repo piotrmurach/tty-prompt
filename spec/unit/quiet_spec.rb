@@ -2,7 +2,7 @@
 
 RSpec.describe TTY::Prompt::Question, "#default" do
 
-  subject(:prompt) { TTY::TestPrompt.new(quiet: true) }
+  subject(:prompt) { TTY::Prompt::Test.new(quiet: true) }
 
   it "sets quiet mode" do
     name = "Anonymous"
