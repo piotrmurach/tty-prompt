@@ -1,5 +1,10 @@
 # frozen_string_literal: true
 
+require "pathname"
+require "date"
+require "time"
+require "uri"
+
 RSpec.describe TTY::Prompt::Converters do
   context ":boolean" do
     {
@@ -43,7 +48,6 @@ RSpec.describe TTY::Prompt::Converters do
   end
 
   context ":date" do
-    require "date"
     {
       "2020/05/21" => ::Date.parse("2020/05/21"),
       "unknown"=> TTY::Prompt::Const::Undefined
@@ -66,7 +70,6 @@ RSpec.describe TTY::Prompt::Converters do
   end
 
   context ":time" do
-    require "time"
     {
       "11:12:13" => ::Time.parse("11:12:13"),
       "unknown" => TTY::Prompt::Const::Undefined
