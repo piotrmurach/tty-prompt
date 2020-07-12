@@ -154,4 +154,20 @@ RSpec.describe TTY::Prompt::Converters do
       end
     end
   end
+
+  context ":array/:list" do
+    {
+      ",," => [],
+      ",b,c" => %w[b c],
+      "a,b,c" => %w[a b c],
+      "a , b , c" => %w[a b c],
+      "a, , c" => %w[a c],
+      "a, b\\, c" => ["a", "b, c"],
+      %w[a b c] => %w[a b c],
+    }.each do |input, obj|
+      it "converts #{input.inspect} to #{obj.inspect}" do
+        expect(described_class.convert(:array, input)).to eq(obj)
+      end
+    end
+  end
 end

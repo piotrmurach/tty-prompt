@@ -129,6 +129,13 @@ module TTY
         require "uri" unless defined?(::URI)
         ::URI.parse(input)
       end
+
+      converter(:list, :array) do |val|
+        (val.respond_to?(:to_a) ? val : val.split(/(?<!\\),/))
+          .map { |v| v.strip.gsub(/\\,/, ",") }
+          .reject(&:empty?)
+      end
+
     end # Converters
   end # Prompt
 end # TTY
