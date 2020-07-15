@@ -170,4 +170,22 @@ RSpec.describe TTY::Prompt::Converters do
       end
     end
   end
+
+  context ":map" do
+    {
+      "" => {},
+      "a=1" => {a: "1"},
+      "a=1&b=2" => {a: "1", b: "2"},
+      "a=&b=2" => {a: "", b: "2"},
+      "a=1&b=2&a=3" => {a: ["1", "3"], b: "2"},
+      "a:1 b:2" => {a: "1", b: "2"},
+      "a:1 b:2 a:3" => {a: ["1", "3"], b: "2"},
+      %w[a:1 b:2 c:3] => {a: "1", b: "2", c: "3"},
+      %w[a=1 b=2 c=3] => {a: "1", b: "2", c: "3"},
+    }.each do |input, obj|
+      it "converts #{input.inspect} to #{obj.inspect}" do
+        expect(described_class.convert(:hash, input)).to eq(obj)
+      end
+    end
+  end
 end

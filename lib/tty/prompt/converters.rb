@@ -136,6 +136,18 @@ module TTY
           .reject(&:empty?)
       end
 
+      converter(:hash, :map) do |val|
+        values = val.respond_to?(:to_a) ? val : val.split(/[& ]/)
+        values.each_with_object({}) do |pair, pairs|
+          key, value = pair.split(/[=:]/, 2)
+          if (current = pairs[key.to_sym])
+            pairs[key.to_sym] = Array(current) << value
+          else
+            pairs[key.to_sym] = value
+          end
+          pairs
+        end
+      end
     end # Converters
   end # Prompt
 end # TTY
