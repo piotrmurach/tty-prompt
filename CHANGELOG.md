@@ -5,7 +5,7 @@
 ### Added
 * Add ability to customize #slider format with a proc by Sven Pchnit(@2called-chaos)
 * Add ability to customize convert message
-* Add :uri converter
+* Add ability to convert input to Array, Hash or Uri object
 * Add ability to allow :active_color and :help_color to be callable objects
 * Add ability to select all choices in #multi_select prompt
 * Add ability to configure :help text in #slider prompt
@@ -22,6 +22,7 @@
 * Change #select/#multi_select prompts default help text
 * Change #multi_select to preserve original ordering in returned answers
 * Change to remove necromancer dependency
+* Change TTY::TestPrompt to TTY::Prompt::Test
 
 ### Fixed
 * Fix multiline prompt to return default value when no input provided
