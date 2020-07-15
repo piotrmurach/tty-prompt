@@ -241,7 +241,7 @@ end
 
 The `convert` property is used to convert input to a required type.
 
-By default no conversion is performed. The following conversions are provided:
+By default no conversion of input is performed. To change this use one of the following conversions:
 
 * `:boolean`|`:bool` - e.g. 'yes/1/y/t/' becomes `true`, 'no/0/n/f' becomes `false`
 * `:date` - parses dates formats "28/03/2020", "March 28th 2020"
@@ -254,6 +254,8 @@ By default no conversion is performed. The following conversions are provided:
 * `:range` - e.g. '1-10' becomes `1..10` range object
 * `:regexp` - e.g. "foo|bar" becomes `/foo|bar/`
 * `:uri` - converts to `URI` object
+* `:list`|`:array` - e.g. 'a,b,c' becomes `["a", "b", "c"]`
+* `:map`|`:hash` - e.g. 'a:1 b:2 c:3' becomes `{a: "1", b: "2", c: "3"}`
 
 For example, if you are interested in range type as answer do the following:
 
@@ -265,7 +267,7 @@ prompt.ask("Provide range of numbers?", convert: :range)
 
 If a user provides a wrong type for conversion an error message will be printed in the console:
 
-```
+```ruby
 prompt.ask("Provide digit:", convert: float)
 # Provide digit: x
 # >> Cannot convert `x` into 'float' type
