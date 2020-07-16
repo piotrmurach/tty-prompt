@@ -257,12 +257,36 @@ By default no conversion of input is performed. To change this use one of the fo
 * `:list`|`:array` - e.g. 'a,b,c' becomes `["a", "b", "c"]`
 * `:map`|`:hash` - e.g. 'a:1 b:2 c:3' becomes `{a: "1", b: "2", c: "3"}`
 
+In addition you can specify a plural or append `list` or `array` to any base type:
+
+* `:ints` or `:int_list` - will convert to a list of integers
+* `:floats` or `:float_list` - will convert to a list of floats
+* `:bools` or `:bool_list` - will convert to a list of booleans, e.g. `t,f,t` becomes `[true, false, true]`
+
+Similarly, you can append `map` or `hash` to any base type:
+
+* `:int_map`|`:integer_map`|`:int_hash` - will convert to a hash of integers, e.g `a:1 b:2 c:3` becomes `{a: 1, b: 2, c: 3}`
+* `:bool_map` | `:boolean_map`|`:bool_hash` - will convert to a hash of booleans, e.g `a:t b:f c:t` becomes `{a: true, b: false, c: true}`
+
+By default, `map` converts keys to symbols, if you wish to use strings instead specify key type like so:
+
+* `:str_int_map` - will convert to a hash of string keys and integer values
+* `:string_integer_hash` - will convert to a hash of string keys and integer values
+
 For example, if you are interested in range type as answer do the following:
 
 ```ruby
 prompt.ask("Provide range of numbers?", convert: :range)
 # Provide range of numbers? 1-10
 # => 1..10
+```
+
+If, on the other hand, you wish to convert input to a hash of integer values do:
+
+```ruby
+prompt.ask("Provide keys and values:", convert: :int_map)
+# Provide keys and values: a=1 b=2 c=3
+# => {a: 1, b: 2, c: 3}
 ```
 
 If a user provides a wrong type for conversion an error message will be printed in the console:
@@ -287,11 +311,11 @@ end
 You can also provide a custom conversion like so:
 
 ```ruby
-prompt.ask('Ingredients? (comma sep list)') do |q|
+prompt.ask("Ingredients? (comma sep list)") do |q|
   q.convert -> (input) { input.split(/,\s*/) }
 end
 # Ingredients? (comma sep list) milk, eggs, flour
-# => ['milk', 'eggs', 'flour']
+# => ["milk", "eggs", "flour"]
 ```
 
 #### 2.1.2 default
