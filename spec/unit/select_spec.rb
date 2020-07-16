@@ -383,15 +383,12 @@ RSpec.describe TTY::Prompt, "#select" do
       prompt.input << "\r"
       prompt.input.rewind
 
-      answer = prompt.select("What letter?") do |menu|
+      answer = prompt.select("What letter?", choices) do |menu|
                 menu.per_page 3
                 menu.default 4
-
-                menu.choices choices
               end
 
       expect(answer).to eq("D")
-
 
       expected_output = [
         "\e[?25lWhat letter? \e[90m(Press #{up_down}/#{left_right} arrow to move and Enter to select)\e[0m\n",
@@ -668,7 +665,7 @@ RSpec.describe TTY::Prompt, "#select" do
         output_helper("What number?", choices[8..9], "10"),
         output_helper("What number?", choices[0..3], "2"),
         output_helper("What number?", choices[8..9], "10"),
-        "What number? \e[32m10\e[0m\n\e[?25h",
+        exit_message("What number?", "10")
       ].join
 
       expect(prompt.output.string).to eq(expected_output)
@@ -708,7 +705,7 @@ RSpec.describe TTY::Prompt, "#select" do
         output_helper("What number?", choices[8..9], "9"),
         output_helper("What number?", choices[4..7], "5"),
         output_helper("What number?", choices[0..3], "2"),
-        "What number? \e[32m2\e[0m\n\e[?25h"
+        exit_message("What number?", "2")
       ].join("")
 
       expect(prompt.output.string).to eq(expected_output)

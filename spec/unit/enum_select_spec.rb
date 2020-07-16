@@ -181,7 +181,7 @@ RSpec.describe TTY::Prompt do
     choices = ["A", {name: "B", disabled: "(out)"}, "C"]
     prompt.input << "\n"
     prompt.input.rewind
-    answer = prompt.enum_select("What letter?", choices) do |menu|
+    answer = prompt.enum_select("What letter?") do |menu|
                menu.symbols cross: "x"
                menu.choices choices
              end

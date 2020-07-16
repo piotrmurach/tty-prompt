@@ -252,9 +252,7 @@ module TTY
     # @api public
     def invoke_select(object, question, *args, &block)
       options = Utils.extract_options!(args)
-      choices = if block
-                  []
-                elsif args.empty?
+      choices = if args.empty? && !block
                   possible = options.dup
                   options = {}
                   possible
