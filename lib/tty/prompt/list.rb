@@ -47,6 +47,7 @@ module TTY
         @filter       = []
         @filter_cache = {}
         @help         = options[:help]
+        @show_help    = options.fetch(:show_help) { :start }
         @first_render = true
         @done         = false
         @per_page     = options[:per_page]
@@ -132,6 +133,15 @@ module TTY
         return @help if !@help.nil? && not_set
 
         @help = (@help.nil? && !not_set) ? value : default_help
+      end
+
+      # Change when help is displayed
+      #
+      # @api public
+      def show_help(value = (not_set = true))
+        return @show_ehlp if not_set
+
+        @show_help = value
       end
 
       # Information about arrow keys
@@ -485,6 +495,20 @@ module TTY
         "(Filter: #{@filter.join.inspect})"
       end
 
+      # Check if help is shown only on start
+      #
+      # @api private
+      def help_start?
+        @show_help =~ /start/i
+      end
+
+      # Check if help is always displayed
+      #
+      # @api private
+      def help_always?
+        @show_help =~ /always/i
+      end
+
       # Render initial help and selected choice
       #
       # @return [String]
@@ -494,7 +518,8 @@ module TTY
         if @done
           selected_item = choices[@active - 1].name
           @prompt.decorate(selected_item.to_s, @active_color)
-        elsif @first_render
+        elsif (@first_render && (help_start? || help_always?)) ||
+              (help_always? && !@filter.any?)
           @prompt.decorate(help, @help_color)
         elsif filterable? && @filter.any?
           @prompt.decorate(filter_help, @help_color)
