@@ -190,7 +190,7 @@ RSpec.describe TTY::Prompt::Converters do
     end
   end
 
-  context ":map" do
+  context ":hash/:map" do
     {
       "" => {},
       "a=1" => {a: "1"},
@@ -204,6 +204,20 @@ RSpec.describe TTY::Prompt::Converters do
     }.each do |input, obj|
       it "converts #{input.inspect} to #{obj.inspect}" do
         expect(described_class.convert(:hash, input)).to eq(obj)
+      end
+    end
+
+    {
+      [:int_map, "a:1 b:2 c:3"] =>  {a: 1, b: 2, c: 3},
+      [:integer_hash, "a:1 b:2 c:3"] =>  {a: 1, b: 2, c: 3},
+      [:float_map, "a:1 b:2 c:3"] =>  {a: 1.0, b: 2.0, c: 3.0},
+      [:bool_map, "a:t b:f c:t"] => {a: true, b: false, c: true},
+      [:boolean_hash, "a:t b:f c:t"] => {a: true, b: false, c: true},
+      [:symbol_map, "a:t b:f c:t"] => {a: :t, b: :f, c: :t},
+      [:regexp_map, "a:t b:f c:t"] => {a: /t/, b: /f/, c: /t/}
+    }.each do |(type, input), obj|
+      it "converts #{input.inspect} to #{obj.inspect}" do
+        expect(described_class.convert(type, input)).to eq(obj)
       end
     end
   end

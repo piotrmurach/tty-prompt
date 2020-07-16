@@ -150,12 +150,20 @@ module TTY
       end
 
       converter_registry.keys.each do |type|
-        next if type =~ /list|array/
+        next if type =~ /list|array|map|hash/
 
         [:"#{type}_list", :"#{type}_array", :"#{type}s"].each do |new_type|
           converter(new_type) do |val|
             converter_registry[:array].(val).map do |obj|
               converter_registry[type].(obj)
+            end
+          end
+        end
+
+        [:"#{type}_map", :"#{type}_hash"].each do |new_type|
+          converter(new_type) do |val|
+            converter_registry[:hash].(val).each_with_object({}) do |(k, v), h|
+              h[k] = converter_registry[type].(v)
             end
           end
         end
