@@ -781,8 +781,8 @@ RSpec.describe TTY::Prompt, "#select" do
       prompt.input << "g" << "\r"
       prompt.input.rewind
 
-      answer = prompt.select("What size?", %w(Small Medium Large Huge), filter: true)
-      expect(answer).to eql("Large")
+      answer = prompt.select("What size?", %i(Small Medium Large Huge), filter: true)
+      expect(answer).to eql(:Large)
 
       actual_prompt_output = prompt.output.string
       expected_prompt_output =

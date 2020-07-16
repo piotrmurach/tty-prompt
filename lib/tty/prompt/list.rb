@@ -207,7 +207,7 @@ module TTY
           else
             filter_value = @filter.join.downcase
             @filter_cache[filter_value] ||= @choices.enabled.select do |choice|
-              choice.name.downcase.include?(filter_value)
+              choice.name.to_s.downcase.include?(filter_value)
             end
           end
         else
