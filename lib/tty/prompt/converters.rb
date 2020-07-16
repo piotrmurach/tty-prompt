@@ -148,6 +148,18 @@ module TTY
           pairs
         end
       end
+
+      converter_registry.keys.each do |type|
+        next if type =~ /list|array/
+
+        [:"#{type}_list", :"#{type}_array", :"#{type}s"].each do |new_type|
+          converter(new_type) do |val|
+            converter_registry[:array].(val).map do |obj|
+              converter_registry[type].(obj)
+            end
+          end
+        end
+      end
     end # Converters
   end # Prompt
 end # TTY

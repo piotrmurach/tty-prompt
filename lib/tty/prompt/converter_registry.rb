@@ -1,11 +1,17 @@
 # frozen_string_literal: true
 
+require "forwardable"
+
 module TTY
   class Prompt
     # Immutable collection of converters for type transformation
     #
     # @api private
     class ConverterRegistry
+      extend Forwardable
+
+      def_delegators "@__registry", :keys
+
       # Create a registry of conversions
       #
       # @param [Hash] registry
