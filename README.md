@@ -1,5 +1,5 @@
 <div align="center">
-  <a href="https://piotrmurach.github.io/tty" target="_blank"><img width="130" src="https://cdn.rawgit.com/piotrmurach/tty/master/images/tty.png" alt="tty logo" /></a>
+  <a href="https://piotrmurach.github.io/tty" target="_blank"><img width="130" src="https://github.com/piotrmurach/tty/raw/master/images/tty.png" alt="tty logo" /></a>
 </div>
 
 # TTY::Prompt [![Gitter](https://badges.gitter.im/Join%20Chat.svg)][gitter]
@@ -47,7 +47,7 @@ For Windows, consider installing [ConEmu](https://conemu.github.io/), [cmder](ht
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'tty-prompt'
+gem "tty-prompt"
 ```
 
 And then execute:
@@ -126,14 +126,14 @@ prompt = TTY::Prompt.new
 And then call `ask` with the question for simple input:
 
 ```ruby
-prompt.ask('What is your name?', default: ENV['USER'])
+prompt.ask("What is your name?", default: ENV["USER"])
 # => What is your name? (piotr)
 ```
 
 To confirm input use `yes?`:
 
 ```ruby
-prompt.yes?('Do you like Ruby?')
+prompt.yes?("Do you like Ruby?")
 # => Do you like Ruby? (Y/n)
 ```
 
@@ -188,13 +188,13 @@ However, if you have a lot of options to choose from you may want to use `expand
 
 ```ruby
 choices = [
-  { key: 'y', name: 'overwrite this file', value: :yes },
-  { key: 'n', name: 'do not overwrite this file', value: :no },
-  { key: 'a', name: 'overwrite this file and all later files', value: :all },
-  { key: 'd', name: 'show diff', value: :diff },
-  { key: 'q', name: 'quit; do not overwrite this file ', value: :quit }
+  { key: "y", name: "overwrite this file", value: :yes },
+  { key: "n", name: "do not overwrite this file", value: :no },
+  { key: "a", name: "overwrite this file and all later files", value: :all },
+  { key: "d", name: "show diff", value: :diff },
+  { key: "q", name: "quit; do not overwrite this file ", value: :quit }
 ]
-prompt.expand('Overwrite Gemfile?', choices)
+prompt.expand("Overwrite Gemfile?", choices)
 # =>
 # Overwrite Gemfile? (enter "h" for help) [y,n,a,d,q,h]
 ```
@@ -203,14 +203,14 @@ If you wish to collect more than one answer use `collect`:
 
 ```ruby
 result = prompt.collect do
-  key(:name).ask('Name?')
+  key(:name).ask("Name?")
 
-  key(:age).ask('Age?', convert: :int)
+  key(:age).ask("Age?", convert: :int)
 
   key(:address) do
-    key(:street).ask('Street?', required: true)
-    key(:city).ask('City?')
-    key(:zip).ask('Zip?', validate: /\A\d{3}\Z/)
+    key(:street).ask("Street?", required: true)
+    key(:city).ask("City?")
+    key(:zip).ask("Zip?", validate: /\A\d{3}\Z/)
   end
 end
 # =>
@@ -323,7 +323,7 @@ end
 The `:default` option is used if the user presses return key:
 
 ```ruby
-prompt.ask('What is your name?', default: 'Anonymous')
+prompt.ask("What is your name?", default: "Anonymous")
 # =>
 # What is your name? (Anonymous)
 ```
@@ -343,7 +343,7 @@ prompt.ask("What is your name?", value: "Piotr")
 To control whether the input is shown back in terminal or not use `:echo` option like so:
 
 ```ruby
-prompt.ask('password:', echo: false)
+prompt.ask("password:", echo: false)
 ```
 
 #### 2.1.5 error messages
@@ -353,26 +353,26 @@ By default `tty-prompt` comes with predefined error messages for `required`, `in
 You can change these and configure to your liking either by passing message as second argument with the option:
 
 ```ruby
-prompt.ask('What is your email?') do |q|
-  q.validate(/\A\w+@\w+\.\w+\Z/, 'Invalid email address')
+prompt.ask("What is your email?") do |q|
+  q.validate(/\A\w+@\w+\.\w+\Z/, "Invalid email address")
 end
 ```
 
 Or change the `messages` key entry out of `:required?`, `:valid?`, `:range?`:
 
 ```ruby
-prompt.ask('What is your email?') do |q|
+prompt.ask("What is your email?") do |q|
   q.validate(/\A\w+@\w+\.\w+\Z/)
-  q.messages[:valid?] = 'Invalid email address'
+  q.messages[:valid?] = "Invalid email address"
 end
 ```
 
 To change default range validation error message do:
 
 ```ruby
-prompt.ask('How spicy on scale (1-5)? ') do |q|
-  q.in '1-5'
-  q.messages[:range?] = '%{value} out of expected range #{in}'
+prompt.ask("How spicy on scale (1-5)? ") do |q|
+  q.in "1-5"
+  q.messages[:range?] = "%{value} out of expected range #{in}"
 end
 ```
 
@@ -381,7 +381,7 @@ end
 In order to check that provided input falls inside a range of inputs use the `in` option. For example, if we wanted to ask a user for a single digit in given range we may do following:
 
 ```ruby
-ask("Provide number in range: 0-9?") { |q| q.in('0-9') }
+ask("Provide number in range: 0-9?") { |q| q.in("0-9") }
 ```
 
 #### 2.1.7 modify
@@ -389,7 +389,7 @@ ask("Provide number in range: 0-9?") { |q| q.in('0-9') }
 Set the `:modify` option if you want to handle whitespace or letter capitalization.
 
 ```ruby
-prompt.ask('Enter text:') do |q|
+prompt.ask("Enter text:") do |q|
   q.modify :strip, :collapse
 end
 ```
@@ -426,13 +426,13 @@ prompt.ask("What's your phone number?", required: true)
 In order to validate that input matches a given pattern you can pass the `validate` option. Validate setting accepts `Regex`, `Proc` or `Symbol`.
 
 ```ruby
-prompt.ask('What is your username?') do |q|
+prompt.ask("What is your username?") do |q|
   q.validate /^[^\.]+\.[^\.]+/
 end
 ```
 
 ```ruby
-prompt.ask('What is your username?') do |q|
+prompt.ask("What is your username?") do |q|
   q.validate { |input| input =~ /^[^\.]+\.[^\.]+/ }
 end
 ```
@@ -440,7 +440,7 @@ end
 The **TTY::Prompt** comes with built-in validations for `:email` and you can use them directly like so:
 
 ```ruby
-prompt.ask('What is your email?') { |q| q.validate :email }
+prompt.ask("What is your email?") { |q| q.validate :email }
 ```
 
 ### 2.2. keypress
@@ -489,15 +489,15 @@ prompt.multiline("Description?")
 The `multiline` uses similar options to those supported by `ask` prompt. For example, to provide default description:
 
 ```ruby
-prompt.multiline("Description?", default: 'A super sweet prompt.')
+prompt.multiline("Description?", default: "A super sweet prompt.")
 ```
 
 Or using DSL:
 
 ```ruby
 prompt.multiline("Description?") do |q|
-  q.default 'A super sweet prompt.'
-  q.help 'Press thy ctrl+d to end'
+  q.default "A super sweet prompt."
+  q.help "Press thy ctrl+d to end"
 end
 ```
 
@@ -506,28 +506,28 @@ end
 If you require input of confidential information use `mask` method. By default each character that is printed is replaced by `•` symbol. All configuration options applicable to `ask` method can be used with `mask` as well.
 
 ```ruby
-prompt.mask('What is your secret?')
+prompt.mask("What is your secret?")
 # => What is your secret? ••••
 ```
 
 The masking character can be changed by passing `:symbols` option with `:mask` key:
 
 ```ruby
-heart = prompt.decorate(prompt.symbols[:heart] + ' ', :magenta)
-prompt.mask('What is your secret?', symbols: {mask: heart})
+heart = prompt.decorate(prompt.symbols[:heart] + " ", :magenta)
+prompt.mask("What is your secret?", symbols: {mask: heart})
 # => What is your secret? ❤  ❤  ❤  ❤  ❤
 ```
 
 If you don't wish to show any output use `:echo` option like so:
 
 ```ruby
-prompt.mask('What is your secret?', echo: false)
+prompt.mask("What is your secret?", echo: false)
 ```
 
 You can also provide validation for your mask to enforce for instance strong passwords:
 
 ```ruby
-prompt.mask('What is your secret?', mask: heart) do |q|
+prompt.mask("What is your secret?", mask: heart) do |q|
   q.validate(/[a-z\ ]{5,15}/)
 end
 ```
@@ -537,7 +537,7 @@ end
 In order to display a query asking for boolean input from user use `yes?` like so:
 
 ```ruby
-prompt.yes?('Do you like Ruby?')
+prompt.yes?("Do you like Ruby?")
 # =>
 # Do you like Ruby? (Y/n)
 ```
@@ -548,7 +548,7 @@ It's enough to provide the `suffix` option for the prompt to accept matching ans
 
 ```ruby
 prompt.yes?("Are you a human?") do |q|
-  q.suffix 'Yup/nope'
+  q.suffix "Yup/nope"
 end
 # =>
 # Are you a human? (Yup/nope)
@@ -559,8 +559,8 @@ Alternatively, instead of `suffix` option provide the `positive` and `negative` 
 ```ruby
 prompt.yes?("Are you a human?") do |q|
   q.default false
-  q.positive 'Yup'
-  q.negative 'Nope'
+  q.positive "Yup"
+  q.negative "Nope"
 end
 # =>
 # Are you a human? (yup/Nope)
@@ -569,10 +569,10 @@ end
 Finally, providing all available options you can ask fully customized question:
 
 ```ruby
-prompt.yes?('Are you a human?') do |q|
-  q.suffix 'Agree/Disagree'
-  q.positive 'Agree'
-  q.negative 'Disagree'
+prompt.yes?("Are you a human?") do |q|
+  q.suffix "Agree/Disagree"
+  q.positive "Agree"
+  q.negative "Disagree"
   q.convert -> (input) { !input.match(/^agree$/i).nil? }
 end
 # =>
@@ -582,7 +582,7 @@ end
 There is also the opposite for asking confirmation of negative question:
 
 ```ruby
-prompt.no?('Do you hate Ruby?')
+prompt.no?("Do you hate Ruby?")
 # =>
 # Do you hate Ruby? (y/N)
 ```
@@ -609,9 +609,9 @@ Finally, you can define an array of choices where each choice is a hash value wi
 
 ```ruby
 choices = [
-  {name: 'small', value: 1},
-  {name: 'medium', value: 2, disabled: '(out of stock)'},
-  {name: 'large', value: 3}
+  {name: "small", value: 1},
+  {name: "medium", value: 2, disabled: "(out of stock)"},
+  {name: "large", value: 3}
 ]
 ```
 
@@ -620,20 +620,20 @@ You can specify `:key` as an additional option which will be used as short name 
 Another way to create menu with choices is using the DSL and the `choice` method. For example, the previous array of choices with hash values can be translated as:
 
 ```ruby
-prompt.select('What size?') do |menu|
-  menu.choice name: 'small',  value: 1
-  menu.choice name: 'medium', value: 2, disabled: '(out of stock)'
-  menu.choice name: 'large',  value: 3
+prompt.select("What size?") do |menu|
+  menu.choice name: "small",  value: 1
+  menu.choice name: "medium", value: 2, disabled: "(out of stock)"
+  menu.choice name: "large",  value: 3
 end
 ```
 
 or in a more compact way:
 
 ```ruby
-prompt.select('What size?') do |menu|
-  menu.choice 'small', 1
-  menu.choice 'medium', 2, disabled: '(out of stock)'
-  menu.choice 'large', 3
+prompt.select("What size?") do |menu|
+  menu.choice "small", 1
+  menu.choice "medium", 2, disabled: "(out of stock)"
+  menu.choice "large", 3
 end
 ```
 
@@ -643,9 +643,9 @@ The `:disabled` key indicates to display a choice as currently unavailable to se
 
 ```ruby
 choices = [
-  {name: 'small', value: 1},
-  {name: 'medium', value: 2, disabled: '(out of stock)'},
-  {name: 'large', value: 3}
+  {name: "small", value: 1},
+  {name: "medium", value: 2, disabled: "(out of stock)"},
+  {name: "large", value: 3}
 ]
 ```
 
@@ -666,9 +666,9 @@ You can also provide options through DSL using the `choice` method for single en
 
 ```ruby
 prompt.select("Choose your destiny?") do |menu|
-  menu.choice 'Scorpion'
-  menu.choice 'Kano'
-  menu.choice 'Jax'
+  menu.choice "Scorpion"
+  menu.choice "Kano"
+  menu.choice "Jax"
 end
 # =>
 # Choose your destiny? (Use ↑/↓ arrow keys, press Enter to select)
@@ -681,9 +681,9 @@ By default the choice name is used as return value, but you can provide your cus
 
 ```ruby
 prompt.select("Choose your destiny?") do |menu|
-  menu.choice 'Scorpion', 1
-  menu.choice 'Kano', 2
-  menu.choice 'Jax', -> { 'Nice choice captain!' }
+  menu.choice "Scorpion", 1
+  menu.choice "Kano", 2
+  menu.choice "Jax", -> { "Nice choice captain!" }
 end
 # =>
 # Choose your destiny? (Use ↑/↓ arrow keys, press Enter to select)
@@ -695,7 +695,7 @@ end
 If you wish you can also provide a simple hash to denote choice name and its value like so:
 
 ```ruby
-choices = {'Scorpion' => 1, 'Kano' => 2, 'Jax' => 3}
+choices = {"Scorpion" => 1, "Kano" => 2, "Jax" => 3}
 prompt.select("Choose your destiny?", choices)
 ```
 
@@ -705,9 +705,9 @@ To mark particular answer as selected use `default` with index of the option sta
 prompt.select("Choose your destiny?") do |menu|
   menu.default 3
 
-  menu.choice 'Scorpion', 1
-  menu.choice 'Kano', 2
-  menu.choice 'Jax', 3
+  menu.choice "Scorpion", 1
+  menu.choice "Kano", 2
+  menu.choice "Jax", 3
 end
 # =>
 # Choose your destiny? (Use ↑/↓ arrow keys, press Enter to select)
@@ -731,11 +731,11 @@ For ordered choices set `enum` to any delimiter String. In that way, you can use
 
 ```ruby
 prompt.select("Choose your destiny?") do |menu|
-  menu.enum '.'
+  menu.enum "."
 
-  menu.choice 'Scorpion', 1
-  menu.choice 'Kano', 2
-  menu.choice 'Jax', 3
+  menu.choice "Scorpion", 1
+  menu.choice "Kano", 2
+  menu.choice "Jax", 3
 end
 # =>
 # Choose your destiny? (Use ↑/↓ arrow or number (0-9) keys, press Enter to select)
@@ -748,7 +748,7 @@ You can configure help message and/or marker like so
 
 ```ruby
 choices = %w(Scorpion Kano Jax)
-prompt.select("Choose your destiny?", choices, help: "(Bash keyboard)", symbols: {marker: '>'})
+prompt.select("Choose your destiny?", choices, help: "(Bash keyboard)", symbols: {marker: ">"})
 # =>
 # Choose your destiny? (Bash keyboard)
 # > Scorpion
@@ -761,7 +761,7 @@ prompt.select("Choose your destiny?", choices, help: "(Bash keyboard)", symbols:
 By default the menu is paginated if selection grows beyond `6` items. To change this setting use `:per_page` configuration.
 
 ```ruby
-letters = ('A'..'Z').to_a
+letters = ("A".."Z").to_a
 prompt.select("Choose your letter?", letters, per_page: 4)
 # =>
 # Which letter? (Use ↑/↓ and ←/→ arrow keys, press Enter to select)
@@ -773,10 +773,10 @@ prompt.select("Choose your letter?", letters, per_page: 4)
 
 You can also customise page navigation text using `:help` option:
 ```ruby
-letters = ('A'..'Z').to_a
+letters = ("A".."Z").to_a
 prompt.select("Choose your letter?") do |menu|
   menu.per_page 4
-  menu.help '(Wiggle thy finger up/down and left/right to see more)'
+  menu.help "(Wiggle thy finger up/down and left/right to see more)"
   menu.choices letters
 end
 # =>
@@ -793,19 +793,19 @@ To disable menu choice, use the `:disabled` key with a value that explains the r
 
 ```ruby
 warriors = [
-  'Scorpion',
-  'Kano',
-  { name: 'Goro', disabled: '(injury)' },
-  'Jax',
-  'Kitana',
-  'Raiden'
+  "Scorpion",
+  "Kano",
+  { name: "Goro", disabled: "(injury)" },
+  "Jax",
+  "Kitana",
+  "Raiden"
 ]
 ```
 
 The disabled choice will be displayed with a cross `✘` character next to it and followed by an explanation:
 
 ```ruby
-prompt.select('Choose your destiny?', warriors)
+prompt.select("Choose your destiny?", warriors)
 # =>
 # Choose your destiny? (Use ↑/↓ arrow keys, press Enter to select)
 # ‣ Scorpion
@@ -822,7 +822,7 @@ To activate dynamic list searching on letter/number key presses use `:filter` op
 
 ```ruby
 warriors = %w(Scorpion Kano Jax Kitana Raiden)
-prompt.select('Choose your destiny?', warriors, filter: true)
+prompt.select("Choose your destiny?", warriors, filter: true)
 # =>
 # Choose your destiny? (Use ↑/↓ arrow keys, press Enter to select, and letter keys to filter)
 # ‣ Scorpion
@@ -916,7 +916,7 @@ Like `select`, for ordered choices set `enum` to any delimiter String. In that w
 
 ```ruby
 prompt.multi_select("Select drinks?") do |menu|
-  menu.enum ')'
+  menu.enum ")"
 
   menu.choice :vodka,   {score: 10}
   menu.choice :beer,    {score: 20}
@@ -950,7 +950,7 @@ You can configure help message and/or marker like so
 
 ```ruby
 choices = {vodka: 1, beer: 2, wine: 3, whisky: 4, bourbon: 5}
-prompt.multi_select("Select drinks?", choices, help: 'Press beer can against keyboard')
+prompt.multi_select("Select drinks?", choices, help: "Press beer can against keyboard")
 # =>
 # Select drinks? (Press beer can against keyboard)"
 # ‣ ⬡ vodka
@@ -963,7 +963,7 @@ prompt.multi_select("Select drinks?", choices, help: 'Press beer can against key
 By default the menu is paginated if selection grows beyond `6` items. To change this setting use `:per_page` configuration.
 
 ```ruby
-letters = ('A'..'Z').to_a
+letters = ("A".."Z").to_a
 prompt.multi_select("Choose your letter?", letters, per_page: 4)
 # =>
 # Which letter? (Use ↑/↓ and ←/→ arrow keys, press Space to select and Enter to finish)
@@ -979,19 +979,19 @@ To disable menu choice, use the `:disabled` key with a value that explains the r
 
 ```ruby
 drinks = [
-  'bourbon',
-  {name: 'sake', disabled: '(out of stock)'},
-  'vodka',
-  {name: 'beer', disabled: '(out of stock)'},
-  'wine',
-  'whisky'
+  "bourbon",
+  {name: "sake", disabled: "(out of stock)"},
+  "vodka",
+  {name: "beer", disabled: "(out of stock)"},
+  "wine",
+  "whisky"
 ]
 ```
 
 The disabled choice will be displayed with a cross `✘` character next to it and followed by an explanation:
 
 ```ruby
-prompt.multi_select('Choose your favourite drink?', drinks)
+prompt.multi_select("Choose your favourite drink?", drinks)
 # =>
 # Choose your favourite drink? (Use ↑/↓ arrow keys, press Space to select and Enter to finish)
 # ‣ ⬡ bourbon
@@ -1102,9 +1102,9 @@ Similar to `select` and `multi_select`, you can provide question options through
 ```ruby
 choices = %w(nano vim emacs)
 prompt.enum_select("Select an editor?") do |menu|
-  menu.choice :nano,  '/bin/nano'
-  menu.choice :vim,   '/usr/bin/vim'
-  menu.choice :emacs, '/usr/bin/emacs'
+  menu.choice :nano,  "/bin/nano"
+  menu.choice :vim,   "/usr/bin/vim"
+  menu.choice :emacs, "/usr/bin/emacs"
 end
 # =>
 #
@@ -1123,11 +1123,11 @@ You can change the indexed numbers by passing `enum` option and the default opti
 choices = %w(nano vim emacs)
 prompt.enum_select("Select an editor?") do |menu|
   menu.default 2
-  menu.enum '.'
+  menu.enum "."
 
-  menu.choice :nano,  '/bin/nano'
-  menu.choice :vim,   '/usr/bin/vim'
-  menu.choice :emacs, '/usr/bin/emacs'
+  menu.choice :nano,  "/bin/nano"
+  menu.choice :vim,   "/usr/bin/vim"
+  menu.choice :emacs, "/usr/bin/emacs"
 end
 # =>
 #
@@ -1145,7 +1145,7 @@ end
 By default the menu is paginated if selection grows beyond `6` items. To change this setting use `:per_page` configuration.
 
 ```ruby
-letters = ('A'..'Z').to_a
+letters = ("A".."Z").to_a
 prompt.enum_select("Choose your letter?", letters, per_page: 4)
 # =>
 # Which letter?
@@ -1163,10 +1163,10 @@ To make a choice unavailable use the `:disabled` option and, if you wish, as val
 
 ```ruby
 choices = [
-  {name: "Emacs", disabled: '(not installed)'},
+  {name: "Emacs", disabled: "(not installed)"},
   "Atom",
   "GNU nano",
-  {name: "Notepad++", disabled: '(not installed)'},
+  {name: "Notepad++", disabled: "(not installed)"},
   "Sublime",
   "Vim"
 ]
@@ -1176,7 +1176,7 @@ The disabled choice will be displayed with a cross ✘ character next to it and 
 
 
 ```ruby
-prompt.enum_select('Select an editor', choices)
+prompt.enum_select("Select an editor", choices)
 # =>
 # Select an editor
 # ✘ 1) Emacs (not installed)
@@ -1197,16 +1197,16 @@ As first argument `expand` takes the message to display and as a second an array
 ```ruby
 choices = [
   {
-    key: 'y',
-    name: 'overwrite this file',
+    key: "y",
+    name: "overwrite this file",
     value: :yes
   }, {
-    key: 'n',
-    name: 'do not overwrite this file',
+    key: "n",
+    name: "do not overwrite this file",
     value: :no
   }, {
-    key: 'q',
-    name: 'quit; do not overwrite this file ',
+    key: "q",
+    name: "quit; do not overwrite this file ",
     value: :quit
   }
 ]
@@ -1215,19 +1215,19 @@ choices = [
 The choices can also be provided through DSL using the `choice` method. The `:value` can be a primitive value or `Proc` instance that gets executed and whose value is used as returned type. For example:
 
 ```ruby
-prompt.expand('Overwrite Gemfile?') do |q|
-  q.choice key: 'y', name: 'Overwrite'      do :ok end
-  q.choice key: 'n', name: 'Skip',          value: :no
-  q.choice key: 'a', name: 'Overwrite all', value: :all
-  q.choice key: 'd', name: 'Show diff',     value: :diff
-  q.choice key: 'q', name: 'Quit',          value: :quit
+prompt.expand("Overwrite Gemfile?") do |q|
+  q.choice key: "y", name: "Overwrite"      do :ok end
+  q.choice key: "n", name: "Skip",          value: :no
+  q.choice key: "a", name: "Overwrite all", value: :all
+  q.choice key: "d", name: "Show diff",     value: :diff
+  q.choice key: "q", name: "Quit",          value: :quit
 end
 ```
 
 The first element in the array of choices or provided via `choice` DSL will be the default choice, you can change that by passing `default` option.
 
 ```ruby
-prompt.expand('Overwrite Gemfile?', choices)
+prompt.expand("Overwrite Gemfile?", choices)
 # =>
 # Overwrite Gemfile? (enter "h" for help) [y,n,q,h]
 ```
@@ -1257,7 +1257,7 @@ Run `examples/expand.rb` to see the prompt in action.
 To show hint by default use `:auto_hint` option:
 
 ```ruby
-prompt.expand('Overwrite Gemfile?', choices, auto_hint: true)
+prompt.expand("Overwrite Gemfile?", choices, auto_hint: true)
 # =>
 # Overwrite Gemfile? (enter "h" for help) [y,n,q,h]
 # >> overwrite this file
@@ -1271,14 +1271,14 @@ For example to gather some contact information do:
 
 ```ruby
 prompt.collect do
-  key(:name).ask('Name?')
+  key(:name).ask("Name?")
 
-  key(:age).ask('Age?', convert: :int)
+  key(:age).ask("Age?", convert: :int)
 
   key(:address) do
-    key(:street).ask('Street?', required: true)
-    key(:city).ask('City?')
-    key(:zip).ask('Zip?', validate: /\A\d{3}\Z/)
+    key(:street).ask("Street?", required: true)
+    key(:city).ask("City?")
+    key(:zip).ask("Zip?", validate: /\A\d{3}\Z/)
   end
 end
 # =>
@@ -1289,15 +1289,15 @@ In order to collect _mutliple values_ for a given key in a loop, chain `values` 
 
 ```ruby
 result = prompt.collect do
-  key(:name).ask('Name?')
+  key(:name).ask("Name?")
 
-  key(:age).ask('Age?', convert: :int)
+  key(:age).ask("Age?", convert: :int)
 
   while prompt.yes?("continue?")
     key(:addresses).values do
-      key(:street).ask('Street?', required: true)
-      key(:city).ask('City?')
-      key(:zip).ask('Zip?', validate: /\A\d{3}\Z/)
+      key(:street).ask("Street?", required: true)
+      key(:city).ask("City?")
+      key(:zip).ask("Zip?", validate: /\A\d{3}\Z/)
     end
   end
 end
@@ -1317,7 +1317,7 @@ end
 To suggest possible matches for the user input use `suggest` method like so:
 
 ```ruby
-prompt.suggest('sta', ['stage', 'stash', 'commit', 'branch'])
+prompt.suggest("sta", ["stage", "stash", "commit", "branch"])
 # =>
 # Did you mean one of these?
 #         stage
@@ -1328,7 +1328,7 @@ To customize query text presented pass `:single_text` and `:plural_text` options
 
 ```ruby
 possible = %w(status stage stash commit branch blame)
-prompt.suggest('b', possible, indent: 4, single_text: 'Perhaps you meant?')
+prompt.suggest("b", possible, indent: 4, single_text: "Perhaps you meant?")
 # =>
 # Perhaps you meant?
 #     blame
@@ -1341,7 +1341,7 @@ If you have constrained range of numbers for user to choose from you may conside
 The slider provides easy visual way of picking a value marked by `●` symbol. You can set `:min`(defaults to 0), `:max` and `:step`(defaults to 1) options to configure slider range:
 
 ```ruby
-prompt.slider('Volume', max: 100, step: 5)
+prompt.slider("Volume", max: 100, step: 5)
 # =>
 # Volume ──────────●────────── 50
 # (Use ←/→ arrow keys, press Enter to select)
@@ -1350,7 +1350,7 @@ prompt.slider('Volume', max: 100, step: 5)
 By default the slider is configured to pick middle of the range as a start value, you can change this by using the `:default` option:
 
 ```ruby
-prompt.slider('Volume', max: 100, step: 5, default: 75)
+prompt.slider("Volume", max: 100, step: 5, default: 75)
 # =>
 # Volume ───────────────●────── 75
 # (Use ←/→ arrow keys, press Enter to select)
@@ -1359,7 +1359,7 @@ prompt.slider('Volume', max: 100, step: 5, default: 75)
 You can also change the default slider formatting using the `:format`. The value must contain the `:slider` token to show current value and any `sprintf` compatible flag for number display, in our case `%d`:
 
 ```ruby
-prompt.slider('Volume', max: 100, step: 5, default: 75, format: "|:slider| %d%%")
+prompt.slider("Volume", max: 100, step: 5, default: 75, format: "|:slider| %d%%")
 # =>
 # Volume |───────────────●──────| 75%
 # (Use ←/→ arrow keys, press Enter to select)
@@ -1387,7 +1387,7 @@ prompt.slider("Volume", max: 10, step: 0.5, default: 0, format: slider_format)
 If you wish to change the slider handle and the slider range display use `:symbols` option:
 
 ```ruby
-prompt.slider("Volume", max: 100, step: 5, default: 75, symbols: {bullet: 'x', line: '_'})
+prompt.slider("Volume", max: 100, step: 5, default: 75, symbols: {bullet: "x", line: "_"})
 # =>
 # Volume _______________x______ 75%
 # (Use ←/→ arrow keys, press Enter to select)
@@ -1405,7 +1405,7 @@ prompt.slider("Volume", max: 10, default: 7, help: "(Move arrows left and right 
 Slider can be configured through DSL as well:
 
 ```ruby
-prompt.slider('What size?') do |range|
+prompt.slider("What size?") do |range|
   range.max 100
   range.step 5
   range.default 75
@@ -1471,11 +1471,11 @@ For example, to add vim like key navigation to `select` prompt one would do the 
 
 ```ruby
 prompt.on(:keypress) do |event|
-  if event.value == 'j'
+  if event.value == "j"
     prompt.trigger(:keydown)
   end
 
-  if event.value == 'k'
+  if event.value == "k"
     prompt.trigger(:keyup)
   end
 end
@@ -1511,7 +1511,7 @@ The available events are:
 Many prompts use symbols to display information. You can overwrite the default symbols for all the prompts using the `:symbols` key and hash of symbol names as value:
 
 ```ruby
-prompt = TTY::Prompt.new(symbols: {marker: '>'})
+prompt = TTY::Prompt.new(symbols: {marker: ">"})
 ```
 
 The following symbols can be overwritten:
@@ -1563,7 +1563,7 @@ prompt = TTY::Prompt.new(active_color: ->(str) { my-color-gem(str) })
 This option can be applied either globally for all prompts or individually:
 
 ```ruby
-prompt.select('What size?', %w(Large Medium Small), active_color: :cyan)
+prompt.select("What size?", %w(Large Medium Small), active_color: :cyan)
 ```
 
 Please [see pastel](https://github.com/piotrmurach/pastel#3-supported-colors) for all supported colors.
@@ -1631,7 +1631,7 @@ prompt = TTY::Prompt.new(interrupt: :signal)
 You can prefix each question asked using the `:prefix` option. This option can be applied either globally for all prompts or individual for each one:
 
 ```ruby
-prompt = TTY::Prompt.new(prefix: '[?] ')
+prompt = TTY::Prompt.new(prefix: "[?] ")
 ```
 
 ### 3.7 `:quiet`
