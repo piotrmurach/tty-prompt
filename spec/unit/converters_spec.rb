@@ -210,6 +210,8 @@ RSpec.describe TTY::Prompt::Converters do
     {
       [:int_map, "a:1 b:2 c:3"] =>  {a: 1, b: 2, c: 3},
       [:integer_hash, "a:1 b:2 c:3"] =>  {a: 1, b: 2, c: 3},
+      [:str_int_map, "a:1 b:2 c:3"] =>  {"a" => 1, "b" => 2, "c" => 3},
+      [:string_integer_hash, "a:1 b:2 c:3"] =>  {"a" => 1, "b" => 2, "c" => 3},
       [:float_map, "a:1 b:2 c:3"] =>  {a: 1.0, b: 2.0, c: 3.0},
       [:bool_map, "a:t b:f c:t"] => {a: true, b: false, c: true},
       [:boolean_hash, "a:t b:f c:t"] => {a: true, b: false, c: true},

@@ -167,6 +167,15 @@ module TTY
             end
           end
         end
+
+        [:"string_#{type}_map", :"str_#{type}_map",
+         :"string_#{type}_hash", :"str_#{type}_hash"].each do |new_type|
+          converter(new_type) do |val|
+            converter_registry[:hash].(val).each_with_object({}) do |(k, v), h|
+              h[converter_registry[:string].(k)] = converter_registry[type].(v)
+            end
+          end
+        end
       end
     end # Converters
   end # Prompt
