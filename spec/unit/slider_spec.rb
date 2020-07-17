@@ -241,8 +241,10 @@ RSpec.describe TTY::Prompt, "#slider" do
     prompt.input << "l" << "l" << "\r"
     prompt.input.rewind
 
-    res = prompt.slider("What size?", min: 0, max: 10, step: 1,
-                        default: 0, show_help: :never)
+    res = prompt.slider("What size?", min: 0, max: 10, step: 1) do |range|
+                          range.default 0
+                          range.show_help :never
+                        end
     expect(res).to eq(2)
 
     expected_output = [
