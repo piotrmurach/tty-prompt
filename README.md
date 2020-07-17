@@ -63,15 +63,15 @@ Or install it yourself as:
 * [1. Usage](#1-usage)
 * [2. Interface](#2-interface)
   * [2.1 ask](#21-ask)
-    * [2.1.1 convert](#211-convert)
-    * [2.1.2 default](#212-default)
-    * [2.1.3 value](#213-value)
-    * [2.1.4 echo](#214-echo)
+    * [2.1.1 :convert](#211-convert)
+    * [2.1.2 :default](#212-default)
+    * [2.1.3 :value](#213-value)
+    * [2.1.4 :echo](#214-echo)
     * [2.1.5 error messages](#215-error-messages)
-    * [2.1.6 in](#216-in)
-    * [2.1.7 modify](#217-modify)
-    * [2.1.8 required](#218-required)
-    * [2.1.9 validate](#219-validate)
+    * [2.1.6 :in](#216-in)
+    * [2.1.7 :modify](#217-modify)
+    * [2.1.8 :required](#218-required)
+    * [2.1.9 :validate](#219-validate)
   * [2.2 keypress](#22-keypress)
     * [2.2.1 :timeout](#221-timeout)
   * [2.3 multiline](#23-multiline)
@@ -81,20 +81,28 @@ Or install it yourself as:
     * [2.6.1 choices](#261-choices)
     * [2.6.1.1 :disabled](#2611-disabled)
     * [2.6.2 select](#262-select)
-      * [2.6.2.1 :per_page](#2621-per_page)
-      * [2.6.2.2 :disabled](#2622-disabled)
-      * [2.6.2.3 :filter](#2623-filter)
+      * [2.6.2.1 :cycle](#2621-cycle)
+      * [2.6.2.2 :enum](#2622-enum)
+      * [2.6.2.3 :help](#2623-help)
+      * [2.6.2.4 :marker](#2624-marker)
+      * [2.6.2.5 :per_page](#2625-per_page)
+      * [2.6.2.6 :disabled](#2626-disabled)
+      * [2.6.2.7 :filter](#2627-filter)
     * [2.6.3 multi_select](#263-multi_select)
-      * [2.6.3.1 :disabled](#2631-disabled)
-      * [2.6.3.2 :echo](#2632-echo)
-      * [2.6.3.3 :filter](#2633-filter)
-      * [2.6.3.4 :min](#2634-min)
-      * [2.6.3.5 :max](#2635-max)
+      * [2.6.3.1 :cycle](#2631-cycle)
+      * [2.6.3.2 :enum](#2632-enum)
+      * [2.6.3.3 :help](#2633-help)
+      * [2.6.3.4 :per_page](#2634-per_page)
+      * [2.6.3.5 :disabled](#2635-disabled)
+      * [2.6.3.6 :echo](#2636-echo)
+      * [2.6.3.7 :filter](#2637-filter)
+      * [2.6.3.8 :min](#2638-min)
+      * [2.6.3.9 :max](#2639-max)
     * [2.6.4 enum_select](#264-enum_select)
       * [2.6.4.1 :per_page](#2641-per_page)
       * [2.6.4.1 :disabled](#2641-disabled)
   * [2.7 expand](#27-expand)
-    * [2.7.1 auto_hint](#271-auto_hint)
+    * [2.7.1 :auto_hint](#271-auto_hint)
   * [2.8 collect](#28-collect)
   * [2.9 suggest](#29-suggest)
   * [2.10 slider](#210-slider)
@@ -237,7 +245,7 @@ prompt.ask("What is your name?") do |q|
 end
 ```
 
-#### 2.1.1 convert
+#### 2.1.1 `:convert`
 
 The `convert` property is used to convert input to a required type.
 
@@ -318,7 +326,7 @@ end
 # => ["milk", "eggs", "flour"]
 ```
 
-#### 2.1.2 default
+#### 2.1.2 `:default`
 
 The `:default` option is used if the user presses return key:
 
@@ -328,7 +336,7 @@ prompt.ask("What is your name?", default: "Anonymous")
 # What is your name? (Anonymous)
 ```
 
-#### 2.1.3 value
+#### 2.1.3 `:value`
 
 To pre-populate the input line for editing use `:value` option:
 
@@ -338,7 +346,7 @@ prompt.ask("What is your name?", value: "Piotr")
 # What is your name? Piotr
 ```
 
-#### 2.1.4 echo
+#### 2.1.4 `:echo`
 
 To control whether the input is shown back in terminal or not use `:echo` option like so:
 
@@ -376,7 +384,7 @@ prompt.ask("How spicy on scale (1-5)? ") do |q|
 end
 ```
 
-#### 2.1.6 in
+#### 2.1.6 `:in`
 
 In order to check that provided input falls inside a range of inputs use the `in` option. For example, if we wanted to ask a user for a single digit in given range we may do following:
 
@@ -384,7 +392,7 @@ In order to check that provided input falls inside a range of inputs use the `in
 ask("Provide number in range: 0-9?") { |q| q.in("0-9") }
 ```
 
-#### 2.1.7 modify
+#### 2.1.7 `:modify`
 
 Set the `:modify` option if you want to handle whitespace or letter capitalization.
 
@@ -411,7 +419,7 @@ Available whitespace settings are:
 :remove   # remove all whitespace
 ```
 
-#### 2.1.8 required
+#### 2.1.8 `:required`
 
 To ensure that input is provided use `:required` option:
 
@@ -421,7 +429,7 @@ prompt.ask("What's your phone number?", required: true)
 # >> Value must be provided
 ```
 
-#### 2.1.9 validate
+#### 2.1.9 `:validate`
 
 In order to validate that input matches a given pattern you can pass the `validate` option. Validate setting accepts `Regex`, `Proc` or `Symbol`.
 
@@ -716,6 +724,9 @@ end
 # ‣ Jax
 ```
 
+
+#### 2.6.2.1 `:cycle`
+
 You can navigate the choices using the arrow keys or define your own key mappings (see [keyboard events](#212-keyboard-events). When reaching the top/bottom of the list, the selection does not cycle around by default. If you wish to enable cycling, you can pass `cycle: true` to `select` and `multi_select`:
 
 ```ruby
@@ -726,6 +737,8 @@ prompt.select("Choose your destiny?", %w(Scorpion Kano Jax), cycle: true)
 #   Kano
 #   Jax
 ```
+
+#### 2.6.2.2 `:enum`
 
 For ordered choices set `enum` to any delimiter String. In that way, you can use arrows keys and numbers (0-9) to select the item.
 
@@ -744,19 +757,35 @@ end
 # ‣ 3. Jax
 ```
 
-You can configure help message and/or marker like so
+#### 2.6.2.3 `:help`
+
+You can configure help message with `:help` and when to display it with `:show_help` options. The help can be displayed on `start`, `never` or `always`:
 
 ```ruby
 choices = %w(Scorpion Kano Jax)
-prompt.select("Choose your destiny?", choices, help: "(Bash keyboard)", symbols: {marker: ">"})
+prompt.select("Choose your destiny?", choices, help: "(Bash keyboard keys)", show_help: :always)
 # =>
-# Choose your destiny? (Bash keyboard)
+# Choose your destiny? (Bash keyboard keys)
 # > Scorpion
 #   Kano
 #   Jax
 ```
 
-#### 2.6.1.1 `:per_page`
+#### 2.6.2.4 `:marker`
+
+You can configure active marker like so:
+
+```ruby
+choices = %w(Scorpion Kano Jax)
+prompt.select("Choose your destiny?", choices, symbols: { marker: ">" })
+# =>
+# Choose your destiny? (Use ↑/↓ and ←/→ arrow keys, press Enter to select)
+# > Scorpion
+#   Kano
+#   Jax
+```
+
+#### 2.6.2.5 `:per_page`
 
 By default the menu is paginated if selection grows beyond `6` items. To change this setting use `:per_page` configuration.
 
@@ -787,7 +816,7 @@ end
 #   D
 ```
 
-#### 2.6.2.2 `:disabled`
+#### 2.6.2.6 `:disabled`
 
 To disable menu choice, use the `:disabled` key with a value that explains the reason for the choice being unavailable. For example, out of all warriors, the Goro is currently injured:
 
@@ -816,7 +845,7 @@ prompt.select("Choose your destiny?", warriors)
 #   Raiden
 ```
 
-#### 2.6.2.3 `:filter`
+#### 2.6.2.7 `:filter`
 
 To activate dynamic list searching on letter/number key presses use `:filter` option:
 
@@ -912,6 +941,16 @@ end
 # ‣ ⬢ bourbon
 ```
 
+#### 2.6.3.1 `:cycle`
+
+Also like, `select`, the method takes an option `cycle` (which defaults to `false`), which lets you configure whether the selection should cycle around when reaching the top/bottom of the list when navigating:
+
+```ruby
+prompt.multi_select("Select drinks?", %w(vodka beer wine), cycle: true)
+```
+
+#### 2.6.3.2 `:enum`
+
 Like `select`, for ordered choices set `enum` to any delimiter String. In that way, you can use arrows keys and numbers (0-9) to select the item.
 
 ```ruby
@@ -940,17 +979,13 @@ And when you press enter you will see the following selected:
 # => [{score: 20}, {score: 50}]
 ```
 
-Also like, `select`, the method takes an option `cycle` (which defaults to `false`), which lets you configure whether the selection should cycle around when reaching the top/bottom of the list when navigating:
+#### 2.6.3.3 `:help`
 
-```ruby
-prompt.multi_select("Select drinks?", %w(vodka beer wine), cycle: true)
-```
-
-You can configure help message and/or marker like so
+You can configure help message with `:help` and when to display it with `:show_help` options. The help can be displayed on `start`, `never` or `always`:
 
 ```ruby
 choices = {vodka: 1, beer: 2, wine: 3, whisky: 4, bourbon: 5}
-prompt.multi_select("Select drinks?", choices, help: "Press beer can against keyboard")
+prompt.multi_select("Select drinks?", choices, help: "Press beer can against keyboard", show_help: :always)
 # =>
 # Select drinks? (Press beer can against keyboard)"
 # ‣ ⬡ vodka
@@ -959,6 +994,8 @@ prompt.multi_select("Select drinks?", choices, help: "Press beer can against key
 #   ⬡ whisky
 #   ⬡ bourbon
 ```
+
+#### 2.6.3.4 `:per_page`
 
 By default the menu is paginated if selection grows beyond `6` items. To change this setting use `:per_page` configuration.
 
@@ -973,7 +1010,7 @@ prompt.multi_select("Choose your letter?", letters, per_page: 4)
 #   ⬡ D
 ```
 
-#### 2.6.3.1 `:disabled`
+#### 2.6.3.5 `:disabled`
 
 To disable menu choice, use the `:disabled` key with a value that explains the reason for the choice being unavailable. For example, out of all drinks, the sake and beer are currently out of stock:
 
@@ -1002,7 +1039,7 @@ prompt.multi_select("Choose your favourite drink?", drinks)
 #   ⬡ whisky
 ```
 
-#### 2.6.3.2 `:echo`
+#### 2.6.3.6 `:echo`
 
 To control whether the selected items are shown on the question
 header use the :echo option:
@@ -1019,7 +1056,7 @@ prompt.multi_select("Select drinks?", choices, echo: false)
 # ‣ ⬢ 5) bourbon
 ```
 
-#### 2.6.3.3 `:filter`
+#### 2.6.3.7 `:filter`
 
 To activate dynamic list filtering on letter/number typing, use the :filter option:
 
@@ -1049,7 +1086,7 @@ If the user changes or deletes a filter, the choices previously selected remain 
 
 The `filter` option is not compatible with `enum`.
 
-#### 2.6.3.4 `:min`
+#### 2.6.3.8 `:min`
 
 To force the minimum number of choices an user must select, use the `:min` option:
 
@@ -1065,7 +1102,7 @@ prompt.multi_select("Select drinks?", choices, min: 3)
 # ‣ ⬡ bourbon
 ```
 
-#### 2.6.3.5 `:max`
+#### 2.6.3.9 `:max`
 
 To limit the number of choices an user can select, use the `:max` option:
 
@@ -1393,10 +1430,10 @@ prompt.slider("Volume", max: 100, step: 5, default: 75, symbols: {bullet: "x", l
 # (Use ←/→ arrow keys, press Enter to select)
 ```
 
-You can configure help message like so:
+You can configure help message with `:help` and when to display with `:show_help` options. The help can be displayed on `start`, `never` or `always`:
 
 ```ruby
-prompt.slider("Volume", max: 10, default: 7, help: "(Move arrows left and right to set value)")
+prompt.slider("Volume", max: 10, default: 7, help: "(Move arrows left and right to set value)", show_help: :always)
 # =>
 # Volume ───────────────●────── 7
 # (Move arrows left and right to set value)
