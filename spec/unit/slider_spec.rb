@@ -198,4 +198,71 @@ RSpec.describe TTY::Prompt, "#slider" do
       "\e[?25h"
     ].join)
   end
+
+  it "changes to always show help" do
+    prompt.on(:keypress) do |event|
+      prompt.trigger(:keyright) if event.value == "l"
+    end
+    prompt.input << "l" << "l" << "\r"
+    prompt.input.rewind
+
+    res = prompt.slider("What size?", min: 0, max: 10, step: 1,
+                        default: 0, show_help: :always)
+    expect(res).to eq(2)
+
+    expected_output = [
+      "\e[?25lWhat size? ",
+      "\e[32m#{symbols[:bullet]}\e[0m",
+      symbols[:line] * 10 + " 0",
+      "\n\e[90m(Use #{left_right} arrow keys, press Enter to select)\e[0m",
+      "\e[2K\e[1G\e[1A\e[2K\e[1G",
+      "What size? ",
+      symbols[:line] * 1,
+      "\e[32m#{symbols[:bullet]}\e[0m",
+      symbols[:line] * 9 + " 1",
+      "\n\e[90m(Use #{left_right} arrow keys, press Enter to select)\e[0m",
+      "\e[2K\e[1G\e[1A\e[2K\e[1G",
+      "What size? ",
+      symbols[:line] * 2,
+      "\e[32m#{symbols[:bullet]}\e[0m",
+      symbols[:line] * 8 + " 2",
+      "\n\e[90m(Use #{left_right} arrow keys, press Enter to select)\e[0m",
+      "\e[2K\e[1G\e[1A\e[2K\e[1G",
+      "What size? \e[32m2\e[0m\n\e[?25h"
+    ].join
+
+    expect(prompt.output.string).to eq(expected_output)
+  end
+
+  it "changes to never show help" do
+    prompt.on(:keypress) do |event|
+      prompt.trigger(:keyright) if event.value == "l"
+    end
+    prompt.input << "l" << "l" << "\r"
+    prompt.input.rewind
+
+    res = prompt.slider("What size?", min: 0, max: 10, step: 1,
+                        default: 0, show_help: :never)
+    expect(res).to eq(2)
+
+    expected_output = [
+      "\e[?25lWhat size? ",
+      "\e[32m#{symbols[:bullet]}\e[0m",
+      symbols[:line] * 10 + " 0",
+      "\e[2K\e[1G",
+      "What size? ",
+      symbols[:line] * 1,
+      "\e[32m#{symbols[:bullet]}\e[0m",
+      symbols[:line] * 9 + " 1",
+      "\e[2K\e[1G",
+      "What size? ",
+      symbols[:line] * 2,
+      "\e[32m#{symbols[:bullet]}\e[0m",
+      symbols[:line] * 8 + " 2",
+      "\e[2K\e[1G",
+      "What size? \e[32m2\e[0m\n\e[?25h"
+    ].join
+
+    expect(prompt.output.string).to eq(expected_output)
+  end
 end

@@ -35,6 +35,7 @@ module TTY
         @format       = options.fetch(:format) { FORMAT }
         @quiet        = options.fetch(:quiet) { @prompt.quiet }
         @help         = options[:help]
+        @show_help    = options.fetch(:show_help) { :start }
         @symbols      = @prompt.symbols.merge(options.fetch(:symbols, {}))
         @first_render = true
         @done         = false
@@ -82,6 +83,15 @@ module TTY
         return @help if !@help.nil? && not_set
 
         @help = (@help.nil? && not_set) ? default_help : text
+      end
+
+      # Change when help is displayed
+      #
+      # @api public
+      def show_help(value = (not_set = true))
+        return @show_ehlp if not_set
+
+        @show_help = value
       end
 
       # Range of numbers to render
@@ -157,6 +167,20 @@ module TTY
 
       private
 
+      # Check if help is shown only on start
+      #
+      # @api private
+      def help_start?
+        @show_help =~ /start/i
+      end
+
+      # Check if help is always displayed
+      #
+      # @api private
+      def help_always?
+        @show_help =~ /always/i
+      end
+
       # Render an interactive range slider.
       #
       # @api private
@@ -204,7 +228,8 @@ module TTY
         else
           header << render_slider
         end
-        if @first_render
+        if @first_render && (help_start? || help_always?) ||
+            (help_always? && !@done)
           header << "\n" + @prompt.decorate(help, @help_color)
           @first_render = false
         end
