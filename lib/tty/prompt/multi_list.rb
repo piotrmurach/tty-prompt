@@ -151,19 +151,21 @@ module TTY
       def render_header
         instructions = @prompt.decorate(help, @help_color)
         minmax_suffix = @min || @max ? minmax_help : ""
+        print_selected = @selected.size.nonzero? && @echo
 
         if @done && @echo
           @prompt.decorate(selected_names, @active_color)
-        elsif @selected.size.nonzero? && @echo
-          help_suffix = filterable? && @filter.any? ? " #{filter_help}" : ""
-          minmax_suffix + selected_names +
-            (@first_render ? " #{instructions}" : help_suffix)
-        elsif @first_render
-          minmax_suffix + instructions
+        elsif (@first_render && (help_start? || help_always?)) ||
+              (help_always? && !@filter.any? && !@done)
+          minmax_suffix +
+            (print_selected ? "#{selected_names} " : "") +
+            instructions
         elsif filterable? && @filter.any?
-          minmax_suffix + filter_help
-        elsif @min || @max
-          minmax_help
+          minmax_suffix +
+            (print_selected ? "#{selected_names} " : "") +
+            @prompt.decorate(filter_help, @help_color)
+        else
+          minmax_suffix + (print_selected ? selected_names : "")
         end
       end
 

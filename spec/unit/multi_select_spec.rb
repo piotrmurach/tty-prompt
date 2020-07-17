@@ -8,7 +8,6 @@ RSpec.describe TTY::Prompt do
   subject(:prompt) { TTY::Prompt::Test.new }
 
   def output_helper(prompt, choices, active, selected, options = {})
-    raise ":init requires :hint" if options[:init] && options[:hint].nil?
     hint = options[:hint]
     init = options.fetch(:init, false)
     enum = options[:enum]
@@ -19,9 +18,8 @@ RSpec.describe TTY::Prompt do
     out << "(min. #{options[:min]}) " if options[:min]
     out << "(max. #{options[:max]}) " if options[:max]
     out << selected.join(", ")
-    out << " " if init && !selected.empty?
-    out << "\e[90m" if init
-    out << (init ? "(#{hint})\e[0m" : " (#{hint})") if hint
+    out << " " if (init || hint) && !selected.empty?
+    out << "\e[90m(#{hint})\e[0m" if hint
     out << "\n"
     out << choices.map.with_index do |choice, i|
       name = choice.is_a?(Hash) ? choice[:name] : choice
@@ -282,6 +280,48 @@ RSpec.describe TTY::Prompt do
       output_helper("Select drinks?", choices, "vodka", [], init: true,
         hint: "Press #{up_down} arrow to move, Space/Ctrl+A|R to select (all|rev) and Enter to finish") +
       "\e[?25h"
+    expect(prompt.output.string).to eq(expected_output)
+  end
+
+  it "changes to always show help" do
+    choices = %w(vodka beer wine whisky bourbon)
+    prompt.on(:keypress) { |e| prompt.trigger(:keydown) if e.value == "j" }
+    prompt.input << "j" << "j" << " " << "\r"
+    prompt.input.rewind
+
+    answer = prompt.multi_select("Select drinks?", choices, show_help: :always)
+    expect(answer).to eq(%w[wine])
+
+    expected_output =
+      output_helper("Select drinks?", choices, "vodka", [], init: true,
+        hint: "Press #{up_down} arrow to move, Space/Ctrl+A|R to select (all|rev) and Enter to finish") +
+      output_helper("Select drinks?", choices, "beer", [],
+        hint: "Press #{up_down} arrow to move, Space/Ctrl+A|R to select (all|rev) and Enter to finish") +
+      output_helper("Select drinks?", choices, "wine", [],
+        hint: "Press #{up_down} arrow to move, Space/Ctrl+A|R to select (all|rev) and Enter to finish") +
+      output_helper("Select drinks?", choices, "wine", %w[wine],
+        hint: "Press #{up_down} arrow to move, Space/Ctrl+A|R to select (all|rev) and Enter to finish") +
+      exit_message("Select drinks?", %w[wine])
+
+    expect(prompt.output.string).to eq(expected_output)
+  end
+
+  it "changes to never show help" do
+    choices = %w(vodka beer wine whisky bourbon)
+    prompt.on(:keypress) { |e| prompt.trigger(:keydown) if e.value == "j" }
+    prompt.input << "j" << "j" << " " << "\r"
+    prompt.input.rewind
+
+    answer = prompt.multi_select("Select drinks?", choices, show_help: :never)
+    expect(answer).to eq(%w[wine])
+
+    expected_output =
+      output_helper("Select drinks?", choices, "vodka", [], init: true) +
+      output_helper("Select drinks?", choices, "beer", []) +
+      output_helper("Select drinks?", choices, "wine", []) +
+      output_helper("Select drinks?", choices, "wine", %w[wine]) +
+      exit_message("Select drinks?", %w[wine])
+
     expect(prompt.output.string).to eq(expected_output)
   end
 
@@ -580,16 +620,18 @@ RSpec.describe TTY::Prompt do
       prompt.input << "\r"
       prompt.input.rewind
 
-      answer = prompt.multi_select("What size?", choices, filter: true)
+      answer = prompt.multi_select("What size?", choices, filter: true, show_help: :always)
       expect(answer).to eql(%w(Tiny Large))
 
       expected_output =
         output_helper("What size?", %w(Tiny Medium Large Huge), "Tiny", %w(), init: true,
           hint: "Press #{up_down} arrow to move, Space/Ctrl+A|R to select (all|rev), Enter to finish and letters to filter") +
-        output_helper("What size?", %w(Tiny Medium Large Huge), "Tiny", %w(Tiny)) +
+        output_helper("What size?", %w(Tiny Medium Large Huge), "Tiny", %w(Tiny),
+          hint: "Press #{up_down} arrow to move, Space/Ctrl+A|R to select (all|rev), Enter to finish and letters to filter") +
         output_helper("What size?", %w(Large), "Large", %w(Tiny), hint: "Filter: \"a\"") +
         output_helper("What size?", %w(Large), "Large", %w(Tiny Large), hint: "Filter: \"a\"") +
-        output_helper("What size?", %w(Tiny Medium Large Huge), "Tiny", %w(Tiny Large)) +
+        output_helper("What size?", %w(Tiny Medium Large Huge), "Tiny", %w(Tiny Large),
+          hint: "Press #{up_down} arrow to move, Space/Ctrl+A|R to select (all|rev), Enter to finish and letters to filter") +
         exit_message("What size?", %w(Tiny Large))
 
       expect(prompt.output.string).to eql(expected_output)
