@@ -120,6 +120,8 @@ Or install it yourself as:
   * [3.6 :prefix](#36-prefix)
   * [3.7 :quiet](#37-quiet)
   * [3.8 :track_history](#38-track_history)
+  * [3.8 :input](#38-track_history)
+* [4. Testing](#4-testing)
 
 ## 1. Usage
 
@@ -1688,6 +1690,58 @@ The prompts that accept line input such as `multiline` or `ask` provide history 
 
 ```ruby
 prompt = TTY::Prompt.new(track_history: false)
+```
+
+## 4. Testing
+
+To test prompt interactions you can use `TTY::Prompt::Test` which provides easy access to mocked standard input and output. It inherits from `TTY::Prompt` hence shares all the behaviour of a regular prompt.
+
+To use it in your tests, first load the file:
+
+```ruby
+require "tty-prompt/test"
+```
+
+And then write your test like so:
+
+```ruby
+it "converts answer to an array of booleans" do
+  prompt = TTY::Prompt::Test.new
+
+  prompt.input << "1,2,3" # Provide keyboard input
+  prompt.input.rewind     # Rewind input to the beginning
+
+  # Run ask prompt with the input
+  answer = prompt.ask("Numbers?", convert: :int_list)
+
+  # Check result
+  expect(answer).to eq([1, 2, 3])
+end
+```
+
+You can also mock more complex interactions by adding custom key events:
+
+```ruby
+it "navigates prompt up and down and pick middle choice" do
+  prompt = TTY::Prompt::Test.new
+
+  # register custom key events
+  prompt.on(:keypress) do |e|
+    prompt.trigger(:keyup)   if e.value == "k"
+    prompt.trigger(:keydown) if e.value == "j"
+  end
+
+  # press 2 times down key, then up key once and pick choice
+  prompt.input << "j" << "j" << "k" << " "
+  prompt.input.rewind
+
+  # Run select prompt with choices
+  choices = { large: 1, medium: 2, small: 3 }
+  answer = prompt.select("What size?", choices)
+
+  # Check picked answer
+  expect(answer).to eq(2)
+end
 ```
 
 ## Contributing
