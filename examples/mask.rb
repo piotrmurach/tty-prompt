@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 require_relative "../lib/tty-prompt"
-require 'pastel'
+require "pastel"
 
 prompt = TTY::Prompt.new
-heart = prompt.decorate(prompt.symbols[:heart] + ' ', :magenta)
+heart = prompt.decorate(prompt.symbols[:heart] + " ", :magenta)
 
-res = prompt.mask('What is your secret?', mask: heart) do |q|
+res = prompt.mask("What is your secret?", mask: heart) do |q|
   q.validate(/[a-z\ ]{5,15}/)
 end
 

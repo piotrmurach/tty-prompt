@@ -1,20 +1,20 @@
 # frozen_string_literal: true
 
-require 'json'
+require "json"
 
 require_relative "../lib/tty-prompt"
 
-prompt = TTY::Prompt.new(prefix: '[?] ')
+prompt = TTY::Prompt.new(prefix: "[?] ")
 
 result = prompt.collect do
-  key(:name).ask('Name?')
+  key(:name).ask("Name?")
 
-  key(:age).ask('Age?', convert: :int)
+  key(:age).ask("Age?", convert: :int)
 
   key(:address) do
-    key(:street).ask('Street?', required: true)
-    key(:city).ask('City?')
-    key(:zip).ask('Zip?', validate: /\A\d{3}\Z/)
+    key(:street).ask("Street?", required: true)
+    key(:city).ask("City?")
+    key(:zip).ask("Zip?", validate: /\A\d{3}\Z/)
   end
 end
 

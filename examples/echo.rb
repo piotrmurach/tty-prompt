@@ -4,7 +4,7 @@ require_relative "../lib/tty-prompt"
 
 prompt = TTY::Prompt.new
 
-answer = prompt.ask('Password?', echo: false) do |q|
+answer = prompt.ask("Password?", echo: false) do |q|
   q.validate(/^[^\.]+\.[^\.]+/)
 end
 
