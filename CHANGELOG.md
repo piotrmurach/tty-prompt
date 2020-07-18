@@ -27,6 +27,7 @@
 * Change TTY::TestPrompt to TTY::Prompt::Test
 * Change #select,#multi_select & #enum_select to allow mix of options and block parameters configuration
 * Change to allow filtering through symbol choice names
+* Change all errors to inherit from common Error class
 
 ### Fixed
 * Fix multiline prompt to return default value when no input provided
