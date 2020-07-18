@@ -117,7 +117,7 @@ module TTY
       def infer_default
         converted = Converters.convert(:bool, default.to_s)
         if converted == Const::Undefined
-          raise ArgumentError, "default needs to be `true` or `false`"
+          raise InvalidArgument, "default needs to be `true` or `false`"
         else
           default(converted)
         end

@@ -90,7 +90,8 @@ RSpec.describe TTY::Prompt, "confirmation" do
       prompt.input.rewind
       expect {
         prompt.yes?("Are you a human?", default: "unknown")
-      }.to raise_error(ArgumentError, "default needs to be `true` or `false`")
+      }.to raise_error(TTY::Prompt::InvalidArgument,
+                       "default needs to be `true` or `false`")
     end
 
     it "defaults suffix and converter" do
