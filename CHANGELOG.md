@@ -1,15 +1,17 @@
 # Change log
 
-## [v0.22.0] - 2020-07-xx
+## [v0.22.0] - 2020-07-18
 
 ### Added
-* Add ability to customize #slider format with a proc by Sven Pchnit(@2called-chaos)
-* Add ability to customize convert message
-* Add ability to convert input to Array, Hash or Uri object
-* Add ability to allow :active_color and :help_color to be callable objects
-* Add ability to select all choices in #multi_select prompt
-* Add ability to configure :help text in #slider prompt
-* Add ability :quiet option to remove final prompt output by Katelyn Schiesser (@slowbro)
+* Add #slider format customization with a proc by Sven Pchnit(@2called-chaos)
+* Add convert message customization
+* Add conversion of input into Array, Hash or URI object
+* Add callable objects as possible values in :active_color and :help_color
+* Add shortcuts to select of all/reverse choices in #multi_select prompt
+* Add :help option to #slider prompt
+* Add :quiet option to remove final prompt output by Katelyn Schiesser (@slowbro)
+* Add :show_help option to control help display in #select, #multi_select, #enum_select
+  and #slider prompts
 
 ### Changed
 * Changed question :validation option to :validate by Sven Pachnit(@2called-chaos)
@@ -23,6 +25,8 @@
 * Change #multi_select to preserve original ordering in returned answers
 * Change to remove necromancer dependency
 * Change TTY::TestPrompt to TTY::Prompt::Test
+* Change #select,#multi_select & #enum_select to allow mix of options and block parameters configuration
+* Change to allow filtering through symbol choice names
 
 ### Fixed
 * Fix multiline prompt to return default value when no input provided
