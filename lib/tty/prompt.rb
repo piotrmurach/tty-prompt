@@ -8,6 +8,7 @@ require "tty-screen"
 
 require_relative "prompt/answers_collector"
 require_relative "prompt/confirm_question"
+require_relative "prompt/errors"
 require_relative "prompt/expander"
 require_relative "prompt/enum_list"
 require_relative "prompt/keypress"
@@ -27,32 +28,6 @@ module TTY
   # A main entry for asking prompt questions.
   class Prompt
     extend Forwardable
-
-    Error = Class.new(StandardError)
-
-    # Raised when wrong parameter is used to configure prompt
-    ConfigurationError = Class.new(Error)
-
-    # Raised when type conversion cannot be performed
-    ConversionError = Class.new(Error)
-
-    # Raised when the passed in validation argument is of wrong type
-    ValidationCoercion = Class.new(Error)
-
-    # Raised when the required argument is not supplied
-    ArgumentRequired = Class.new(Error)
-
-    # Raised when the argument validation fails
-    ArgumentValidation = Class.new(Error)
-
-    # Raised when the argument is not expected
-    InvalidArgument = Class.new(Error)
-
-    # Raised when overriding already defined conversion
-    ConversionAlreadyDefined = Class.new(Error)
-
-    # Raised when conversion type isn't registered
-    UnsupportedConversion = Class.new(Error)
 
     # @api private
     attr_reader :input
