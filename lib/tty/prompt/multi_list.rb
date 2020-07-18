@@ -121,7 +121,7 @@ module TTY
         help = []
         help << "min. #{@min}" if @min
         help << "max. #{@max}" if @max
-        "(%s) " % [help.join(" ")]
+        "(%s) " % [help.join(", ")]
       end
 
       # Build a default help text
