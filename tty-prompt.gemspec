@@ -22,12 +22,11 @@ Gem::Specification.new do |spec|
   spec.files         = Dir["lib/**/*"]
   spec.extra_rdoc_files = Dir["README.md", "CHANGELOG.md", "LICENSE.txt"]
   spec.require_paths = ["lib"]
-
   spec.required_ruby_version = ">= 2.0.0"
 
   spec.add_dependency "pastel",     "~> 0.8"
-  spec.add_dependency "tty-reader", "~> 0.8.0"
+  spec.add_dependency "tty-reader", "~> 0.8"
 
   spec.add_development_dependency "rake"
-  spec.add_development_dependency "rspec", "~> 3.0"
+  spec.add_development_dependency "rspec", ">= 3.0"
 end
