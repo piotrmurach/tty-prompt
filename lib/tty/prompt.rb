@@ -48,6 +48,12 @@ module TTY
     # Raised when the argument is not expected
     InvalidArgument = Class.new(Error)
 
+    # Raised when overriding already defined conversion
+    ConversionAlreadyDefined = Class.new(Error)
+
+    # Raised when conversion type isn't registered
+    UnsupportedConversion = Class.new(Error)
+
     # @api private
     attr_reader :input
 

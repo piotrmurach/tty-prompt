@@ -42,7 +42,7 @@ module TTY
       def register(*names, &block)
         names.each do |name|
           if contain?(name)
-            raise ArgumentError,
+            raise ConversionAlreadyDefined,
                   "converter for #{name.inspect} is already registered"
           end
           @__registry[name] = block
@@ -55,7 +55,8 @@ module TTY
       def [](name)
         conv_name = name.to_s.downcase.to_sym
         @__registry.fetch(conv_name) do
-          raise ArgumentError, "converter #{conv_name.inspect} is not registered"
+          raise UnsupportedConversion,
+                "converter #{conv_name.inspect} is not registered"
         end
       end
       alias fetch []

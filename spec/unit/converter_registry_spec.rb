@@ -41,7 +41,8 @@ RSpec.describe TTY::Prompt::ConverterRegistry do
 
       expect {
         registry.register(:foo) { "value2" }
-      }.to raise_error(ArgumentError, "converter for :foo is already registered")
+      }.to raise_error(TTY::Prompt::ConversionAlreadyDefined,
+                       "converter for :foo is already registered")
     end
   end
 
@@ -66,7 +67,8 @@ RSpec.describe TTY::Prompt::ConverterRegistry do
 
       expect {
         registry[:foo]
-      }.to raise_error(ArgumentError, "converter :foo is not registered")
+      }.to raise_error(TTY::Prompt::UnsupportedConversion,
+                       "converter :foo is not registered")
     end
   end
 end
