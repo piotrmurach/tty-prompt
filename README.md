@@ -1699,7 +1699,7 @@ To test prompt interactions you can use `TTY::Prompt::Test` which provides easy 
 To use it in your tests, first load the file:
 
 ```ruby
-require "tty-prompt/test"
+require "tty/prompt/test"
 ```
 
 And then write your test like so:
