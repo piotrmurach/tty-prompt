@@ -17,13 +17,6 @@ end
 
 require "tty/prompt"
 require "tty/prompt/test"
-require "stringio"
-
-class StringIO
-  def wait_readable(*)
-    true
-  end
-end
 
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|
