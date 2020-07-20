@@ -23,6 +23,10 @@
 
 **TTY::Prompt** provides independent prompt component for [TTY](https://github.com/piotrmurach/tty) toolkit.
 
+<div align="center">
+  <img alt="Available prompts demo" src="assets/demo.gif" width="562" height="226">
+</div>
+
 ## Features
 
 * Number of prompt types for gathering user input
@@ -120,7 +124,6 @@ Or install it yourself as:
   * [3.6 :prefix](#36-prefix)
   * [3.7 :quiet](#37-quiet)
   * [3.8 :track_history](#38-track_history)
-  * [3.8 :input](#38-track_history)
 
 ## 1. Usage
 
