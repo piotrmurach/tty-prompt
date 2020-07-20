@@ -1,6 +1,6 @@
 # Change log
 
-## [v0.22.0] - 2020-07-18
+## [v0.22.0] - 2020-07-20
 
 ### Added
 * Add #slider format customization with a proc by Sven Pchnit(@2called-chaos)
