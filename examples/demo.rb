@@ -4,30 +4,19 @@ require "json"
 require_relative "../lib/tty-prompt"
 
 prompt = TTY::Prompt.new
-warriors = [
- "Baraka", "Jade", "Jax", "Johnny Cage", "Kano", "Kintaro",  "Kitana",
- "Liu Kang", "Raiden", "Scorpion", "Sonya Blade", "Sub-Zero", "Goro",
- "Reptile", "Mileena",
-]
-cheats = [
-  "Freeplay",
-  "No Damage to P1",
-  "No Damage to P2",
-  "1 Hit Kills P1",
-  "1 Hit Kills P2",
-  "Soak Test",
-  "Stop clock"
-]
+envs = %w[local development test staging production]
+platforms = %w[Debian Ubuntu Fedora Windows macOS]
 
 puts TTY::Cursor.save
 
 result = prompt.collect do
-  key(:name).ask("Player name:")
-  key(:player).select("Character:", warriors)
-  key(:level).ask("Level (1-10)?", convert: :int, in: (1..10))
-  key(:blood).yes?("Blood?")
-  key(:cheats).multi_select("Cheats:", cheats)
-  key(:volume).slider("Volume", max: 10, step: 1)
+  key(:username).ask("Username:")
+  key(:password).mask("Password:")
+  key(:env).select("Environment:", envs)
+  key(:version).ask("Version (1-10)?", convert: :int, in: (1..10))
+  key(:verbose).yes?("Verbose?")
+  key(:platforms).multi_select("Platforms?", platforms)
+  key(:nodes).slider("Number of nodes?", max: 20, step: 1)
 end
 
 print TTY::Cursor.clear_screen_up
