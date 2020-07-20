@@ -23,10 +23,6 @@
 
 **TTY::Prompt** provides independent prompt component for [TTY](https://github.com/piotrmurach/tty) toolkit.
 
-<div align="center">
-  <img alt="Available prompts demo" src="assets/demo.gif" width="562" height="226">
-</div>
-
 ## Features
 
 * Number of prompt types for gathering user input
