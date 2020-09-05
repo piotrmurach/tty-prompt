@@ -613,10 +613,10 @@ By default the choice name is also the value the prompt will return when selecte
 choices = {small: 1, medium: 2, large: 3}
 prompt.select("What size?", choices)
 # =>
-What sie? (Press ↑/↓ arrow to move and Enter to select)
-‣ small
-  medium
-  large
+# What size? (Press ↑/↓ arrow to move and Enter to select)
+# ‣ small
+#   medium
+#   large
 ```
 
 Finally, you can define an array of choices where each choice is a hash value with `:name` & `:value` keys which can include other options for customising individual choices:
@@ -640,10 +640,10 @@ prompt.select("What size?") do |menu|
   menu.choice name: "large",  value: 3
 end
 # =>
-What size? (Press ↑/↓ arrow to move and Enter to select)
-‣ small
-✘ medium (out of stock)
-  large
+# What size? (Press ↑/↓ arrow to move and Enter to select)
+# ‣ small
+# ✘ medium (out of stock)
+#   large
 ```
 
 or in a more compact way:
