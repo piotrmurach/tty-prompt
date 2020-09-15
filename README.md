@@ -1384,9 +1384,9 @@ prompt.suggest("b", possible, indent: 4, single_text: "Perhaps you meant?")
 
 ### 2.10 slider
 
-If you have constrained range of numbers for user to choose from you may consider using `slider`.
+If you'd rather not display all possible values in a vertical list, you may consider using `slider`. The slider provides easy visual way of picking a value marked by `●` symbol.
 
-The slider provides easy visual way of picking a value marked by `●` symbol. You can set `:min`(defaults to 0), `:max` and `:step`(defaults to 1) options to configure slider range:
+For integers, you can set `:min`(defaults to 0), `:max` and `:step`(defaults to 1) options to configure slider range:
 
 ```ruby
 prompt.slider("Volume", max: 100, step: 5)
@@ -1394,6 +1394,17 @@ prompt.slider("Volume", max: 100, step: 5)
 # Volume ──────────●────────── 50
 # (Use ←/→ arrow keys, press Enter to select)
 ```
+
+For strings, you can set `:values` to an array of your desired choices:
+
+```ruby
+prompt.slider("Letter", values: ('a'..'z').to_a)
+# =>
+# Letter ────────────●───────────── m
+# (Use ←/→ arrow keys, press Enter to select)
+```
+
+Additionally, you may provide an array of objects, if the objects implement `to_s`.
 
 By default the slider is configured to pick middle of the range as a start value, you can change this by using the `:default` option:
 
