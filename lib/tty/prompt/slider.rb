@@ -9,7 +9,7 @@ module TTY
     class Slider
       HELP = "(Use %s arrow keys, press Enter to select)"
 
-      FORMAT = ":slider %d"
+      FORMAT = ":slider %s"
 
       # Initailize a Slider
       #
@@ -20,6 +20,7 @@ module TTY
       # @option options [Integer] :min The minimum value
       # @option options [Integer] :max The maximum value
       # @option options [Integer] :step The step value
+      # @option options [Array]   :values The values for the slider (instead of calculating them)
       # @option options [String] :format The display format
       #
       # @api public
@@ -29,6 +30,7 @@ module TTY
         @min          = options.fetch(:min) { 0 }
         @max          = options.fetch(:max) { 10 }
         @step         = options.fetch(:step) { 1 }
+        @values       = options.fetch(:values) { nil }
         @default      = options[:default]
         @active_color = options.fetch(:active_color) { @prompt.active_color }
         @help_color   = options.fetch(:help_color) { @prompt.help_color }
@@ -96,11 +98,15 @@ module TTY
 
       # Range of numbers to render
       #
-      # @return [Array[Integer]]
+      # @return [Array[Integer, String]]
       #
       # @api private
       def range
-        (@min..@max).step(@step).to_a
+        if @values
+          @values
+        else
+          (@min..@max).step(@step).to_a
+        end
       end
 
       # @api public
@@ -123,6 +129,12 @@ module TTY
         @step = value
       end
 
+      # @api public
+      def values(value)
+        @values = value
+      end
+
+      # @api public
       def format(value)
         @format = value
       end
@@ -208,7 +220,7 @@ module TTY
         @prompt.print(@prompt.clear_lines(lines))
       end
 
-      # @return [Integer]
+      # @return [Integer, String]
       #
       # @api private
       def answer
