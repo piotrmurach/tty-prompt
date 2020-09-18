@@ -100,7 +100,7 @@ module TTY
 
       # Find a matching choice
       #
-      # @exmaple
+      # @example
       #   choices.find_by(:name, "small")
       #
       # @param [Symbol] attr

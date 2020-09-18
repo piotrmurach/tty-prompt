@@ -9,7 +9,7 @@ module TTY
     class Slider
       HELP = "(Use %s arrow keys, press Enter to select)"
 
-      FORMAT = ":slider %d"
+      FORMAT = ":slider %s"
 
       # Initailize a Slider
       #
@@ -26,6 +26,7 @@ module TTY
       def initialize(prompt, **options)
         @prompt       = prompt
         @prefix       = options.fetch(:prefix) { @prompt.prefix }
+        @choices      = Choices.new
         @min          = options.fetch(:min) { 0 }
         @max          = options.fetch(:max) { 10 }
         @step         = options.fetch(:step) { 1 }
@@ -60,9 +61,14 @@ module TTY
       # @api private
       def initial
         if @default.nil?
-          range.size / 2
+          # no default - choose the middle option
+          choices.size / 2
+        elsif default_choice = choices.find_by(:name, @default)
+          # found a Choice by name - use it
+          choices.index(default_choice)
         else
-          range.index(@default)
+          # default is the index number
+          @default - 1
         end
       end
 
@@ -94,15 +100,6 @@ module TTY
         @show_help = value
       end
 
-      # Range of numbers to render
-      #
-      # @return [Array[Integer]]
-      #
-      # @api private
-      def range
-        (@min..@max).step(@step).to_a
-      end
-
       # @api public
       def default(value)
         @default = value
@@ -123,6 +120,32 @@ module TTY
         @step = value
       end
 
+      # Add a single choice
+      #
+      # @api public
+      def choice(*value, &block)
+        if block
+          @choices << (value << block)
+        else
+          @choices << value
+        end
+      end
+
+      # Add multiple choices
+      #
+      # @param [Array[Object]] values
+      #   the values to add as choices
+      #
+      # @api public
+      def choices(values = (not_set = true))
+        if not_set
+          @choices
+        else
+          values.each { |val| @choices << val }
+        end
+      end
+
+      # @api public
       def format(value)
         @format = value
       end
@@ -140,9 +163,17 @@ module TTY
       #   the question to ask
       #
       # @apu public
-      def call(question, &block)
+      def call(question, possibilities = nil, &block)
         @question = question
         block.call(self) if block
+        if possibilities
+          choices(possibilities)
+        end
+
+        # set up a Choices collection for min, max, step
+        # if no possibilities were supplied
+        choices((@min..@max).step(@step).to_a) if @choices.empty?
+
         @active = initial
         @prompt.subscribe(self) do
           render
@@ -155,7 +186,7 @@ module TTY
       alias keydown keyleft
 
       def keyright(*)
-        @active += 1 if (@active + 1) < range.size
+        @active += 1 if (@active + 1) < choices.size
       end
       alias keyup keyright
 
@@ -208,11 +239,11 @@ module TTY
         @prompt.print(@prompt.clear_lines(lines))
       end
 
-      # @return [Integer]
+      # @return [Integer, String]
       #
       # @api private
       def answer
-        range[@active]
+        choices[@active].value
       end
 
       # Render question with the slider
@@ -223,7 +254,7 @@ module TTY
       def render_question
         header = ["#{@prefix}#{@question} "]
         if @done
-          header << @prompt.decorate(answer.to_s, @active_color)
+          header << @prompt.decorate(choices[@active].to_s, @active_color)
           header << "\n"
         else
           header << render_slider
@@ -244,8 +275,8 @@ module TTY
       def render_slider
         slider = (@symbols[:line] * @active) +
                  @prompt.decorate(@symbols[:bullet], @active_color) +
-                 (@symbols[:line] * (range.size - @active - 1))
-        value = range[@active]
+                 (@symbols[:line] * (choices.size - @active - 1))
+        value = choices[@active].name
         case @format
         when Proc
           @format.call(slider, value)
