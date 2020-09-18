@@ -1,5 +1,11 @@
 # Change log
 
+## [v0.23.0] - unreleased
+
+### Added
+* Add the ability to provide an arbitrary array of values to Prompt::Slider
+  by Katelyn Schiesser (@slowbro)
+
 ## [v0.22.0] - 2020-07-20
 
 ### Added
@@ -43,7 +49,7 @@
 * Change gemspec to remove test artifacts
 
 ### Fixed
-* Fix :help_color option for multi_selct prompt by @robbystk
+* Fix :help_color option for multi_select prompt by @robbystk
 
 ## [v0.20.0] - 2019-11-24
 
@@ -383,6 +389,7 @@
 
 * Initial implementation and release
 
+[v0.23.0]: https://github.com/piotrmurach/tty-prompt/compare/v0.22.0...v0.23.0
 [v0.22.0]: https://github.com/piotrmurach/tty-prompt/compare/v0.21.0...v0.22.0
 [v0.21.0]: https://github.com/piotrmurach/tty-prompt/compare/v0.20.0...v0.21.0
 [v0.20.0]: https://github.com/piotrmurach/tty-prompt/compare/v0.19.0...v0.20.0
