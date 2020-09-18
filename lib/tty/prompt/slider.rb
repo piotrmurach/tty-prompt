@@ -165,11 +165,8 @@ module TTY
       # @apu public
       def call(question, possibilities = nil, &block)
         @question = question
+        choices(possibilities) if possibilities
         block.call(self) if block
-        if possibilities
-          choices(possibilities)
-        end
-
         # set up a Choices collection for min, max, step
         # if no possibilities were supplied
         choices((@min..@max).step(@step).to_a) if @choices.empty?

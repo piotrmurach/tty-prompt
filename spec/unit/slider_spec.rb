@@ -355,7 +355,44 @@ RSpec.describe TTY::Prompt, "#slider" do
                           range.choice 'f'
                           range.choice 'g'
                         end
-    expect(res).to eq('a')
+    expect(res).to eq("a")
+
+    expected_output = [
+      "\e[?25lWhat letter? ",
+      symbols[:line] * 2,
+      "\e[32m#{symbols[:bullet]}\e[0m",
+      symbols[:line] * 4 + " c",
+      "\n\e[90m(Use ←/→ arrow keys, press Enter to select)\e[0m\e[2K\e[1G",
+      "\e[1A\e[2K\e[1G",
+      "What letter? ",
+      symbols[:line] * 1,
+      "\e[32m#{symbols[:bullet]}\e[0m",
+      symbols[:line] * 5 + " b",
+      "\e[2K\e[1G",
+      "What letter? ",
+      "\e[32m#{symbols[:bullet]}\e[0m",
+      symbols[:line] * 6 + " a",
+      "\e[2K\e[1G",
+      "What letter? \e[32ma\e[0m\n\e[?25h"
+    ].join
+
+    expect(prompt.output.string).to eq(expected_output)
+  end
+
+  it "mixes choices as values and via DSL and keeps ordering" do
+    prompt.on(:keypress) do |event|
+      prompt.trigger(:keyleft) if event.value == "l"
+    end
+    prompt.input << "l" << "l" << "\r"
+    prompt.input.rewind
+
+    res = prompt.slider("What letter?", %w[a b c d]) do |range|
+                          range.default "c"
+                          range.choice "e"
+                          range.choice "f"
+                          range.choice "g"
+                        end
+    expect(res).to eq("a")
 
     expected_output = [
       "\e[?25lWhat letter? ",
