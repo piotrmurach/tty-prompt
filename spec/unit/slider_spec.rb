@@ -6,33 +6,46 @@ RSpec.describe TTY::Prompt, "#slider" do
   let(:symbols) { TTY::Prompt::Symbols.symbols }
   let(:left_right) { "#{symbols[:arrow_left]}/#{symbols[:arrow_right]}"}
 
+  def output_helper(prompt, choices, active, init: false, hint: false)
+    index = choices.index(active)
+    out = []
+    out << "\e[?25l" if init
+    out << prompt << " "
+    out << symbols[:line] * index
+    out << "\e[32m#{symbols[:bullet]}\e[0m"
+    out << symbols[:line] * (choices.size - index - 1)
+    out << " " << active
+    out << "\n\e[90m(#{hint})\e[0m" if hint
+    out << "\e[2K\e[1G"
+    out << "\e[1A\e[2K\e[1G" if hint
+    out.join
+  end
+
+  def exit_message(prompt, choice)
+    "#{prompt} \e[32m#{choice}\e[0m\n\e[?25h"
+  end
+
   it "specifies ranges & step" do
+    choices = (32..54).step(2).to_a
     prompt.input << "\r"
     prompt.input.rewind
     expect(prompt.slider("What size?", min: 32, max: 54, step: 2)).to eq(44)
     expect(prompt.output.string).to eq([
-      "\e[?25lWhat size? ",
-      symbols[:line] * 6,
-      "\e[32m#{symbols[:bullet]}\e[0m",
-      "#{symbols[:line] * 5} 44",
-      "\n\e[90m(Use #{left_right} arrow keys, press Enter to select)\e[0m",
-      "\e[2K\e[1G\e[1A\e[2K\e[1G",
-      "What size? \e[32m44\e[0m\n\e[?25h"
+      output_helper("What size?", choices, 44, init: true,
+                    hint: "Use #{left_right} arrow keys, press Enter to select"),
+      exit_message("What size?", 44)
     ].join)
   end
 
   it "specifies default value" do
+    choices = (32..54).step(2).to_a
     prompt.input << "\r"
     prompt.input.rewind
     expect(prompt.slider("What size?", min: 32, max: 54, step: 2, default: 38)).to eq(38)
     expect(prompt.output.string).to eq([
-      "\e[?25lWhat size? ",
-      symbols[:line] * 3,
-      "\e[32m#{symbols[:bullet]}\e[0m",
-      "#{symbols[:line] * 8} 38",
-      "\n\e[90m(Use #{left_right} arrow keys, press Enter to select)\e[0m",
-      "\e[2K\e[1G\e[1A\e[2K\e[1G",
-      "What size? \e[32m38\e[0m\n\e[?25h"
+      output_helper("What size?", choices, 38, init: true,
+                    hint: "Use #{left_right} arrow keys, press Enter to select"),
+      exit_message("What size?", 38)
     ].join)
   end
 
@@ -97,6 +110,7 @@ RSpec.describe TTY::Prompt, "#slider" do
   end
 
   it "doesn't allow values outside of range" do
+    choices = (0..10).to_a
     prompt.input << "l\r"
     prompt.input.rewind
     prompt.on(:keypress) do |event|
@@ -107,16 +121,10 @@ RSpec.describe TTY::Prompt, "#slider" do
     res = prompt.slider("What size?", min: 0, max: 10, step: 1, default: 10)
     expect(res).to eq(10)
     expect(prompt.output.string).to eq([
-      "\e[?25lWhat size? ",
-      symbols[:line] * 10,
-      "\e[32m#{symbols[:bullet]}\e[0m 10",
-      "\n\e[90m(Use #{left_right} arrow keys, press Enter to select)\e[0m",
-      "\e[2K\e[1G\e[1A\e[2K\e[1G",
-      "What size? ",
-      symbols[:line] * 10,
-      "\e[32m#{symbols[:bullet]}\e[0m 10",
-      "\e[2K\e[1G",
-      "What size? \e[32m10\e[0m\n\e[?25h"
+      output_helper("What size?", choices, 10, init: true,
+                    hint: "Use #{left_right} arrow keys, press Enter to select"),
+      output_helper("What size?", choices, 10),
+      exit_message("What size?", 10)
     ].join)
   end
 
@@ -162,16 +170,13 @@ RSpec.describe TTY::Prompt, "#slider" do
   end
 
   it "sets quiet mode" do
+    choices = (32..54).step(2).to_a
     prompt.input << "\r"
     prompt.input.rewind
     expect(prompt.slider("What size?", min: 32, max: 54, step: 2, quiet: true)).to eq(44)
     expect(prompt.output.string).to eq([
-      "\e[?25lWhat size? ",
-      symbols[:line] * 6,
-      "\e[32m#{symbols[:bullet]}\e[0m",
-      "#{symbols[:line] * 5} 44",
-      "\n\e[90m(Use #{left_right} arrow keys, press Enter to select)\e[0m",
-      "\e[2K\e[1G\e[1A\e[2K\e[1G",
+      output_helper("What size?", choices, 44, init: true,
+                    hint: "Use #{left_right} arrow keys, press Enter to select"),
       "\e[?25h"
     ].join)
   end
@@ -200,6 +205,7 @@ RSpec.describe TTY::Prompt, "#slider" do
   end
 
   it "changes to always show help" do
+    choices = (0..10).to_a
     prompt.on(:keypress) do |event|
       prompt.trigger(:keyright) if event.value == "l"
     end
@@ -211,30 +217,20 @@ RSpec.describe TTY::Prompt, "#slider" do
     expect(res).to eq(2)
 
     expected_output = [
-      "\e[?25lWhat size? ",
-      "\e[32m#{symbols[:bullet]}\e[0m",
-      symbols[:line] * 10 + " 0",
-      "\n\e[90m(Use #{left_right} arrow keys, press Enter to select)\e[0m",
-      "\e[2K\e[1G\e[1A\e[2K\e[1G",
-      "What size? ",
-      symbols[:line] * 1,
-      "\e[32m#{symbols[:bullet]}\e[0m",
-      symbols[:line] * 9 + " 1",
-      "\n\e[90m(Use #{left_right} arrow keys, press Enter to select)\e[0m",
-      "\e[2K\e[1G\e[1A\e[2K\e[1G",
-      "What size? ",
-      symbols[:line] * 2,
-      "\e[32m#{symbols[:bullet]}\e[0m",
-      symbols[:line] * 8 + " 2",
-      "\n\e[90m(Use #{left_right} arrow keys, press Enter to select)\e[0m",
-      "\e[2K\e[1G\e[1A\e[2K\e[1G",
-      "What size? \e[32m2\e[0m\n\e[?25h"
+      output_helper("What size?", choices, 0, init: true,
+                    hint: "Use #{left_right} arrow keys, press Enter to select"),
+      output_helper("What size?", choices, 1,
+                    hint: "Use #{left_right} arrow keys, press Enter to select"),
+      output_helper("What size?", choices, 2,
+                    hint: "Use #{left_right} arrow keys, press Enter to select"),
+      exit_message("What size?", 2),
     ].join
 
     expect(prompt.output.string).to eq(expected_output)
   end
 
   it "changes to never show help" do
+    choices = (0..10).to_a
     prompt.on(:keypress) do |event|
       prompt.trigger(:keyright) if event.value == "l"
     end
@@ -248,62 +244,41 @@ RSpec.describe TTY::Prompt, "#slider" do
     expect(res).to eq(2)
 
     expected_output = [
-      "\e[?25lWhat size? ",
-      "\e[32m#{symbols[:bullet]}\e[0m",
-      symbols[:line] * 10 + " 0",
-      "\e[2K\e[1G",
-      "What size? ",
-      symbols[:line] * 1,
-      "\e[32m#{symbols[:bullet]}\e[0m",
-      symbols[:line] * 9 + " 1",
-      "\e[2K\e[1G",
-      "What size? ",
-      symbols[:line] * 2,
-      "\e[32m#{symbols[:bullet]}\e[0m",
-      symbols[:line] * 8 + " 2",
-      "\e[2K\e[1G",
-      "What size? \e[32m2\e[0m\n\e[?25h"
+      output_helper("What size?", choices, 0, init: true),
+      output_helper("What size?", choices, 1),
+      output_helper("What size?", choices, 2),
+      exit_message("What size?", 2)
     ].join
 
     expect(prompt.output.string).to eq(expected_output)
   end
 
   it "specifies choices instead of calculated range" do
+    choices = %w[a b c d e f g]
     prompt.on(:keypress) do |event|
       prompt.trigger(:keyright) if event.value == "l"
     end
     prompt.input << "l" << "l" << "\r"
     prompt.input.rewind
 
-    res = prompt.slider("What letter?", %w[ a b c d e f g ]) do |range|
-                          range.default 'b'
+    res = prompt.slider("What letter?", choices) do |range|
+                          range.default "b"
                         end
-    expect(res).to eq('d')
+    expect(res).to eq("d")
 
     expected_output = [
-      "\e[?25lWhat letter? ",
-      symbols[:line] * 1,
-      "\e[32m#{symbols[:bullet]}\e[0m",
-      symbols[:line] * 5 + " b",
-      "\n\e[90m(Use ←/→ arrow keys, press Enter to select)\e[0m\e[2K\e[1G",
-      "\e[1A\e[2K\e[1G",
-      "What letter? ",
-      symbols[:line] * 2,
-      "\e[32m#{symbols[:bullet]}\e[0m",
-      symbols[:line] * 4 + " c",
-      "\e[2K\e[1G",
-      "What letter? ",
-      symbols[:line] * 3,
-      "\e[32m#{symbols[:bullet]}\e[0m",
-      symbols[:line] * 3 + " d",
-      "\e[2K\e[1G",
-      "What letter? \e[32md\e[0m\n\e[?25h"
+      output_helper("What letter?", choices, "b", init: true,
+                    hint: "Use #{left_right} arrow keys, press Enter to select"),
+      output_helper("What letter?", choices, "c"),
+      output_helper("What letter?", choices, "d"),
+      exit_message("What letter?", "d")
     ].join
 
     expect(prompt.output.string).to eq(expected_output)
   end
 
   it "specifies choices through DSL" do
+    choices = %w[a b c d e f g]
     prompt.on(:keypress) do |event|
       prompt.trigger(:keyleft) if event.value == "l"
     end
@@ -311,75 +286,55 @@ RSpec.describe TTY::Prompt, "#slider" do
     prompt.input.rewind
 
     res = prompt.slider("What letter?") do |range|
-                          range.default 'c'
-                          range.choices %w[ a b c d e f g ]
-                        end
-    expect(res).to eq('a')
-
-    expected_output = [
-      "\e[?25lWhat letter? ",
-      symbols[:line] * 2,
-      "\e[32m#{symbols[:bullet]}\e[0m",
-      symbols[:line] * 4 + " c",
-      "\n\e[90m(Use ←/→ arrow keys, press Enter to select)\e[0m\e[2K\e[1G",
-      "\e[1A\e[2K\e[1G",
-      "What letter? ",
-      symbols[:line] * 1,
-      "\e[32m#{symbols[:bullet]}\e[0m",
-      symbols[:line] * 5 + " b",
-      "\e[2K\e[1G",
-      "What letter? ",
-      "\e[32m#{symbols[:bullet]}\e[0m",
-      symbols[:line] * 6 + " a",
-      "\e[2K\e[1G",
-      "What letter? \e[32ma\e[0m\n\e[?25h"
-    ].join
-
-    expect(prompt.output.string).to eq(expected_output)
-  end
-
-  it "specifies choices through DSL" do
-    prompt.on(:keypress) do |event|
-      prompt.trigger(:keyleft) if event.value == "l"
-    end
-    prompt.input << "l" << "l" << "\r"
-    prompt.input.rewind
-
-    res = prompt.slider("What letter?") do |range|
-                          range.default 'c'
-                          range.choice 'a'
-                          range.choice 'b'
-                          range.choice 'c'
-                          range.choice 'd'
-                          range.choice 'e'
-                          range.choice 'f'
-                          range.choice 'g'
+                          range.default "c"
+                          range.choices choices
                         end
     expect(res).to eq("a")
 
     expected_output = [
-      "\e[?25lWhat letter? ",
-      symbols[:line] * 2,
-      "\e[32m#{symbols[:bullet]}\e[0m",
-      symbols[:line] * 4 + " c",
-      "\n\e[90m(Use ←/→ arrow keys, press Enter to select)\e[0m\e[2K\e[1G",
-      "\e[1A\e[2K\e[1G",
-      "What letter? ",
-      symbols[:line] * 1,
-      "\e[32m#{symbols[:bullet]}\e[0m",
-      symbols[:line] * 5 + " b",
-      "\e[2K\e[1G",
-      "What letter? ",
-      "\e[32m#{symbols[:bullet]}\e[0m",
-      symbols[:line] * 6 + " a",
-      "\e[2K\e[1G",
-      "What letter? \e[32ma\e[0m\n\e[?25h"
+      output_helper("What letter?", choices, "c", init: true,
+                    hint: "Use #{left_right} arrow keys, press Enter to select"),
+      output_helper("What letter?", choices, "b"),
+      output_helper("What letter?", choices, "a"),
+      exit_message("What letter?", "a")
+    ].join
+
+    expect(prompt.output.string).to eq(expected_output)
+  end
+
+  it "specifies choices through DSL" do
+    choices = %w[a b c d e f g]
+    prompt.on(:keypress) do |event|
+      prompt.trigger(:keyleft) if event.value == "l"
+    end
+    prompt.input << "l" << "l" << "\r"
+    prompt.input.rewind
+
+    res = prompt.slider("What letter?") do |range|
+                          range.default "c"
+                          range.choice "a"
+                          range.choice "b"
+                          range.choice "c"
+                          range.choice "d"
+                          range.choice "e"
+                          range.choice "f"
+                          range.choice "g"
+                        end
+    expect(res).to eq("a")
+
+    expected_output = [
+      output_helper("What letter?", choices, "c", init: true,
+                    hint: "Use #{left_right} arrow keys, press Enter to select"),
+      output_helper("What letter?", choices, "b"),
+      output_helper("What letter?", choices, "a"),
+      exit_message("What letter?", "a")
     ].join
 
     expect(prompt.output.string).to eq(expected_output)
   end
 
   it "mixes choices as values and via DSL and keeps ordering" do
+    choices = %w[a b c d e f g]
     prompt.on(:keypress) do |event|
       prompt.trigger(:keyleft) if event.value == "l"
     end
@@ -395,22 +350,11 @@ RSpec.describe TTY::Prompt, "#slider" do
     expect(res).to eq("a")
 
     expected_output = [
-      "\e[?25lWhat letter? ",
-      symbols[:line] * 2,
-      "\e[32m#{symbols[:bullet]}\e[0m",
-      symbols[:line] * 4 + " c",
-      "\n\e[90m(Use ←/→ arrow keys, press Enter to select)\e[0m\e[2K\e[1G",
-      "\e[1A\e[2K\e[1G",
-      "What letter? ",
-      symbols[:line] * 1,
-      "\e[32m#{symbols[:bullet]}\e[0m",
-      symbols[:line] * 5 + " b",
-      "\e[2K\e[1G",
-      "What letter? ",
-      "\e[32m#{symbols[:bullet]}\e[0m",
-      symbols[:line] * 6 + " a",
-      "\e[2K\e[1G",
-      "What letter? \e[32ma\e[0m\n\e[?25h"
+      output_helper("What letter?", choices, "c", init: true,
+                    hint: "Use #{left_right} arrow keys, press Enter to select"),
+      output_helper("What letter?", choices, "b"),
+      output_helper("What letter?", choices, "a"),
+      exit_message("What letter?", "a")
     ].join
 
     expect(prompt.output.string).to eq(expected_output)
@@ -421,10 +365,10 @@ RSpec.describe TTY::Prompt, "#slider" do
     prompt.input.rewind
 
     res = prompt.slider("What letter?") do |range|
-                          range.default 'a'
-                          range.choice 'a', 1
-                          range.choice 'b', 2
-                          range.choice 'c', 3
+                          range.default "a"
+                          range.choice "a", 1
+                          range.choice "b", 2
+                          range.choice "c", 3
                         end
 
     expect(res).to eq(1)
@@ -436,9 +380,9 @@ RSpec.describe TTY::Prompt, "#slider" do
 
     res = prompt.slider("What letter?") do |range|
                           range.default 3
-                          range.choice 'a', 1
-                          range.choice 'b', 2
-                          range.choice 'c', 3
+                          range.choice "a", 1
+                          range.choice "b", 2
+                          range.choice "c", 3
                         end
 
     expect(res).to eq(3)
@@ -449,11 +393,11 @@ RSpec.describe TTY::Prompt, "#slider" do
     prompt.input.rewind
 
     res = prompt.slider("What letter?") do |range|
-                          range.choice 'a', 1
-                          range.choice 'b' do "NOT THE BEEEEEEEES!" end
-                          range.choice 'c', 3
+                          range.choice "a", 1
+                          range.choice "b" do "NOT THE BEEEEEEEES!" end
+                          range.choice "c", 3
                         end
 
-    expect(res).to eq('NOT THE BEEEEEEEES!')
+    expect(res).to eq("NOT THE BEEEEEEEES!")
   end
 end
