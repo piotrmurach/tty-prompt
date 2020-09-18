@@ -1389,22 +1389,20 @@ If you'd rather not display all possible values in a vertical list, you may cons
 For integers, you can set `:min`(defaults to 0), `:max` and `:step`(defaults to 1) options to configure slider range:
 
 ```ruby
-prompt.slider("Volume", max: 100, step: 5)
+prompt.slider("Volume", min: 0, max: 100, step: 5)
 # =>
 # Volume ──────────●────────── 50
 # (Use ←/→ arrow keys, press Enter to select)
 ```
 
-For strings, you can set `:values` to an array of your desired choices:
+For everything else, you can provide an array of your desired choices:
 
 ```ruby
-prompt.slider("Letter", values: ('a'..'z').to_a)
+prompt.slider("Letter", ('a'..'z').to_a)
 # =>
 # Letter ────────────●───────────── m
 # (Use ←/→ arrow keys, press Enter to select)
 ```
-
-Additionally, you may provide an array of objects, if the objects implement `to_s`.
 
 By default the slider is configured to pick middle of the range as a start value, you can change this by using the `:default` option:
 
@@ -1412,6 +1410,15 @@ By default the slider is configured to pick middle of the range as a start value
 prompt.slider("Volume", max: 100, step: 5, default: 75)
 # =>
 # Volume ───────────────●────── 75
+# (Use ←/→ arrow keys, press Enter to select)
+```
+
+You can also select the default value by name:
+
+```ruby
+prompt.slider("Letter", ('a'..'z').to_a, default: 'q')
+# =>
+# Letter ──────────────────●─────── q
 # (Use ←/→ arrow keys, press Enter to select)
 ```
 
@@ -1472,6 +1479,17 @@ prompt.slider("What size?") do |range|
 end
 # =>
 # Volume |───────────────●──────| 75%
+# (Use ←/→ arrow keys, press Enter to select)
+```
+
+```ruby
+prompt.slider("What letter?") do |range|
+  range.choices ('a'..'z').to_a
+  range.format "|:slider| %s"
+  range.default 'q'
+end
+# =>
+# What letter? |──────────────────●───────| q
 # (Use ←/→ arrow keys, press Enter to select)
 ```
 

@@ -268,14 +268,14 @@ RSpec.describe TTY::Prompt, "#slider" do
     expect(prompt.output.string).to eq(expected_output)
   end
 
-  it "specifies values instead of calculated range" do
+  it "specifies choices instead of calculated range" do
     prompt.on(:keypress) do |event|
       prompt.trigger(:keyright) if event.value == "l"
     end
     prompt.input << "l" << "l" << "\r"
     prompt.input.rewind
 
-    res = prompt.slider("What letter?", values: %w[ a b c d e f g ]) do |range|
+    res = prompt.slider("What letter?", %w[ a b c d e f g ]) do |range|
                           range.default 'b'
                         end
     expect(res).to eq('d')
@@ -303,7 +303,7 @@ RSpec.describe TTY::Prompt, "#slider" do
     expect(prompt.output.string).to eq(expected_output)
   end
 
-  it "specifies values through DSL" do
+  it "specifies choices through DSL" do
     prompt.on(:keypress) do |event|
       prompt.trigger(:keyleft) if event.value == "l"
     end
@@ -312,7 +312,48 @@ RSpec.describe TTY::Prompt, "#slider" do
 
     res = prompt.slider("What letter?") do |range|
                           range.default 'c'
-                          range.values %w[ a b c d e f g ]
+                          range.choices %w[ a b c d e f g ]
+                        end
+    expect(res).to eq('a')
+
+    expected_output = [
+      "\e[?25lWhat letter? ",
+      symbols[:line] * 2,
+      "\e[32m#{symbols[:bullet]}\e[0m",
+      symbols[:line] * 4 + " c",
+      "\n\e[90m(Use ←/→ arrow keys, press Enter to select)\e[0m\e[2K\e[1G",
+      "\e[1A\e[2K\e[1G",
+      "What letter? ",
+      symbols[:line] * 1,
+      "\e[32m#{symbols[:bullet]}\e[0m",
+      symbols[:line] * 5 + " b",
+      "\e[2K\e[1G",
+      "What letter? ",
+      "\e[32m#{symbols[:bullet]}\e[0m",
+      symbols[:line] * 6 + " a",
+      "\e[2K\e[1G",
+      "What letter? \e[32ma\e[0m\n\e[?25h"
+    ].join
+
+    expect(prompt.output.string).to eq(expected_output)
+  end
+
+  it "specifies choices through DSL" do
+    prompt.on(:keypress) do |event|
+      prompt.trigger(:keyleft) if event.value == "l"
+    end
+    prompt.input << "l" << "l" << "\r"
+    prompt.input.rewind
+
+    res = prompt.slider("What letter?") do |range|
+                          range.default 'c'
+                          range.choice 'a'
+                          range.choice 'b'
+                          range.choice 'c'
+                          range.choice 'd'
+                          range.choice 'e'
+                          range.choice 'f'
+                          range.choice 'g'
                         end
     expect(res).to eq('a')
 

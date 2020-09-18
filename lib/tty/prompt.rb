@@ -388,16 +388,20 @@ module TTY
     # @example
     #   prompt = TTY::Prompt.new
     #   prompt.slider("What size?", min: 32, max: 54, step: 2)
+    #   prompt.slider("What size?", [ 'xs', 's', 'm', 'l', 'xl' ])
     #
     # @param [String] question
     #   the question to ask
     #
+    # @param [Array] choices
+    #   the choices to display
+    #
     # @return [String]
     #
     # @api public
-    def slider(question, **options, &block)
+    def slider(question, choices = nil, **options, &block)
       slider = Slider.new(self, **options)
-      slider.call(question, &block)
+      slider.call(question, choices, &block)
     end
 
     # Print statement out. If the supplied message ends with a space or
