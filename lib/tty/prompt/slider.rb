@@ -68,7 +68,7 @@ module TTY
           choices.index(default_choice)
         else
           # default is the index number
-          @default
+          @default - 1
         end
       end
 
@@ -254,7 +254,7 @@ module TTY
       def render_question
         header = ["#{@prefix}#{@question} "]
         if @done
-          header << @prompt.decorate(choices[@active].name.to_s, @active_color)
+          header << @prompt.decorate(choices[@active].to_s, @active_color)
           header << "\n"
         else
           header << render_slider

@@ -378,4 +378,45 @@ RSpec.describe TTY::Prompt, "#slider" do
 
     expect(prompt.output.string).to eq(expected_output)
   end
+
+  it "sets default choice by name" do
+    prompt.input << "\r"
+    prompt.input.rewind
+
+    res = prompt.slider("What letter?") do |range|
+                          range.default 'a'
+                          range.choice 'a', 1
+                          range.choice 'b', 2
+                          range.choice 'c', 3
+                        end
+
+    expect(res).to eq(1)
+  end
+
+  it "sets default choice by index number" do
+    prompt.input << "\r"
+    prompt.input.rewind
+
+    res = prompt.slider("What letter?") do |range|
+                          range.default 3
+                          range.choice 'a', 1
+                          range.choice 'b', 2
+                          range.choice 'c', 3
+                        end
+
+    expect(res).to eq(3)
+  end
+
+  it "sets choice value to proc and executes it" do
+    prompt.input << "\r"
+    prompt.input.rewind
+
+    res = prompt.slider("What letter?") do |range|
+                          range.choice 'a', 1
+                          range.choice 'b' do "NOT THE BEEEEEEEES!" end
+                          range.choice 'c', 3
+                        end
+
+    expect(res).to eq('NOT THE BEEEEEEEES!')
+  end
 end
