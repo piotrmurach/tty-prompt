@@ -91,11 +91,26 @@ RSpec.describe TTY::Prompt::Choice, "#from" do
   it "creates choice from hash with key property" do
     default = {key: "h", name: "Help", value: :help}
     expected_choice = described_class.new("Help", :help, key: "h")
-    choice = described_class.from(default) 
+    choice = described_class.from(default)
 
     expect(choice).to eq(expected_choice)
     expect(choice.name).to eq("Help")
     expect(choice.value).to eq(:help)
+    expect(choice.key).to eq("h")
+    expect(choice.key_name).to eq("h")
+    expect(choice.disabled?).to eq(false)
+  end
+
+  it "creates choice from hash with key_name property" do
+    default = {key: :escape, key_name: "esc", name: "Help", value: :help}
+    expected_choice = described_class.new("Help", :help, key: :escape, key_name: "esc")
+    choice = described_class.from(default)
+
+    expect(choice).to eq(expected_choice)
+    expect(choice.name).to eq("Help")
+    expect(choice.value).to eq(:help)
+    expect(choice.key).to eq(:escape)
+    expect(choice.key_name).to eq("esc")
     expect(choice.disabled?).to eq(false)
   end
 

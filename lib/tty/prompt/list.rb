@@ -16,6 +16,14 @@ module TTY
       # Allowed keys for filter, along with backspace and canc.
       FILTER_KEYS_MATCHER = /\A([[:alnum:]]|[[:punct:]])\Z/.freeze
 
+      # Allowed values for :key_action
+      #   move: move to the choice
+      #   select: select the choice
+      ALLOWED_KEY_ACTIONS = [
+        :move,
+        :select
+      ]
+
       # Create instance of TTY::Prompt::List menu.
       #
       # @param Hash options
@@ -36,6 +44,7 @@ module TTY
         @prompt       = prompt
         @prefix       = options.fetch(:prefix) { @prompt.prefix }
         @enum         = options.fetch(:enum) { nil }
+        @key_action   = options.fetch(:key_action) { :move }
         @default      = Array(options[:default])
         @choices      = Choices.new
         @active_color = options.fetch(:active_color) { @prompt.active_color }
@@ -108,6 +117,9 @@ module TTY
         @per_page = value
       end
 
+      # Get the number of items per page.
+      #
+      # @api public
       def page_size
         (@per_page || Paginator::DEFAULT_PAGE_SIZE)
       end
@@ -201,6 +213,7 @@ module TTY
         else
           @choices << value
         end
+        check_choice_consistency(@choices.last)
       end
 
       # Add multiple choices, or return them.
@@ -222,7 +235,10 @@ module TTY
           end
         else
           @filter_cache = {}
-          values.each { |val| @choices << val }
+          values.each do |val|
+            @choices << val
+            check_choice_consistency(@choices.last)
+          end
         end
       end
 
@@ -249,6 +265,13 @@ module TTY
         !@enum.nil?
       end
 
+      def search_choice_in(searchable)
+        searchable.find { |i| !choices[i - 1].disabled? }
+      end
+
+      # Handle pressed numeric keys. Used to select/move to enumerated choices.
+      #
+      # @api private
       def keynum(event)
         return unless enumerate?
 
@@ -256,18 +279,21 @@ module TTY
         return unless (1..choices.count).cover?(value)
         return if choices[value - 1].disabled?
         @active = value
+        @done = true if @key_action == :select
       end
 
+      # Select the currently hilighted item.
+      #
+      # @api private
       def keyenter(*)
         @done = true unless choices.empty?
       end
       alias keyreturn keyenter
       alias keyspace keyenter
 
-      def search_choice_in(searchable)
-        searchable.find { |i| !choices[i - 1].disabled? }
-      end
-
+      # Move the the selection up.
+      #
+      # @api private
       def keyup(*)
         searchable  = (@active - 1).downto(1).to_a
         prev_active = search_choice_in(searchable)
@@ -285,6 +311,9 @@ module TTY
         @by_page = false
       end
 
+      # Move the selection down.
+      #
+      # @api private
       def keydown(*)
         searchable  = ((@active + 1)..choices.length)
         next_active = search_choice_in(searchable)
@@ -307,6 +336,8 @@ module TTY
       #
       # When the choice on a page is outside of next page range then
       # adjust it to the last item, otherwise leave unchanged.
+      #
+      # @api private
       def keyright(*)
         if (@active + page_size) <= @choices.size
           searchable = ((@active + page_size)..choices.length)
@@ -328,6 +359,7 @@ module TTY
       end
       alias keypage_down keyright
 
+      # @api private
       def keyleft(*)
         if (@active - page_size) > 0
           searchable = ((@active - page_size)..choices.length)
@@ -341,15 +373,32 @@ module TTY
       end
       alias keypage_up keyleft
 
+      # Handle entered non-numeric characters. When `filterable?`, apply them
+      # to the filter text. Otherwise, match the input character against Choice
+      # :key settings.
+      #
+      # @api private
       def keypress(event)
-        return unless filterable?
-
-        if event.value =~ FILTER_KEYS_MATCHER
-          @filter << event.value
-          @active = 1
+        # if filterable, ignore :key?
+        if filterable?
+          if event.value =~ FILTER_KEYS_MATCHER
+            @filter << event.value
+            @active = 1
+          end
+        else
+          # check for a matching Choice :key by key 'value', and then by 'name'
+          # this allows for either an alnum like "a", or a special like :escape
+          choice = choices.find_by(:key, event.value) || choices.find_by(:key, event.key.name)
+          if choice
+            @active = choices.index(choice) + 1
+            @done = true if @key_action == :select
+          end
         end
       end
 
+      # Remove characters from the filter text.
+      #
+      # @api private
       def keydelete(*)
         return unless filterable?
 
@@ -357,6 +406,9 @@ module TTY
         @active = 1
       end
 
+      # Remove characters from the filter text.
+      #
+      # @api private
       def keybackspace(*)
         return unless filterable?
 
@@ -366,10 +418,29 @@ module TTY
 
       private
 
+      # Make sure incompatible options or bad values are not present.
+      #
+      # @api private
       def check_options_consistency(options)
         if options.key?(:enum) && options.key?(:filter)
           raise ConfigurationError,
                 "Enumeration can't be used with filter"
+        end
+
+        if options.key?(:key_action) && !ALLOWED_KEY_ACTIONS.include?(options[:key_action])
+          raise ConfigurationError,
+                "Invalid :key_action => %p. Must be one of: %s" %
+                  [ options[:key_action], ALLOWED_KEY_ACTIONS.map(&:inspect).join(', ') ]
+        end
+      end
+
+      # Make sure settings on a Choice are not incompatible with any options.
+      #
+      # @api private
+      def check_choice_consistency(choice)
+        if filterable? && choice.key
+          raise ConfigurationError,
+                "Filtering can't be used with Choice :key settings"
         end
       end
 
@@ -536,7 +607,16 @@ module TTY
 
         sync_paginators if @paging_changed
         paginator.paginate(choices, @active, @per_page) do |choice, index|
-          num = enumerate? ? (index + 1).to_s + @enum + " " : ""
+          # enumerate by provided :key, :key_name, or index number.
+          num = ""
+          if enumerate?
+            if choice.key && choice.key_name
+              num = choice.key_name.to_s + @enum + " "
+            elsif !choice.key
+              num = (index + 1).to_s + @enum + " "
+            end
+          end
+
           message = if index + 1 == @active && !choice.disabled?
                       selected = "#{@symbols[:marker]} #{num}#{choice.name}"
                       @prompt.decorate(selected.to_s, @active_color)

@@ -20,7 +20,15 @@ RSpec.describe TTY::Prompt, "#select" do
     out << choices.map.with_index do |c, i|
       name = c.is_a?(Hash) ? c[:name] : c
       disabled = c.is_a?(Hash) ? c[:disabled] : false
-      num = (i + 1).to_s + enum if enum
+			num = ""
+			if enum
+				if c.is_a?(Hash) && c[:key] && c[:key_name]
+					num = c[:key_name].to_s + enum
+				elsif !c.is_a?(Hash) || !c[:key]
+					num = (i + 1).to_s + enum
+				end
+			end
+
       if disabled
         "\e[31m#{symbols[:cross]}\e[0m #{num}#{name} #{disabled}"
       elsif name == active
@@ -639,7 +647,7 @@ RSpec.describe TTY::Prompt, "#select" do
       expect(prompt.output.string).to eq(expected_output)
     end
 
-    it "cycles around when configured to do so" do
+    it "cycles from bottom when configured to do so" do
       choices = %w(A B C)
       prompt.on(:keypress) { |e| prompt.trigger(:keydown) if e.value == "j" }
       prompt.input << "j" << "j" << "j" << "\r"
@@ -655,6 +663,25 @@ RSpec.describe TTY::Prompt, "#select" do
         output_helper("What letter?", choices, "C"),
         output_helper("What letter?", choices, "A"),
         "What letter? \e[32mA\e[0m\n\e[?25h"
+      ].join
+      expect(prompt.output.string).to eq(expected_output)
+    end
+
+    it "cycles from top when configured to do so" do
+      choices = %w(A B C)
+      prompt.on(:keypress) { |e| prompt.trigger(:keyup) if e.value == "j" }
+      prompt.input << "j" << "j" << "\r"
+      prompt.input.rewind
+
+      answer = prompt.select("What letter?", choices, cycle: true)
+
+      expect(answer).to eq("B")
+      expected_output = [
+        output_helper("What letter?", choices, "A", init: true,
+          hint: "Press #{up_down} arrow to move and Enter to select"),
+        output_helper("What letter?", choices, "C"),
+        output_helper("What letter?", choices, "B"),
+        "What letter? \e[32mB\e[0m\n\e[?25h"
       ].join
       expect(prompt.output.string).to eq(expected_output)
     end
@@ -981,6 +1008,140 @@ RSpec.describe TTY::Prompt, "#select" do
       expect {
         prompt.select("What size?", choices, default: 1)
       }.to raise_error(TTY::Prompt::ConfigurationError, /default index `1` matches disabled choice item/)
+    end
+  end
+
+  context "keypress customization" do
+    it "doesn't allow mixing Choice#key and filter" do
+      expect {
+        prompt.select("What size?", [{name: "test", key: "t"}], filter: true)
+      }.to raise_error(TTY::Prompt::ConfigurationError, "Filtering can't be used with Choice :key settings")
+    end
+
+    it "emits an error when using an invalid :key_action" do
+      expect {
+        prompt.select("What size?", [{name: "test", key: "t"}], key_action: :explode)
+      }.to raise_error(TTY::Prompt::ConfigurationError, /Invalid :key_action => :explode/)
+    end
+
+    it "displays the set Choice#key when enumerating" do
+      choices = [
+                  {name: "Small", key: "s", key_name: "s"},
+                  {name: "Medium", key: "m", key_name: "m"},
+                  {name: "Large", key: "l", key_name: "l"}
+                ]
+      prompt.input << "\r"
+      prompt.input.rewind
+      answer = prompt.select("What size?", choices, enum: ")")
+      expect(answer).to eq("Small")
+
+      expected_output =
+        output_helper("What size?", choices, "Small", init: true, enum: ") ",
+          hint: "Press #{up_down} arrow or 1-3 number to move and Enter to select") +
+        "What size? \e[32mSmall\e[0m\n\e[?25h"
+
+      expect(prompt.output.string).to eq(expected_output)
+    end
+
+    it "preferentially displays the set Choice#key_name when enumerating" do
+      choices = [
+                  {name: "Small", key: "s", key_name: "S"},
+                  {name: "Medium", key: "m", key_name: "S"},
+                  {name: "Large", key: "l", key_name: "L"}
+                ]
+      prompt.input << "\r"
+      prompt.input.rewind
+      answer = prompt.select("What size?", choices, enum: ")")
+      expect(answer).to eq("Small")
+
+      expected_output =
+        output_helper("What size?", choices, "Small", init: true, enum: ") ",
+          hint: "Press #{up_down} arrow or 1-3 number to move and Enter to select") +
+        "What size? \e[32mSmall\e[0m\n\e[?25h"
+
+      expect(prompt.output.string).to eq(expected_output)
+    end
+
+    context ":key_action => :move" do
+      it "pressing the set Choice#key moves to the choice" do
+        choices = [
+                    {name: "Small", key: "s", key_name: "s"},
+                    {name: "Medium", key: "m", key_name: "m"},
+                    {name: "Large", key: "l", key_name: "l"}
+                  ]
+        prompt.input << "l" << "\r"
+        prompt.input.rewind
+        answer = prompt.select("What size?", choices, enum: ")")
+        expect(answer).to eq("Large")
+
+        expected_output =
+          output_helper("What size?", choices, "Small", init: true, enum: ") ",
+            hint: "Press #{up_down} arrow or 1-3 number to move and Enter to select") +
+          output_helper("What size?", choices, "Large", enum: ") " ) +
+          "What size? \e[32mLarge\e[0m\n\e[?25h"
+
+        expect(prompt.output.string).to eq(expected_output)
+      end
+
+      it "pressing a number key when :enum enabled moves to the choice" do
+        choices = [
+                    {name: "Small"},
+                    {name: "Medium"},
+                    {name: "Large"}
+                  ]
+        prompt.input << "2" << "\r"
+        prompt.input.rewind
+        answer = prompt.select("What size?", choices, enum: ")")
+        expect(answer).to eq("Medium")
+
+        expected_output =
+          output_helper("What size?", choices, "Small", init: true, enum: ") ",
+            hint: "Press #{up_down} arrow or 1-3 number to move and Enter to select") +
+          output_helper("What size?", choices, "Medium", enum: ") " ) +
+          "What size? \e[32mMedium\e[0m\n\e[?25h"
+
+        expect(prompt.output.string).to eq(expected_output)
+      end
+    end
+
+    context ":key_action => :select" do
+      it "pressing the set Choice#key selects the choice" do
+        choices = [
+                    {name: "Small", key: "s", key_name: "s"},
+                    {name: "Medium", key: "m", key_name: "m"},
+                    {name: "Large", key: "l", key_name: "l"}
+                  ]
+        prompt.input << "m"
+        prompt.input.rewind
+        answer = prompt.select("What size?", choices, enum: ")", key_action: :select)
+        expect(answer).to eq("Medium")
+
+        expected_output =
+          output_helper("What size?", choices, "Small", init: true, enum: ") ",
+            hint: "Press #{up_down} arrow or 1-3 number to move and Enter to select") +
+          "What size? \e[32mMedium\e[0m\n\e[?25h"
+
+        expect(prompt.output.string).to eq(expected_output)
+      end
+
+      it "pressing a number key when :enum enabled selects the choice" do
+        choices = [
+                    {name: "Small"},
+                    {name: "Medium"},
+                    {name: "Large"}
+                  ]
+        prompt.input << "3"
+        prompt.input.rewind
+        answer = prompt.select("What size?", choices, enum: ")", key_action: :select)
+        expect(answer).to eq("Large")
+
+        expected_output =
+          output_helper("What size?", choices, "Small", init: true, enum: ") ",
+            hint: "Press #{up_down} arrow or 1-3 number to move and Enter to select") +
+          "What size? \e[32mLarge\e[0m\n\e[?25h"
+
+        expect(prompt.output.string).to eq(expected_output)
+      end
     end
   end
 end

@@ -629,7 +629,30 @@ choices = [
 ]
 ```
 
-You can specify `:key` as an additional option which will be used as short name for selecting the choice via keyboard key press.
+You can specify `:key` as an additional option which will be used as short name for selecting the choice via keyboard key press. When used with `:enum`, the key is displayed instead of a number.
+
+```ruby
+choices = [{name: "small", key: "s"}, {name: "medium", key: "m"}, {name: "large", key: "l"}]
+prompt.select("What size?", choices, enum: ')')
+# =>
+# What size? (Press ↑/↓ arrow to move and Enter to select)
+# ‣ s) small
+#   m) medium
+#   l) large
+```
+
+When providing `:key`, you can override the displayed text with `:key_name` - as in the case of using the escape key:
+
+
+```ruby
+choices = [{name: "next", key: "n"}, {name: "previous", key: "p"}, {name: "exit", key: :escape, key_name: "esc"}]
+prompt.select("Do what?", choices, enum: ')')
+# =>
+# Do what? (Press ↑/↓ arrow to move and Enter to select)
+# ‣ n) next
+#   p) previous
+#   esc) exit
+```
 
 Another way to create menu with choices is using the DSL and the `choice` method. For example, the previous array of choices with hash values can be translated as:
 
@@ -767,6 +790,30 @@ end
 #   2. Kano
 # ‣ 3. Jax
 ```
+
+If your choices include the `:key` and (optionally) `:key_name` settings, those values will be displayed instead of numbers.
+
+```ruby
+choices = [{name: "small", key: "s"}, {name: "medium", key: "m"}, {name: "large", key: "l"}]
+prompt.select("What size?", choices, enum: ')')
+# =>
+# What size? (Press ↑/↓ arrow to move and Enter to select)
+# ‣ s) small
+#   m) medium
+#   l) large
+```
+
+#### 2.6.2.3 `:key_action`
+
+When using `:enum` or Choice `:key` settings, you can change the keypress behavior. By default, `:key_action` is `:move`: pressing a number key or corresponding `:key` will move the cursor to select the choice. You can also use `key_action: :select` to make a keypress immediately select the item.
+
+
+```ruby
+choices = [{name: "small", key: "s"}, {name: "medium", key: "m"}, {name: "large", key: "l"}]
+prompt.select("What size?", choices, enum: ')', key_action: :select)
+```
+
+In the above example, when pressing "l", the "large" option will be immediately selected and the prompt will exit.
 
 #### 2.6.2.3 `:help`
 

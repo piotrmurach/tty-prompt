@@ -14,7 +14,7 @@ module TTY
       extend Forwardable
 
       def_delegators :choices, :length, :size, :to_ary, :empty?,
-                     :values_at, :index, :==
+                     :values_at, :index, :==, :last
 
       # Convenience for creating choices
       #
