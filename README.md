@@ -300,7 +300,7 @@ prompt.ask("Provide keys and values:", convert: :int_map)
 If a user provides a wrong type for conversion an error message will be printed in the console:
 
 ```ruby
-prompt.ask("Provide digit:", convert: float)
+prompt.ask("Provide digit:", convert: :float)
 # Provide digit: x
 # >> Cannot convert `x` into 'float' type
 ```
@@ -308,8 +308,8 @@ prompt.ask("Provide digit:", convert: float)
 You can further customize error message:
 
 ```ruby
-prompt.ask("Provide digit:", convert: float) do |q|
-  q.convert(:float, "Wrong value of %{value} for %{type} conversion"
+prompt.ask("Provide digit:", convert: :float) do |q|
+  q.convert(:float, "Wrong value of %{value} for %{type} conversion")
   # or
   q.convert :float
   q.messages[:convert?] = "Wrong value of %{value} for %{type} conversion"
@@ -380,7 +380,7 @@ To change default range validation error message do:
 ```ruby
 prompt.ask("How spicy on scale (1-5)? ") do |q|
   q.in "1-5"
-  q.messages[:range?] = "%{value} out of expected range #{in}"
+  q.messages[:range?] = "%{value} out of expected range %{in}"
 end
 ```
 
@@ -389,7 +389,7 @@ end
 In order to check that provided input falls inside a range of inputs use the `in` option. For example, if we wanted to ask a user for a single digit in given range we may do following:
 
 ```ruby
-ask("Provide number in range: 0-9?") { |q| q.in("0-9") }
+prompt.ask("Provide number in range: 0-9?") { |q| q.in("0-9") }
 ```
 
 #### 2.1.7 `:modify`
@@ -518,11 +518,11 @@ prompt.mask("What is your secret?")
 # => What is your secret? ••••
 ```
 
-The masking character can be changed by passing `:symbols` option with `:mask` key:
+The masking character can be changed by passing the `:mask` key:
 
 ```ruby
 heart = prompt.decorate(prompt.symbols[:heart] + " ", :magenta)
-prompt.mask("What is your secret?", symbols: {mask: heart})
+prompt.mask("What is your secret?", mask: heart)
 # => What is your secret? ❤  ❤  ❤  ❤  ❤
 ```
 
@@ -1475,7 +1475,7 @@ prompt.slider("What size?") do |range|
   range.max 100
   range.step 5
   range.default 75
-  range.format "|:slider| %d%"
+  range.format "|:slider| %d%%"
 end
 # =>
 # Volume |───────────────●──────| 75%
@@ -1492,6 +1492,7 @@ end
 # What letter? |──────────────────●───────| q
 # (Use ←/→ arrow keys, press Enter to select)
 ```
+
 
 ### 2.11 say
 
@@ -1693,7 +1694,7 @@ Please [see pastel](https://github.com/piotrmurach/pastel#3-supported-colors) fo
 By default `InputInterrupt` error will be raised when the user hits the interrupt key(Control-C). However, you can customise this behaviour by passing the `:interrupt` option. The available options are:
 
 * `:signal` - sends interrupt signal
-* `:exit` - exists with status code
+* `:exit` - exits with status code
 * `:noop` - skips handler
 * custom proc
 
