@@ -152,7 +152,7 @@ RSpec.describe TTY::Prompt, "#ask" do
   end
 
   it "overwrites global settings" do
-    active = ->(str) { Pastel.new.cyan(str) }
+    active = ->(str) { Pastel.new(enabled: true).cyan(str) }
     help = Pastel.new.red.detach
     global_settings = {prefix: "[?] ", active_color: active, help_color: help}
     prompt = TTY::Prompt::Test.new(**global_settings)
