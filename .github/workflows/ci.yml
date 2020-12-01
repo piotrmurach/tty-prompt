@@ -1,0 +1,57 @@
+---
+name: CI
+on:
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - "benchmarks/**"
+      - "examples/**"
+      - "*.md"
+  pull_request:
+    branches:
+      - master
+    paths-ignore:
+      - "benchmarks/**"
+      - "examples/**"
+      - "*.md"
+jobs:
+  tests:
+    name: Ruby ${{ matrix.ruby }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+        ruby:
+          - 2.1
+          - 2.2
+          - 2.3
+          - 2.4
+          - 2.5
+          - 2.6
+          - ruby-head
+          - jruby-9.2.13.0
+          - jruby-head
+          - truffleruby-head
+        include:
+          - ruby: 2.7
+            os: ubuntu-latest
+            coverage: true
+    env:
+      COVERAGE: ${{ matrix.coverage }}
+      COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+    continue-on-error: ${{ endsWith(matrix.ruby, 'head') }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+      - name: Install bundler
+        run: gem install bundler -v '< 2.0'
+      - name: Install dependencies
+        run: bundle install --jobs 4 --retry 3
+      - name: Run tests
+        run: bundle exec rake ci
