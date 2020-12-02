@@ -1,4 +1,9 @@
 ---
+skip_commits:
+  files:
+    - "benchmarks/**"
+    - "examples/**"
+    - "*.md"
 install:
   - SET PATH=C:\Ruby%ruby_version%\bin;%PATH%
   - gem install bundler -v '< 2.0'
