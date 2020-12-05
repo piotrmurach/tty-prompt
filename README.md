@@ -115,7 +115,7 @@ Or install it yourself as:
 * [3. settings](#3-settings)
   * [3.1 :symbols](#31-symbols)
   * [3.2 :active_color](#32-active_color)
-  * [3.3 :enable_color](#33-enable-color)
+  * [3.3 :enable_color](#33-enable_color)
   * [3.4 :help_color](#34-help_color)
   * [3.5 :interrupt](#35-interrupt)
   * [3.6 :prefix](#36-prefix)
@@ -1678,7 +1678,7 @@ prompt = TTY::Prompt.new(help_color: notice)
 
 Or use coloring of your own choice:
 
-```
+```ruby
 prompt = TTY::Prompt.new(help_color: ->(str) { my-color-gem(str) })
 ```
 
