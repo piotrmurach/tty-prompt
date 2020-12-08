@@ -67,6 +67,13 @@ module TTY
       # @api public
       attr_reader :key
 
+      # The text to display when this choice is used with :enum (i.e. in List)
+      # Defaults to :key. Use `nil` or `false` to disable showing the enum for
+      # this Choice.
+      #
+      # @api public
+      attr_reader :key_name
+
       # The text to display for disabled choice
       #
       # @api public
@@ -76,9 +83,10 @@ module TTY
       #
       # @api public
       def initialize(name, value, **options)
-        @name  = name
-        @value = value
-        @key   = options[:key]
+        @name     = name
+        @value    = value
+        @key      = options[:key]
+        @key_name = options[:key_name] || @key
         @disabled = options[:disabled].nil? ? false : options[:disabled]
         freeze
       end
@@ -113,7 +121,8 @@ module TTY
         return false unless other.is_a?(self.class)
         name == other.name &&
         value == other.value &&
-        key == other.key
+        key == other.key &&
+        key_name == other.key_name
       end
 
       # Object string representation

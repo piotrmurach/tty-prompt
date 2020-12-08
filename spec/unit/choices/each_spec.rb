@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe TTY::Prompt::Choices, ".each" do
+RSpec.describe TTY::Prompt::Choices, "#each" do
   it "iterates over collection" do
     choices = described_class[:large, :medium, :small]
     actual = []
