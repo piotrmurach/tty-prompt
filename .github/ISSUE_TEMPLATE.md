@@ -20,4 +20,4 @@ What did you expect to happen?
 
 * OS version:
 * Ruby version:
-* TTY version:
+* TTY::Prompt version:
