@@ -4,6 +4,8 @@ RSpec.describe TTY::Prompt do
   let(:symbols) { TTY::Prompt::Symbols.symbols }
   let(:up_down) { "#{symbols[:arrow_up]}/#{symbols[:arrow_down]}" }
   let(:left_right) { "#{symbols[:arrow_left]}/#{symbols[:arrow_right]}"}
+  let(:left_key) { "\e[D"}
+  let(:right_key) { "\e[C"}
 
   subject(:prompt) { TTY::Prompt::Test.new }
 
@@ -605,6 +607,34 @@ RSpec.describe TTY::Prompt do
         output_helper("What number?", choices[8..9], "10", %w[2]) +
         output_helper("What number?", choices[8..9], "10", %w[2 10]) +
         exit_message("What number?", %w[2 10])
+
+      expect(prompt.output.string).to eq(expected_output)
+    end
+
+    it "cycles filtered choices left and right" do
+      numbers = ("1".."10").to_a
+      choices = numbers.map { |n| "a#{n}" } + numbers.map { |n| "b#{n}" }
+      prompt.input << "b" << right_key << right_key << right_key
+      prompt.input << left_key << left_key << left_key << " \r"
+      prompt.input.rewind
+
+      answer = prompt.multi_select("What room?", choices, default: 2, per_page: 4,
+                                                          filter: true, cycle: true)
+
+      expect(answer).to eq(%w[a2 b2])
+
+      expected_output =
+        output_helper("What room?", choices[0..3], "a2", %w[a2], init: true,
+          hint: "Press #{up_down}/#{left_right} arrow to move, Space/Ctrl+A|R to select (all|rev), Enter to finish and letters to filter") +
+        output_helper("What room?", choices[10..13], "b1", %w[a2], hint: "Filter: \"b\"") +
+        output_helper("What room?", choices[14..17], "b5", %w[a2], hint: "Filter: \"b\"") +
+        output_helper("What room?", choices[18..20], "b9", %w[a2], hint: "Filter: \"b\"") +
+        output_helper("What room?", choices[10..13], "b1", %w[a2], hint: "Filter: \"b\"") +
+        output_helper("What room?", choices[18..20], "b10", %w[a2], hint: "Filter: \"b\"") +
+        output_helper("What room?", choices[14..17], "b6", %w[a2], hint: "Filter: \"b\"") +
+        output_helper("What room?", choices[10..13], "b2", %w[a2], hint: "Filter: \"b\"") +
+        output_helper("What room?", choices[10..13], "b2", %w[a2 b2], hint: "Filter: \"b\"") +
+        exit_message("What room?", %w[a2 b2])
 
       expect(prompt.output.string).to eq(expected_output)
     end

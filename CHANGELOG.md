@@ -6,6 +6,9 @@
 * Add the ability to provide an arbitrary array of values to Prompt::Slider
   by Katelyn Schiesser (@slowbro)
 
+### Fixed
+* Fix left and right key navigation while filtering choices in the #select and #multi_select prompts
+
 ## [v0.22.0] - 2020-07-20
 
 ### Added

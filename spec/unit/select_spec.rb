@@ -4,6 +4,8 @@ RSpec.describe TTY::Prompt, "#select" do
   let(:symbols) { TTY::Prompt::Symbols.symbols }
   let(:up_down) { "#{symbols[:arrow_up]}/#{symbols[:arrow_down]}" }
   let(:left_right) { "#{symbols[:arrow_left]}/#{symbols[:arrow_right]}"}
+  let(:left_key) { "\e[D"}
+  let(:right_key) { "\e[C"}
 
   subject(:prompt) { TTY::Prompt::Test.new }
 
@@ -749,6 +751,33 @@ RSpec.describe TTY::Prompt, "#select" do
 
       expect(prompt.output.string).to eq(expected_output)
     end
+
+    it "cycles filtered choices left and right" do
+      numbers = ("1".."10").to_a
+      choices = numbers.map { |n| "a#{n}" } + numbers.map { |n| "b#{n}" }
+      prompt.input << "b" << right_key << right_key << right_key
+      prompt.input << left_key << left_key << left_key << "\r"
+      prompt.input.rewind
+
+      answer = prompt.select("What room?", choices, default: 2, per_page: 4,
+                                                    filter: true, cycle: true)
+
+      expect(answer).to eq("b2")
+
+      expected_output =
+        output_helper("What room?", choices[0..3], "a2", init: true,
+          hint: "Press #{up_down}/#{left_right} arrow to move, Enter to select and letters to filter") +
+        output_helper("What room?", choices[10..13], "b1", hint: "Filter: \"b\"") +
+        output_helper("What room?", choices[14..17], "b5", hint: "Filter: \"b\"") +
+        output_helper("What room?", choices[18..20], "b9", hint: "Filter: \"b\"") +
+        output_helper("What room?", choices[10..13], "b1", hint: "Filter: \"b\"") +
+        output_helper("What room?", choices[18..20], "b10", hint: "Filter: \"b\"") +
+        output_helper("What room?", choices[14..17], "b6", hint: "Filter: \"b\"") +
+        output_helper("What room?", choices[10..13], "b2", hint: "Filter: \"b\"") +
+        exit_message("What room?", "b2")
+
+      expect(prompt.output.string).to eq(expected_output)
+    end
   end
 
   it "verifies default index format" do
@@ -894,6 +923,33 @@ RSpec.describe TTY::Prompt, "#select" do
         exit_message("What size?", "Small")
 
       expect(prompt.output.string).to eql(expected_prompt_output)
+    end
+
+    it "navigates left and right with filtered items" do
+      numbers = ("1".."10").to_a
+      choices = numbers.map { |n| "a#{n}" } + numbers.map { |n| "b#{n}" }
+      prompt.input << "b" << right_key << right_key << right_key
+      prompt.input << left_key << left_key << left_key << "\r"
+      prompt.input.rewind
+
+      answer = prompt.select("What room?", choices, default: 2, per_page: 4,
+                                                    filter: true)
+
+      expect(answer).to eq("b1")
+
+      expected_output =
+        output_helper("What room?", choices[0..3], "a2", init: true,
+          hint: "Press #{up_down}/#{left_right} arrow to move, Enter to select and letters to filter") +
+        output_helper("What room?", choices[10..13], "b1", hint: "Filter: \"b\"") +
+        output_helper("What room?", choices[14..17], "b5", hint: "Filter: \"b\"") +
+        output_helper("What room?", choices[18..20], "b9", hint: "Filter: \"b\"") +
+        output_helper("What room?", choices[18..20], "b9", hint: "Filter: \"b\"") +
+        output_helper("What room?", choices[14..17], "b5", hint: "Filter: \"b\"") +
+        output_helper("What room?", choices[10..13], "b1", hint: "Filter: \"b\"") +
+        output_helper("What room?", choices[10..13], "b1", hint: "Filter: \"b\"") +
+        exit_message("What room?", "b1")
+
+      expect(prompt.output.string).to eq(expected_output)
     end
   end
 

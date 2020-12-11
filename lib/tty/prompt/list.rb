@@ -308,17 +308,19 @@ module TTY
       # When the choice on a page is outside of next page range then
       # adjust it to the last item, otherwise leave unchanged.
       def keyright(*)
-        if (@active + page_size) <= @choices.size
-          searchable = ((@active + page_size)..choices.length)
+        choices_size = choices.size
+        if (@active + page_size) <= choices_size
+          searchable = ((@active + page_size)..choices_size)
           @active = search_choice_in(searchable)
-        elsif @active <= @choices.size # last page shorter
+        elsif @active <= choices_size # last page shorter
           current   = @active % page_size
-          remaining = @choices.size % page_size
+          remaining = choices_size % page_size
+
           if current.zero? || (remaining > 0 && current > remaining)
-            searchable = @choices.size.downto(0).to_a
+            searchable = choices_size.downto(0).to_a
             @active = search_choice_in(searchable)
           elsif @cycle
-            searchable = ((current.zero? ? page_size : current)..choices.length)
+            searchable = ((current.zero? ? page_size : current)..choices_size)
             @active = search_choice_in(searchable)
           end
         end
@@ -330,10 +332,10 @@ module TTY
 
       def keyleft(*)
         if (@active - page_size) > 0
-          searchable = ((@active - page_size)..choices.length)
+          searchable = ((@active - page_size)..choices.size)
           @active = search_choice_in(searchable)
         elsif @cycle
-          searchable = @choices.size.downto(1).to_a
+          searchable = choices.size.downto(1).to_a
           @active = search_choice_in(searchable)
         end
         @paging_changed = !@by_page
