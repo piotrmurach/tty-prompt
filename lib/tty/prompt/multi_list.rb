@@ -92,14 +92,24 @@ module TTY
       def setup_defaults
         validate_defaults
         # At this stage, @choices matches all the visible choices.
-        default_indexes = @default.map { |d| d - 1 }
+        default_indexes = @default.map do |d|
+          if d.to_s =~ INTEGER_MATCHER
+            d - 1
+          else
+            choices.index(choices.find_by(:name, d.to_s))
+          end
+        end
         @selected = SelectedChoices.new(@choices.values_at(*default_indexes),
                                         default_indexes)
 
-        if !@default.empty?
+        if @default.empty?
+          # no default, pick the first non-disabled choice
+          @active = choices.index { |choice| !choice.disabled? } + 1
+        elsif @default.last.to_s =~ INTEGER_MATCHER
           @active = @default.last
         else
-          @active = @choices.index { |choice| !choice.disabled? } + 1
+          default_choice = choices.find_by(:name, @default.last.to_s)
+          @active = choices.index(default_choice) + 1
         end
       end
 

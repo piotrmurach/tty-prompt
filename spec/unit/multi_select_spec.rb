@@ -197,6 +197,19 @@ RSpec.describe TTY::Prompt do
     expect(value).to match_array([{score: 20}, {score: 50}])
   end
 
+  it "sets default choices using names" do
+    prompt.input << "\r"
+    prompt.input.rewind
+    value = prompt.multi_select("Select drinks?", default: [:beer, "whisky"]) do |menu|
+              menu.choice :vodka,   {score: 10}
+              menu.choice :beer,    {score: 20}
+              menu.choice :wine,    {score: 30}
+              menu.choice :whisky,  {score: 40}
+              menu.choice :bourbon, {score: 50}
+            end
+    expect(value).to match_array([{score: 20}, {score: 40}])
+  end
+
   it "raises error for defaults out of range" do
     prompt.input << "\r"
     prompt.input.rewind

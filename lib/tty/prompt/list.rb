@@ -16,6 +16,9 @@ module TTY
       # Allowed keys for filter, along with backspace and canc.
       FILTER_KEYS_MATCHER = /\A([[:alnum:]]|[[:punct:]])\Z/.freeze
 
+      # Checks type of default parameter to be integer
+      INTEGER_MATCHER = /\A\d+\Z/.freeze
+
       # Create instance of TTY::Prompt::List menu.
       #
       # @param Hash options
@@ -377,14 +380,20 @@ module TTY
 
       # Setup default option and active selection
       #
+      # @return [Integer]
+      #
       # @api private
       def setup_defaults
         validate_defaults
 
-        if !@default.empty?
+        if @default.empty?
+          # no default, pick the first non-disabled choice
+          @active = choices.index { |choice| !choice.disabled? } + 1
+        elsif @default.first.to_s =~ INTEGER_MATCHER
           @active = @default.first
         else
-          @active = @choices.index { |choice| !choice.disabled? } + 1
+          default_choice = choices.find_by(:name, @default.first)
+          @active = choices.index(default_choice) + 1
         end
       end
 
@@ -399,6 +408,10 @@ module TTY
         @default.each do |d|
           msg = if d.nil? || d.to_s.empty?
                   "default index must be an integer in range (1 - #{choices.size})"
+                elsif d.to_s !~ INTEGER_MATCHER
+                  unless choices.find_by(:name, d.to_s)
+                    msg = "no match for default choice `#{d}`"
+                  end
                 elsif d < 1 || d > choices.size
                   "default index `#{d}` out of range (1 - #{choices.size})"
                 elsif choices[d - 1] && choices[d - 1].disabled?

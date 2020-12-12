@@ -50,15 +50,11 @@ RSpec.describe TTY::Prompt, "#select" do
     prompt.input.rewind
 
     expect(prompt.select("What size?", choices)).to eq(:Large)
-    expected_output = [
-      "\e[?25lWhat size? \e[90m(Press #{up_down} arrow to move and Enter to select)\e[0m\n",
-      "\e[32m#{symbols[:marker]} Large\e[0m\n",
-      "  Medium\n",
-      "  Small",
-      "\e[2K\e[1G\e[1A" * 3,
-      "\e[2K\e[1G",
-      "What size? \e[32mLarge\e[0m\n\e[?25h"
-    ].join
+
+    expected_output =
+      output_helper("What size?", choices, :Large, init: true,
+        hint: "Press #{up_down} arrow to move and Enter to select") +
+      exit_message("What size?", "Large")
 
     expect(prompt.output.string).to eq(expected_output)
   end
@@ -780,8 +776,31 @@ RSpec.describe TTY::Prompt, "#select" do
     end
   end
 
+  it "selects default choice by name" do
+    choices = %w[Large Medium Small]
+    prompt.input << "\r"
+    prompt.input.rewind
+
+    answer = prompt.select("What size?", choices, default: "Small")
+
+    expect(answer).to eq("Small")
+  end
+
+  it "raises when default choice doesn't match any choices" do
+    choices = %w[Large Medium Small]
+    prompt.input << "\r"
+    prompt.input.rewind
+
+    expect {
+      prompt.select("What size?", choices) do |menu|
+        menu.default "Unknown"
+      end
+    }.to raise_error(TTY::Prompt::ConfigurationError,
+                     "no match for default choice `Unknown`")
+  end
+
   it "verifies default index format" do
-    choices = %w(Large Medium Small)
+    choices = %w[Large Medium Small]
     prompt.input << "\r"
     prompt.input.rewind
 
