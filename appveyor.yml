@@ -5,7 +5,9 @@ skip_commits:
     - "examples/**"
     - "*.md"
 install:
-  - SET PATH=C:\Ruby%ruby_version%\bin;%PATH%
+  - curl https://curl.se/ca/cacert.pem --output C:\Ruby%ruby_version%\cacert.pm
+  - set SSL_CERT_FILE=C:\Ruby%ruby_version%\cacert.pem
+  - set PATH=C:\Ruby%ruby_version%\bin;%PATH%
   - gem install bundler -v '< 2.0'
   - bundle install
 before_test:
