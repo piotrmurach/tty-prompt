@@ -1,13 +1,16 @@
+AllCops:
+  NewCops: enable
+
 Lint/AssignmentInCondition:
   Enabled: false
 
 Metrics/AbcSize:
-  Max: 30
+  Max: 35
 
 Metrics/BlockLength:
   CountComments: true
   Max: 25
-  ExcludedMethods: []
+  IgnoredMethods: []
   Exclude:
     - "spec/**/*"
 
@@ -26,13 +29,17 @@ Metrics/MethodLength:
 Naming/BinaryOperatorParameterName:
   Enabled: false
 
+Style/AccessorGrouping:
+  Enabled: false
+
 Style/AsciiComments:
   Enabled: false
 
 Style/LambdaCall:
-  SupportedStyles:
-  - call
-  - braces
+  EnforcedStyle: braces
+
+Style/FormatString:
+  EnforcedStyle: percent
 
 Style/StringLiterals:
   EnforcedStyle: double_quotes
