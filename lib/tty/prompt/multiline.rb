@@ -25,6 +25,7 @@ module TTY
       # @api public
       def help(value = (not_set = true))
         return @help if not_set
+
         @help = value
       end
 
@@ -42,7 +43,7 @@ module TTY
         if !echo?
           header
         elsif @done
-          header << @prompt.decorate("#{@input}", @active_color)
+          header << @prompt.decorate(@input.to_s, @active_color)
         elsif @first_render
           header << @prompt.decorate(help, @help_color)
           @first_render = false

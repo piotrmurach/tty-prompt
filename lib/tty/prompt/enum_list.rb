@@ -25,11 +25,11 @@ module TTY
         @prompt       = prompt
         @prefix       = options.fetch(:prefix) { @prompt.prefix }
         @enum         = options.fetch(:enum) { ")" }
-        @default      = options.fetch(:default) { nil }
+        @default      = options.fetch(:default, nil)
         @active_color = options.fetch(:active_color) { @prompt.active_color }
         @help_color   = options.fetch(:help_color)   { @prompt.help_color }
         @error_color  = options.fetch(:error_color)  { @prompt.error_color }
-        @cycle        = options.fetch(:cycle) { false }
+        @cycle        = options.fetch(:cycle, false)
         @quiet        = options.fetch(:quiet) { @prompt.quiet }
         @symbols      = @prompt.symbols.merge(options.fetch(:symbols, {}))
         @input        = nil
@@ -52,6 +52,7 @@ module TTY
       # @api public
       def symbols(new_symbols = (not_set = true))
         return @symbols if not_set
+
         @symbols.merge!(new_symbols)
       end
 
@@ -156,6 +157,7 @@ module TTY
       def keypress(event)
         if %i[backspace delete].include?(event.key.name)
           return if @input.empty?
+
           @input.chop!
           mark_choice_as_active
         elsif event.value =~ /^\d+$/
@@ -363,6 +365,7 @@ module TTY
       def render_header
         return "" unless @done
         return "" unless @active
+
         selected_item = @choices[@active - 1].name.to_s
         @prompt.decorate(selected_item, @active_color)
       end
@@ -383,6 +386,7 @@ module TTY
       # @api private
       def page_help_message
         return "" unless paginated?
+
         "\n" + @prompt.decorate(@page_help, @help_color)
       end
 

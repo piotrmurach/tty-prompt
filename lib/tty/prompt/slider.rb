@@ -27,9 +27,9 @@ module TTY
         @prompt       = prompt
         @prefix       = options.fetch(:prefix) { @prompt.prefix }
         @choices      = Choices.new
-        @min          = options.fetch(:min) { 0 }
-        @max          = options.fetch(:max) { 10 }
-        @step         = options.fetch(:step) { 1 }
+        @min          = options.fetch(:min, 0)
+        @max          = options.fetch(:max, 10)
+        @step         = options.fetch(:step, 1)
         @default      = options[:default]
         @active_color = options.fetch(:active_color) { @prompt.active_color }
         @help_color   = options.fetch(:help_color) { @prompt.help_color }

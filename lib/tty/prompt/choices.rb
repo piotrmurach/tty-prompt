@@ -62,6 +62,7 @@ module TTY
       # @api public
       def each(&block)
         return to_enum unless block_given?
+
         choices.each(&block)
       end
 

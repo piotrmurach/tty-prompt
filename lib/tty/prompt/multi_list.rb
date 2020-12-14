@@ -60,6 +60,7 @@ module TTY
           @selected.delete_at(@active - 1)
         else
           return if @max && @selected.size >= @max
+
           @selected.insert(@active - 1, active_choice)
         end
       end
@@ -69,6 +70,7 @@ module TTY
       # @api private
       def keyctrl_a(*)
         return if @max && @max < choices.size
+
         @selected = SelectedChoices.new(choices.enabled, choices.enabled_indexes)
       end
 
@@ -77,6 +79,7 @@ module TTY
       # @api private
       def keyctrl_r(*)
         return if @max && @max < choices.size
+
         indexes = choices.each_with_index.reduce([]) do |acc, (choice, idx)|
                     acc << idx if !choice.disabled? && !@selected.include?(choice)
                     acc

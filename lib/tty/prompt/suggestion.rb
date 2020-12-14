@@ -88,6 +88,7 @@ module TTY
       # @api private
       def evaluate
         return @suggestions if @suggestions.empty?
+
         if @suggestions.one?
           build_single_suggestion
         else

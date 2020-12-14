@@ -30,6 +30,7 @@ module TTY
 
       def countdown(value = (not_set = true))
         return @countdown if not_set
+
         @countdown = value
       end
 
@@ -81,6 +82,7 @@ module TTY
 
         @timer.while_remaining do |remaining|
           break if @done
+
           @input = @prompt.read_keypress(nonblock: true)
         end
         countdown(0) unless @done

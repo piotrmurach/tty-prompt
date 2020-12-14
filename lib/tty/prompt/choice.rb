@@ -111,9 +111,10 @@ module TTY
       # @api public
       def ==(other)
         return false unless other.is_a?(self.class)
+
         name == other.name &&
-        value == other.value &&
-        key == other.key
+          value == other.value &&
+          key == other.key
       end
 
       # Object string representation
@@ -122,7 +123,7 @@ module TTY
       #
       # @api public
       def to_s
-        "#{name}"
+        name.to_s
       end
     end # Choice
   end # Prompt

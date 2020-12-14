@@ -19,7 +19,7 @@ module TTY
 
     class Test < TTY::Prompt
       def initialize(**options)
-        @input  = StringIO.new
+        @input = StringIO.new
         @input.extend(StringIOExtensions)
         @output = StringIO.new
 
@@ -27,7 +27,7 @@ module TTY
           input: @input,
           output: @output,
           env: { "TTY_TEST" => true },
-          enable_color: options.fetch(:enable_color) { true }
+          enable_color: options.fetch(:enable_color, true)
         })
         super(**options)
       end

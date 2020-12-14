@@ -23,7 +23,7 @@ module TTY
       def check(proc = nil, &block)
         results << (proc || block)
       end
-      alias_method :<<, :check
+      alias << check
     end # Evaluator
   end # Prompt
 end # TTY

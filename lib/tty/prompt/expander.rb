@@ -21,8 +21,8 @@ module TTY
       def initialize(prompt, options = {})
         @prompt       = prompt
         @prefix       = options.fetch(:prefix) { @prompt.prefix }
-        @default      = options.fetch(:default) { 1 }
-        @auto_hint    = options.fetch(:auto_hint) { false }
+        @default      = options.fetch(:default, 1)
+        @auto_hint    = options.fetch(:auto_hint, false)
         @active_color = options.fetch(:active_color) { @prompt.active_color }
         @help_color   = options.fetch(:help_color) { @prompt.help_color }
         @quiet        = options.fetch(:quiet) { @prompt.quiet }
@@ -101,6 +101,7 @@ module TTY
       # @api public
       def default(value = (not_set = true))
         return @default if not_set
+
         @default = value
       end
 

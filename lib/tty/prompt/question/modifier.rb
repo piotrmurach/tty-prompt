@@ -49,6 +49,7 @@ module TTY
         # @api public
         def self.letter_case(mod, value)
           return value unless value.is_a?(String)
+
           case mod
           when :up, :upcase, :uppercase
             value.upcase
@@ -75,15 +76,16 @@ module TTY
         # @api public
         def self.whitespace(mod, value)
           return value unless value.is_a?(String)
+
           case mod
           when :trim, :strip
             value.strip
           when :chomp
             value.chomp
           when :collapse
-            value.gsub(/\s+/, ' ')
+            value.gsub(/\s+/, " ")
           when :remove
-            value.gsub(/\s+/, '')
+            value.gsub(/\s+/, "")
           else
             value
           end

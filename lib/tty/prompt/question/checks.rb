@@ -42,7 +42,7 @@ module TTY
               (question.in? && question.in.include?(cast(value)))
               [value]
             else
-              tokens = {value: value, in: question.in}
+              tokens = { value: value, in: question.in }
               [value, question.message_for(:range?, tokens)]
             end
           end
@@ -56,7 +56,7 @@ module TTY
                 Validation.new(question.validation).call(value))
               [value]
             else
-              tokens = {valid: question.validation.inspect}
+              tokens = { valid: question.validation.inspect }
               [value, question.message_for(:valid?, tokens)]
             end
           end
@@ -89,7 +89,7 @@ module TTY
             if question.convert? && !Utils.blank?(value)
               result = question.convert_result(value)
               if result == Const::Undefined
-                tokens = {value: value, type: question.convert}
+                tokens = { value: value, type: question.convert }
                 [value, question.message_for(:convert?, tokens)]
               else
                 [result]

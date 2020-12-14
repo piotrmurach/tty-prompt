@@ -55,7 +55,7 @@ module TTY
         @error_color  = options.fetch(:error_color) { :red }
         @value        = options.fetch(:value) { UndefinedSetting }
         @quiet        = options.fetch(:quiet) { @prompt.quiet }
-        @messages     = Utils.deep_copy(options.fetch(:messages) { { } })
+        @messages     = Utils.deep_copy(options.fetch(:messages) { {} })
         @done         = false
         @first_render = true
         @input        = nil
@@ -170,7 +170,7 @@ module TTY
       #
       # @api private
       def read_input(question)
-        options = {echo: echo}
+        options = { echo: echo }
         if value? && @first_render
           options[:value] = @value
           @first_render = false
@@ -257,6 +257,7 @@ module TTY
       # @api public
       def default(value = (not_set = true))
         return @default if not_set
+
         @default = value
       end
 
@@ -277,9 +278,10 @@ module TTY
       def required(value = (not_set = true), message = nil)
         messages[:required?] = message if message
         return @required if not_set
+
         @required = value
       end
-      alias_method :required?, :required
+      alias required? required
 
       # Set validation rule for an argument
       #
@@ -298,6 +300,7 @@ module TTY
       # @api public
       def value(val)
         return @value if val.nil?
+
         @value = val
       end
 
@@ -327,18 +330,20 @@ module TTY
       # @api public
       def echo(value = nil)
         return @echo if value.nil?
+
         @echo = value
       end
-      alias_method :echo?, :echo
+      alias echo? echo
 
       # Turn raw mode on or off. This enables character-based input.
       #
       # @api public
       def raw(value = nil)
         return @raw if value.nil?
+
         @raw = value
       end
-      alias_method :raw?, :raw
+      alias raw? raw
 
       # Set expected range of values
       #
@@ -351,6 +356,7 @@ module TTY
           @in = Converters.convert(:range, @in)
         end
         return @in if not_set
+
         @in = Converters.convert(:range, value)
       end
 

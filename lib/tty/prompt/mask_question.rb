@@ -27,14 +27,15 @@ module TTY
       # @api public
       def mask(char = (not_set = true))
         return @mask if not_set
+
         @mask = char
       end
 
-      def keyreturn(event)
+      def keyreturn(_event)
         @done_masked = true
       end
 
-      def keyenter(event)
+      def keyenter(_event)
         @done_masked = true
       end
 

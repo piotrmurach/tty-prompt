@@ -38,6 +38,7 @@ module TTY
       # @api public
       def suffix(value = (not_set = true))
         return @negative if not_set
+
         @suffix = value
       end
 
@@ -46,6 +47,7 @@ module TTY
       # @api public
       def positive(value = (not_set = true))
         return @positive if not_set
+
         @positive = value
       end
 
@@ -54,11 +56,13 @@ module TTY
       # @api public
       def negative(value = (not_set = true))
         return @negative if not_set
+
         @negative = value
       end
 
       def call(message, &block)
         return if Utils.blank?(message)
+
         @message = message
         block.call(self) if block
         setup_defaults

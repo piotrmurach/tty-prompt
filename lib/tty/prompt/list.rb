@@ -68,6 +68,7 @@ module TTY
       # @api public
       def symbols(new_symbols = (not_set = true))
         return @symbols if not_set
+
         @symbols.merge!(new_symbols)
       end
 
@@ -258,6 +259,7 @@ module TTY
         value = event.value.to_i
         return unless (1..choices.count).cover?(value)
         return if choices[value - 1].disabled?
+
         @active = value
       end
 
