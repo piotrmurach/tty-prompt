@@ -1,10 +1,12 @@
 # Change log
 
-## [v0.23.0] - unreleased
+## [v0.23.0] - 2020-12-14
 
 ### Added
-* Add the ability to provide an arbitrary array of values to Prompt::Slider
-  by Katelyn Schiesser (@slowbro)
+* Add the ability to provide an arbitrary array of values to Prompt::Slider by Katelyn Schiesser (@slowbro)
+
+### Changed
+* Change to allow default option to be choice name as well as index in select, multi_select and enum_select prompts
 
 ### Fixed
 * Fix left and right key navigation while filtering choices in the #select and #multi_select prompts
