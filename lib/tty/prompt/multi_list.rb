@@ -107,8 +107,7 @@ module TTY
           @active = choices.index { |choice| !choice.disabled? } + 1
         elsif @default.last.to_s =~ INTEGER_MATCHER
           @active = @default.last
-        else
-          default_choice = choices.find_by(:name, @default.last.to_s)
+        elsif default_choice = choices.find_by(:name, @default.last.to_s)
           @active = choices.index(default_choice) + 1
         end
       end

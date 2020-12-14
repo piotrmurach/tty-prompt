@@ -391,8 +391,7 @@ module TTY
           @active = choices.index { |choice| !choice.disabled? } + 1
         elsif @default.first.to_s =~ INTEGER_MATCHER
           @active = @default.first
-        else
-          default_choice = choices.find_by(:name, @default.first)
+        elsif default_choice = choices.find_by(:name, @default.first)
           @active = choices.index(default_choice) + 1
         end
       end
@@ -409,16 +408,31 @@ module TTY
           msg = if d.nil? || d.to_s.empty?
                   "default index must be an integer in range (1 - #{choices.size})"
                 elsif d.to_s !~ INTEGER_MATCHER
-                  unless choices.find_by(:name, d.to_s)
-                    msg = "no choice found for the default name: #{d.inspect}"
-                  end
+                  validate_default_name(d)
                 elsif d < 1 || d > choices.size
                   "default index `#{d}` out of range (1 - #{choices.size})"
-                elsif choices[d - 1] && choices[d - 1].disabled?
-                  "default index `#{d}` matches disabled choice item"
+                elsif (dflt_choice = choices[d - 1]) && dflt_choice.disabled?
+                  "default index `#{d}` matches disabled choice"
                 end
 
           raise(ConfigurationError, msg) if msg
+        end
+      end
+
+      # Validate default choice name
+      #
+      # @param [String] name
+      #   the name to verify
+      #
+      # @return [String]
+      #
+      # @api private
+      def validate_default_name(name)
+        default_choice = choices.find_by(:name, name.to_s)
+        if default_choice.nil?
+          "no choice found for the default name: #{name.inspect}"
+        elsif default_choice.disabled?
+          "default name #{name.inspect} matches disabled choice"
         end
       end
 

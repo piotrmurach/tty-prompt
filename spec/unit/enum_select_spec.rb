@@ -72,6 +72,16 @@ RSpec.describe TTY::Prompt do
                     "no choice found for the default name: \"unknown\"")
   end
 
+  it "raises when default name matches a disabled choice" do
+    choices = [{ name: "/bin/nano", disabled: "unavailable" },
+               "/usr/bin/vim.basic", "/usr/bin/vim.tiny"]
+
+    expect {
+      prompt.enum_select("Select an editor?", choices, default: "/bin/nano")
+    }.to raise_error(TTY::Prompt::ConfigurationError,
+                    "default name \"/bin/nano\" matches disabled choice")
+  end
+
   it "selects default option when return pressed immediately" do
     choices = %w(/bin/nano /usr/bin/vim.basic /usr/bin/vim.tiny)
     prompt.input << "\n"

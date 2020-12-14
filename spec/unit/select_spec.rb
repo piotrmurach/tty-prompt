@@ -788,8 +788,6 @@ RSpec.describe TTY::Prompt, "#select" do
 
   it "raises when default choice doesn't match any choices" do
     choices = %w[Large Medium Small]
-    prompt.input << "\r"
-    prompt.input.rewind
 
     expect {
       prompt.select("What size?", choices) do |menu|
@@ -797,6 +795,17 @@ RSpec.describe TTY::Prompt, "#select" do
       end
     }.to raise_error(TTY::Prompt::ConfigurationError,
                      "no choice found for the default name: \"Unknown\"")
+  end
+
+  it "raises when default choice matches disabled choice" do
+    choices = [{name: "Large", disabled: true}, "Medium", "Small"]
+
+    expect {
+      prompt.select("What size?", choices) do |menu|
+        menu.default "Large"
+      end
+    }.to raise_error(TTY::Prompt::ConfigurationError,
+                     "default name \"Large\" matches disabled choice")
   end
 
   it "verifies default index format" do
@@ -1055,7 +1064,8 @@ RSpec.describe TTY::Prompt, "#select" do
 
       expect {
         prompt.select("What size?", choices, default: 1)
-      }.to raise_error(TTY::Prompt::ConfigurationError, /default index `1` matches disabled choice item/)
+      }.to raise_error(TTY::Prompt::ConfigurationError,
+                       "default index `1` matches disabled choice")
     end
   end
 end

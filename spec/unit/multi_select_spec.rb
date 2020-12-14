@@ -690,7 +690,7 @@ RSpec.describe TTY::Prompt do
       expect {
         prompt.multi_select("Select drinks?", choices, default: 1)
       }.to raise_error(TTY::Prompt::ConfigurationError,
-        /default index `1` matches disabled choice item/)
+                       "default index `1` matches disabled choice")
     end
 
     it "adjusts active index to match first non-disabled choice" do

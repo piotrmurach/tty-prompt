@@ -223,9 +223,7 @@ module TTY
         msg = if @default.nil? || @default.to_s.empty?
                 "default index must be an integer in range (1 - #{choices.size})"
               elsif @default.to_s !~ INTEGER_MATCHER
-                unless choices.find_by(:name, @default)
-                  "no choice found for the default name: #{@default.inspect}"
-                end
+                validate_default_name
               elsif @default < 1 || @default > @choices.size
                 "default index #{@default} out of range (1 - #{@choices.size})"
               elsif choices[@default - 1] && choices[@default - 1].disabled?
@@ -235,16 +233,31 @@ module TTY
         raise(ConfigurationError, msg) if msg
       end
 
+      # Validate default choice name
+      #
+      # @return [String]
+      #
+      # @api private
+      def validate_default_name
+        default_choice = choices.find_by(:name, @default.to_s)
+        if default_choice.nil?
+          "no choice found for the default name: #{@default.inspect}"
+        elsif default_choice.disabled?
+          "default name #{@default.inspect} matches disabled choice"
+        end
+      end
+
       # Setup default option and active selection
       #
       # @api private
       def setup_defaults
         if @default.to_s.empty?
           @default = (0..choices.length).find { |i| !choices[i].disabled? } + 1
-        elsif default_choice = choices.find_by(:name, @default)
-          @default = choices.index(default_choice) + 1
         end
         validate_defaults
+        if default_choice = choices.find_by(:name, @default)
+          @default = choices.index(default_choice) + 1
+        end
         mark_choice_as_active
       end
 
