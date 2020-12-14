@@ -719,11 +719,12 @@ choices = {"Scorpion" => 1, "Kano" => 2, "Jax" => 3}
 prompt.select("Choose your destiny?", choices)
 ```
 
-To mark particular answer as selected use `default` with index of the option starting from `1`:
+To mark particular answer as selected use `default` with either an index of the choice starting from `1` or a choice's name:
 
 ```ruby
 prompt.select("Choose your destiny?") do |menu|
   menu.default 3
+  # or menu.default "Jax"
 
   menu.choice "Scorpion", 1
   menu.choice "Kano", 2
@@ -735,7 +736,6 @@ end
 #   Kano
 # ‣ Jax
 ```
-
 
 #### 2.6.2.1 `:cycle`
 
@@ -932,11 +932,12 @@ prompt.multi_select("Select drinks?") do |menu|
 end
 ```
 
-To mark choice(s) as selected use the `default` option with index(s) of the option(s) starting from `1`:
+To mark choice(s) as selected use the `default` option with either index(s) of the choice(s) starting from `1` or choice name(s):
 
 ```ruby
 prompt.multi_select("Select drinks?") do |menu|
   menu.default 2, 5
+  # or menu.default :beer, :whisky
 
   menu.choice :vodka,   {score: 10}
   menu.choice :beer,    {score: 20}
@@ -1166,12 +1167,13 @@ end
 # Select an editor? /bin/nano
 ```
 
-You can change the indexed numbers by passing `enum` option and the default option by using `default` like so
+You can change the indexed numbers formatting by passing `enum` option. The `default` option lets you specify which choice to mark as selected by default. It accepts an index of the choice starting from `1` or a choice name:
 
 ```ruby
 choices = %w(nano vim emacs)
 prompt.enum_select("Select an editor?") do |menu|
   menu.default 2
+  # or menu.defualt "/usr/bin/vim"
   menu.enum "."
 
   menu.choice :nano,  "/bin/nano"
