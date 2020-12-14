@@ -15,6 +15,9 @@ module TTY
     class EnumList
       PAGE_HELP = "(Press tab/right or left to reveal more choices)"
 
+      # Checks type of default parameter to be integer
+      INTEGER_MATCHER = /\A[-+]?\d+\Z/.freeze
+
       # Create instance of EnumList menu.
       #
       # @api public
@@ -22,7 +25,7 @@ module TTY
         @prompt       = prompt
         @prefix       = options.fetch(:prefix) { @prompt.prefix }
         @enum         = options.fetch(:enum) { ")" }
-        @default      = options.fetch(:default) { -1 }
+        @default      = options.fetch(:default) { nil }
         @active_color = options.fetch(:active_color) { @prompt.active_color }
         @help_color   = options.fetch(:help_color)   { @prompt.help_color }
         @error_color  = options.fetch(:error_color)  { @prompt.error_color }
@@ -65,7 +68,7 @@ module TTY
       #
       # @api public
       def default?
-        @default > 0
+        !@default.to_s.empty?
       end
 
       # Set number of items per page
@@ -195,7 +198,6 @@ module TTY
 
       private
 
-
       # Find active choice or set to default
       #
       # @return [nil]
@@ -220,6 +222,10 @@ module TTY
       def validate_defaults
         msg = if @default.nil? || @default.to_s.empty?
                 "default index must be an integer in range (1 - #{choices.size})"
+              elsif @default.to_s !~ INTEGER_MATCHER
+                unless choices.find_by(:name, @default)
+                  "no choice found for the default name: #{@default.inspect}"
+                end
               elsif @default < 1 || @default > @choices.size
                 "default index #{@default} out of range (1 - #{@choices.size})"
               elsif choices[@default - 1] && choices[@default - 1].disabled?
@@ -233,8 +239,10 @@ module TTY
       #
       # @api private
       def setup_defaults
-        if !default?
-          @default = (0..choices.length).find {|i| !choices[i].disabled? } + 1
+        if @default.to_s.empty?
+          @default = (0..choices.length).find { |i| !choices[i].disabled? } + 1
+        elsif default_choice = choices.find_by(:name, @default)
+          @default = choices.index(default_choice) + 1
         end
         validate_defaults
         mark_choice_as_active

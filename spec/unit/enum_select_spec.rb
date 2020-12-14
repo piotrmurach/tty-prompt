@@ -43,13 +43,33 @@ RSpec.describe TTY::Prompt do
     "#{prompt} \e[32m#{choice}\e[0m\n"
   end
 
-  it "raises configuration error when wrong default" do
+  it "raises configuration error when default is higher than number of choices" do
     choices = %w(/bin/nano /usr/bin/vim.basic /usr/bin/vim.tiny)
 
     expect {
       prompt.enum_select("Select an editor?", choices, default: 100)
     }.to raise_error(TTY::Prompt::ConfigurationError,
                      /default index 100 out of range \(1 - 3\)/)
+  end
+
+  it "selects default choice by name" do
+    choices = %w(/bin/nano /usr/bin/vim.basic /usr/bin/vim.tiny)
+    prompt.input << "\n"
+    prompt.input.rewind
+
+    answer = prompt.enum_select("Select an editor?", choices,
+                                default: "/usr/bin/vim.basic")
+
+    expect(answer).to eq("/usr/bin/vim.basic")
+  end
+
+  it "raises when default choice name is not found" do
+    choices = %w(/bin/nano /usr/bin/vim.basic /usr/bin/vim.tiny)
+
+    expect {
+      prompt.enum_select("Select an editor?", choices, default: "unknown")
+    }.to raise_error(TTY::Prompt::ConfigurationError,
+                    "no choice found for the default name: \"unknown\"")
   end
 
   it "selects default option when return pressed immediately" do
