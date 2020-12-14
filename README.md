@@ -436,13 +436,13 @@ In order to validate that input matches a given pattern you can pass the `valida
 
 ```ruby
 prompt.ask("What is your username?") do |q|
-  q.validate /^[^\.]+\.[^\.]+/
+  q.validate(/\A[^.]+\.[^.]+\Z/)
 end
 ```
 
 ```ruby
 prompt.ask("What is your username?") do |q|
-  q.validate { |input| input =~ /^[^\.]+\.[^\.]+/ }
+  q.validate ->(input) { input =~ /\A[^.]+\.[^.]+\Z/ }
 end
 ```
 
@@ -492,7 +492,8 @@ prompt.multiline("Description?")
 # I know not all that may be coming,
 # but be it what it will,
 # I'll go to it laughing.
-# => ["I know not all that may be coming,\n", "but be it what it will,\n", "I'll go to it laughing.\n"]
+# =>
+# ["I know not all that may be coming,\n", "but be it what it will,\n", "I'll go to it laughing.\n"]
 ```
 
 The `multiline` uses similar options to those supported by `ask` prompt. For example, to provide default description:
