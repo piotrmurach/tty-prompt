@@ -5,6 +5,9 @@ require_relative "question"
 module TTY
   class Prompt
     class MaskQuestion < Question
+      # Names for delete keys
+      DELETE_KEYS = %i[backspace delete].freeze
+
       # Create masked question
       #
       # @param [Hash] options
@@ -40,7 +43,7 @@ module TTY
       end
 
       def keypress(event)
-        if [:backspace, :delete].include?(event.key.name)
+        if DELETE_KEYS.include?(event.key.name)
           @input.chop! unless @input.empty?
         elsif event.value =~ /^[^\e\n\r]/
           @input += event.value

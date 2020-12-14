@@ -15,6 +15,9 @@ module TTY
         value: :help
       }.freeze
 
+      # Names for delete keys
+      DELETE_KEYS = %i[backspace delete].freeze
+
       # Create instance of Expander
       #
       # @api public
@@ -75,7 +78,7 @@ module TTY
       #
       # @api public
       def keypress(event)
-        if [:backspace, :delete].include?(event.key.name)
+        if DELETE_KEYS.include?(event.key.name)
           @input.chop! unless @input.empty?
         elsif event.value =~ /^[^\e\n\r]/
           @input += event.value
