@@ -796,7 +796,7 @@ RSpec.describe TTY::Prompt, "#select" do
         menu.default "Unknown"
       end
     }.to raise_error(TTY::Prompt::ConfigurationError,
-                     "no match for default choice `Unknown`")
+                     "no choice found for the default name: \"Unknown\"")
   end
 
   it "verifies default index format" do

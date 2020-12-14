@@ -410,7 +410,7 @@ module TTY
                   "default index must be an integer in range (1 - #{choices.size})"
                 elsif d.to_s !~ INTEGER_MATCHER
                   unless choices.find_by(:name, d.to_s)
-                    msg = "no match for default choice `#{d}`"
+                    msg = "no choice found for the default name: #{d.inspect}"
                   end
                 elsif d < 1 || d > choices.size
                   "default index `#{d}` out of range (1 - #{choices.size})"
