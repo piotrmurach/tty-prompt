@@ -5,10 +5,10 @@ require_relative "../lib/tty-prompt"
 prompt = TTY::Prompt.new
 
 choices = [
-  {name: "Emacs", disabled: '(not installed)'},
+  { name: "Emacs", disabled: "(not installed)" },
   "Atom",
   "GNU nano",
-  {name: "Notepad++", disabled: '(not installed)'},
+  { name: "Notepad++", disabled: "(not installed)" },
   "Sublime",
   "Vim"
 ]

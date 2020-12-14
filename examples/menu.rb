@@ -5,7 +5,7 @@ require_relative "../lib/tty-prompt"
 @prompt = TTY::Prompt.new(quiet: true)
 @cool = 0
 
-def main_menu(from = nil)
+def main_menu(_from = nil)
   name = @prompt.select("Cool Menu") do |menu|
     menu.enum "."
 
@@ -26,7 +26,7 @@ def next_menu(name, from)
 end
 
 def status_menu(from)
-  name = @prompt.select("Coolness is at #{@cool}" ) do |menu|
+  name = @prompt.select("Coolness is at #{@cool}") do |menu|
     menu.enum "."
 
     menu.choice "Back", from
@@ -36,8 +36,8 @@ def status_menu(from)
   next_menu(name, :status_menu)
 end
 
-def manage_menu(from)
-  name = @prompt.select("Coolness is at #{@cool}.\nManage" ) do |menu|
+def manage_menu(_from)
+  name = @prompt.select("Coolness is at #{@cool}.\nManage") do |menu|
     menu.enum "."
 
     menu.choice "Add coolness", :add_cool

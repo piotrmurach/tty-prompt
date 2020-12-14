@@ -2,7 +2,7 @@
 
 require_relative "../lib/tty-prompt"
 
-prompt = TTY::Prompt::new
+prompt = TTY::Prompt.new
 
 answer = prompt.multiline("Description:")
 
