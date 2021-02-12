@@ -1,4 +1,7 @@
-# Change log
+# Change Log
+
+### Added
+* Add the ability to automatically select an option if it's the only one available (Ben Arnold; @seawolf)
 
 ## [v0.23.0] - 2020-12-14
 

@@ -41,6 +41,7 @@ module TTY
         @enum         = options.fetch(:enum) { nil }
         @default      = Array(options[:default])
         @choices      = Choices.new
+        @auto_select  = options.fetch(:auto_select) { false }
         @active_color = options.fetch(:active_color) { @prompt.active_color }
         @help_color   = options.fetch(:help_color) { @prompt.help_color }
         @cycle        = options.fetch(:cycle) { false }
@@ -451,7 +452,12 @@ module TTY
         until @done
           question = render_question
           @prompt.print(question)
-          @prompt.read_keypress
+
+          if @auto_select && only_one_choice?
+            @done = true
+          else
+            @prompt.read_keypress
+          end
 
           # Split manually; if the second line is blank (when there are no
           # matching lines), it won't be included by using String#lines.
@@ -483,6 +489,13 @@ module TTY
       # @api private
       def answer
         choices[@active - 1].value
+      end
+
+      # Have we only one valid choice available?
+      #
+      # @api private
+      def only_one_choice?
+        choices.enabled.length == 1
       end
 
       # Clear screen lines

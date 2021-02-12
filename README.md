@@ -89,6 +89,7 @@ Or install it yourself as:
       * [2.6.2.5 :per_page](#2625-per_page)
       * [2.6.2.6 :disabled](#2626-disabled)
       * [2.6.2.7 :filter](#2627-filter)
+      * [2.6.2.8 :auto_select](#2628-auto-select)
     * [2.6.3 multi_select](#263-multi_select)
       * [2.6.3.1 :cycle](#2631-cycle)
       * [2.6.3.2 :enum](#2632-enum)
@@ -894,6 +895,24 @@ After the user presses "ka":
 Filter characters can be deleted partially or entirely via, respectively, Backspace and Canc.
 
 If the user changes or deletes a filter, the choices previously selected remain selected.
+
+
+#### 2.6.2.8 `:auto_select`
+
+To automatically select the only available option in a list, use the `:auto_select` option:
+
+```ruby
+meals = [
+  { name: "Fruit", value: 'fruit', disabled: true },
+  { name: "Cake", value: 'cake' },
+  { name: "Nothing", value: 'air', disabled: true },
+]
+nom = prompt.select("What would you like to eat?", meals, auto_select: true)
+puts "Placing your order for #{nom}..."
+# =>
+# What would you like to eat? Cake
+# Placing your order for cake...
+```
 
 ### 2.6.3 multi_select
 
