@@ -1068,4 +1068,26 @@ RSpec.describe TTY::Prompt, "#select" do
                        "default index `1` matches disabled choice")
     end
   end
+
+  context "with automatic selection enabled" do
+    it "selects the only available option" do
+      choices = [
+          { name: 'Large', value: :Large, disabled: '(out of stock)' },
+          { name: 'Medium', value: :Medium },
+          { name: 'Small', value: :Small, disabled: '(out of stock)' }
+      ]
+      prompt.input << "\r"
+      prompt.input.rewind
+
+      expect(prompt.select("What size?", choices, auto_select: true)).to eq(:Medium)
+      expect(prompt.output.string).to eq(
+        output_helper(
+          "What size?", choices, "Medium",
+          init: true,
+          hint: "Press #{up_down} arrow to move and Enter to select"
+        ) +
+        exit_message("What size?", "Medium")
+      )
+    end
+  end
 end
