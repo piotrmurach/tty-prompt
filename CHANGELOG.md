@@ -1,5 +1,10 @@
 # Change log
 
+## [v0.23.1] - unreleased
+
+### Changed
+* Change validate to allow access to invalid input inside the message
+
 ## [v0.23.0] - 2020-12-14
 
 ### Added
@@ -394,6 +399,7 @@
 
 * Initial implementation and release
 
+[v0.23.1]: https://github.com/piotrmurach/tty-prompt/compare/v0.23.0...v0.23.1
 [v0.23.0]: https://github.com/piotrmurach/tty-prompt/compare/v0.22.0...v0.23.0
 [v0.22.0]: https://github.com/piotrmurach/tty-prompt/compare/v0.21.0...v0.22.0
 [v0.21.0]: https://github.com/piotrmurach/tty-prompt/compare/v0.20.0...v0.21.0

@@ -51,21 +51,23 @@ RSpec.describe TTY::Prompt::Question do
 
   it "fails validation check with inlined custom message" do
     question = described_class.new(prompt)
-    question.validate(/\A\w+@\w+\.\w+\Z/, "Invalid email address")
+    question.validate(/\A\w+@\w+\.\w+\Z/, "Invalid email address: %{value}")
 
-    result = TTY::Prompt::Question::Checks::CheckValidation.call(question, "piotr@com")
+    result = TTY::Prompt::Question::Checks::CheckValidation.call(question,
+                                                                 "piotr@com")
 
-    expect(result).to eq(["piotr@com", ["Invalid email address"]])
+    expect(result).to eq(["piotr@com", ["Invalid email address: piotr@com"]])
   end
 
   it "fails validation check with custom message" do
     question = described_class.new(prompt)
     question.validate(/\A\w+@\w+\.\w+\Z/)
-    question.messages[:valid?] = "Invalid email address"
+    question.messages[:valid?] = "Invalid email address: %{value}"
 
-    result = TTY::Prompt::Question::Checks::CheckValidation.call(question, "piotr@com")
+    result = TTY::Prompt::Question::Checks::CheckValidation.call(question,
+                                                                 "piotr@com")
 
-    expect(result).to eq(["piotr@com", ["Invalid email address"]])
+    expect(result).to eq(["piotr@com", ["Invalid email address: piotr@com"]])
   end
 
   it "passes required check" do

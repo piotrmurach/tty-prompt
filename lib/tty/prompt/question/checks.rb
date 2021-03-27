@@ -56,7 +56,7 @@ module TTY
                 Validation.new(question.validation).call(value))
               [value]
             else
-              tokens = { valid: question.validation.inspect }
+              tokens = { valid: question.validation.inspect, value: value }
               [value, question.message_for(:valid?, tokens)]
             end
           end
