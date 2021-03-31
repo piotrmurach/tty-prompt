@@ -357,7 +357,7 @@ prompt.ask("password:", echo: false)
 
 #### 2.1.5 error messages
 
-By default `tty-prompt` comes with predefined error messages for `required`, `in`, `validate` options.
+By default `tty-prompt` comes with predefined error messages for `convert`, `required`, `in`, `validate` options.
 
 You can change these and configure to your liking either by passing message as second argument with the option:
 
@@ -367,7 +367,7 @@ prompt.ask("What is your email?") do |q|
 end
 ```
 
-Or change the `messages` key entry out of `:required?`, `:valid?`, `:range?`:
+Or change the `messages` key entry out of `:convert?`, `:range?`, `:required?` and `:valid?`:
 
 ```ruby
 prompt.ask("What is your email?") do |q|
@@ -432,7 +432,9 @@ prompt.ask("What's your phone number?", required: true)
 
 #### 2.1.9 `:validate`
 
-In order to validate that input matches a given pattern you can pass the `validate` option. Validate setting accepts `Regex`, `Proc` or `Symbol`.
+In order to validate that input matches a given pattern you can pass the `validate` option/method.
+
+Validate accepts `Regex`, `Proc` or `Symbol`.
 
 ```ruby
 prompt.ask("What is your username?") do |q|
@@ -440,16 +442,35 @@ prompt.ask("What is your username?") do |q|
 end
 ```
 
+The above can also be expressed as a `Proc`:
+
 ```ruby
 prompt.ask("What is your username?") do |q|
   q.validate ->(input) { input =~ /\A[^.]+\.[^.]+\Z/ }
 end
 ```
 
-The **TTY::Prompt** comes with built-in validations for `:email` and you can use them directly like so:
+There is a built-in validation for `:email` and you can use it directly like so:
 
 ```ruby
 prompt.ask("What is your email?") { |q| q.validate :email }
+```
+
+The default validation message is `"Your answer is invalid (must match %{valid})"` and you can customise it by passing in a second argument:
+
+```ruby
+prompt.ask("What is your username?") do |q|
+  q.validate(/\A[^.]+\.[^.]+\Z/, "Invalid username: %{value}, must match %{valid}")
+end
+```
+
+The default message can also be set using `messages` and the `:valid?` key:
+
+```ruby
+prompt.ask("What is your username?") do |q|
+  q.validate(/\A[^.]+\.[^.]+\Z/)
+  q.messages[:valid?] = "Invalid username: %{value}, must match %{valid}")
+end
 ```
 
 ### 2.2. keypress
