@@ -18,7 +18,7 @@ RSpec.describe TTY::Prompt::SelectedChoices do
     expect(selected.to_a).to eq(choices)
     expect(selected.size).to eq(6)
 
-    expect(selected.delete_at(3)). to eq("D")
+    expect(selected.delete_at(3)).to eq("D")
   end
 
   it "initializes with selected choices" do

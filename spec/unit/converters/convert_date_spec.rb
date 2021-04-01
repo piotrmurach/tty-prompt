@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe TTY::Prompt::Question, "convert date" do
-
-  subject(:prompt) { TTY::Prompt::Test.new}
+  subject(:prompt) { TTY::Prompt::Test.new }
 
   it "fails to convert date" do
     prompt.input << "x"

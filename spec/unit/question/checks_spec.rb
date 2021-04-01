@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe TTY::Prompt::Question do
-
   subject(:prompt) { TTY::Prompt::Test.new }
 
   it "passes range check" do

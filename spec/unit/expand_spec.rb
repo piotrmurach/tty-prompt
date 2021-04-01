@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe TTY::Prompt, "#expand" do
-
   subject(:prompt) { TTY::Prompt::Test.new }
 
   let(:choices) {
@@ -158,7 +157,7 @@ RSpec.describe TTY::Prompt, "#expand" do
       "  Choice [y]: d",
       "\e[2K\e[1G\e[1A" * 7,
       "\e[2K\e[1G",
-      "Overwrite Gemfile? \e[32mShow diff\e[0m\n",
+      "Overwrite Gemfile? \e[32mShow diff\e[0m\n"
     ].join
 
     expect(prompt.output.string).to eq(expected_output)
@@ -292,7 +291,7 @@ RSpec.describe TTY::Prompt, "#expand" do
   end
 
   it "fails to expand due to lack of key attribute" do
-    choices = [{ name: "Overwrite", value: :yes }]
+    choices = [{name: "Overwrite", value: :yes}]
 
     expect {
       prompt.expand("Overwrite Gemfile?", choices)
@@ -300,7 +299,7 @@ RSpec.describe TTY::Prompt, "#expand" do
   end
 
   it "fails to expand due to wrong key length" do
-    choices = [{ key: "long", name: "Overwrite", value: :yes }]
+    choices = [{key: "long", name: "Overwrite", value: :yes}]
 
     expect {
       prompt.expand("Overwrite Gemfile?", choices)
@@ -308,7 +307,7 @@ RSpec.describe TTY::Prompt, "#expand" do
   end
 
   it "fails to expand due to reserve key" do
-    choices = [{ key: "h", name: "Overwrite", value: :yes }]
+    choices = [{key: "h", name: "Overwrite", value: :yes}]
 
     expect {
       prompt.expand("Overwrite Gemfile?", choices)
@@ -316,8 +315,8 @@ RSpec.describe TTY::Prompt, "#expand" do
   end
 
   it "fails to expand due to duplicate key" do
-    choices = [{ key: "y", name: "Overwrite", value: :yes },
-               { key: "y", name: "Change", value: :yes }]
+    choices = [{key: "y", name: "Overwrite", value: :yes},
+               {key: "y", name: "Change", value: :yes}]
 
     expect {
       prompt.expand("Overwrite Gemfile?", choices)

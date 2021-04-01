@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe TTY::Prompt::Question, "#validate" do
-
   subject(:prompt) { TTY::Prompt::Test.new }
 
   it "validates input with regex" do
@@ -9,7 +8,7 @@ RSpec.describe TTY::Prompt::Question, "#validate" do
     prompt.input.rewind
 
     answer = prompt.ask("What is your username?") do |q|
-      q.validate(/^[^\.]+\.[^\.]+/)
+      q.validate(/^[^.]+\.[^.]+/)
     end
 
     expect(answer).to eq("p.m")
@@ -28,7 +27,7 @@ RSpec.describe TTY::Prompt::Question, "#validate" do
     prompt.input.rewind
 
     answer = prompt.ask("What is your username?") do |q|
-      q.validate { |input| input =~ /^[^\.]+\.[^\.]+/ }
+      q.validate { |input| input =~ /^[^.]+\.[^.]+/ }
     end
 
     expect(answer).to eq("piotr.murach")

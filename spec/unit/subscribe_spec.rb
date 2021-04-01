@@ -17,6 +17,6 @@ RSpec.describe TTY::Prompt, "#subscribe" do
 
     expect(letter).to eq("C")
     expect(id).to eq(uuid)
-    expect(keys).to eq([:enter, :enter])
+    expect(keys).to eq(%i[enter enter])
   end
 end

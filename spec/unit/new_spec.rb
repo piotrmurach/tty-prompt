@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe TTY::Prompt, "#new" do
-  let(:env) { { "TTY_TEST" => true } }
+  let(:env) { {"TTY_TEST" => true} }
 
   it "sets prefix" do
     prompt = described_class.new(prefix: "[?]", env: env)

@@ -8,7 +8,7 @@ RSpec.describe TTY::Utils do
       "\n\t\s" => true,
       "    " => true,
       "foo" => false,
-      :foo => false,
+      :foo => false
     }.each do |value, result|
       it "detects blank of #{value.inspect} as #{result}" do
         expect(described_class.blank?(value)).to eq(result)

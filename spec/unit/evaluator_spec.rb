@@ -5,7 +5,7 @@ RSpec.describe TTY::Prompt::Evaluator do
     question = double(:question)
     evaluator = TTY::Prompt::Evaluator.new(question)
 
-    evaluator.check { |quest, value|
+    evaluator.check { |_quest, value|
       if value < 21
         [value, ["#{value} is not bigger than 21"]]
       else
@@ -13,7 +13,7 @@ RSpec.describe TTY::Prompt::Evaluator do
       end
     }
 
-    evaluator.check { |quest, value|
+    evaluator.check { |_quest, value|
       if value < 42
         [value, ["#{value} is not bigger than 42"]]
       else
@@ -33,7 +33,7 @@ RSpec.describe TTY::Prompt::Evaluator do
     evaluator = TTY::Prompt::Evaluator.new(question)
 
     LessThan21 = Class.new do
-      def self.call(quest, value)
+      def self.call(_quest, value)
         if value < 21
           [value, ["#{value} is not bigger than 21"]]
         else
@@ -43,7 +43,7 @@ RSpec.describe TTY::Prompt::Evaluator do
     end
 
     LessThan42 = Class.new do
-      def self.call(quest, value)
+      def self.call(_quest, value)
         if value < 42
           [value, ["#{value} is not bigger than 42"]]
         else

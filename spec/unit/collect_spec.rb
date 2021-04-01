@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe TTY::Prompt, "#collect" do
-
   subject(:prompt) { TTY::Prompt::Test.new }
 
   def collect(&block)
@@ -20,7 +19,7 @@ RSpec.describe TTY::Prompt, "#collect" do
   end
 
   context "when receiving multiple answers" do
-    let(:colors) { %w(red blue yellow) }
+    let(:colors) { %w[red blue yellow] }
 
     before do
       subject.input << "y\r" + colors.join("\ry\r") + "\rn\r"
@@ -38,13 +37,13 @@ RSpec.describe TTY::Prompt, "#collect" do
         key(:colors).values { key(:name).ask("color:") }
       end
       expect(result[:count]).to eq(3)
-      expect(result[:colors]).to eq(colors.map { |c| { name: c } })
+      expect(result[:colors]).to eq(colors.map { |c| {name: c} })
     end
 
     context "with multiple keys" do
       let(:colors) { ["red\rblue", "yellow\rgreen"] }
       let(:expected_pairs) do
-        colors.map { |s| Hash[%i(hot cold).zip(s.split("\r"))] }
+        colors.map { |s| Hash[%i[hot cold].zip(s.split("\r"))] }
       end
 
       it "collects into the appropriate keys" do

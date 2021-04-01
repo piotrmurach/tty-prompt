@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe TTY::Prompt::Question, "#echo" do
-
   subject(:prompt) { TTY::Prompt::Test.new }
 
   it "asks with echo on" do

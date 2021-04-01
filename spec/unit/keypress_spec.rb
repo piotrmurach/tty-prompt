@@ -13,7 +13,7 @@ RSpec.describe TTY::Prompt::Question, "#keypress" do
     expect(prompt.output.string).to eq([
       "Press key: ",
       "\e[2K\e[1G\e[1A\e[2K\e[1G",
-      "Press key: \n\n",
+      "Press key: \n\n"
     ].join)
   end
 
@@ -27,7 +27,7 @@ RSpec.describe TTY::Prompt::Question, "#keypress" do
     expect(prompt.output.string).to eq([
       "Press key: ",
       "\e[2K\e[1G",
-      "Press key: \e[32ma\e[0m\n",
+      "Press key: \e[32ma\e[0m\n"
     ].join)
   end
 
@@ -41,7 +41,7 @@ RSpec.describe TTY::Prompt::Question, "#keypress" do
     expect(prompt.output.string).to eq([
       "Press key: ",
       "\e[2K\e[1G",
-      "Press key: \n",
+      "Press key: \n"
     ].join)
   end
 

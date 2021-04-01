@@ -24,49 +24,49 @@ RSpec.describe TTY::Prompt::Distance, ".distance" do
   end
 
   context "when single char" do
-    let(:strings) { ["a", "abc"] }
+    let(:strings) { %w[a abc] }
 
     it { is_expected.to eql(2) }
   end
 
   context "when similar" do
-    let(:strings) { ["abc", "abc"] }
+    let(:strings) { %w[abc abc] }
 
     it { is_expected.to eql(0) }
   end
 
   context "when similar" do
-    let(:strings) { ["abc", "acb"] }
+    let(:strings) { %w[abc acb] }
 
     it { is_expected.to eql(1) }
   end
 
   context "when end similar" do
-    let(:strings) { ["saturday", "sunday"] }
+    let(:strings) { %w[saturday sunday] }
 
     it { is_expected.to eql(3) }
   end
 
   context "when contain similar" do
-    let(:strings) { ["which", "witch"] }
+    let(:strings) { %w[which witch] }
 
     it { is_expected.to eql(2) }
   end
 
   context "when prefix" do
-    let(:strings) { ["sta", "status"] }
+    let(:strings) { %w[sta status] }
 
     it { is_expected.to eql(3) }
   end
 
   context "when similar" do
-    let(:strings) { ["smellyfish","jellyfish"] }
+    let(:strings) { %w[smellyfish jellyfish] }
 
     it { is_expected.to eql(2) }
   end
 
   context "when unicode" do
-    let(:strings) { ["マラソン五輪代表", "ララソン五輪代表"] }
+    let(:strings) { %w[マラソン五輪代表 ララソン五輪代表] }
 
     it { is_expected.to eql(1) }
   end

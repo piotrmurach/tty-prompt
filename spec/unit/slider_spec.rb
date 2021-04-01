@@ -4,7 +4,7 @@ RSpec.describe TTY::Prompt, "#slider" do
   subject(:prompt) { TTY::Prompt::Test.new }
 
   let(:symbols) { TTY::Prompt::Symbols.symbols }
-  let(:left_right) { "#{symbols[:arrow_left]}/#{symbols[:arrow_right]}"}
+  let(:left_right) { "#{symbols[:arrow_left]}/#{symbols[:arrow_right]}" }
 
   def output_helper(prompt, choices, active, init: false, hint: false)
     index = choices.index(active)
@@ -142,7 +142,7 @@ RSpec.describe TTY::Prompt, "#slider" do
       "\e[?25lWhat size? ",
       "_" * 6,
       "\e[32mx\e[0m",
-      "#{"_" * 5} 44",
+      "#{'_' * 5} 44",
       "\n\e[90m(Use #{left_right} arrow keys, press Enter to select)\e[0m",
       "\e[2K\e[1G\e[1A\e[2K\e[1G",
       "What size? \e[32m44\e[0m\n\e[?25h"
@@ -162,7 +162,7 @@ RSpec.describe TTY::Prompt, "#slider" do
       "\e[?25lWhat size? ",
       "_" * 6,
       "\e[32mx\e[0m",
-      "#{"_" * 5} 44",
+      "#{'_' * 5} 44",
       "\n\e[90m(Use #{left_right} arrow keys, press Enter to select)\e[0m",
       "\e[2K\e[1G\e[1A\e[2K\e[1G",
       "What size? \e[32m44\e[0m\n\e[?25h"
@@ -223,7 +223,7 @@ RSpec.describe TTY::Prompt, "#slider" do
                     hint: "Use #{left_right} arrow keys, press Enter to select"),
       output_helper("What size?", choices, 2,
                     hint: "Use #{left_right} arrow keys, press Enter to select"),
-      exit_message("What size?", 2),
+      exit_message("What size?", 2)
     ].join
 
     expect(prompt.output.string).to eq(expected_output)

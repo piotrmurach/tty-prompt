@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe TTY::Prompt::Question, "convert bool" do
-
-  subject(:prompt) { TTY::Prompt::Test.new}
+  subject(:prompt) { TTY::Prompt::Test.new }
 
   it "fails to convert boolean" do
     prompt.input << "x"

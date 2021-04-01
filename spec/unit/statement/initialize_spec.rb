@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe TTY::Prompt::Statement, '#new' do
+RSpec.describe TTY::Prompt::Statement, ".new" do
   it "forces newline after the prompt message" do
     prompt = TTY::Prompt::Test.new
     statement = described_class.new(prompt)

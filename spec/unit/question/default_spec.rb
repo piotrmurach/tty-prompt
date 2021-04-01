@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe TTY::Prompt::Question, "#default" do
-
   subject(:prompt) { TTY::Prompt::Test.new }
 
   it "uses default value" do

@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe TTY::Prompt::Question, "#initialize" do
-
-  subject(:question) { described_class.new(TTY::Prompt::Test.new)}
+  subject(:question) { described_class.new(TTY::Prompt::Test.new) }
 
   it { expect(question.echo).to eq(true) }
 

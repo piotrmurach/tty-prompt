@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe TTY::Prompt::Question, "#modify" do
-
   subject(:prompt) { TTY::Prompt::Test.new }
 
   it "preserves answer for unkown modification" do

@@ -63,7 +63,7 @@ RSpec.describe TTY::Prompt::Choice, "#from" do
 
   it "creates choice from a hash with a value" do
     expected_choice = described_class.new("large", 1)
-    choice = described_class.from({ large: 1 })
+    choice = described_class.from({large: 1})
 
     expect(choice).to eq(expected_choice)
     expect(choice.name).to eq("large")
@@ -72,7 +72,7 @@ RSpec.describe TTY::Prompt::Choice, "#from" do
 
   it "creates choice from a hash with a nil value" do
     expected_choice = described_class.new("large", nil)
-    choice = described_class.from({ large: nil })
+    choice = described_class.from({large: nil})
 
     expect(choice).to eq(expected_choice)
     expect(choice.name).to eq("large")
@@ -81,7 +81,7 @@ RSpec.describe TTY::Prompt::Choice, "#from" do
 
   it "creates choice from an array with key-value pair" do
     expected_choice = described_class.new("large", 1)
-    choice = described_class.from([{ "large" => 1 }])
+    choice = described_class.from([{"large" => 1}])
 
     expect(choice).to eq(expected_choice)
     expect(choice.name).to eq("large")
@@ -90,7 +90,7 @@ RSpec.describe TTY::Prompt::Choice, "#from" do
 
   it "creates choice from an array with a hash with name and value keys" do
     expected_choice = described_class.new("large", 1)
-    choice = described_class.from([{ name: "large", value: 1 }])
+    choice = described_class.from([{name: "large", value: 1}])
 
     expect(choice).to eq(expected_choice)
     expect(choice.name).to eq("large")
@@ -99,7 +99,7 @@ RSpec.describe TTY::Prompt::Choice, "#from" do
 
   it "creates choice from an array with a hash without value key" do
     expected_choice = described_class.new("large", "large")
-    choice = described_class.from([{ name: "large" }])
+    choice = described_class.from([{name: "large"}])
 
     expect(choice).to eq(expected_choice)
     expect(choice.name).to eq("large")
@@ -107,7 +107,7 @@ RSpec.describe TTY::Prompt::Choice, "#from" do
   end
 
   it "creates choice from a hash with name, value and key keys" do
-    default = { key: "h", name: "Help", value: :help }
+    default = {key: "h", name: "Help", value: :help}
     expected_choice = described_class.new("Help", :help, key: "h")
     choice = described_class.from(default)
 

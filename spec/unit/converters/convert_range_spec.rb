@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe TTY::Prompt::Question, "convert range" do
-
-  subject(:prompt) { TTY::Prompt::Test.new}
+  subject(:prompt) { TTY::Prompt::Test.new }
 
   it "converts with valid range" do
     prompt.input << "20-30"

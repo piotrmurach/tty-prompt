@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe TTY::Prompt::Question, "#required" do
-
   subject(:prompt) { TTY::Prompt::Test.new }
 
   it "requires value to be present" do
@@ -55,9 +54,9 @@ RSpec.describe TTY::Prompt::Question, "#required" do
     prompt.input.rewind
     answer = prompt.ask("File name?") do |q|
       q.required(true)
-      q.validate { |v| !(v =~ /exists/) }
+      q.validate { |v| v !~ /exists/ }
       q.messages[:required?] = "File name must not be empty!"
-      q.messages[:valid?]   = "File already exists!"
+      q.messages[:valid?] = "File already exists!"
     end
     expect(answer).to eq("test")
     expect(prompt.output.string).to eq([
@@ -85,7 +84,7 @@ RSpec.describe TTY::Prompt::Question, "#required" do
       "\e[2K\e[1GFile name? test\n",
       "\e[2K\e[1G",
       "\e[1A\e[2K\e[1G",
-      "File name? \e[32mtest\e[0m\n",
+      "File name? \e[32mtest\e[0m\n"
     ].join)
     expect(answer).to eq("test")
   end

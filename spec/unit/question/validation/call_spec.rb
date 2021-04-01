@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe TTY::Prompt::Question::Validation, "#call" do
-  let(:pattern) { /^[^\.]+\.[^\.]+/ }
+  let(:pattern) { /^[^.]+\.[^.]+/ }
 
   it "validates nil input" do
     validation = described_class.new(pattern)

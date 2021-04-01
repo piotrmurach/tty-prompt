@@ -49,7 +49,7 @@ RSpec.describe TTY::Prompt, "#mask" do
       "\e[2K\e[1G",
       "What is your password? \e[32m****\e[0m\n",
       "\e[1A\e[2K\e[1G",
-      "What is your password? \e[32m****\e[0m\n",
+      "What is your password? \e[32m****\e[0m\n"
     ].join)
   end
 
@@ -71,7 +71,7 @@ RSpec.describe TTY::Prompt, "#mask" do
       "\e[2K\e[1G",
       "What is your password? \e[32m♥♥♥\e[0m\n",
       "\e[1A\e[2K\e[1G",
-      "What is your password? \e[32m♥♥♥\e[0m\n",
+      "What is your password? \e[32m♥♥♥\e[0m\n"
     ].join)
   end
 
@@ -98,7 +98,7 @@ RSpec.describe TTY::Prompt, "#mask" do
       "\e[2K\e[1G",
       "What is your password? \n",
       "\e[1A\e[2K\e[1G",
-      "What is your password? \n",
+      "What is your password? \n"
     ].join)
   end
 

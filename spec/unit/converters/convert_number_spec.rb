@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe TTY::Prompt::Question, "convert numbers" do
-
   subject(:prompt) { TTY::Prompt::Test.new }
 
   it "fails to convert integer" do

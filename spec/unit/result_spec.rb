@@ -5,7 +5,7 @@ RSpec.describe TTY::Prompt::Result do
     question = double(:question)
     result = TTY::Prompt::Result.new(question, nil)
 
-    answer = result.with { |quest, value|
+    answer = result.with { |_quest, value|
       if value.nil?
         [value, ["`#{value}` provided cannot be empty"]]
       else
@@ -22,7 +22,7 @@ RSpec.describe TTY::Prompt::Result do
     result = TTY::Prompt::Result.new(question, "Piotr")
 
     CheckRequired = Class.new do
-      def self.call(quest, value)
+      def self.call(_quest, value)
         if value.nil?
           [value, ["`#{value}` provided cannot be empty"]]
         else

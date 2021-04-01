@@ -67,7 +67,7 @@ RSpec.describe TTY::Prompt::Question, "#multiline" do
     prompt.input.rewind
 
     answer = prompt.multiline("Description?")
-    expect(answer).to eq(["aa\n", "bb\n", "cc"])
+    expect(answer).to eq(%W[aa\n bb\n cc])
     expect(prompt.output.string).to eq([
       "Description? \e[90m(Press Ctrl+D or Ctrl+Z to finish)\e[0m\n",
       "\e[2K\e[1Ga",

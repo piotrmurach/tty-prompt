@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
 RSpec.describe TTY::Prompt, "#suggest" do
-  let(:possible) { %w(status stage stash commit branch blame) }
+  let(:possible) { %w[status stage stash commit branch blame] }
 
   subject(:prompt) { TTY::Prompt::Test.new }
 
   it "suggests few matches" do
     prompt.suggest("sta", possible)
-    expect(prompt.output.string).
-      to eql("Did you mean one of these?\n        stage\n        stash\n")
+    expect(prompt.output.string)
+      .to eql("Did you mean one of these?\n        stage\n        stash\n")
   end
 
   it "suggests a single match for one character" do

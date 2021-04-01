@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe TTY::Prompt::Question, "#in" do
-
   subject(:prompt) { TTY::Prompt::Test.new }
 
   it "reads range from option" do
@@ -26,7 +25,7 @@ RSpec.describe TTY::Prompt::Question, "#in" do
       "How do you like it on scale 1-10? ",
       "\e[2K\e[1GHow do you like it on scale 1-10? 8",
       "\e[1A\e[2K\e[1G",
-      "How do you like it on scale 1-10? \e[32m8\e[0m\n",
+      "How do you like it on scale 1-10? \e[32m8\e[0m\n"
     ].join)
   end
 
@@ -45,7 +44,7 @@ RSpec.describe TTY::Prompt::Question, "#in" do
       "\e[2K\e[1GHow do you like it on scale 1-10? 8.",
       "\e[2K\e[1GHow do you like it on scale 1-10? 8.1",
       "\e[1A\e[2K\e[1G",
-      "How do you like it on scale 1-10? \e[32m8.1\e[0m\n",
+      "How do you like it on scale 1-10? \e[32m8.1\e[0m\n"
     ].join)
   end
 

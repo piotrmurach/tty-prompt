@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe TTY::Prompt::Question, "#default" do
-
   subject(:prompt) { TTY::Prompt::Test.new(quiet: true) }
 
   it "sets quiet mode" do
@@ -15,7 +14,7 @@ RSpec.describe TTY::Prompt::Question, "#default" do
     expect(prompt.output.string).to eq([
       "What is your name? \e[90m(Anonymous)\e[0m ",
       "\e[2K\e[1GWhat is your name? \e[90m(Anonymous)\e[0m \n",
-      "\e[1A\e[2K\e[1G",
+      "\e[1A\e[2K\e[1G"
     ].join)
   end
 end

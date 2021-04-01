@@ -13,7 +13,7 @@ RSpec.describe TTY::Prompt, "#inspect" do
       "error_color=:red",
       "help_color=:bright_black",
       "input=#{prompt.input}",
-      "output=#{prompt.output}>",
+      "output=#{prompt.output}>"
     ].join(" "))
   end
 end

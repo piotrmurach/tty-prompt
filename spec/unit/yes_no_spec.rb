@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe TTY::Prompt, "confirmation" do
-
   subject(:prompt) { TTY::Prompt::Test.new }
 
   context "#yes?" do
@@ -153,7 +152,8 @@ RSpec.describe TTY::Prompt, "confirmation" do
       prompt.input << "\r"
       prompt.input.rewind
       result = prompt.yes?("Are you a human?", suffix: "Agree/Disagree",
-                            positive: "Agree", negative: "Disagree")
+                                               positive: "Agree",
+                                               negative: "Disagree")
       expect(result).to eq(true)
       expect(prompt.output.string).to eq([
         "Are you a human? \e[90m(Agree/Disagree)\e[0m ",

@@ -3,9 +3,9 @@
 RSpec.describe TTY::Prompt, "#select" do
   let(:symbols) { TTY::Prompt::Symbols.symbols }
   let(:up_down) { "#{symbols[:arrow_up]}/#{symbols[:arrow_down]}" }
-  let(:left_right) { "#{symbols[:arrow_left]}/#{symbols[:arrow_right]}"}
-  let(:left_key) { "\e[D"}
-  let(:right_key) { "\e[C"}
+  let(:left_right) { "#{symbols[:arrow_left]}/#{symbols[:arrow_right]}" }
+  let(:left_key) { "\e[D" }
+  let(:right_key) { "\e[C" }
 
   subject(:prompt) { TTY::Prompt::Test.new }
 
@@ -45,7 +45,7 @@ RSpec.describe TTY::Prompt, "#select" do
   before { allow(TTY::Screen).to receive(:width).and_return(200) }
 
   it "selects by default first option" do
-    choices = %i(Large Medium Small)
+    choices = %i[Large Medium Small]
     prompt.input << "\r"
     prompt.input.rewind
 
@@ -60,7 +60,7 @@ RSpec.describe TTY::Prompt, "#select" do
   end
 
   it "allows navigation using events without errors" do
-    choices = %w(Large Medium Small)
+    choices = %w[Large Medium Small]
     prompt.input << "j" << "\r"
     prompt.input.rewind
     prompt.on(:keypress) do |event|
@@ -101,7 +101,7 @@ RSpec.describe TTY::Prompt, "#select" do
   end
 
   it "sets choice value to nil" do
-    choices = { none: nil, large: 1, medium: 2, small: 3 }
+    choices = {none: nil, large: 1, medium: 2, small: 3}
     prompt.input << " "
     prompt.input.rewind
     expect(prompt.select("What size?", choices, default: 1)).to eq(nil)
@@ -160,7 +160,7 @@ RSpec.describe TTY::Prompt, "#select" do
     prompt.input.rewind
     value = prompt.select("What size?") do |menu|
               menu.choice "Large"
-              menu.choices %w(Medium Small)
+              menu.choices %w[Medium Small]
             end
     expect(value).to eq("Large")
     expect(prompt.output.string).to eq([
@@ -219,7 +219,7 @@ RSpec.describe TTY::Prompt, "#select" do
   end
 
   it "sets default option through hash syntax" do
-    choices = %w(Large Medium Small)
+    choices = %w[Large Medium Small]
     prompt.input << " "
     prompt.input.rewind
     expect(prompt.select("What size?", choices, default: 2, enum: ".")).to eq("Medium")
@@ -235,11 +235,11 @@ RSpec.describe TTY::Prompt, "#select" do
   end
 
   it "changes selected item color & marker" do
-    choices = %w(Large Medium Small)
+    choices = %w[Large Medium Small]
     prompt = TTY::Prompt::Test.new(symbols: {marker: ">"})
     prompt.input << " "
     prompt.input.rewind
-    options = {active_color: :blue, help_color: :red, symbols: {marker: ">" }}
+    options = {active_color: :blue, help_color: :red, symbols: {marker: ">"}}
 
     value = prompt.select("What size?", choices, **options)
 
@@ -256,7 +256,7 @@ RSpec.describe TTY::Prompt, "#select" do
   end
 
   it "changes help text" do
-    choices = %w(Large Medium Small)
+    choices = %w[Large Medium Small]
     prompt.input << " "
     prompt.input.rewind
     value = prompt.select("What size?", choices, help: "(Bash keyboard)")
@@ -273,7 +273,7 @@ RSpec.describe TTY::Prompt, "#select" do
   end
 
   it "changes help text through DSL" do
-    choices = %w(Large Medium Small)
+    choices = %w[Large Medium Small]
     prompt.input << " "
     prompt.input.rewind
     value = prompt.select("What size?") do |menu|
@@ -293,7 +293,7 @@ RSpec.describe TTY::Prompt, "#select" do
   end
 
   it "configures quiet mode" do
-    choices = { large: 1, medium: 2, small: 3 }
+    choices = {large: 1, medium: 2, small: 3}
     prompt.input << " "
     prompt.input.rewind
 
@@ -311,11 +311,11 @@ RSpec.describe TTY::Prompt, "#select" do
     prompt.input << " "
     prompt.input.rewind
 
-    expect(prompt.select('What size?') do |q|
-           q.choice "Large"
-           q.choice "Medium"
-           q.choice "Small"
-           q.quiet true
+    expect(prompt.select("What size?") do |q|
+      q.choice "Large"
+      q.choice "Medium"
+      q.choice "Small"
+      q.quiet true
     end).to eq("Large")
 
     expected_output =
@@ -328,7 +328,7 @@ RSpec.describe TTY::Prompt, "#select" do
 
   it "sets prompt prefix" do
     prompt = TTY::Prompt::Test.new(prefix: "[?] ")
-    choices = %w(Large Medium Small)
+    choices = %w[Large Medium Small]
     prompt.input << "\r"
     prompt.input.rewind
     expect(prompt.select("What size?", choices)).to eq("Large")
@@ -344,7 +344,7 @@ RSpec.describe TTY::Prompt, "#select" do
   end
 
   it "changes to always show help" do
-    choices = { large: 1, medium: 2, small: 3 }
+    choices = {large: 1, medium: 2, small: 3}
     prompt.on(:keypress) { |e| prompt.trigger(:keydown) if e.value == "j" }
     prompt.input << "j" << "j" << " "
     prompt.input.rewind
@@ -364,7 +364,7 @@ RSpec.describe TTY::Prompt, "#select" do
   end
 
   it "changes to never show help" do
-    choices = { large: 1, medium: 2, small: 3 }
+    choices = {large: 1, medium: 2, small: 3}
     prompt.on(:keypress) { |e| prompt.trigger(:keydown) if e.value == "j" }
     prompt.input << "j" << "j" << " "
     prompt.input.rewind
@@ -385,7 +385,7 @@ RSpec.describe TTY::Prompt, "#select" do
 
   context "when paginated" do
     it "paginates long selections" do
-      choices = %w(A B C D E F G H)
+      choices = %w[A B C D E F G H]
       prompt.input << "\r"
       prompt.input.rewind
 
@@ -399,7 +399,7 @@ RSpec.describe TTY::Prompt, "#select" do
         "  F",
         "\e[2K\e[1G\e[1A" * 3,
         "\e[2K\e[1G",
-        "What letter? \e[32mD\e[0m\n\e[?25h",
+        "What letter? \e[32mD\e[0m\n\e[?25h"
       ].join
 
       expect(prompt.output.string).to eq(expected_output)
@@ -421,14 +421,14 @@ RSpec.describe TTY::Prompt, "#select" do
         "  F",
         "\e[2K\e[1G\e[1A" * 3,
         "\e[2K\e[1G",
-        "What letter? \e[32mD\e[0m\n\e[?25h",
+        "What letter? \e[32mD\e[0m\n\e[?25h"
       ].join
       expect(prompt.output.string).to eq(expected_output)
     end
 
     it "paginates long selections through DSL" do
       prompt = TTY::Prompt::Test.new
-      choices = %w(A B C D E F G H)
+      choices = %w[A B C D E F G H]
       prompt.input << "\r"
       prompt.input.rewind
 
@@ -446,7 +446,7 @@ RSpec.describe TTY::Prompt, "#select" do
         "  F",
         "\e[2K\e[1G\e[1A" * 3,
         "\e[2K\e[1G",
-        "What letter? \e[32mD\e[0m\n\e[?25h",
+        "What letter? \e[32mD\e[0m\n\e[?25h"
       ].join
       expect(prompt.output.string).to eq(expected_output)
     end
@@ -467,7 +467,7 @@ RSpec.describe TTY::Prompt, "#select" do
         output_helper("What number?", choices[4..7], "5"),
         output_helper("What number?", choices[8..11], "9"),
         output_helper("What number?", choices[8..11], "9"),
-        "What number? \e[32m9\e[0m\n\e[?25h",
+        "What number? \e[32m9\e[0m\n\e[?25h"
       ].join
 
       expect(prompt.output.string).to eq(expected_output)
@@ -489,7 +489,7 @@ RSpec.describe TTY::Prompt, "#select" do
         output_helper("What number?", choices[4..7], "8"),
         output_helper("What number?", choices[8..9], "10"),
         output_helper("What number?", choices[8..9], "10"),
-        "What number? \e[32m10\e[0m\n\e[?25h",
+        "What number? \e[32m10\e[0m\n\e[?25h"
       ].join
 
       expect(prompt.output.string).to eq(expected_output)
@@ -514,7 +514,7 @@ RSpec.describe TTY::Prompt, "#select" do
         output_helper("What number?", choices[4..7], "6"),
         output_helper("What number?", choices[8..9], "10"),
         output_helper("What number?", choices[4..7], "6"),
-        "What number? \e[32m6\e[0m\n\e[?25h",
+        "What number? \e[32m6\e[0m\n\e[?25h"
       ].join
 
       expect(prompt.output.string).to eq(expected_output)
@@ -564,7 +564,7 @@ RSpec.describe TTY::Prompt, "#select" do
         {name: "7", disabled: "out"},
         "8",
         "9",
-        {name: "10", disabled: "out"},
+        {name: "10", disabled: "out"}
       ]
 
       prompt.input << "j" << "j" << "j" << "j" << "\r"
@@ -582,7 +582,7 @@ RSpec.describe TTY::Prompt, "#select" do
         output_helper("What number?", choices[5..8], "8"),
         output_helper("What number?", choices[6..9], "9"),
         "What number? \e[32m9\e[0m\n\e[?25h"
-      ].join("")
+      ].join
 
       expect(prompt.output.string).to eq(expected_output)
     end
@@ -622,7 +622,7 @@ RSpec.describe TTY::Prompt, "#select" do
         output_helper("What number?", choices[0..3], "2"),
         output_helper("What number?", choices[0..3], "2"),
         "What number? \e[32m2\e[0m\n\e[?25h"
-      ].join("")
+      ].join
 
       expect(prompt.output.string).to eq(expected_output)
     end
@@ -630,7 +630,7 @@ RSpec.describe TTY::Prompt, "#select" do
 
   context "with :cycle option" do
     it "doesn't cycle by default" do
-      choices = %w(A B C)
+      choices = %w[A B C]
       prompt.on(:keypress) { |e| prompt.trigger(:keydown) if e.value == "j" }
       prompt.input << "j" << "j" << "j" << "\r"
       prompt.input.rewind
@@ -650,7 +650,7 @@ RSpec.describe TTY::Prompt, "#select" do
     end
 
     it "cycles around when configured to do so" do
-      choices = %w(A B C)
+      choices = %w[A B C]
       prompt.on(:keypress) { |e| prompt.trigger(:keydown) if e.value == "j" }
       prompt.input << "j" << "j" << "j" << "\r"
       prompt.input.rewind
@@ -675,7 +675,7 @@ RSpec.describe TTY::Prompt, "#select" do
         {name: "B"},
         {name: "C", disabled: "(out)"},
         {name: "D"},
-        {name: "E", disabled: "(out)"},
+        {name: "E", disabled: "(out)"}
       ]
       prompt.on(:keypress) { |e| prompt.trigger(:keydown) if e.value == "j" }
       prompt.input << "j" << "j" << "j" << "\r"
@@ -755,7 +755,7 @@ RSpec.describe TTY::Prompt, "#select" do
         output_helper("What number?", choices[4..7], "5"),
         output_helper("What number?", choices[0..3], "2"),
         exit_message("What number?", "2")
-      ].join("")
+      ].join
 
       expect(prompt.output.string).to eq(expected_output)
     end
@@ -831,7 +831,7 @@ RSpec.describe TTY::Prompt, "#select" do
   end
 
   it "doesn't paginate short selections" do
-    choices = %w(A B C D)
+    choices = %w[A B C D]
     prompt.input << "\r"
     prompt.input.rewind
     value = prompt.select("What letter?", choices, per_page: 4, default: 1)
@@ -845,12 +845,12 @@ RSpec.describe TTY::Prompt, "#select" do
       "  D",
       "\e[2K\e[1G\e[1A" * 4,
       "\e[2K\e[1G",
-      "What letter? \e[32mA\e[0m\n\e[?25h",
+      "What letter? \e[32mA\e[0m\n\e[?25h"
     ].join)
   end
 
   it "verifies default index range" do
-    choices = %w(Large Medium Small)
+    choices = %w[Large Medium Small]
     prompt.input << "\r"
     prompt.input.rewind
 
@@ -870,17 +870,17 @@ RSpec.describe TTY::Prompt, "#select" do
       prompt.input << "U" << "g" << "\r"
       prompt.input.rewind
 
-      answer = prompt.select("What size?", %w(Small Medium Large Huge),
+      answer = prompt.select("What size?", %w[Small Medium Large Huge],
                                           filter: true, show_help: :always)
       expect(answer).to eql("Huge")
 
       actual_prompt_output = prompt.output.string
 
       expected_prompt_output =
-        output_helper("What size?", %w(Small Medium Large Huge), "Small", init: true,
+        output_helper("What size?", %w[Small Medium Large Huge], "Small", init: true,
           hint: "Press #{up_down} arrow to move, Enter to select and letters to filter") +
-        output_helper("What size?", %w(Medium Huge), "Medium", hint: "Filter: \"U\"") +
-        output_helper("What size?", %w(Huge), "Huge", hint: "Filter: \"Ug\"") +
+        output_helper("What size?", %w[Medium Huge], "Medium", hint: "Filter: \"U\"") +
+        output_helper("What size?", %w[Huge], "Huge", hint: "Filter: \"Ug\"") +
         exit_message("What size?", "Huge")
 
       expect(actual_prompt_output).to eql(expected_prompt_output)
@@ -890,14 +890,14 @@ RSpec.describe TTY::Prompt, "#select" do
       prompt.input << "g" << "\r"
       prompt.input.rewind
 
-      answer = prompt.select("What size?", %i(Small Medium Large Huge), filter: true)
+      answer = prompt.select("What size?", %i[Small Medium Large Huge], filter: true)
       expect(answer).to eql(:Large)
 
       actual_prompt_output = prompt.output.string
       expected_prompt_output =
-        output_helper("What size?", %w(Small Medium Large Huge), "Small", init: true,
+        output_helper("What size?", %w[Small Medium Large Huge], "Small", init: true,
           hint: "Press #{up_down} arrow to move, Enter to select and letters to filter") +
-        output_helper("What size?", %w(Large Huge), "Large", hint: "Filter: \"g\"") +
+        output_helper("What size?", %w[Large Huge], "Large", hint: "Filter: \"g\"") +
         exit_message("What size?", "Large")
 
       expect(actual_prompt_output).to eql(expected_prompt_output)
@@ -907,16 +907,16 @@ RSpec.describe TTY::Prompt, "#select" do
       prompt.input << "p" << "*" << "2" << "\r"
       prompt.input.rewind
 
-      answer = prompt.select("What email?", %w(p*1@mail.com p*2@mail.com p*3@mail.com), filter: true)
+      answer = prompt.select("What email?", %w[p*1@mail.com p*2@mail.com p*3@mail.com], filter: true)
       expect(answer).to eql("p*2@mail.com")
 
       actual_prompt_output = prompt.output.string
       expected_prompt_output =
-        output_helper("What email?", %w(p*1@mail.com p*2@mail.com p*3@mail.com), "p*1@mail.com", init: true,
+        output_helper("What email?", %w[p*1@mail.com p*2@mail.com p*3@mail.com], "p*1@mail.com", init: true,
           hint: "Press #{up_down} arrow to move, Enter to select and letters to filter") +
-        output_helper("What email?", %w(p*1@mail.com p*2@mail.com p*3@mail.com), "p*1@mail.com", hint: "Filter: \"p\"") +
-        output_helper("What email?", %w(p*1@mail.com p*2@mail.com p*3@mail.com), "p*1@mail.com", hint: "Filter: \"p*\"") +
-        output_helper("What email?", %w(p*2@mail.com), "p*2@mail.com", hint: "Filter: \"p*2\"") +
+        output_helper("What email?", %w[p*1@mail.com p*2@mail.com p*3@mail.com], "p*1@mail.com", hint: "Filter: \"p\"") +
+        output_helper("What email?", %w[p*1@mail.com p*2@mail.com p*3@mail.com], "p*1@mail.com", hint: "Filter: \"p*\"") +
+        output_helper("What email?", %w[p*2@mail.com], "p*2@mail.com", hint: "Filter: \"p*2\"") +
         exit_message("What email?", "p*2@mail.com")
 
       expect(actual_prompt_output).to eql(expected_prompt_output)
@@ -929,16 +929,16 @@ RSpec.describe TTY::Prompt, "#select" do
       prompt.input << "a" << "\r"    # triggers Backspace before `a` (see above)
       prompt.input.rewind
 
-      answer = prompt.select("What size?", %w(Tiny Medium Large Huge), filter: true)
+      answer = prompt.select("What size?", %w[Tiny Medium Large Huge], filter: true)
       expect(answer).to eql("Large")
 
       actual_prompt_output = prompt.output.string
       expected_prompt_output =
-        output_helper("What size?", %w(Tiny Medium Large Huge), "Tiny", init: true,
+        output_helper("What size?", %w[Tiny Medium Large Huge], "Tiny", init: true,
           hint: "Press #{up_down} arrow to move, Enter to select and letters to filter") +
-        output_helper("What size?", %w(), "", hint: "Filter: \"z\"") +
-        output_helper("What size?", %w(), "", hint: "Filter: \"z\"") +
-        output_helper("What size?", %w(Large), "Large", hint: "Filter: \"a\"") +
+        output_helper("What size?", %w[], "", hint: "Filter: \"z\"") +
+        output_helper("What size?", %w[], "", hint: "Filter: \"z\"") +
+        output_helper("What size?", %w[Large], "Large", hint: "Filter: \"a\"") +
         exit_message("What size?", "Large")
 
       expect(actual_prompt_output).to eql(expected_prompt_output)
@@ -947,19 +947,19 @@ RSpec.describe TTY::Prompt, "#select" do
     it "cancels a selection" do
       prompt.on(:keypress) { |e| prompt.trigger(:keydelete) if e.value == "S" }
       prompt.input << "Hu"
-      prompt.input << "S"   # triggers Canc before `S` (see above)
+      prompt.input << "S" # triggers Canc before `S` (see above)
       prompt.input << "\r"
       prompt.input.rewind
 
-      answer = prompt.select("What size?", %w(Small Medium Large Huge), filter: true)
+      answer = prompt.select("What size?", %w[Small Medium Large Huge], filter: true)
       expect(answer).to eql("Small")
 
       expected_prompt_output =
-        output_helper("What size?", %w(Small Medium Large Huge), "Small", init: true,
+        output_helper("What size?", %w[Small Medium Large Huge], "Small", init: true,
           hint: "Press #{up_down} arrow to move, Enter to select and letters to filter") +
-        output_helper("What size?", %w(Huge), "Huge", hint: "Filter: \"H\"") +
-        output_helper("What size?", %w(Huge), "Huge", hint: "Filter: \"Hu\"") +
-        output_helper("What size?", %w(Small), "Small", hint: "Filter: \"S\"") +
+        output_helper("What size?", %w[Huge], "Huge", hint: "Filter: \"H\"") +
+        output_helper("What size?", %w[Huge], "Huge", hint: "Filter: \"Hu\"") +
+        output_helper("What size?", %w[Small], "Small", hint: "Filter: \"S\"") +
         exit_message("What size?", "Small")
 
       expect(prompt.output.string).to eql(expected_prompt_output)
@@ -995,7 +995,7 @@ RSpec.describe TTY::Prompt, "#select" do
 
   context "with :disabled choice" do
     it "omits disabled choice when navigating menu" do
-      choices = [ "Small", "Medium", {name: "Large", disabled: "(out of stock)"}, "Huge" ]
+      choices = ["Small", "Medium", {name: "Large", disabled: "(out of stock)"}, "Huge"]
       prompt.input << "j" << "j" << "\r"
       prompt.input.rewind
       prompt.on(:keypress) { |e| prompt.trigger(:keydown) if e.value == "j" }
@@ -1014,7 +1014,7 @@ RSpec.describe TTY::Prompt, "#select" do
     end
 
     it "doesn't show disabled choice when filtering choices" do
-      choices = [ "A", "B", {name: "C", disabled: "(unavailable)"}, "D" ]
+      choices = ["A", "B", {name: "C", disabled: "(unavailable)"}, "D"]
       prompt.on(:keypress) { |e| prompt.trigger(:keybackspace) if e.value == "a" }
       prompt.input << "c" << "\r" # nothing matches
       prompt.input << "a" << "\r" # backtracks & chooses default option
@@ -1035,7 +1035,7 @@ RSpec.describe TTY::Prompt, "#select" do
     end
 
     it "omits disabled choice when number key is pressed" do
-      choices = [ "Small", {name: "Medium", disabled: "(out of stock)"}, "Large" ]
+      choices = ["Small", {name: "Medium", disabled: "(out of stock)"}, "Large"]
       prompt.input << "2" << "\r" << "\r"
       prompt.input.rewind
       answer = prompt.select("What size?") do |menu|
