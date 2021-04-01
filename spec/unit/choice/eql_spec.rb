@@ -16,6 +16,11 @@ RSpec.describe TTY::Prompt::Choice, "#==" do
       not_to eq(described_class.new(:large, 2))
   end
 
+  it "is false with different key attribute" do
+    expect(described_class.new(:large, 1, key: "j")).
+      not_to eq(described_class.new(:large, 2, key: "k"))
+  end
+
   it "is false with non-choice object" do
     expect(described_class.new(:large, 1)).not_to eq(:other)
   end
