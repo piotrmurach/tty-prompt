@@ -25,8 +25,6 @@ jobs:
         os:
           - ubuntu-latest
         ruby:
-          - 2.1
-          - 2.2
           - 2.3
           - 2.4
           - 2.5
@@ -37,9 +35,18 @@ jobs:
           - jruby-head
           - truffleruby-head
         include:
+          - ruby: 2.1
+            os: ubuntu-latest
+            coverage: false
+            bundler: 1
+          - ruby: 2.2
+            os: ubuntu-latest
+            coverage: false
+            bundler: 1
           - ruby: 2.7
             os: ubuntu-latest
             coverage: true
+            bundler: latest
     env:
       COVERAGE: ${{ matrix.coverage }}
       COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
@@ -50,8 +57,7 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
-      - name: Install bundler
-        run: gem install bundler -v '< 2.0'
+          bundler: ${{ matrix.bundler }}
       - name: Install dependencies
         run: bundle install --jobs 4 --retry 3
       - name: Run tests
