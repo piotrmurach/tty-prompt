@@ -5,6 +5,9 @@
 ### Changed
 * Change validate to allow access to invalid input inside the message
 
+### Fixed
+* Fix Choice#from to differentiate between no value being set and nil value
+
 ## [v0.23.0] - 2020-12-14
 
 ### Added

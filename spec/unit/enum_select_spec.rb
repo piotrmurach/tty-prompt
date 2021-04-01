@@ -138,6 +138,28 @@ RSpec.describe TTY::Prompt do
     expect(prompt.output.string).to eq(expected_output)
   end
 
+  it "sets choice value to nil through DSL" do
+    choices = %w(none /bin/nano /usr/bin/vim.basic /usr/bin/vim.tiny)
+    prompt.input << "\n"
+    prompt.input.rewind
+    answer = prompt.enum_select("Select an editor?") do |menu|
+      menu.default 1
+
+      menu.choice "none", nil
+      menu.choice "/bin/nano"
+      menu.choice "/usr/bin/vim.basic"
+      menu.choice "/usr/bin/vim.tiny"
+    end
+    expect(answer).to eq(nil)
+
+    expected_output = [
+      output_helper("Select an editor?", choices, "none", default: 1),
+      exit_message("Select an editor?", "none")
+    ].join
+
+    expect(prompt.output.string).to eq(expected_output)
+  end
+
   it "selects option through DSL with key and value" do
     choices = %w(nano vim emacs)
     prompt.input << "\n"

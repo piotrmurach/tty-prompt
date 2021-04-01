@@ -7,7 +7,7 @@ RSpec.describe TTY::Prompt::Choice, "#from" do
     expect(described_class.from(choice)).to eq(choice)
   end
 
-  it "creates choice from string" do
+  it "creates choice from a string" do
     expected_choice = described_class.new("large", "large")
     choice = described_class.from("large")
 
@@ -16,7 +16,16 @@ RSpec.describe TTY::Prompt::Choice, "#from" do
     expect(choice.value).to eq("large")
   end
 
-  it "creates choice from array with one element" do
+  it "creates choice from a symbol" do
+    expected_choice = described_class.new(:large, :large)
+    choice = described_class.from(:large)
+
+    expect(choice).to eq(expected_choice)
+    expect(choice.name).to eq(:large)
+    expect(choice.value).to eq(:large)
+  end
+
+  it "creates choice from an array with name only and defaults value" do
     expected_choice = described_class.new("large", "large")
     choice = described_class.from([:large])
 
@@ -25,7 +34,7 @@ RSpec.describe TTY::Prompt::Choice, "#from" do
     expect(choice.value).to eq("large")
   end
 
-  it "creates choice from array with more than one element" do
+  it "creates choice from an array with name and a value" do
     expected_choice = described_class.new("large", 1)
     choice = described_class.from([:large, 1])
 
@@ -34,7 +43,7 @@ RSpec.describe TTY::Prompt::Choice, "#from" do
     expect(choice.value).to eq(1)
   end
 
-  it "creates choice from array with false" do
+  it "creates choice from an array with name and false value" do
     expected_choice = described_class.new("large", false)
     choice = described_class.from([:large, false])
 
@@ -43,55 +52,64 @@ RSpec.describe TTY::Prompt::Choice, "#from" do
     expect(choice.value).to eq(false)
   end
 
-  it "defaults value to name if value is nil" do
+  it "creates choice from array with name and nil value" do
+    expected_choice = described_class.new("none", nil)
+    choice = described_class.from([:none, nil])
+
+    expect(choice).to eq(expected_choice)
+    expect(choice.name).to eq("none")
+    expect(choice.value).to eq(nil)
+  end
+
+  it "creates choice from a hash with a value" do
+    expected_choice = described_class.new("large", 1)
+    choice = described_class.from({ large: 1 })
+
+    expect(choice).to eq(expected_choice)
+    expect(choice.name).to eq("large")
+    expect(choice.value).to eq(1)
+  end
+
+  it "creates choice from a hash with a nil value" do
+    expected_choice = described_class.new("large", nil)
+    choice = described_class.from({ large: nil })
+
+    expect(choice).to eq(expected_choice)
+    expect(choice.name).to eq("large")
+    expect(choice.value).to eq(nil)
+  end
+
+  it "creates choice from an array with key-value pair" do
+    expected_choice = described_class.new("large", 1)
+    choice = described_class.from([{ "large" => 1 }])
+
+    expect(choice).to eq(expected_choice)
+    expect(choice.name).to eq("large")
+    expect(choice.value).to eq(1)
+  end
+
+  it "creates choice from an array with a hash with name and value keys" do
+    expected_choice = described_class.new("large", 1)
+    choice = described_class.from([{ name: "large", value: 1 }])
+
+    expect(choice).to eq(expected_choice)
+    expect(choice.name).to eq("large")
+    expect(choice.value).to eq(1)
+  end
+
+  it "creates choice from an array with a hash without value key" do
     expected_choice = described_class.new("large", "large")
-    choice = described_class.from([:large, nil])
+    choice = described_class.from([{ name: "large" }])
 
     expect(choice).to eq(expected_choice)
     expect(choice.name).to eq("large")
     expect(choice.value).to eq("large")
   end
 
-  it "creates choice from hash value" do
-    expected_choice = described_class.new("large", 1)
-    choice = described_class.from({large: 1})
-
-    expect(choice).to eq(expected_choice)
-    expect(choice.name).to eq("large")
-    expect(choice.value).to eq(1)
-  end
-
-  it "creats choice from array with key value pair" do
-    expected_choice = described_class.new("large", 1)
-    choice = described_class.from([{"large" => 1}])
-
-    expect(choice).to eq(expected_choice)
-    expect(choice.name).to eq("large")
-    expect(choice.value).to eq(1)
-  end
-
-  it "creats choice from array with hash elements" do
-    expected_choice = described_class.new("large", 1)
-    choice = described_class.from([{name: "large", value: 1}])
-
-    expect(choice).to eq(expected_choice)
-    expect(choice.name).to eq("large")
-    expect(choice.value).to eq(1)
-  end
-
-  it "creats choice from array with hash elements without value" do
-    expected_choice = described_class.new("large", "large")
-    choice = described_class.from([{name: "large"}])
-
-    expect(choice).to eq(expected_choice)
-    expect(choice.name).to eq("large")
-    expect(choice.value).to eq("large")
-  end
-
-  it "creates choice from hash with key property" do
-    default = {key: "h", name: "Help", value: :help}
+  it "creates choice from a hash with name, value and key keys" do
+    default = { key: "h", name: "Help", value: :help }
     expected_choice = described_class.new("Help", :help, key: "h")
-    choice = described_class.from(default) 
+    choice = described_class.from(default)
 
     expect(choice).to eq(expected_choice)
     expect(choice.name).to eq("Help")
@@ -104,7 +122,8 @@ RSpec.describe TTY::Prompt::Choice, "#from" do
     choice = described_class.from({
       name: "Disabled",
       value: :none,
-      disabled: "unavailable"})
+      disabled: "unavailable"
+    })
 
     expect(choice).to eq(expected_choice)
     expect(choice.name).to eq("Disabled")

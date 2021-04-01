@@ -184,6 +184,32 @@ RSpec.describe TTY::Prompt do
     ].join)
   end
 
+  it "sets choice value to nil through DSL" do
+    choices = [
+      { name: "none", value: nil },
+      { name: "vodka", value: 1 },
+      { name: "beer", value: 1 },
+      { name: "wine", value: 1 },
+    ]
+    prompt.input << "\r"
+    prompt.input.rewind
+    value = prompt.multi_select("Select drinks?", default: 1) do |menu|
+              menu.choice :none,  nil
+              menu.choice :vodka, { score: 10 }
+              menu.choice :beer,  { score: 20 }
+              menu.choice :wine,  { score: 30 }
+            end
+    expect(value).to match_array([nil])
+
+    expected_output =
+      output_helper("Select drinks?", choices, "none", %w[none], init: true,
+        hint: "Press #{up_down} arrow to move, Space/Ctrl+A|R to select " \
+              "(all|rev) and Enter to finish") +
+      exit_message("Select drinks?", %w[none])
+
+    expect(prompt.output.string).to eq(expected_output)
+  end
+
   it "sets default options through hash syntax" do
     prompt.input << "\r"
     prompt.input.rewind

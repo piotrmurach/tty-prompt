@@ -100,6 +100,18 @@ RSpec.describe TTY::Prompt, "#select" do
     ].join)
   end
 
+  it "sets choice value to nil" do
+    choices = { none: nil, large: 1, medium: 2, small: 3 }
+    prompt.input << " "
+    prompt.input.rewind
+    expect(prompt.select("What size?", choices, default: 1)).to eq(nil)
+    expect(prompt.output.string).to eq([
+      output_helper("What size?", choices.keys, :none, init: true,
+        hint: "Press #{up_down} arrow to move and Enter to select"),
+      exit_message("What size?", "none")
+    ].join)
+  end
+
   it "sets choice name through DSL" do
     prompt.input << " "
     prompt.input.rewind

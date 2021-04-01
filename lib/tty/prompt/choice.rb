@@ -31,12 +31,7 @@ module TTY
         when Choice
           val
         when Array
-          name, value, options = *val
-          if name.is_a?(Hash)
-            convert_hash(name)
-          else
-            new(name.to_s, (value.nil? ? name.to_s : value), **(options || {}))
-          end
+          convert_array(val)
         when Hash
           convert_hash(val)
         else
@@ -44,7 +39,29 @@ module TTY
         end
       end
 
-      # Convert hash into choice
+      # Convert an array into choice
+      #
+      # @param [Array<Object>]
+      #
+      # @return [Choice]
+      #
+      # @api public
+      def self.convert_array(val)
+        name, value, options = *val
+        if name.is_a?(Hash)
+          convert_hash(name)
+        elsif val.size == 1
+          new(name.to_s, name.to_s)
+        else
+          new(name.to_s, value, **(options || {}))
+        end
+      end
+
+      # Convert a hash into choice
+      #
+      # @param [Hash<Symbol,Object>]
+      #
+      # @return [Choice]
       #
       # @api public
       def self.convert_hash(val)
