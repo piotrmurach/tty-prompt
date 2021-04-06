@@ -1,11 +1,39 @@
 AllCops:
   NewCops: enable
 
+Layout/BlockAlignment:
+  Exclude:
+    - "spec/**/*"
+
+Layout/FirstArrayElementIndentation:
+  Enabled: false
+
+Layout/FirstHashElementIndentation:
+  Enabled: false
+
+Layout/HashAlignment:
+  Exclude:
+    - "spec/**/*"
+
+Layout/LineLength:
+  Max: 80
+  Exclude:
+    - "spec/**/*"
+
+Layout/SpaceInsideHashLiteralBraces:
+  EnforcedStyle: no_space
+
 Lint/AssignmentInCondition:
   Enabled: false
 
+Lint/ConstantDefinitionInBlock:
+  Exclude:
+    - "spec/**/*"
+
 Metrics/AbcSize:
   Max: 35
+  Exclude:
+    - "spec/**/*"
 
 Metrics/BlockLength:
   CountComments: true
@@ -20,11 +48,10 @@ Metrics/ClassLength:
 Metrics/CyclomaticComplexity:
   Enabled: false
 
-Metrics/LineLength:
-  Max: 80
-
 Metrics/MethodLength:
   Max: 20
+  Exclude:
+    - "spec/**/*"
 
 Naming/BinaryOperatorParameterName:
   Enabled: false
@@ -32,24 +59,38 @@ Naming/BinaryOperatorParameterName:
 Style/AccessorGrouping:
   Enabled: false
 
+Style/AccessModifierDeclarations:
+  Enabled: false
+
 Style/AsciiComments:
   Enabled: false
 
-Style/LambdaCall:
-  EnforcedStyle: braces
-
-Style/FormatString:
-  EnforcedStyle: percent
-
-Style/StringLiterals:
-  EnforcedStyle: double_quotes
-
-Style/TrivialAccessors:
-  Enabled: false
-
-# { ... } for multi-line blocks is okay
 Style/BlockDelimiters:
   Enabled: false
 
 Style/CommentedKeyword:
+  Enabled: false
+
+Style/FormatString:
+  EnforcedStyle: percent
+
+Style/FormatStringToken:
+  EnforcedStyle: template
+
+Style/HashConversion:
+  Enabled: false
+
+Style/LambdaCall:
+  EnforcedStyle: braces
+  Exclude:
+    - "spec/**/*"
+
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
+
+Style/StringConcatenation:
+  Exclude:
+    - "spec/**/*"
+
+Style/TrivialAccessors:
   Enabled: false
