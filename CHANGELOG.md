@@ -1,6 +1,6 @@
 # Change log
 
-## [v0.23.1] - unreleased
+## [v0.23.1] - 2021-04-17
 
 ### Changed
 * Change validate to allow access to invalid input inside the message
