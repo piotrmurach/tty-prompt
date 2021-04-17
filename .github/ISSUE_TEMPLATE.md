@@ -1,6 +1,6 @@
 ### Are you in the right place?
 * For issues or feature requests file a GitHub issue in this repository
-* For general questions or discussion post in [Gitter](https://gitter.im/piotrmurach/tty)
+* For general questions or discussion post in [Discussions](https://github.com/piotrmurach/tty-prompt/discussions)
 
 ### Describe the problem
 A brief description of the issue/feature.
