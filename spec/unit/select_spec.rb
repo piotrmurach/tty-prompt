@@ -886,6 +886,23 @@ RSpec.describe TTY::Prompt, "#select" do
       expect(actual_prompt_output).to eql(expected_prompt_output)
     end
 
+    it "filters and chooses entry with space, with default key config" do
+      prompt.input << "g" << " "
+      prompt.input.rewind
+
+      answer = prompt.select("What size?", %i[Small Medium Large Huge], filter: true)
+      expect(answer).to eql(:Large)
+
+      actual_prompt_output = prompt.output.string
+      expected_prompt_output =
+        output_helper("What size?", %w[Small Medium Large Huge], "Small", init: true,
+          hint: "Press #{up_down} arrow to move, Enter to select and letters to filter") +
+        output_helper("What size?", %w[Large Huge], "Large", hint: "Filter: \"g\"") +
+        exit_message("What size?", "Large")
+
+      expect(actual_prompt_output).to eql(expected_prompt_output)
+    end
+
     it "filters and chooses the first of multiple matching entries" do
       prompt.input << "g" << "\r"
       prompt.input.rewind
