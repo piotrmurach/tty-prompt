@@ -53,7 +53,7 @@ RSpec.describe TTY::Prompt, "#select" do
 
     expected_output =
       output_helper("What size?", choices, :Large, init: true,
-        hint: "Press #{up_down} arrow to move and Enter to select") +
+        hint: "Press #{up_down} arrow to move and Space or Enter to select") +
       exit_message("What size?", "Large")
 
     expect(prompt.output.string).to eq(expected_output)
@@ -68,7 +68,7 @@ RSpec.describe TTY::Prompt, "#select" do
     end
     expect { prompt.select("What size?", choices) }.not_to output.to_stderr
     expect(prompt.output.string).to eq([
-      "\e[?25lWhat size? \e[90m(Press #{up_down} arrow to move and Enter to select)\e[0m\n",
+      "\e[?25lWhat size? \e[90m(Press #{up_down} arrow to move and Space or Enter to select)\e[0m\n",
       "\e[32m#{symbols[:marker]} Large\e[0m\n",
       "  Medium\n",
       "  Small",
@@ -90,7 +90,7 @@ RSpec.describe TTY::Prompt, "#select" do
     prompt.input.rewind
     expect(prompt.select("What size?", choices, default: 1)).to eq(1)
     expect(prompt.output.string).to eq([
-      "\e[?25lWhat size? \e[90m(Press #{up_down} arrow to move and Enter to select)\e[0m\n",
+      "\e[?25lWhat size? \e[90m(Press #{up_down} arrow to move and Space or Enter to select)\e[0m\n",
       "\e[32m#{symbols[:marker]} large\e[0m\n",
       "  medium\n",
       "  small",
@@ -107,7 +107,7 @@ RSpec.describe TTY::Prompt, "#select" do
     expect(prompt.select("What size?", choices, default: 1)).to eq(nil)
     expect(prompt.output.string).to eq([
       output_helper("What size?", choices.keys, :none, init: true,
-        hint: "Press #{up_down} arrow to move and Enter to select"),
+        hint: "Press #{up_down} arrow to move and Space or Enter to select"),
       exit_message("What size?", "none")
     ].join)
   end
@@ -124,7 +124,7 @@ RSpec.describe TTY::Prompt, "#select" do
             end
     expect(value).to eq("Large")
     expect(prompt.output.string).to eq([
-      "\e[?25lWhat size? \e[90m(Press #{up_down} arrow to move and Enter to select)\e[0m\n",
+      "\e[?25lWhat size? \e[90m(Press #{up_down} arrow to move and Space or Enter to select)\e[0m\n",
       "\e[32m> Large\e[0m\n",
       "  Medium\n",
       "  Small",
@@ -145,7 +145,7 @@ RSpec.describe TTY::Prompt, "#select" do
             end
     expect(value).to eq(1)
     expect(prompt.output.string).to eq([
-      "\e[?25lWhat size? \e[90m(Press #{up_down} arrow to move and Enter to select)\e[0m\n",
+      "\e[?25lWhat size? \e[90m(Press #{up_down} arrow to move and Space or Enter to select)\e[0m\n",
       "\e[32m> large\e[0m\n",
       "  medium\n",
       "  small",
@@ -164,7 +164,7 @@ RSpec.describe TTY::Prompt, "#select" do
             end
     expect(value).to eq("Large")
     expect(prompt.output.string).to eq([
-      "\e[?25lWhat size? \e[90m(Press #{up_down} arrow to move and Enter to select)\e[0m\n",
+      "\e[?25lWhat size? \e[90m(Press #{up_down} arrow to move and Space or Enter to select)\e[0m\n",
       "\e[32m#{symbols[:marker]} Large\e[0m\n",
       "  Medium\n",
       "  Small",
@@ -187,7 +187,7 @@ RSpec.describe TTY::Prompt, "#select" do
             end
     expect(value).to eq(2)
     expect(prompt.output.string).to eq([
-      "\e[?25lWhat size? \e[90m(Press #{up_down} arrow or 1-3 number to move and Enter to select)\e[0m\n",
+      "\e[?25lWhat size? \e[90m(Press #{up_down} arrow or 1-3 number to move and Space or Enter to select)\e[0m\n",
       "  1. large\n",
       "\e[32m#{symbols[:marker]} 2. medium\e[0m\n",
       "  3. small",
@@ -208,7 +208,7 @@ RSpec.describe TTY::Prompt, "#select" do
 
     expect(value).to eq("Good choice!")
     expect(prompt.output.string).to eq([
-      "\e[?25lWhat size? \e[90m(Press #{up_down} arrow or 1-3 number to move and Enter to select)\e[0m\n",
+      "\e[?25lWhat size? \e[90m(Press #{up_down} arrow or 1-3 number to move and Space or Enter to select)\e[0m\n",
       "  1) large\n",
       "\e[32m#{symbols[:marker]} 2) medium\e[0m\n",
       "  3) small",
@@ -224,7 +224,7 @@ RSpec.describe TTY::Prompt, "#select" do
     prompt.input.rewind
     expect(prompt.select("What size?", choices, default: 2, enum: ".")).to eq("Medium")
     expect(prompt.output.string).to eq([
-      "\e[?25lWhat size? \e[90m(Press #{up_down} arrow or 1-3 number to move and Enter to select)\e[0m\n",
+      "\e[?25lWhat size? \e[90m(Press #{up_down} arrow or 1-3 number to move and Space or Enter to select)\e[0m\n",
       "  1. Large\n",
       "\e[32m#{symbols[:marker]} 2. Medium\e[0m\n",
       "  3. Small",
@@ -245,7 +245,7 @@ RSpec.describe TTY::Prompt, "#select" do
 
     expect(value).to eq("Large")
     expect(prompt.output.string).to eq([
-      "\e[?25lWhat size? \e[31m(Press #{up_down} arrow to move and Enter to select)\e[0m\n",
+      "\e[?25lWhat size? \e[31m(Press #{up_down} arrow to move and Space or Enter to select)\e[0m\n",
       "\e[34m> Large\e[0m\n",
       "  Medium\n",
       "  Small",
@@ -301,7 +301,7 @@ RSpec.describe TTY::Prompt, "#select" do
 
     expected_output =
       output_helper("What size?", choices.keys, :large, init: true,
-        hint: "Press #{up_down} arrow to move and Enter to select") +
+        hint: "Press #{up_down} arrow to move and Space or Enter to select") +
       "\e[?25h"
 
     expect(prompt.output.string).to eq(expected_output)
@@ -320,7 +320,7 @@ RSpec.describe TTY::Prompt, "#select" do
 
     expected_output =
       output_helper("What size?", %w[Large Medium Small], "Large", init: true,
-        hint: "Press #{up_down} arrow to move and Enter to select") +
+        hint: "Press #{up_down} arrow to move and Space or Enter to select") +
       "\e[?25h"
 
     expect(prompt.output.string).to eq(expected_output)
@@ -333,7 +333,7 @@ RSpec.describe TTY::Prompt, "#select" do
     prompt.input.rewind
     expect(prompt.select("What size?", choices)).to eq("Large")
     expect(prompt.output.string).to eq([
-      "\e[?25l[?] What size? \e[90m(Press #{up_down} arrow to move and Enter to select)\e[0m\n",
+      "\e[?25l[?] What size? \e[90m(Press #{up_down} arrow to move and Space or Enter to select)\e[0m\n",
       "\e[32m#{symbols[:marker]} Large\e[0m\n",
       "  Medium\n",
       "  Small",
@@ -353,11 +353,11 @@ RSpec.describe TTY::Prompt, "#select" do
 
     expected_output =
       output_helper("What size?", choices.keys, :large, init: true,
-        hint: "Press #{up_down} arrow to move and Enter to select") +
+        hint: "Press #{up_down} arrow to move and Space or Enter to select") +
       output_helper("What size?", choices.keys, :medium,
-        hint: "Press #{up_down} arrow to move and Enter to select") +
+                    hint: "Press #{up_down} arrow to move and Space or Enter to select") +
       output_helper("What size?", choices.keys, :small,
-        hint: "Press #{up_down} arrow to move and Enter to select") +
+                    hint: "Press #{up_down} arrow to move and Space or Enter to select") +
       exit_message("What size?", "small")
 
     expect(prompt.output.string).to eq(expected_output)
@@ -393,7 +393,7 @@ RSpec.describe TTY::Prompt, "#select" do
 
       expect(answer).to eq("D")
       expected_output = [
-        "\e[?25lWhat letter? \e[90m(Press #{up_down}/#{left_right} arrow to move and Enter to select)\e[0m\n",
+        "\e[?25lWhat letter? \e[90m(Press #{up_down}/#{left_right} arrow to move and Space or Enter to select)\e[0m\n",
         "\e[32m#{symbols[:marker]} D\e[0m\n",
         "  E\n",
         "  F",
@@ -415,7 +415,7 @@ RSpec.describe TTY::Prompt, "#select" do
 
       expect(answer).to eq(4)
       expected_output = [
-        "\e[?25lWhat letter? \e[90m(Press #{up_down}/#{left_right} arrow to move and Enter to select)\e[0m\n",
+        "\e[?25lWhat letter? \e[90m(Press #{up_down}/#{left_right} arrow to move and Space or Enter to select)\e[0m\n",
         "\e[32m#{symbols[:marker]} D\e[0m\n",
         "  E\n",
         "  F",
@@ -440,7 +440,7 @@ RSpec.describe TTY::Prompt, "#select" do
       expect(answer).to eq("D")
 
       expected_output = [
-        "\e[?25lWhat letter? \e[90m(Press #{up_down}/#{left_right} arrow to move and Enter to select)\e[0m\n",
+        "\e[?25lWhat letter? \e[90m(Press #{up_down}/#{left_right} arrow to move and Space or Enter to select)\e[0m\n",
         "\e[32m#{symbols[:marker]} D\e[0m\n",
         "  E\n",
         "  F",
@@ -463,7 +463,7 @@ RSpec.describe TTY::Prompt, "#select" do
 
       expected_output = [
         output_helper("What number?", choices[0..3], "1", init: true,
-          hint: "Press #{up_down}/#{left_right} arrow to move and Enter to select"),
+          hint: "Press #{up_down}/#{left_right} arrow to move and Space or Enter to select"),
         output_helper("What number?", choices[4..7], "5"),
         output_helper("What number?", choices[8..11], "9"),
         output_helper("What number?", choices[8..11], "9"),
@@ -485,7 +485,7 @@ RSpec.describe TTY::Prompt, "#select" do
 
       expected_output = [
         output_helper("What number?", choices[3..6], "4", init: true,
-          hint: "Press #{up_down}/#{left_right} arrow to move and Enter to select"),
+          hint: "Press #{up_down}/#{left_right} arrow to move and Space or Enter to select"),
         output_helper("What number?", choices[4..7], "8"),
         output_helper("What number?", choices[8..9], "10"),
         output_helper("What number?", choices[8..9], "10"),
@@ -510,7 +510,7 @@ RSpec.describe TTY::Prompt, "#select" do
 
       expected_output = [
         output_helper("What number?", choices[0..3], "2", init: true,
-          hint: "Press #{up_down}/#{left_right} arrow to move and Enter to select"),
+          hint: "Press #{up_down}/#{left_right} arrow to move and Space or Enter to select"),
         output_helper("What number?", choices[4..7], "6"),
         output_helper("What number?", choices[8..9], "10"),
         output_helper("What number?", choices[4..7], "6"),
@@ -537,7 +537,7 @@ RSpec.describe TTY::Prompt, "#select" do
 
       expected_output = [
         output_helper("What number?", choices[0..3], "2", init: true,
-          hint: "Press #{up_down}/#{left_right} arrow to move and Enter to select"),
+          hint: "Press #{up_down}/#{left_right} arrow to move and Space or Enter to select"),
         output_helper("What number?", choices[0..3], "3"),
         output_helper("What number?", choices[4..7], "7"),
         output_helper("What number?", choices[4..7], "6"),
@@ -576,7 +576,7 @@ RSpec.describe TTY::Prompt, "#select" do
 
       expected_output = [
         output_helper("What number?", choices[0..3], "1", init: true,
-          hint: "Press #{up_down}/#{left_right} arrow to move and Enter to select"),
+          hint: "Press #{up_down}/#{left_right} arrow to move and Space or Enter to select"),
         output_helper("What number?", choices[0..3], "3"),
         output_helper("What number?", choices[2..5], "5"),
         output_helper("What number?", choices[5..8], "8"),
@@ -614,7 +614,7 @@ RSpec.describe TTY::Prompt, "#select" do
 
       expected_output = [
         output_helper("What number?", choices[0..3], "2", init: true,
-          hint: "Press #{up_down}/#{left_right} arrow to move and Enter to select"),
+          hint: "Press #{up_down}/#{left_right} arrow to move and Space or Enter to select"),
         output_helper("What number?", choices[4..7], "7"),
         output_helper("What number?", choices[8..9], "9"),
         output_helper("What number?", choices[8..9], "9"),
@@ -640,7 +640,7 @@ RSpec.describe TTY::Prompt, "#select" do
       expect(value).to eq("C")
       expected_output = [
         output_helper("What letter?", choices, "A", init: true,
-          hint: "Press #{up_down} arrow to move and Enter to select"),
+          hint: "Press #{up_down} arrow to move and Space or Enter to select"),
         output_helper("What letter?", choices, "B"),
         output_helper("What letter?", choices, "C"),
         output_helper("What letter?", choices, "C"),
@@ -660,7 +660,7 @@ RSpec.describe TTY::Prompt, "#select" do
       expect(answer).to eq("A")
       expected_output = [
         output_helper("What letter?", choices, "A", init: true,
-          hint: "Press #{up_down} arrow to move and Enter to select"),
+          hint: "Press #{up_down} arrow to move and Space or Enter to select"),
         output_helper("What letter?", choices, "B"),
         output_helper("What letter?", choices, "C"),
         output_helper("What letter?", choices, "A"),
@@ -685,7 +685,7 @@ RSpec.describe TTY::Prompt, "#select" do
 
       expected_output =
         output_helper("What letter?", choices, "B", init: true,
-                       hint: "Press #{up_down} arrow to move and Enter to select") +
+                       hint: "Press #{up_down} arrow to move and Space or Enter to select") +
         output_helper("What letter?", choices, "D") +
         output_helper("What letter?", choices, "B") +
         output_helper("What letter?", choices, "D") +
@@ -709,7 +709,7 @@ RSpec.describe TTY::Prompt, "#select" do
 
       expected_output = [
         output_helper("What number?", choices[0..3], "2", init: true,
-          hint: "Press #{up_down}/#{left_right} arrow to move and Enter to select"),
+          hint: "Press #{up_down}/#{left_right} arrow to move and Space or Enter to select"),
         output_helper("What number?", choices[4..7], "6"),
         output_helper("What number?", choices[8..9], "10"),
         output_helper("What number?", choices[0..3], "2"),
@@ -747,7 +747,7 @@ RSpec.describe TTY::Prompt, "#select" do
 
       expected_output = [
         output_helper("What number?", choices[0..3], "2", init: true,
-          hint: "Press #{up_down}/#{left_right} arrow to move and Enter to select"),
+          hint: "Press #{up_down}/#{left_right} arrow to move and Space or Enter to select"),
         output_helper("What number?", choices[4..7], "7"),
         output_helper("What number?", choices[8..9], "9"),
         output_helper("What number?", choices[0..3], "2"),
@@ -774,7 +774,7 @@ RSpec.describe TTY::Prompt, "#select" do
 
       expected_output =
         output_helper("What room?", choices[0..3], "a2", init: true,
-          hint: "Press #{up_down}/#{left_right} arrow to move, Enter to select and letters to filter") +
+          hint: "Press #{up_down}/#{left_right} arrow to move, Space or Enter to select and letters to filter") +
         output_helper("What room?", choices[10..13], "b1", hint: "Filter: \"b\"") +
         output_helper("What room?", choices[14..17], "b5", hint: "Filter: \"b\"") +
         output_helper("What room?", choices[18..20], "b9", hint: "Filter: \"b\"") +
@@ -838,7 +838,7 @@ RSpec.describe TTY::Prompt, "#select" do
     expect(value).to eq("A")
 
     expect(prompt.output.string).to eq([
-      "\e[?25lWhat letter? \e[90m(Press #{up_down} arrow to move and Enter to select)\e[0m\n",
+      "\e[?25lWhat letter? \e[90m(Press #{up_down} arrow to move and Space or Enter to select)\e[0m\n",
       "\e[32m#{symbols[:marker]} A\e[0m\n",
       "  B\n",
       "  C\n",
@@ -878,7 +878,7 @@ RSpec.describe TTY::Prompt, "#select" do
 
       expected_prompt_output =
         output_helper("What size?", %w[Small Medium Large Huge], "Small", init: true,
-          hint: "Press #{up_down} arrow to move, Enter to select and letters to filter") +
+          hint: "Press #{up_down} arrow to move, Space or Enter to select and letters to filter") +
         output_helper("What size?", %w[Medium Huge], "Medium", hint: "Filter: \"U\"") +
         output_helper("What size?", %w[Huge], "Huge", hint: "Filter: \"Ug\"") +
         exit_message("What size?", "Huge")
@@ -896,9 +896,47 @@ RSpec.describe TTY::Prompt, "#select" do
       actual_prompt_output = prompt.output.string
       expected_prompt_output =
         output_helper("What size?", %w[Small Medium Large Huge], "Small", init: true,
-          hint: "Press #{up_down} arrow to move, Enter to select and letters to filter") +
+          hint: "Press #{up_down} arrow to move, Space or Enter to select and letters to filter") +
         output_helper("What size?", %w[Large Huge], "Large", hint: "Filter: \"g\"") +
         exit_message("What size?", "Large")
+
+      expect(actual_prompt_output).to eql(expected_prompt_output)
+    end
+
+    it "filters and chooses entry with tab when configured as submit key" do
+      prompt.input << "g" << "\t"
+      prompt.input.rewind
+
+      answer = prompt.select("What size?", %i[Small Medium Large Huge], filter: true, submit_keys: [:tab])
+      expect(answer).to eql(:Large)
+
+      actual_prompt_output = prompt.output.string
+      expected_prompt_output =
+        output_helper("What size?", %w[Small Medium Large Huge], "Small", init: true,
+          hint: "Press #{up_down} arrow to move, Tab to select and letters to filter") +
+        output_helper("What size?", %w[Large Huge], "Large", hint: "Filter: \"g\"") +
+        exit_message("What size?", "Large")
+
+      expect(actual_prompt_output).to eql(expected_prompt_output)
+    end
+
+    it "does not choose entry with space, when configured to use only enter" do
+      prompt.input << "X" << " " << "X" << "\r"
+      prompt.input.rewind
+
+      choices = ["X Large", "X X Large"]
+
+      answer = prompt.select("What size?", choices, filter: true, submit_keys: [:return])
+      expect(answer).to eql("X X Large")
+
+      actual_prompt_output = prompt.output.string
+      expected_prompt_output =
+        output_helper("What size?", choices, "X Large", init: true,
+          hint: "Press #{up_down} arrow to move, Enter to select and letters to filter") +
+        output_helper("What size?", choices, "X Large", hint: "Filter: \"X\"") +
+        output_helper("What size?", choices, "X Large", hint: "Filter: \"X \"") +
+        output_helper("What size?", ["X X Large"], "X X Large", hint: "Filter: \"X X\"") +
+        exit_message("What size?", "X X Large")
 
       expect(actual_prompt_output).to eql(expected_prompt_output)
     end
@@ -913,7 +951,7 @@ RSpec.describe TTY::Prompt, "#select" do
       actual_prompt_output = prompt.output.string
       expected_prompt_output =
         output_helper("What size?", %w[Small Medium Large Huge], "Small", init: true,
-          hint: "Press #{up_down} arrow to move, Enter to select and letters to filter") +
+          hint: "Press #{up_down} arrow to move, Space or Enter to select and letters to filter") +
         output_helper("What size?", %w[Large Huge], "Large", hint: "Filter: \"g\"") +
         exit_message("What size?", "Large")
 
@@ -930,7 +968,7 @@ RSpec.describe TTY::Prompt, "#select" do
       actual_prompt_output = prompt.output.string
       expected_prompt_output =
         output_helper("What email?", %w[p*1@mail.com p*2@mail.com p*3@mail.com], "p*1@mail.com", init: true,
-          hint: "Press #{up_down} arrow to move, Enter to select and letters to filter") +
+          hint: "Press #{up_down} arrow to move, Space or Enter to select and letters to filter") +
         output_helper("What email?", %w[p*1@mail.com p*2@mail.com p*3@mail.com], "p*1@mail.com", hint: "Filter: \"p\"") +
         output_helper("What email?", %w[p*1@mail.com p*2@mail.com p*3@mail.com], "p*1@mail.com", hint: "Filter: \"p*\"") +
         output_helper("What email?", %w[p*2@mail.com], "p*2@mail.com", hint: "Filter: \"p*2\"") +
@@ -952,7 +990,7 @@ RSpec.describe TTY::Prompt, "#select" do
       actual_prompt_output = prompt.output.string
       expected_prompt_output =
         output_helper("What size?", %w[Tiny Medium Large Huge], "Tiny", init: true,
-          hint: "Press #{up_down} arrow to move, Enter to select and letters to filter") +
+          hint: "Press #{up_down} arrow to move, Space or Enter to select and letters to filter") +
         output_helper("What size?", %w[], "", hint: "Filter: \"z\"") +
         output_helper("What size?", %w[], "", hint: "Filter: \"z\"") +
         output_helper("What size?", %w[Large], "Large", hint: "Filter: \"a\"") +
@@ -973,7 +1011,7 @@ RSpec.describe TTY::Prompt, "#select" do
 
       expected_prompt_output =
         output_helper("What size?", %w[Small Medium Large Huge], "Small", init: true,
-          hint: "Press #{up_down} arrow to move, Enter to select and letters to filter") +
+          hint: "Press #{up_down} arrow to move, Space or Enter to select and letters to filter") +
         output_helper("What size?", %w[Huge], "Huge", hint: "Filter: \"H\"") +
         output_helper("What size?", %w[Huge], "Huge", hint: "Filter: \"Hu\"") +
         output_helper("What size?", %w[Small], "Small", hint: "Filter: \"S\"") +
@@ -996,7 +1034,7 @@ RSpec.describe TTY::Prompt, "#select" do
 
       expected_output =
         output_helper("What room?", choices[0..3], "a2", init: true,
-          hint: "Press #{up_down}/#{left_right} arrow to move, Enter to select and letters to filter") +
+          hint: "Press #{up_down}/#{left_right} arrow to move, Space or Enter to select and letters to filter") +
         output_helper("What room?", choices[10..13], "b1", hint: "Filter: \"b\"") +
         output_helper("What room?", choices[14..17], "b5", hint: "Filter: \"b\"") +
         output_helper("What room?", choices[18..20], "b9", hint: "Filter: \"b\"") +
@@ -1022,7 +1060,7 @@ RSpec.describe TTY::Prompt, "#select" do
 
       expected_output =
         output_helper("What size?", choices, "Small", init: true,
-          hint: "Press #{up_down} arrow to move and Enter to select") +
+          hint: "Press #{up_down} arrow to move and Space or Enter to select") +
         output_helper("What size?", choices, "Medium") +
         output_helper("What size?", choices, "Huge") +
         "What size? \e[32mHuge\e[0m\n\e[?25h"
@@ -1042,7 +1080,7 @@ RSpec.describe TTY::Prompt, "#select" do
 
       expected_output =
         output_helper("What letter?", choices, "A", init: true,
-          hint: "Press #{up_down} arrow to move, Enter to select and letters to filter") +
+          hint: "Press #{up_down} arrow to move, Space or Enter to select and letters to filter") +
         output_helper("What letter?", [], "", hint: "Filter: \"c\"") +
         output_helper("What letter?", [], "", hint: "Filter: \"c\"") +
         output_helper("What letter?", ["A"], "A", hint: "Filter: \"a\"") +
@@ -1066,7 +1104,7 @@ RSpec.describe TTY::Prompt, "#select" do
 
       expected_output =
         output_helper("What size?", choices, "Small", init: true, enum: ") ",
-          hint: "Press #{up_down} arrow or 1-3 number to move and Enter to select") +
+          hint: "Press #{up_down} arrow or 1-3 number to move and Space or Enter to select") +
         output_helper("What size?", choices, "Small", enum: ") ") +
         "What size? \e[32mSmall\e[0m\n\e[?25h"
 

@@ -1,5 +1,15 @@
 # Change log
 
+## [v0.24.0] - 2021-??-??
+
+### Changed
+* Change #select and #multi_select to accept a :submit_keys option, instead of always defaulting to space and return
+* Change #multi_select to accept a :select_key option, instead of always defaulting to space
+
+### Fixed
+* Fix #select and #multi_select hint to print out the correct submit_keys
+* Fix typo in #slider show_help
+
 ## [v0.23.1] - 2021-04-17
 
 ### Changed

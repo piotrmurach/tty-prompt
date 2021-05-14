@@ -89,6 +89,7 @@ Or install it yourself as:
       * [2.6.2.5 :per_page](#2625-per_page)
       * [2.6.2.6 :disabled](#2626-disabled)
       * [2.6.2.7 :filter](#2627-filter)
+      * [2.6.2.8 :submit_keys](#2628-submit_keys)
     * [2.6.3 multi_select](#263-multi_select)
       * [2.6.3.1 :cycle](#2631-cycle)
       * [2.6.3.2 :enum](#2632-enum)
@@ -99,6 +100,8 @@ Or install it yourself as:
       * [2.6.3.7 :filter](#2637-filter)
       * [2.6.3.8 :min](#2638-min)
       * [2.6.3.9 :max](#2639-max)
+      * [2.6.3.10 :submit_keys](#26310-submit_keys)
+      * [2.6.3.11 :select_key](#262311-select_key)
     * [2.6.4 enum_select](#264-enum_select)
       * [2.6.4.1 :per_page](#2641-per_page)
       * [2.6.4.1 :disabled](#2641-disabled)
@@ -916,6 +919,52 @@ Filter characters can be deleted partially or entirely via, respectively, Backsp
 
 If the user changes or deletes a filter, the choices previously selected remain selected.
 
+#### 2.6.2.8 `:submit_keys`
+
+You can configure which key(s) submit your selection (`:space` and `:return` by default): 
+
+```ruby
+choices = %w(Scorpion Kano Jax)
+prompt.select("Choose your destiny?", choices, submit_keys: [:tab])
+# =>
+# Choose your destiny? (Press ↑/↓ to move and Tab to select)
+# ‣ Scorpion
+#   Kano
+#   Jax
+```
+
+This is particularly useful in conjunction with `:filter`, as you may have choices that include spaces.
+
+```ruby
+choices = ["Jax Sr", "Jax", "Jax Jr"]
+prompt.select("Choose your destiny?", choices, submit_keys: [:tab], filter: true)
+# =>
+# Choose your destiny? (Press ↑/↓ to move and Tab to select and letters to filter)
+# ‣ Jax Sr
+#   Jax
+#   Jax Jr
+```
+
+After the user types "Jax":
+
+```ruby
+# =>
+# Choose your destiny? (Filter: "Jax")
+# ‣ Jax Sr
+#   Jax
+#   Jax Jr
+```
+
+After the user presses space:
+```ruby
+# =>
+# Choose your destiny? (Filter: "Jax ")
+# ‣ Jax Sr
+#   Jax Jr
+```
+
+Please note that alphanumeric keys are *not* supported.
+
 ### 2.6.3 multi_select
 
 For asking questions involving multiple selection list use `multi_select` method by passing the question and possible choices:
@@ -1152,6 +1201,76 @@ prompt.multi_select("Select drinks?", choices, max: 3)
 #   ⬢ whisky
 # ‣ ⬡ bourbon
 ```
+
+#### 2.6.3.10 `:submit_keys`
+
+This works similar to the [same option for `select`](#2628-submit_keys).
+You can configure which key(s) submit your selection (`:return` by default): 
+
+```ruby
+choices = %w(vodka beer wine whisky bourbon)
+prompt.multi_select("Select drinks?", choices, submit_keys: [:tab])
+# =>
+# Select drinks? vodka, beer, whisky
+#   ⬢ vodka
+#   ⬢ beer
+#   ⬡ wine
+#   ⬢ whisky
+# ‣ ⬡ bourbon
+```
+
+The user can then press the `tab` key to confirm their selection:
+```ruby
+# =>
+# Select drinks? vodka, beer, whisky
+```
+
+Please note that alphanumeric keys are *not* supported.
+
+#### 2.6.3.11 `:select_key`
+
+You can configure which key selects an option (`:space` default).
+This is particularly useful in conjunction with the `filter` option, as you may have choices that include spaces.
+
+```ruby
+choices = ["gin", "gin tonic", "gin fizz", "beer"]
+prompt.multi_select("Select drinks?", choices, filter: true, select_key: :tab)
+# =>
+# Select drinks? (Press ↑/↓ arrow keys to move, Tab/Ctrl+A|R to select (all|rev), Enter to finish and letters to filter)
+# ‣ ⬡ gin
+#   ⬡ gin tonic
+#   ⬡ gin fizz
+#   ⬡ beer
+```
+
+After the user types "gin":
+
+```ruby
+# =>
+# Select drinks? (Filter: "gin")
+# ‣ ⬡ gin
+#   ⬡ gin tonic
+#   ⬡ gin fizz
+```
+
+and then presses space:
+
+```ruby
+# =>
+# Select drinks? (Filter: "gin ")
+# ‣ ⬡ gin tonic
+#   ⬡ gin fizz
+```
+
+The user can then press the `tab` key to select the options:
+```ruby
+# =>
+# Select drinks? (Filter: "gin ")
+# ‣ ⬢ gin tonic
+#   ⬡ gin fizz
+```
+
+Please note that alphanumeric keys are *not* supported.
 
 ### 2.6.4 enum_select
 

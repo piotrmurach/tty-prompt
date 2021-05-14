@@ -14,7 +14,7 @@ module TTY
     # @api private
     class List
       # Allowed keys for filter, along with backspace and canc.
-      FILTER_KEYS_MATCHER = /\A([[:alnum:]]|[[:punct:]])\Z/.freeze
+      FILTER_KEYS_MATCHER = /\A([[:alnum:]]|[[:punct:]]|[[:blank:]])\Z/.freeze
 
       # Checks type of default parameter to be integer
       INTEGER_MATCHER = /\A\d+\Z/.freeze
@@ -47,6 +47,7 @@ module TTY
         @filterable   = options.fetch(:filter) { false }
         @symbols      = @prompt.symbols.merge(options.fetch(:symbols, {}))
         @quiet        = options.fetch(:quiet) { @prompt.quiet }
+        @submit_keys  = options.fetch(:submit_keys) { default_submit_keys }
         @filter       = []
         @filter_cache = {}
         @help         = options[:help]
@@ -77,6 +78,13 @@ module TTY
       # @api public
       def default(*default_values)
         @default = default_values
+      end
+
+      # Default submit keys, if not explicitly configured
+      #
+      # @api private
+      def default_submit_keys
+        %i[space return].freeze
       end
 
       # Select paginator based on the current navigation key
@@ -163,11 +171,37 @@ module TTY
         arrows.join
       end
 
+      # Convert a key name into a human-readable label
+      #
+      # @return [String]
+      #
+      # @api private
+      def key_help_label(key_name)
+        key_name == :return ? "Enter" : key_name.to_s.capitalize
+      end
+
+      # Information about keys that submit the selection
+      #
+      # @return [String]
+      #
+      # @api private
+      def submit_keys_help
+        labels = @submit_keys.map(&method(:key_help_label))
+        case labels.length
+        when 1
+          labels[0]
+        when 2
+          "#{labels[0]} or #{labels[1]}"
+        else
+          "[#{labels.join(',')}]"
+        end
+      end
+
       # Default help text
       #
       # Note that enumeration and filter are mutually exclusive
       #
-      # @a public
+      # @api public
       def default_help
         str = []
         str << "(Press "
@@ -175,7 +209,7 @@ module TTY
         str << " or 1-#{choices.size} number" if enumerate?
         str << " to move"
         str << (filterable? ? "," : " and")
-        str << " Enter to select"
+        str << " #{submit_keys_help} to select"
         str << " and letters to filter" if filterable?
         str << ")"
         str.join
@@ -263,12 +297,6 @@ module TTY
         @active = value
       end
 
-      def keyenter(*)
-        @done = true unless choices.empty?
-      end
-      alias keyreturn keyenter
-      alias keyspace keyenter
-
       def search_choice_in(searchable)
         searchable.find { |i| !choices[i - 1].disabled? }
       end
@@ -305,7 +333,6 @@ module TTY
         @paging_changed = @by_page
         @by_page = false
       end
-      alias keytab keydown
 
       # Moves all choices page by page keeping the current selected item
       # at the same level on each page.
@@ -348,10 +375,19 @@ module TTY
       end
       alias keypage_up keyleft
 
-      def keypress(event)
-        return unless filterable?
+      # Callback fired when a submit key is pressed
+      #
+      # @api private
+      def submit
+        @done = true unless choices.empty?
+      end
 
-        if event.value =~ FILTER_KEYS_MATCHER
+      def keypress(event)
+        if @submit_keys.is_a?(Array) && @submit_keys.include?(event.key.name)
+          submit
+        elsif event.key.name == :tab
+          keydown
+        elsif filterable? && event.value =~ FILTER_KEYS_MATCHER
           @filter << event.value
           @active = 1
         end
