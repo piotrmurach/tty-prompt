@@ -161,7 +161,7 @@ Asking question with list of options couldn't be easier using `select` like so:
 ```ruby
 prompt.select("Choose your destiny?", %w(Scorpion Kano Jax))
 # =>
-# Choose your destiny? (Use ↑/↓ arrow keys, press Enter to select)
+# Choose your destiny? (Press ↑/↓ arrow to move, Space or Enter to select)
 # ‣ Scorpion
 #   Kano
 #   Jax
@@ -639,7 +639,7 @@ By default the choice name is also the value the prompt will return when selecte
 choices = {small: 1, medium: 2, large: 3}
 prompt.select("What size?", choices)
 # =>
-# What size? (Press ↑/↓ arrow to move and Enter to select)
+# What size? (Press ↑/↓ arrow to move and Space or Enter to select)
 # ‣ small
 #   medium
 #   large
@@ -666,7 +666,7 @@ prompt.select("What size?") do |menu|
   menu.choice name: "large",  value: 3
 end
 # =>
-# What size? (Press ↑/↓ arrow to move and Enter to select)
+# What size? (Press ↑/↓ arrow to move and Space or Enter to select)
 # ‣ small
 # ✘ medium (out of stock)
 #   large
@@ -701,7 +701,7 @@ For asking questions involving list of options use `select` method by passing th
 ```ruby
 prompt.select("Choose your destiny?", %w(Scorpion Kano Jax))
 # =>
-# Choose your destiny? (Use ↑/↓ arrow keys, press Enter to select)
+# Choose your destiny? (Press ↑/↓ arrow to move and Space or Enter to select)
 # ‣ Scorpion
 #   Kano
 #   Jax
@@ -716,7 +716,7 @@ prompt.select("Choose your destiny?") do |menu|
   menu.choice "Jax"
 end
 # =>
-# Choose your destiny? (Use ↑/↓ arrow keys, press Enter to select)
+# Choose your destiny? (Press ↑/↓ arrow to move and Space or Enter to select)
 # ‣ Scorpion
 #   Kano
 #   Jax
@@ -731,7 +731,7 @@ prompt.select("Choose your destiny?") do |menu|
   menu.choice "Jax", -> { "Nice choice captain!" }
 end
 # =>
-# Choose your destiny? (Use ↑/↓ arrow keys, press Enter to select)
+# Choose your destiny? (Press ↑/↓ arrow to move and Space or Enter to select)
 # ‣ Scorpion
 #   Kano
 #   Jax
@@ -756,7 +756,7 @@ prompt.select("Choose your destiny?") do |menu|
   menu.choice "Jax", 3
 end
 # =>
-# Choose your destiny? (Use ↑/↓ arrow keys, press Enter to select)
+# Choose your destiny? (Press ↑/↓ arrow to move and Space or Enter to select)
 #   Scorpion
 #   Kano
 # ‣ Jax
@@ -769,7 +769,7 @@ You can navigate the choices using the arrow keys or define your own key mapping
 ```ruby
 prompt.select("Choose your destiny?", %w(Scorpion Kano Jax), cycle: true)
 # =>
-# Choose your destiny? (Use ↑/↓ arrow keys, press Enter to select)
+# Choose your destiny? (Press ↑/↓ arrow to move and Space or Enter to select)
 # ‣ Scorpion
 #   Kano
 #   Jax
@@ -788,7 +788,7 @@ prompt.select("Choose your destiny?") do |menu|
   menu.choice "Jax", 3
 end
 # =>
-# Choose your destiny? (Use ↑/↓ arrow or number (0-9) keys, press Enter to select)
+# Choose your destiny? (Press ↑/↓ arrow or 1-9 number to move and Space or Enter to select)
 #   1. Scorpion
 #   2. Kano
 # ‣ 3. Jax
@@ -816,7 +816,7 @@ You can configure active marker like so:
 choices = %w(Scorpion Kano Jax)
 prompt.select("Choose your destiny?", choices, symbols: { marker: ">" })
 # =>
-# Choose your destiny? (Use ↑/↓ and ←/→ arrow keys, press Enter to select)
+# Choose your destiny? (Press ↑/↓ to move and Space or Enter to select)
 # > Scorpion
 #   Kano
 #   Jax
@@ -830,7 +830,7 @@ By default the menu is paginated if selection grows beyond `6` items. To change 
 letters = ("A".."Z").to_a
 prompt.select("Choose your letter?", letters, per_page: 4)
 # =>
-# Which letter? (Use ↑/↓ and ←/→ arrow keys, press Enter to select)
+# Which letter? (Press ↑/↓/←/→ arrow to move and press Space or Enter to select)
 # ‣ A
 #   B
 #   C
@@ -873,7 +873,7 @@ The disabled choice will be displayed with a cross `✘` character next to it an
 ```ruby
 prompt.select("Choose your destiny?", warriors)
 # =>
-# Choose your destiny? (Use ↑/↓ arrow keys, press Enter to select)
+# Choose your destiny? (Press ↑/↓ arrow to move and Space or Enter to select)
 # ‣ Scorpion
 #   Kano
 # ✘ Goro (injury)
@@ -890,7 +890,7 @@ To activate dynamic list searching on letter/number key presses use `:filter` op
 warriors = %w(Scorpion Kano Jax Kitana Raiden)
 prompt.select("Choose your destiny?", warriors, filter: true)
 # =>
-# Choose your destiny? (Use ↑/↓ arrow keys, press Enter to select, and letter keys to filter)
+# Choose your destiny? (Press ↑/↓ arrow to move, Space or Enter to select and letters to filter)
 # ‣ Scorpion
 #   Kano
 #   Jax
@@ -974,7 +974,7 @@ choices = %w(vodka beer wine whisky bourbon)
 prompt.multi_select("Select drinks?", choices)
 # =>
 #
-# Select drinks? (Use ↑/↓ arrow keys, press Space to select and Enter to finish)"
+# Select drinks? (Press ↑/↓ arrow keys to move, Space/Ctrl+A|R to select (all|rev) and Enter to finish)
 # ‣ ⬡ vodka
 #   ⬡ beer
 #   ⬡ wine
@@ -1087,7 +1087,7 @@ By default the menu is paginated if selection grows beyond `6` items. To change 
 letters = ("A".."Z").to_a
 prompt.multi_select("Choose your letter?", letters, per_page: 4)
 # =>
-# Which letter? (Use ↑/↓ and ←/→ arrow keys, press Space to select and Enter to finish)
+# Which letter? (Press ↑/↓/←/→ arrow keys to move, Space/Ctrl+A|R to select (all|rev) and Enter to finish)
 # ‣ ⬡ A
 #   ⬡ B
 #   ⬡ C
@@ -1114,7 +1114,7 @@ The disabled choice will be displayed with a cross `✘` character next to it an
 ```ruby
 prompt.multi_select("Choose your favourite drink?", drinks)
 # =>
-# Choose your favourite drink? (Use ↑/↓ arrow keys, press Space to select and Enter to finish)
+# Choose your favourite drink? (Press ↑/↓ arrow keys to move, Space/Ctrl+A|R to select (all|rev) and Enter to finish)
 # ‣ ⬡ bourbon
 #   ✘ sake (out of stock)
 #   ⬡ vodka
@@ -1132,7 +1132,7 @@ header use the :echo option:
 choices = %w(vodka beer wine whisky bourbon)
 prompt.multi_select("Select drinks?", choices, echo: false)
 # =>
-# Select drinks?
+# Select drinks? (Press ↑/↓ arrow keys to move, Space/Ctrl+A|R to select (all|rev) and Enter to finish)
 #   ⬡ vodka
 #   ⬢ 2) beer
 #   ⬡ 3) wine
@@ -1148,7 +1148,7 @@ To activate dynamic list filtering on letter/number typing, use the :filter opti
 choices = %w(vodka beer wine whisky bourbon)
 prompt.multi_select("Select drinks?", choices, filter: true)
 # =>
-# Select drinks? (Use ↑/↓ arrow keys, press Space to select and Enter to finish, and letter keys to filter)
+# Select drinks? (Press ↑/↓ arrow keys to move, Space/Ctrl+A|R to select (all|rev), Enter to finish and letters to filter)
 # ‣ ⬡ vodka
 #   ⬡ beer
 #   ⬡ wine
