@@ -84,7 +84,7 @@ module TTY
       #
       # @api private
       def default_submit_keys
-        %i[space return].freeze
+        %i[space return enter].freeze
       end
 
       # Select paginator based on the current navigation key
@@ -177,7 +177,7 @@ module TTY
       #
       # @api private
       def key_help_label(key_name)
-        key_name == :return ? "Enter" : key_name.to_s.capitalize
+        %i[return enter].include?(key_name) ? "Enter" : key_name.to_s.capitalize
       end
 
       # Information about keys that submit the selection
@@ -186,7 +186,7 @@ module TTY
       #
       # @api private
       def submit_keys_help
-        labels = @submit_keys.map(&method(:key_help_label))
+        labels = @submit_keys.map(&method(:key_help_label)).uniq
         case labels.length
         when 1
           labels[0]

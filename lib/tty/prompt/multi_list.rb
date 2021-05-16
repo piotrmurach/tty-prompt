@@ -46,7 +46,7 @@ module TTY
       #
       # @api private
       def default_submit_keys
-        [:return].freeze
+        %i[return enter].freeze
       end
 
       # Callback fired when a submit key is pressed
