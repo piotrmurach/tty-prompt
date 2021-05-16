@@ -63,7 +63,7 @@ module TTY
       # Callback fired when the selection key is pressed
       #
       # @api private
-      def select
+      def select_choice
         active_choice = choices[@active - 1]
         if @selected.include?(active_choice)
           @selected.delete_at(@active - 1)
@@ -79,7 +79,7 @@ module TTY
       # @api private
       def keypress(event)
         if event.key.name == @select_key
-          select
+          select_choice
         else
           super(event)
         end
