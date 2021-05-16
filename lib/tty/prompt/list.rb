@@ -47,7 +47,7 @@ module TTY
         @filterable   = options.fetch(:filter) { false }
         @symbols      = @prompt.symbols.merge(options.fetch(:symbols, {}))
         @quiet        = options.fetch(:quiet) { @prompt.quiet }
-        @submit_keys  = keys_with_labels(options.fetch(:submit_keys) { default_submit_keys })
+        @submit_keys  = init_action_keys(options.fetch(:submit_keys) { default_submit_keys })
         @filter       = []
         @filter_cache = {}
         @help         = options[:help]
@@ -85,6 +85,41 @@ module TTY
       # @api private
       def default_submit_keys
         %i[space return enter].freeze
+      end
+
+      # Ensure that if any EOL char is passed as an action key
+      # then all EOL chars are included (for cross-system compat)
+      # Maintain any custom labels.
+      #
+      # @return [Array[Hash]]
+      #
+      # @api private
+      def ensure_eol_compat(keys)
+        eol_symbols = %i[enter return].sort
+        key_symbols = keys.keys.sort
+        key_intersection = key_symbols & eol_symbols
+
+        case key_intersection
+        when [], eol_symbols
+          keys
+        else
+          eol_label = keys[key_intersection[0]]
+          all_eol_keys = eol_symbols.reduce({}) { |hash, key|
+            hash.merge({key => eol_label})
+          }
+          all_eol_keys.merge(keys)
+        end
+      end
+
+      # Initialize any default or custom action keys
+      # setting up their labels and dealing with compat
+      #
+      # @return [Array[Hash]]
+      #
+      # @api private
+      def init_action_keys(keys)
+        keys = keys_with_labels(keys)
+        ensure_eol_compat(keys)
       end
 
       # Select paginator based on the current navigation key

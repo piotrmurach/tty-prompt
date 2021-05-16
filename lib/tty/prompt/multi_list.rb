@@ -19,7 +19,7 @@ module TTY
       def initialize(prompt, **options)
         super
         @selected = SelectedChoices.new
-        @select_keys = keys_with_labels(options.fetch(:select_keys, [:space]))
+        @select_keys = init_action_keys(options.fetch(:select_keys, [:space]))
         @help = options[:help]
         @echo = options.fetch(:echo, true)
         @min  = options[:min]

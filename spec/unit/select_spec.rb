@@ -903,6 +903,40 @@ RSpec.describe TTY::Prompt, "#select" do
       expect(actual_prompt_output).to eql(expected_prompt_output)
     end
 
+    it "filters and chooses entry with enter even if only return is passed in submit_keys" do
+      prompt.input << "g" << "\n"
+      prompt.input.rewind
+
+      answer = prompt.select("What size?", %i[Small Medium Large Huge], filter: true, submit_keys: [:return])
+      expect(answer).to eql(:Large)
+
+      actual_prompt_output = prompt.output.string
+      expected_prompt_output =
+        output_helper("What size?", %w[Small Medium Large Huge], "Small", init: true,
+          hint: "Press #{up_down} arrow to move, Enter to select and letters to filter") +
+        output_helper("What size?", %w[Large Huge], "Large", hint: "Filter: \"g\"") +
+        exit_message("What size?", "Large")
+
+      expect(actual_prompt_output).to eql(expected_prompt_output)
+    end
+
+    it "filters and chooses entry with enter preserving the return key label" do
+      prompt.input << "g" << "\n"
+      prompt.input.rewind
+
+      answer = prompt.select("What size?", %i[Small Medium Large Huge], filter: true, submit_keys: [{return: ">ENTER<"}])
+      expect(answer).to eql(:Large)
+
+      actual_prompt_output = prompt.output.string
+      expected_prompt_output =
+        output_helper("What size?", %w[Small Medium Large Huge], "Small", init: true,
+          hint: "Press #{up_down} arrow to move, >ENTER< to select and letters to filter") +
+        output_helper("What size?", %w[Large Huge], "Large", hint: "Filter: \"g\"") +
+        exit_message("What size?", "Large")
+
+      expect(actual_prompt_output).to eql(expected_prompt_output)
+    end
+
     it "filters and chooses entry with return and enter, with default key config" do
       prompt.input << "g" << "\r\n"
       prompt.input.rewind
