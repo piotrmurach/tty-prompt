@@ -939,7 +939,7 @@ This is particularly useful in conjunction with `:filter`, as you may have choic
 choices = ["Jax Sr", "Jax", "Jax Jr"]
 prompt.select("Choose your destiny?", choices, submit_keys: [:ctrl_s], filter: true)
 # =>
-# Choose your destiny? (Press ↑/↓ to move and Ctrl+S to select and letters to filter)
+# Choose your destiny? (Press ↑/↓ to move, Ctrl+S to select and letters to filter)
 # ‣ Jax Sr
 #   Jax
 #   Jax Jr
@@ -960,6 +960,18 @@ After the user presses space:
 # =>
 # Choose your destiny? (Filter: "Jax ")
 # ‣ Jax Sr
+#   Jax Jr
+```
+
+You may also pass your own key labels to be displayed in the hint:
+
+```ruby
+choices = ["Jax Sr", "Jax", "Jax Jr"]
+prompt.select("Choose your destiny?", choices, submit_keys: [:enter, {escape: "ESC"}])
+# =>
+# Choose your destiny? (Press ↑/↓ to move and Enter or ESC to select)
+# ‣ Jax Sr
+#   Jax
 #   Jax Jr
 ```
 

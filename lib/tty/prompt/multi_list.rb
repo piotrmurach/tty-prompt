@@ -116,7 +116,7 @@ module TTY
         return unless @submit_keys.include?(@select_key)
 
         raise ConfigurationError,
-              ":submit_keys #{@submit_keys} are clashing with " \
+              ":submit_keys #{@submit_keys.keys} are clashing with " \
               ":select_key (:#{@select_key})"
       end
 

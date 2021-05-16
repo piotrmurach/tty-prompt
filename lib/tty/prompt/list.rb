@@ -47,7 +47,7 @@ module TTY
         @filterable   = options.fetch(:filter) { false }
         @symbols      = @prompt.symbols.merge(options.fetch(:symbols, {}))
         @quiet        = options.fetch(:quiet) { @prompt.quiet }
-        @submit_keys  = options.fetch(:submit_keys) { default_submit_keys }
+        @submit_keys  = keys_with_labels(options.fetch(:submit_keys) { default_submit_keys })
         @filter       = []
         @filter_cache = {}
         @help         = options[:help]
@@ -171,13 +171,29 @@ module TTY
         arrows.join
       end
 
+      # Normalize a list of key symbols or symbol-label hashes
+      # into a single symbol-label lookup hash.
+      #
+      # @return [String]
+      #
+      # @api private
+      def keys_with_labels(keys)
+        keys.reduce({}) { |result, key|
+          if key.is_a?(Hash)
+            result.merge(key)
+          else
+            result.merge({key => key_help_label(key)})
+          end
+        }
+      end
+
       # Convert a key name into a human-readable label
       #
       # @return [String]
       #
       # @api private
       def key_help_label(key_name)
-        if %i[return enter].include?(key_name)
+        if key_name == :return
           "Enter"
         else
           key_name.to_s.split("_").map(&:capitalize).join("+")
@@ -190,14 +206,11 @@ module TTY
       #
       # @api private
       def submit_keys_help
-        labels = @submit_keys.map(&method(:key_help_label)).uniq
-        case labels.length
-        when 1
+        labels = @submit_keys.values.uniq
+        if labels.length == 1
           labels[0]
-        when 2
-          "#{labels[0]} or #{labels[1]}"
         else
-          "[#{labels.join(',')}]"
+          "#{labels[0..-2].join(', ')} or #{labels[-1]}"
         end
       end
 
@@ -387,7 +400,7 @@ module TTY
       end
 
       def keypress(event)
-        if @submit_keys.is_a?(Array) && @submit_keys.include?(event.key.name)
+        if @submit_keys.include?(event.key.name)
           submit
         elsif event.key.name == :tab
           keydown
