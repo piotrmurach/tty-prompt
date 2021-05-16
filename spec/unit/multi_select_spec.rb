@@ -84,15 +84,30 @@ RSpec.describe TTY::Prompt do
     expect(prompt.output.string).to eq(expected_output)
   end
 
-  it "selects item when custom key pressed" do
+  it "selects item when custom key pressed and shows custom key labels" do
     choices = %w[vodka beer wine whisky bourbon]
     prompt.input << "\C-s\r"
     prompt.input.rewind
-    expect(prompt.multi_select("Select drinks?", choices, select_key: :ctrl_s)).to eq(["vodka"])
+    expect(prompt.multi_select("Select drinks?", choices, select_keys: [:ctrl_s, {escape: "Esc"}])).to eq(["vodka"])
 
     expected_output =
       output_helper("Select drinks?", choices, "vodka", [], init: true,
-        hint: "Press #{up_down} arrow to move, Ctrl+S/Ctrl+A|R to select (all|rev) and Enter to finish") +
+        hint: "Press #{up_down} arrow to move, Ctrl+S or Esc/Ctrl+A|R to select (all|rev) and Enter to finish") +
+      output_helper("Select drinks?", choices, "vodka", ["vodka"]) +
+      exit_message("Select drinks?", %w[vodka])
+
+    expect(prompt.output.string).to eq(expected_output)
+  end
+
+  it "selects item and submits selection with custom keys" do
+    choices = %w[vodka beer wine whisky bourbon]
+    prompt.input << "\C-s\e"
+    prompt.input.rewind
+    expect(prompt.multi_select("Select drinks?", choices, select_keys: [:ctrl_s], submit_keys: [{escape: "Esc"}])).to eq(["vodka"])
+
+    expected_output =
+      output_helper("Select drinks?", choices, "vodka", [], init: true,
+        hint: "Press #{up_down} arrow to move, Ctrl+S/Ctrl+A|R to select (all|rev) and Esc to finish") +
       output_helper("Select drinks?", choices, "vodka", ["vodka"]) +
       exit_message("Select drinks?", %w[vodka])
 
@@ -272,16 +287,16 @@ RSpec.describe TTY::Prompt do
     expect {
       prompt.multi_select("Select drinks?", %w[vodka beer wine], submit_keys: [:space])
     }.to raise_error(TTY::Prompt::ConfigurationError,
-                     ":submit_keys [:space] are clashing with :select_key (:space)")
+                     ":submit_keys [:space] are clashing with :select_keys [:space]")
   end
 
   it "raises error when submit and select keys clash (configured)" do
     prompt.input << "\r"
     prompt.input.rewind
     expect {
-      prompt.multi_select("Select drinks?", %w[vodka beer wine], submit_keys: %i[space ctrl_s], select_key: :space)
+      prompt.multi_select("Select drinks?", %w[vodka beer wine], submit_keys: %i[space ctrl_s], select_keys: [:space])
     }.to raise_error(TTY::Prompt::ConfigurationError,
-                     ":submit_keys [:space, :ctrl_s] are clashing with :select_key (:space)")
+                     ":submit_keys [:space, :ctrl_s] are clashing with :select_keys [:space]")
   end
 
 
@@ -756,7 +771,7 @@ RSpec.describe TTY::Prompt do
       prompt.input << "\r"
       prompt.input.rewind
 
-      expect(prompt.multi_select("Select drinks?", choices, filter: true, select_key: :ctrl_s)).to eq(["gin fizz", "gin tonic"])
+      expect(prompt.multi_select("Select drinks?", choices, filter: true, select_keys: [:ctrl_s])).to eq(["gin fizz", "gin tonic"])
 
       expected_output =
         output_helper("Select drinks?", choices, "gin", [], init: true,

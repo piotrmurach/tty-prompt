@@ -19,7 +19,7 @@ module TTY
       def initialize(prompt, **options)
         super
         @selected = SelectedChoices.new
-        @select_key = options.fetch(:select_key) { :space }
+        @select_keys = keys_with_labels(options.fetch(:select_keys, [:space]))
         @help = options[:help]
         @echo = options.fetch(:echo, true)
         @min  = options[:min]
@@ -78,7 +78,7 @@ module TTY
       #
       # @api private
       def keypress(event)
-        if event.key.name == @select_key
+        if @select_keys.include?(event.key.name)
           select_choice
         else
           super(event)
@@ -113,11 +113,11 @@ module TTY
       #
       # @api private
       def check_clashing_keys
-        return unless @submit_keys.include?(@select_key)
+        return if (@submit_keys.keys & @select_keys.keys).empty?
 
         raise ConfigurationError,
               ":submit_keys #{@submit_keys.keys} are clashing with " \
-              ":select_key (:#{@select_key})"
+              ":select_keys #{@select_keys.keys}"
       end
 
       # Setup default options and active selection
@@ -177,12 +177,12 @@ module TTY
         str << "(Press "
         str << "#{arrows_help} arrow"
         str << " or 1-#{choices.size} number" if enumerate?
-        str << " to move, #{key_help_label(@select_key)}"
+        str << " to move, #{keys_help(@select_keys)}"
         str << "/Ctrl+A|R" if @max.nil?
         str << " to select"
         str << " (all|rev)" if @max.nil?
         str << (filterable? ? "," : " and")
-        str << " #{submit_keys_help} to finish"
+        str << " #{keys_help(@submit_keys)} to finish"
         str << " and letters to filter" if filterable?
         str << ")"
         str.join

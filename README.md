@@ -101,7 +101,7 @@ Or install it yourself as:
       * [2.6.3.8 :min](#2638-min)
       * [2.6.3.9 :max](#2639-max)
       * [2.6.3.10 :submit_keys](#26310-submit_keys)
-      * [2.6.3.11 :select_key](#262311-select_key)
+      * [2.6.3.11 :select_keys](#262311-select_keys)
     * [2.6.4 enum_select](#264-enum_select)
       * [2.6.4.1 :per_page](#2641-per_page)
       * [2.6.4.1 :disabled](#2641-disabled)
@@ -1239,14 +1239,14 @@ The user can then press the `Ctrl+S` key to confirm their selection:
 
 Please note that alphanumeric keys are *not* supported.
 
-#### 2.6.3.11 `:select_key`
+#### 2.6.3.11 `:select_keys`
 
 You can configure which key selects an option (`:space` default).
 This is particularly useful in conjunction with the `filter` option, as you may have choices that include spaces.
 
 ```ruby
 choices = ["gin", "gin tonic", "gin fizz", "beer"]
-prompt.multi_select("Select drinks?", choices, filter: true, select_key: :ctrl_s)
+prompt.multi_select("Select drinks?", choices, filter: true, select_keys: [:ctrl_s])
 # =>
 # Select drinks? (Press ↑/↓ arrow keys to move, Ctrl+S/Ctrl+A|R to select (all|rev), Enter to finish and letters to filter)
 # ‣ ⬡ gin
@@ -1280,6 +1280,19 @@ The user can then press the `Ctrl+S` key combo to select the options:
 # Select drinks? (Filter: "gin ")
 # ‣ ⬢ gin tonic
 #   ⬡ gin fizz
+```
+
+Similar to the `:submit_keys` option, you may also pass your own key labels to be displayed in the hint:
+
+```ruby
+choices = ["gin", "gin tonic", "gin fizz", "beer"]
+prompt.multi_select("Select drinks?", choices, filter: true, select_keys: [{ctr_s: "Ctrl-S"}, {space: "Spacebar"}])
+# =>
+# Select drinks? (Press ↑/↓ arrow keys to move, Ctrl-S or Spacebar/Ctrl+A|R to select (all|rev), Enter to finish and letters to filter)
+# ‣ ⬡ gin
+#   ⬡ gin tonic
+#   ⬡ gin fizz
+#   ⬡ beer
 ```
 
 Please note that alphanumeric keys are *not* supported.

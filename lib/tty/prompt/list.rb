@@ -205,8 +205,8 @@ module TTY
       # @return [String]
       #
       # @api private
-      def submit_keys_help
-        labels = @submit_keys.values.uniq
+      def keys_help(keys)
+        labels = keys.values.uniq
         if labels.length == 1
           labels[0]
         else
@@ -226,7 +226,7 @@ module TTY
         str << " or 1-#{choices.size} number" if enumerate?
         str << " to move"
         str << (filterable? ? "," : " and")
-        str << " #{submit_keys_help} to select"
+        str << " #{keys_help(@submit_keys)} to select"
         str << " and letters to filter" if filterable?
         str << ")"
         str.join
