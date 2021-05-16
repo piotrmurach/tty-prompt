@@ -937,17 +937,17 @@ RSpec.describe TTY::Prompt, "#select" do
       expect(actual_prompt_output).to eql(expected_prompt_output)
     end
 
-    it "filters and chooses entry with tab when configured as submit key" do
-      prompt.input << "g" << "\t"
+    it "filters and chooses entry with Ctrl+S when configured as submit key" do
+      prompt.input << "g" << "\C-s"
       prompt.input.rewind
 
-      answer = prompt.select("What size?", %i[Small Medium Large Huge], filter: true, submit_keys: [:tab])
+      answer = prompt.select("What size?", %i[Small Medium Large Huge], filter: true, submit_keys: [:ctrl_s])
       expect(answer).to eql(:Large)
 
       actual_prompt_output = prompt.output.string
       expected_prompt_output =
         output_helper("What size?", %w[Small Medium Large Huge], "Small", init: true,
-          hint: "Press #{up_down} arrow to move, Tab to select and letters to filter") +
+          hint: "Press #{up_down} arrow to move, Ctrl+S to select and letters to filter") +
         output_helper("What size?", %w[Large Huge], "Large", hint: "Filter: \"g\"") +
         exit_message("What size?", "Large")
 

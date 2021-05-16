@@ -86,13 +86,13 @@ RSpec.describe TTY::Prompt do
 
   it "selects item when custom key pressed" do
     choices = %w[vodka beer wine whisky bourbon]
-    prompt.input << "\t\r"
+    prompt.input << "\C-s\r"
     prompt.input.rewind
-    expect(prompt.multi_select("Select drinks?", choices, select_key: :tab)).to eq(["vodka"])
+    expect(prompt.multi_select("Select drinks?", choices, select_key: :ctrl_s)).to eq(["vodka"])
 
     expected_output =
       output_helper("Select drinks?", choices, "vodka", [], init: true,
-        hint: "Press #{up_down} arrow to move, Tab/Ctrl+A|R to select (all|rev) and Enter to finish") +
+        hint: "Press #{up_down} arrow to move, Ctrl+S/Ctrl+A|R to select (all|rev) and Enter to finish") +
       output_helper("Select drinks?", choices, "vodka", ["vodka"]) +
       exit_message("Select drinks?", %w[vodka])
 
@@ -279,9 +279,9 @@ RSpec.describe TTY::Prompt do
     prompt.input << "\r"
     prompt.input.rewind
     expect {
-      prompt.multi_select("Select drinks?", %w[vodka beer wine], submit_keys: %i[space tab], select_key: :space)
+      prompt.multi_select("Select drinks?", %w[vodka beer wine], submit_keys: %i[space ctrl_s], select_key: :space)
     }.to raise_error(TTY::Prompt::ConfigurationError,
-                     ":submit_keys [:space, :tab] are clashing with :select_key (:space)")
+                     ":submit_keys [:space, :ctrl_s] are clashing with :select_key (:space)")
   end
 
 
@@ -749,18 +749,18 @@ RSpec.describe TTY::Prompt do
       prompt.input << "gin"
       prompt.input << " "
       prompt.input << "f"
-      prompt.input << "\t"
+      prompt.input << "\C-s"
       prompt.input << "\u007F"  # Delete one letter
       prompt.input << "t"
-      prompt.input << "\t"
+      prompt.input << "\C-s"
       prompt.input << "\r"
       prompt.input.rewind
 
-      expect(prompt.multi_select("Select drinks?", choices, filter: true, select_key: :tab)).to eq(["gin fizz", "gin tonic"])
+      expect(prompt.multi_select("Select drinks?", choices, filter: true, select_key: :ctrl_s)).to eq(["gin fizz", "gin tonic"])
 
       expected_output =
         output_helper("Select drinks?", choices, "gin", [], init: true,
-          hint: "Press #{up_down} arrow to move, Tab/Ctrl+A|R to select (all|rev), Enter to finish and letters to filter") +
+          hint: "Press #{up_down} arrow to move, Ctrl+S/Ctrl+A|R to select (all|rev), Enter to finish and letters to filter") +
         output_helper("Select drinks?", choices, "gin", [], hint: "Filter: \"g\"") +
         output_helper("Select drinks?", choices, "gin", [], hint: "Filter: \"gi\"") +
         output_helper("Select drinks?", choices, "gin", [], hint: "Filter: \"gin\"") +

@@ -177,7 +177,11 @@ module TTY
       #
       # @api private
       def key_help_label(key_name)
-        %i[return enter].include?(key_name) ? "Enter" : key_name.to_s.capitalize
+        if %i[return enter].include?(key_name)
+          "Enter"
+        else
+          key_name.to_s.split("_").map(&:capitalize).join("+")
+        end
       end
 
       # Information about keys that submit the selection

@@ -6,6 +6,7 @@ prompt = TTY::Prompt.new
 
 warriors = ["Jax", "Jax Jr", "Kitana", "Raiden ft. Thunder"]
 
-answer = prompt.select("Choose your destiny?", warriors, filter: true, submit_keys: [:return, :tab])
+answer = prompt.select("Choose your destiny?", warriors,
+                       filter: true, submit_keys: %i[return ctrl_s])
 
 puts answer.inspect

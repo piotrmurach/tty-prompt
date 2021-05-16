@@ -925,9 +925,9 @@ You can configure which key(s) submit your selection (`:space` and `:return` by 
 
 ```ruby
 choices = %w(Scorpion Kano Jax)
-prompt.select("Choose your destiny?", choices, submit_keys: [:tab])
+prompt.select("Choose your destiny?", choices, submit_keys: [:ctrl_s])
 # =>
-# Choose your destiny? (Press ↑/↓ to move and Tab to select)
+# Choose your destiny? (Press ↑/↓ to move and Ctrl+S to select)
 # ‣ Scorpion
 #   Kano
 #   Jax
@@ -937,9 +937,9 @@ This is particularly useful in conjunction with `:filter`, as you may have choic
 
 ```ruby
 choices = ["Jax Sr", "Jax", "Jax Jr"]
-prompt.select("Choose your destiny?", choices, submit_keys: [:tab], filter: true)
+prompt.select("Choose your destiny?", choices, submit_keys: [:ctrl_s], filter: true)
 # =>
-# Choose your destiny? (Press ↑/↓ to move and Tab to select and letters to filter)
+# Choose your destiny? (Press ↑/↓ to move and Ctrl+S to select and letters to filter)
 # ‣ Jax Sr
 #   Jax
 #   Jax Jr
@@ -1209,7 +1209,7 @@ You can configure which key(s) submit your selection (`:return` by default):
 
 ```ruby
 choices = %w(vodka beer wine whisky bourbon)
-prompt.multi_select("Select drinks?", choices, submit_keys: [:tab])
+prompt.multi_select("Select drinks?", choices, submit_keys: [:ctrl_s])
 # =>
 # Select drinks? vodka, beer, whisky
 #   ⬢ vodka
@@ -1219,7 +1219,7 @@ prompt.multi_select("Select drinks?", choices, submit_keys: [:tab])
 # ‣ ⬡ bourbon
 ```
 
-The user can then press the `tab` key to confirm their selection:
+The user can then press the `Ctrl+S` key to confirm their selection:
 ```ruby
 # =>
 # Select drinks? vodka, beer, whisky
@@ -1234,9 +1234,9 @@ This is particularly useful in conjunction with the `filter` option, as you may 
 
 ```ruby
 choices = ["gin", "gin tonic", "gin fizz", "beer"]
-prompt.multi_select("Select drinks?", choices, filter: true, select_key: :tab)
+prompt.multi_select("Select drinks?", choices, filter: true, select_key: :ctrl_s)
 # =>
-# Select drinks? (Press ↑/↓ arrow keys to move, Tab/Ctrl+A|R to select (all|rev), Enter to finish and letters to filter)
+# Select drinks? (Press ↑/↓ arrow keys to move, Ctrl+S/Ctrl+A|R to select (all|rev), Enter to finish and letters to filter)
 # ‣ ⬡ gin
 #   ⬡ gin tonic
 #   ⬡ gin fizz
@@ -1262,7 +1262,7 @@ and then presses space:
 #   ⬡ gin fizz
 ```
 
-The user can then press the `tab` key to select the options:
+The user can then press the `Ctrl+S` key combo to select the options:
 ```ruby
 # =>
 # Select drinks? (Filter: "gin ")
