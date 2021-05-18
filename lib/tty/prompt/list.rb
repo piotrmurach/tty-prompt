@@ -87,6 +87,59 @@ module TTY
         %i[space return enter].freeze
       end
 
+      # Initialize any default or custom action keys
+      # setting up their labels and dealing with compat
+      #
+      # @param [Array<Symbol, Hash{Symbol => String}>]
+      #
+      # @return [Hash{Symbol => String}]
+      #
+      # @api private
+      def init_action_keys(keys)
+        keys = keys_with_labels(keys)
+        ensure_eol_compat(keys)
+      end
+
+      # Normalize a list of key symbols or symbol-label hashes
+      # into a single symbol-label lookup hash.
+      #
+      # @example Only with symbol keys
+      #   keys = [:enter, :ctrl_s]
+      #   keys_with_labels(keys)
+      #   # => {enter: "Enter", ctrl_s: "Ctrl+S"}
+      #
+      # @example With mixed keys
+      #   keys = [:enter, {ctrl_s: "Ctrl-S"}]
+      #   keys_with_labels(keys)
+      #   # => {enter: "Enter", ctrl_s: "Ctrl-S"}
+      #
+      # @param [Array<Symbol, Hash{Symbol => String}>]
+      #
+      # @return [String]
+      #
+      # @api private
+      def keys_with_labels(keys)
+        keys.reduce({}) do |result, key|
+          obj = key.is_a?(::Hash) ? key : {key => key_help_label(key)}
+          result.merge(obj)
+        end
+      end
+
+      # Convert a key name into a human-readable label
+      #
+      # @param [Symbol]
+      #
+      # @return [String]
+      #
+      # @api private
+      def key_help_label(key_name)
+        if key_name == :return
+          "Enter"
+        else
+          key_name.to_s.split("_").map(&:capitalize).join("+")
+        end
+      end
+
       # Ensure that if any EOL char is passed as an action key
       # then all EOL chars are included (for cross-system compat)
       # Maintain any custom labels.
@@ -114,19 +167,6 @@ module TTY
           missing_key = (eol_symbols - key_intersection).first
           keys.merge({missing_key => eol_label})
         end
-      end
-
-      # Initialize any default or custom action keys
-      # setting up their labels and dealing with compat
-      #
-      # @param [Array<Symbol, Hash{Symbol => String}>]
-      #
-      # @return [Hash{Symbol => String}]
-      #
-      # @api private
-      def init_action_keys(keys)
-        keys = keys_with_labels(keys)
-        ensure_eol_compat(keys)
       end
 
       # Select paginator based on the current navigation key
@@ -211,44 +251,6 @@ module TTY
         arrows << "/" if paginated?
         arrows << left_right if paginated?
         arrows.join
-      end
-
-      # Normalize a list of key symbols or symbol-label hashes
-      # into a single symbol-label lookup hash.
-      #
-      # @example Only with symbol keys
-      #   keys = [:enter, :ctrl_s]
-      #   keys_with_labels(keys)
-      #   # => {enter: "Enter", ctrl_s: "Ctrl+S"}
-      #
-      # @example With mixed keys
-      #   keys = [:enter, {ctrl_s: "Ctrl-S"}]
-      #   keys_with_labels(keys)
-      #   # => {enter: "Enter", ctrl_s: "Ctrl-S"}
-      #
-      # @param [Array<Symbol, Hash{Symbol => String}>]
-      #
-      # @return [String]
-      #
-      # @api private
-      def keys_with_labels(keys)
-        keys.reduce({}) do |result, key|
-          obj = key.is_a?(::Hash) ? key : {key => key_help_label(key)}
-          result.merge(obj)
-        end
-      end
-
-      # Convert a key name into a human-readable label
-      #
-      # @return [String]
-      #
-      # @api private
-      def key_help_label(key_name)
-        if key_name == :return
-          "Enter"
-        else
-          key_name.to_s.split("_").map(&:capitalize).join("+")
-        end
       end
 
       # Information about keys that submit the selection
