@@ -25,7 +25,7 @@ module TTY
         @min  = options[:min]
         @max  = options[:max]
 
-        check_clashing_keys
+        check_conflicting_keys
       end
 
       # Set a minimum number of choices
@@ -112,12 +112,13 @@ module TTY
       # Checks that there are no key options clashing
       #
       # @api private
-      def check_clashing_keys
-        return if (@submit_keys.keys & @select_keys.keys).empty?
+      def check_conflicting_keys
+        conflicting_keys = @submit_keys.keys & @select_keys.keys
+        return if conflicting_keys.empty?
 
         raise ConfigurationError,
-              ":submit_keys #{@submit_keys.keys} are clashing with " \
-              ":select_keys #{@select_keys.keys}"
+              ":submit_keys #{conflicting_keys} are conflicting with " \
+              "the same keys in :select_keys"
       end
 
       # Setup default options and active selection

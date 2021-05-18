@@ -287,7 +287,7 @@ RSpec.describe TTY::Prompt do
     expect {
       prompt.multi_select("Select drinks?", %w[vodka beer wine], submit_keys: [:space])
     }.to raise_error(TTY::Prompt::ConfigurationError,
-                     ":submit_keys [:space] are clashing with :select_keys [:space]")
+                     ":submit_keys [:space] are conflicting with the same keys in :select_keys")
   end
 
   it "raises error when submit and select keys clash (configured)" do
@@ -296,7 +296,7 @@ RSpec.describe TTY::Prompt do
     expect {
       prompt.multi_select("Select drinks?", %w[vodka beer wine], submit_keys: %i[space ctrl_s], select_keys: [:space])
     }.to raise_error(TTY::Prompt::ConfigurationError,
-                     ":submit_keys [:space, :ctrl_s] are clashing with :select_keys [:space]")
+                     ":submit_keys [:space] are conflicting with the same keys in :select_keys")
   end
 
 
