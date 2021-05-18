@@ -213,13 +213,10 @@ module TTY
       #
       # @api private
       def keys_with_labels(keys)
-        keys.reduce({}) { |result, key|
-          if key.is_a?(Hash)
-            result.merge(key)
-          else
-            result.merge({key => key_help_label(key)})
-          end
-        }
+        keys.reduce({}) do |result, key|
+          obj = key.is_a?(::Hash) ? key : {key => key_help_label(key)}
+          result.merge(obj)
+        end
       end
 
       # Convert a key name into a human-readable label
