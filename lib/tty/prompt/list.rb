@@ -91,7 +91,14 @@ module TTY
       # then all EOL chars are included (for cross-system compat)
       # Maintain any custom labels.
       #
-      # @return [Array[Hash]]
+      # @example
+      #   keys = {return: "Enter", ctrl_s: "Ctrl+S"}
+      #   ensure_eol_compat(keys)
+      #   # => {enter: "Enter", return: "Enter", ctrl_s: "Ctrl+S"}
+      #
+      # @param [Hash{Symbol => String}]
+      #
+      # @return [Hash{Symbol => String}]
       #
       # @api private
       def ensure_eol_compat(keys)
@@ -112,7 +119,9 @@ module TTY
       # Initialize any default or custom action keys
       # setting up their labels and dealing with compat
       #
-      # @return [Array[Hash]]
+      # @param [Array<Symbol, Hash{Symbol => String}>]
+      #
+      # @return [Hash{Symbol => String}]
       #
       # @api private
       def init_action_keys(keys)
@@ -207,6 +216,18 @@ module TTY
       # Normalize a list of key symbols or symbol-label hashes
       # into a single symbol-label lookup hash.
       #
+      # @example Only with symbol keys
+      #   keys = [:enter, :ctrl_s]
+      #   keys_with_labels(keys)
+      #   # => {enter: "Enter", ctrl_s: "Ctrl+S"}
+      #
+      # @example With mixed keys
+      #   keys = [:enter, {ctrl_s: "Ctrl-S"}]
+      #   keys_with_labels(keys)
+      #   # => {enter: "Enter", ctrl_s: "Ctrl-S"}
+      #
+      # @param [Array<Symbol, Hash{Symbol => String}>]
+      #
       # @return [String]
       #
       # @api private
@@ -231,6 +252,18 @@ module TTY
       end
 
       # Information about keys that submit the selection
+      #
+      # @example Get help string for many keys
+      #   keys = {return: "Enter", ctrl_s: "Ctrl+S", space: "Space"}
+      #   keys_help(keys)
+      #   # => "Enter, Ctrl+S or Space"
+      #
+      # @example Get help string for one key
+      #   keys = {return: "Enter"}
+      #   keys_help(keys)
+      #   # => "Enter"
+      #
+      # @param [Hash{Symbol => String}]
       #
       # @return [String]
       #
