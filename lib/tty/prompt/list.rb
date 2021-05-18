@@ -95,19 +95,17 @@ module TTY
       #
       # @api private
       def ensure_eol_compat(keys)
-        eol_symbols = %i[enter return].sort
+        eol_symbols = %i[enter return]
         key_symbols = keys.keys.sort
-        key_intersection = key_symbols & eol_symbols
+        key_intersection = eol_symbols & key_symbols
 
         case key_intersection
         when [], eol_symbols
           keys
         else
-          eol_label = keys[key_intersection[0]]
-          all_eol_keys = eol_symbols.reduce({}) { |hash, key|
-            hash.merge({key => eol_label})
-          }
-          all_eol_keys.merge(keys)
+          eol_label = keys[key_intersection.first]
+          missing_key = (eol_symbols - key_intersection).first
+          keys.merge({missing_key => eol_label})
         end
       end
 
