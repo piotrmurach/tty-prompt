@@ -89,7 +89,7 @@ Or install it yourself as:
       * [2.6.2.5 :per_page](#2625-per_page)
       * [2.6.2.6 :disabled](#2626-disabled)
       * [2.6.2.7 :filter](#2627-filter)
-      * [2.6.2.8 :submit_keys](#2628-submit_keys)
+      * [2.6.2.8 :confirm_keys](#2628-confirm_keys)
     * [2.6.3 multi_select](#263-multi_select)
       * [2.6.3.1 :cycle](#2631-cycle)
       * [2.6.3.2 :enum](#2632-enum)
@@ -100,7 +100,7 @@ Or install it yourself as:
       * [2.6.3.7 :filter](#2637-filter)
       * [2.6.3.8 :min](#2638-min)
       * [2.6.3.9 :max](#2639-max)
-      * [2.6.3.10 :submit_keys](#26310-submit_keys)
+      * [2.6.3.10 :confirm_keys](#26310-confirm_keys)
       * [2.6.3.11 :select_keys](#262311-select_keys)
     * [2.6.4 enum_select](#264-enum_select)
       * [2.6.4.1 :per_page](#2641-per_page)
@@ -919,13 +919,13 @@ Filter characters can be deleted partially or entirely via, respectively, Backsp
 
 If the user changes or deletes a filter, the choices previously selected remain selected.
 
-#### 2.6.2.8 `:submit_keys`
+#### 2.6.2.8 `:confirm_keys`
 
 You can configure which key(s) submit your selection (`:space` and `:return` by default): 
 
 ```ruby
 choices = %w(Scorpion Kano Jax)
-prompt.select("Choose your destiny?", choices, submit_keys: [:ctrl_s])
+prompt.select("Choose your destiny?", choices, confirm_keys: [:ctrl_s])
 # =>
 # Choose your destiny? (Press ↑/↓ to move and Ctrl+S to select)
 # ‣ Scorpion
@@ -937,7 +937,7 @@ This is particularly useful in conjunction with `:filter`, as you may have choic
 
 ```ruby
 choices = ["Jax Sr", "Jax", "Jax Jr"]
-prompt.select("Choose your destiny?", choices, submit_keys: [:ctrl_s], filter: true)
+prompt.select("Choose your destiny?", choices, confirm_keys: [:ctrl_s], filter: true)
 # =>
 # Choose your destiny? (Press ↑/↓ to move, Ctrl+S to select and letters to filter)
 # ‣ Jax Sr
@@ -967,7 +967,7 @@ You may also pass your own key labels to be displayed in the hint:
 
 ```ruby
 choices = ["Jax Sr", "Jax", "Jax Jr"]
-prompt.select("Choose your destiny?", choices, submit_keys: [:enter, {escape: "ESC"}])
+prompt.select("Choose your destiny?", choices, confirm_keys: [:enter, {escape: "ESC"}])
 # =>
 # Choose your destiny? (Press ↑/↓ to move and Enter or ESC to select)
 # ‣ Jax Sr
@@ -1214,14 +1214,14 @@ prompt.multi_select("Select drinks?", choices, max: 3)
 # ‣ ⬡ bourbon
 ```
 
-#### 2.6.3.10 `:submit_keys`
+#### 2.6.3.10 `:confirm_keys`
 
-This works similar to the [same option for `select`](#2628-submit_keys).
+This works similar to the [same option for `select`](#2628-confirm_keys).
 You can configure which key(s) submit your selection (`:return` by default): 
 
 ```ruby
 choices = %w(vodka beer wine whisky bourbon)
-prompt.multi_select("Select drinks?", choices, submit_keys: [:ctrl_s])
+prompt.multi_select("Select drinks?", choices, confirm_keys: [:ctrl_s])
 # =>
 # Select drinks? vodka, beer, whisky
 #   ⬢ vodka
@@ -1282,7 +1282,7 @@ The user can then press the `Ctrl+S` key combo to select the options:
 #   ⬡ gin fizz
 ```
 
-Similar to the `:submit_keys` option, you may also pass your own key labels to be displayed in the hint:
+Similar to the `:confirm_keys` option, you may also pass your own key labels to be displayed in the hint:
 
 ```ruby
 choices = ["gin", "gin tonic", "gin fizz", "beer"]

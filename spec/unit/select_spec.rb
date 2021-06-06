@@ -903,11 +903,11 @@ RSpec.describe TTY::Prompt, "#select" do
       expect(actual_prompt_output).to eql(expected_prompt_output)
     end
 
-    it "filters and chooses entry with enter even if only return is passed in submit_keys" do
+    it "filters and chooses entry with enter even if only return is passed in confirm_keys" do
       prompt.input << "g" << "\n"
       prompt.input.rewind
 
-      answer = prompt.select("What size?", %i[Small Medium Large Huge], filter: true, submit_keys: [:return])
+      answer = prompt.select("What size?", %i[Small Medium Large Huge], filter: true, confirm_keys: [:return])
       expect(answer).to eql(:Large)
 
       actual_prompt_output = prompt.output.string
@@ -924,7 +924,7 @@ RSpec.describe TTY::Prompt, "#select" do
       prompt.input << "g" << "\n"
       prompt.input.rewind
 
-      answer = prompt.select("What size?", %i[Small Medium Large Huge], filter: true, submit_keys: [{return: ">ENTER<"}])
+      answer = prompt.select("What size?", %i[Small Medium Large Huge], filter: true, confirm_keys: [{return: ">ENTER<"}])
       expect(answer).to eql(:Large)
 
       actual_prompt_output = prompt.output.string
@@ -971,11 +971,11 @@ RSpec.describe TTY::Prompt, "#select" do
       expect(actual_prompt_output).to eql(expected_prompt_output)
     end
 
-    it "filters and chooses entry with Ctrl+S when configured as submit key" do
+    it "filters and chooses entry with Ctrl+S when configured as confirm key" do
       prompt.input << "g" << "\C-s"
       prompt.input.rewind
 
-      answer = prompt.select("What size?", %i[Small Medium Large Huge], filter: true, submit_keys: [:ctrl_s])
+      answer = prompt.select("What size?", %i[Small Medium Large Huge], filter: true, confirm_keys: [:ctrl_s])
       expect(answer).to eql(:Large)
 
       actual_prompt_output = prompt.output.string
@@ -988,11 +988,11 @@ RSpec.describe TTY::Prompt, "#select" do
       expect(actual_prompt_output).to eql(expected_prompt_output)
     end
 
-    it "filters and chooses entry with Escape and custom label when configured as submit key" do
+    it "filters and chooses entry with Escape and custom label when configured as confirm key" do
       prompt.input << "g" << "\e"
       prompt.input.rewind
 
-      answer = prompt.select("What size?", %i[Small Medium Large Huge], filter: true, submit_keys: [escape: "Esc"])
+      answer = prompt.select("What size?", %i[Small Medium Large Huge], filter: true, confirm_keys: [escape: "Esc"])
       expect(answer).to eql(:Large)
 
       actual_prompt_output = prompt.output.string
@@ -1011,7 +1011,7 @@ RSpec.describe TTY::Prompt, "#select" do
 
       choices = ["X Large", "X X Large"]
 
-      answer = prompt.select("What size?", choices, filter: true, submit_keys: [:return])
+      answer = prompt.select("What size?", choices, filter: true, confirm_keys: [:return])
       expect(answer).to eql("X X Large")
 
       actual_prompt_output = prompt.output.string

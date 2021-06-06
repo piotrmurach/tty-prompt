@@ -6,5 +6,5 @@ prompt = TTY::Prompt.new
 
 drinks = %w[vodka beer wine whisky bourbon]
 prompt.multi_select("Choose your favourite drink?", drinks,
-                    submit_keys: [:return, {escape: "Esc"}],
+                    confirm_keys: [:return, {escape: "Esc"}],
                     select_keys: [{space: "Spacebar"}, :ctrl_s])

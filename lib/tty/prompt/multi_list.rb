@@ -42,17 +42,17 @@ module TTY
         @max = value
       end
 
-      # Default submit keys, if not explicitly configured
+      # Default confirm keys, if not explicitly configured
       #
       # @api private
-      def default_submit_keys
+      def default_confirm_keys
         %i[return enter].freeze
       end
 
-      # Callback fired when a submit key is pressed
+      # Callback fired when a confirm key is pressed
       #
       # @api private
-      def submit
+      def confirm
         valid = true
         valid = @min <= @selected.size if @min
         valid = @selected.size <= @max if @max
@@ -113,11 +113,11 @@ module TTY
       #
       # @api private
       def check_conflicting_keys
-        conflicting_keys = @submit_keys.keys & @select_keys.keys
+        conflicting_keys = @confirm_keys.keys & @select_keys.keys
         return if conflicting_keys.empty?
 
         raise ConfigurationError,
-              ":submit_keys #{conflicting_keys} are conflicting with " \
+              ":confirm_keys #{conflicting_keys} are conflicting with " \
               "the same keys in :select_keys"
       end
 
@@ -183,7 +183,7 @@ module TTY
         str << " to select"
         str << " (all|rev)" if @max.nil?
         str << (filterable? ? "," : " and")
-        str << " #{keys_help(@submit_keys)} to finish"
+        str << " #{keys_help(@confirm_keys)} to finish"
         str << " and letters to filter" if filterable?
         str << ")"
         str.join

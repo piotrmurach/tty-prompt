@@ -99,11 +99,11 @@ RSpec.describe TTY::Prompt do
     expect(prompt.output.string).to eq(expected_output)
   end
 
-  it "selects item and submits selection with custom keys" do
+  it "selects item and confirms selection with custom keys" do
     choices = %w[vodka beer wine whisky bourbon]
     prompt.input << "\C-s\e"
     prompt.input.rewind
-    expect(prompt.multi_select("Select drinks?", choices, select_keys: [:ctrl_s], submit_keys: [{escape: "Esc"}])).to eq(["vodka"])
+    expect(prompt.multi_select("Select drinks?", choices, select_keys: [:ctrl_s], confirm_keys: [{escape: "Esc"}])).to eq(["vodka"])
 
     expected_output =
       output_helper("Select drinks?", choices, "vodka", [], init: true,
@@ -281,22 +281,22 @@ RSpec.describe TTY::Prompt do
                      /default index `6` out of range \(1 - 5\)/)
   end
 
-  it "raises error when submit and select keys clash (with default select_key)" do
+  it "raises error when confirm and select keys clash (with default select_key)" do
     prompt.input << "\r"
     prompt.input.rewind
     expect {
-      prompt.multi_select("Select drinks?", %w[vodka beer wine], submit_keys: [:space])
+      prompt.multi_select("Select drinks?", %w[vodka beer wine], confirm_keys: [:space])
     }.to raise_error(TTY::Prompt::ConfigurationError,
-                     ":submit_keys [:space] are conflicting with the same keys in :select_keys")
+                     ":confirm_keys [:space] are conflicting with the same keys in :select_keys")
   end
 
-  it "raises error when submit and select keys clash (configured)" do
+  it "raises error when confirm and select keys clash (configured)" do
     prompt.input << "\r"
     prompt.input.rewind
     expect {
-      prompt.multi_select("Select drinks?", %w[vodka beer wine], submit_keys: %i[space ctrl_s], select_keys: [:space])
+      prompt.multi_select("Select drinks?", %w[vodka beer wine], confirm_keys: %i[space ctrl_s], select_keys: [:space])
     }.to raise_error(TTY::Prompt::ConfigurationError,
-                     ":submit_keys [:space] are conflicting with the same keys in :select_keys")
+                     ":confirm_keys [:space] are conflicting with the same keys in :select_keys")
   end
 
 

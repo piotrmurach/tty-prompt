@@ -47,7 +47,7 @@ module TTY
         @filterable   = options.fetch(:filter) { false }
         @symbols      = @prompt.symbols.merge(options.fetch(:symbols, {}))
         @quiet        = options.fetch(:quiet) { @prompt.quiet }
-        @submit_keys  = init_action_keys(options.fetch(:submit_keys) { default_submit_keys })
+        @confirm_keys  = init_action_keys(options.fetch(:confirm_keys) { default_confirm_keys })
         @filter       = []
         @filter_cache = {}
         @help         = options[:help]
@@ -80,10 +80,10 @@ module TTY
         @default = default_values
       end
 
-      # Default submit keys, if not explicitly configured
+      # Default confirm keys, if not explicitly configured
       #
       # @api private
-      def default_submit_keys
+      def default_confirm_keys
         %i[space return enter].freeze
       end
 
@@ -253,7 +253,7 @@ module TTY
         arrows.join
       end
 
-      # Information about keys that submit the selection
+      # Information about keys that confirm the selection
       #
       # @example Get help string for many keys
       #   keys = {return: "Enter", ctrl_s: "Ctrl+S", space: "Space"}
@@ -291,7 +291,7 @@ module TTY
         str << " or 1-#{choices.size} number" if enumerate?
         str << " to move"
         str << (filterable? ? "," : " and")
-        str << " #{keys_help(@submit_keys)} to select"
+        str << " #{keys_help(@confirm_keys)} to select"
         str << " and letters to filter" if filterable?
         str << ")"
         str.join
@@ -457,16 +457,16 @@ module TTY
       end
       alias keypage_up keyleft
 
-      # Callback fired when a submit key is pressed
+      # Callback fired when a confirm key is pressed
       #
       # @api private
-      def submit
+      def confirm
         @done = true unless choices.empty?
       end
 
       def keypress(event)
-        if @submit_keys.include?(event.key.name)
-          submit
+        if @confirm_keys.include?(event.key.name)
+          confirm
         elsif event.key.name == :tab
           keydown
         elsif filterable? && event.value =~ FILTER_KEYS_MATCHER
