@@ -19,6 +19,9 @@ module TTY
       # Checks type of default parameter to be integer
       INTEGER_MATCHER = /\A\d+\Z/.freeze
 
+      # The default keys that confirm the selected item(s)
+      DEFAULT_CONFIRM_KEYS = %i[space return enter].freeze
+
       # Create instance of TTY::Prompt::List menu.
       #
       # @param Hash options
@@ -47,7 +50,7 @@ module TTY
         @filterable   = options.fetch(:filter) { false }
         @symbols      = @prompt.symbols.merge(options.fetch(:symbols, {}))
         @quiet        = options.fetch(:quiet) { @prompt.quiet }
-        @confirm_keys  = init_action_keys(options.fetch(:confirm_keys) { default_confirm_keys })
+        @confirm_keys  = init_action_keys(options.fetch(:confirm_keys) { self.class::DEFAULT_CONFIRM_KEYS })
         @filter       = []
         @filter_cache = {}
         @help         = options[:help]
@@ -78,13 +81,6 @@ module TTY
       # @api public
       def default(*default_values)
         @default = default_values
-      end
-
-      # Default confirm keys, if not explicitly configured
-      #
-      # @api private
-      def default_confirm_keys
-        %i[space return enter].freeze
       end
 
       # Initialize any default or custom action keys

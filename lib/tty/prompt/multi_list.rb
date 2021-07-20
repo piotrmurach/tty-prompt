@@ -10,6 +10,9 @@ module TTY
     #
     # @api private
     class MultiList < List
+      # The default keys that confirm the selected item(s)
+      DEFAULT_CONFIRM_KEYS = %i[return enter].freeze
+
       # Create instance of TTY::Prompt::MultiList menu.
       #
       # @param [Prompt] :prompt
@@ -40,13 +43,6 @@ module TTY
       # @api public
       def max(value)
         @max = value
-      end
-
-      # Default confirm keys, if not explicitly configured
-      #
-      # @api private
-      def default_confirm_keys
-        %i[return enter].freeze
       end
 
       # Callback fired when a confirm key is pressed
