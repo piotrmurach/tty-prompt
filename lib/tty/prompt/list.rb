@@ -155,8 +155,7 @@ module TTY
         key_symbols = keys.keys.sort_by(&:to_s)
         key_intersection = eol_symbols & key_symbols
 
-        case key_intersection
-        when [], eol_symbols
+        if key_intersection.empty? || key_intersection == eol_symbols
           keys
         else
           eol_label = keys[key_intersection.first]
