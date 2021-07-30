@@ -240,6 +240,29 @@ RSpec.describe TTY::Prompt do
     expect(prompt.output.string).to eq(expected_output)
   end
 
+  it "sets confirm_keys and select_keys through DSL" do
+    choices = %w[vodka beer wine]
+    prompt.on(:keypress) { |e| prompt.trigger(:keydown) if e.value == "j" }
+    prompt.input << "j\r\C-s"
+    prompt.input.rewind
+    value = prompt.multi_select("Select drinks?") do |menu|
+              menu.choices choices
+              menu.confirm_keys [:ctrl_s]
+              menu.select_keys [:enter]
+            end
+    expect(value).to eq(["beer"])
+
+    expected_output =
+      output_helper("Select drinks?", choices, "vodka", [], init: true,
+        hint: "Press #{up_down} arrow to move, Enter/Ctrl+A|R to select " \
+              "(all|rev) and Ctrl+S to finish") +
+      output_helper("Select drinks?", choices, "beer", []) +
+      output_helper("Select drinks?", choices, "beer", %w[beer]) +
+      exit_message("Select drinks?", %w[beer])
+
+    expect(prompt.output.string).to eq(expected_output)
+  end
+
   it "sets default options through hash syntax" do
     prompt.input << "\r"
     prompt.input.rewind

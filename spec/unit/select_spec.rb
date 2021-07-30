@@ -134,6 +134,26 @@ RSpec.describe TTY::Prompt, "#select" do
     ].join)
   end
 
+  it "sets confirm_keys through DSL" do
+    choices = %w[Large Medium Small]
+    prompt.input << "\C-s"
+    prompt.input.rewind
+    value = prompt.select("What size?") do |menu|
+              menu.choices choices
+              menu.confirm_keys [:ctrl_s]
+            end
+    expect(value).to eq("Large")
+    expect(prompt.output.string).to eq([
+      "\e[?25lWhat size? \e[90m(Press #{up_down} arrow to move and Ctrl+S to select)\e[0m\n",
+      "\e[32m#{symbols[:marker]} Large\e[0m\n",
+      "  Medium\n",
+      "  Small",
+      "\e[2K\e[1G\e[1A" * 3,
+      "\e[2K\e[1G",
+      "What size? \e[32mLarge\e[0m\n\e[?25h"
+    ].join)
+  end
+
   it "sets choice name & value through DSL" do
     prompt = TTY::Prompt::Test.new(symbols: {marker: ">"})
     prompt.input << " "

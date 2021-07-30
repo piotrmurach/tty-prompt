@@ -83,6 +83,21 @@ module TTY
         @default = default_values
       end
 
+      # Set confirm keys
+      #
+      # @param [Array<Symbol, String, Hash{Symbol, String => String}>] value
+      #   the new confirm_keys
+      #
+      # @return [Hash{Symbol, String => String}]
+      #
+      # @api public
+      def confirm_keys(value = (not_set = true))
+        return @confirm_keys if !@confirm_keys.nil? && not_set
+
+        value = not_set ? self.class::DEFAULT_CONFIRM_KEYS : value
+        @confirm_keys = init_action_keys(value)
+      end
+
       # Initialize any default or custom action keys
       # setting up their labels and dealing with compat
       #

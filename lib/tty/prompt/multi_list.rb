@@ -12,6 +12,7 @@ module TTY
     class MultiList < List
       # The default keys that confirm the selected item(s)
       DEFAULT_CONFIRM_KEYS = %i[return enter].freeze
+      DEFAULT_SELECT_KEYS = %i[space].freeze
 
       # Create instance of TTY::Prompt::MultiList menu.
       #
@@ -22,13 +23,11 @@ module TTY
       def initialize(prompt, **options)
         super
         @selected = SelectedChoices.new
-        @select_keys = init_action_keys(options.fetch(:select_keys, [:space]))
+        @select_keys = init_select_keys(options.fetch(:select_keys, DEFAULT_SELECT_KEYS))
         @help = options[:help]
         @echo = options.fetch(:echo, true)
         @min  = options[:min]
         @max  = options[:max]
-
-        check_conflicting_keys
       end
 
       # Set a minimum number of choices
@@ -54,6 +53,27 @@ module TTY
         valid = @selected.size <= @max if @max
 
         super if valid
+      end
+
+      def confirm_keys(value = (not_set = true))
+        super
+        check_conflicting_keys
+        @confirm_keys
+      end
+
+      # Set select keys
+      #
+      # @param [Array<Symbol, String, Hash{Symbol, String => String}>] value
+      #   the new select_keys
+      #
+      # @return [Hash{Symbol, String => String}]
+      #
+      # @api public
+      def select_keys(value = (not_set = true))
+        return @select_keys if !@select_keys.nil? && not_set
+
+        value = not_set ? self.class::DEFAULT_SELECT_KEYS : value
+        @select_keys = init_select_keys(value)
       end
 
       # Callback fired when the selection key is pressed
@@ -104,6 +124,14 @@ module TTY
       end
 
       private
+
+      def init_select_keys(keys)
+        @select_keys = init_action_keys(keys)
+
+        check_conflicting_keys
+
+        @select_keys
+      end
 
       # Checks that there are no key options clashing
       #

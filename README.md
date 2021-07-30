@@ -975,6 +975,21 @@ prompt.select("Choose your destiny?", choices, confirm_keys: [:enter, {escape: "
 #   Jax Jr
 ```
 
+Confirm keys may be configured using the DSL, similar to `:choices`:
+
+```ruby
+choices = ["Jax Sr", "Jax", "Jax Jr"]
+
+prompt.select("Choose your destiny?") do |menu|
+  menu.choices choices
+  menu.confirm_keys [:enter, {escape: "ESC"}, {"," => "Comma (,)"}]
+# =>
+# Choose your destiny? (Press ↑/↓ to move and Enter, ESC or Comma (,) to select)
+# ‣ Jax Sr
+#   Jax
+#   Jax Jr
+```
+
 ### 2.6.3 multi_select
 
 For asking questions involving multiple selection list use `multi_select` method by passing the question and possible choices:
@@ -1235,6 +1250,8 @@ The user can then press the `Ctrl+S` or the `,` key to confirm their selection:
 # Select drinks? vodka, beer, whisky
 ```
 
+You may also configure the keys using the DSL, in the same way that is done for [select](#2628-confirm_keys)
+
 #### 2.6.3.11 `:select_keys`
 
 You can configure which key selects an option (`:space` default).
@@ -1285,6 +1302,22 @@ choices = ["gin", "gin tonic", "gin fizz", "beer"]
 prompt.multi_select("Select drinks?", choices, filter: true, select_keys: [{ctr_s: "Ctrl-S"}, {space: "Spacebar"}])
 # =>
 # Select drinks? (Press ↑/↓ arrow keys to move, Ctrl-S or Spacebar/Ctrl+A|R to select (all|rev), Enter to finish and letters to filter)
+# ‣ ⬡ gin
+#   ⬡ gin tonic
+#   ⬡ gin fizz
+#   ⬡ beer
+```
+
+You can also configure your keys using the DSL, similar to `:confirm_keys`:
+```ruby
+choices = ["gin", "gin tonic", "gin fizz", "beer"]
+prompt.multi_select("Select drinks?") do |menu|
+  menu.choices choices
+  menu.select_keys [{ctr_s: "Ctrl-S"}, {space: "Spacebar"}]
+end
+
+# =>
+# Select drinks? (Press ↑/↓ arrow keys to move, Ctrl-S or Spacebar/Ctrl+A|R to select (all|rev), and Enter to finish)
 # ‣ ⬡ gin
 #   ⬡ gin tonic
 #   ⬡ gin fizz
