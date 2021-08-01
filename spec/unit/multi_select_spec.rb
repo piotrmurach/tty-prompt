@@ -247,8 +247,8 @@ RSpec.describe TTY::Prompt do
     prompt.input.rewind
     value = prompt.multi_select("Select drinks?") do |menu|
               menu.choices choices
-              menu.confirm_keys [:ctrl_s]
-              menu.select_keys [:enter]
+              menu.confirm_keys :ctrl_s
+              menu.select_keys :enter
             end
     expect(value).to eq(["beer"])
 

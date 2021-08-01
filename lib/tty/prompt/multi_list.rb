@@ -12,6 +12,8 @@ module TTY
     class MultiList < List
       # The default keys that confirm the selected item(s)
       DEFAULT_CONFIRM_KEYS = %i[return enter].freeze
+
+      # The default keys that select choices
       DEFAULT_SELECT_KEYS = %i[space].freeze
 
       # Create instance of TTY::Prompt::MultiList menu.
@@ -55,7 +57,7 @@ module TTY
         super if valid
       end
 
-      def confirm_keys(value = (not_set = true))
+      def confirm_keys(*keys)
         super
         check_conflicting_keys
         @confirm_keys
@@ -63,17 +65,17 @@ module TTY
 
       # Set select keys
       #
-      # @param [Array<Symbol, String, Hash{Symbol, String => String}>] value
-      #   the new select_keys
+      # @param [Array<Symbol, String, Hash{Symbol, String => String}>] keys
+      #   the key(s) used for selecting choices
       #
       # @return [Hash{Symbol, String => String}]
       #
       # @api public
-      def select_keys(value = (not_set = true))
-        return @select_keys if !@select_keys.nil? && not_set
+      def select_keys(*keys)
+        keys = keys.flatten
+        return @select_keys if keys.empty?
 
-        value = not_set ? self.class::DEFAULT_SELECT_KEYS : value
-        @select_keys = init_select_keys(value)
+        @select_keys = init_select_keys(keys)
       end
 
       # Callback fired when the selection key is pressed
@@ -125,11 +127,15 @@ module TTY
 
       private
 
+      # Initialize any default or custom select keys
+      # setting up their labels and dealing with any key conflicts
+      #
+      # @see List#init_action_keys
+      #
+      # @api private
       def init_select_keys(keys)
         @select_keys = init_action_keys(keys)
-
         check_conflicting_keys
-
         @select_keys
       end
 

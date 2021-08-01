@@ -982,7 +982,8 @@ choices = ["Jax Sr", "Jax", "Jax Jr"]
 
 prompt.select("Choose your destiny?") do |menu|
   menu.choices choices
-  menu.confirm_keys [:enter, {escape: "ESC"}, {"," => "Comma (,)"}]
+  menu.confirm_keys :enter, {escape: "ESC"}, {"," => "Comma (,)"}
+end
 # =>
 # Choose your destiny? (Press ↑/↓ to move and Enter, ESC or Comma (,) to select)
 # ‣ Jax Sr
@@ -1313,7 +1314,7 @@ You can also configure your keys using the DSL, similar to `:confirm_keys`:
 choices = ["gin", "gin tonic", "gin fizz", "beer"]
 prompt.multi_select("Select drinks?") do |menu|
   menu.choices choices
-  menu.select_keys [{ctr_s: "Ctrl-S"}, {space: "Spacebar"}]
+  menu.select_keys({ctr_s: "Ctrl-S"}, {space: "Spacebar"})
 end
 
 # =>

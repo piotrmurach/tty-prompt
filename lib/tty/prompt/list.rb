@@ -50,7 +50,9 @@ module TTY
         @filterable   = options.fetch(:filter) { false }
         @symbols      = @prompt.symbols.merge(options.fetch(:symbols, {}))
         @quiet        = options.fetch(:quiet) { @prompt.quiet }
-        @confirm_keys  = init_action_keys(options.fetch(:confirm_keys) { self.class::DEFAULT_CONFIRM_KEYS })
+        @confirm_keys  = init_action_keys(options.fetch(:confirm_keys) do
+                          self.class::DEFAULT_CONFIRM_KEYS
+                        end)
         @filter       = []
         @filter_cache = {}
         @help         = options[:help]
@@ -85,17 +87,17 @@ module TTY
 
       # Set confirm keys
       #
-      # @param [Array<Symbol, String, Hash{Symbol, String => String}>] value
-      #   the new confirm_keys
+      # @param [Array<Symbol, String, Hash{Symbol, String => String}>] keys
+      #   the key(s) to confirm the selected item(s)
       #
       # @return [Hash{Symbol, String => String}]
       #
       # @api public
-      def confirm_keys(value = (not_set = true))
-        return @confirm_keys if !@confirm_keys.nil? && not_set
+      def confirm_keys(*keys)
+        keys = keys.flatten
+        return @confirm_keys if keys.empty?
 
-        value = not_set ? self.class::DEFAULT_CONFIRM_KEYS : value
-        @confirm_keys = init_action_keys(value)
+        @confirm_keys = init_action_keys(keys)
       end
 
       # Initialize any default or custom action keys

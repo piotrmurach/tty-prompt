@@ -140,7 +140,7 @@ RSpec.describe TTY::Prompt, "#select" do
     prompt.input.rewind
     value = prompt.select("What size?") do |menu|
               menu.choices choices
-              menu.confirm_keys [:ctrl_s]
+              menu.confirm_keys :ctrl_s
             end
     expect(value).to eq("Large")
     expect(prompt.output.string).to eq([
