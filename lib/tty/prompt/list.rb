@@ -22,6 +22,12 @@ module TTY
       # The default keys that confirm the selected item(s)
       DEFAULT_CONFIRM_KEYS = %i[space return enter].freeze
 
+      # The keys that signify "end of line" (EOL).
+      # Depending on whether we are on a Unix system / Windows
+      # the "Enter" key may translate to CR and/or LF characters.
+      # See also List#ensure_eol_compat
+      EOL_KEYS = %i[enter return].freeze
+
       # Create instance of TTY::Prompt::List menu.
       #
       # @param Hash options
@@ -50,7 +56,7 @@ module TTY
         @filterable   = options.fetch(:filter) { false }
         @symbols      = @prompt.symbols.merge(options.fetch(:symbols, {}))
         @quiet        = options.fetch(:quiet) { @prompt.quiet }
-        @confirm_keys  = init_action_keys(options.fetch(:confirm_keys) do
+        @confirm_keys = init_action_keys(options.fetch(:confirm_keys) do
                           self.class::DEFAULT_CONFIRM_KEYS
                         end)
         @filter       = []
@@ -168,15 +174,14 @@ module TTY
       #
       # @api private
       def ensure_eol_compat(keys)
-        eol_symbols = %i[enter return]
         key_symbols = keys.keys.sort_by(&:to_s)
-        key_intersection = eol_symbols & key_symbols
+        key_intersection = EOL_KEYS & key_symbols
 
-        if key_intersection.empty? || key_intersection == eol_symbols
+        if key_intersection.empty? || key_intersection == EOL_KEYS
           keys
         else
           eol_label = keys[key_intersection.first]
-          missing_key = (eol_symbols - key_intersection).first
+          missing_key = (EOL_KEYS - key_intersection).first
           keys.merge({missing_key => eol_label})
         end
       end
@@ -477,7 +482,8 @@ module TTY
       end
 
       def keypress(event)
-        if !(@confirm_keys.keys & [event.key.name, event.value]).empty?
+        if @confirm_keys.keys.include?(event.key.name) ||
+           @confirm_keys.keys.include?(event.value)
           confirm
         elsif event.key.name == :tab
           keydown

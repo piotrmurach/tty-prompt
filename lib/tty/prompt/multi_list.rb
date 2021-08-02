@@ -57,6 +57,9 @@ module TTY
         super if valid
       end
 
+      # @see List#confirm_keys
+      #
+      # @api public
       def confirm_keys(*keys)
         super
         check_conflicting_keys

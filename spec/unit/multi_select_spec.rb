@@ -322,7 +322,6 @@ RSpec.describe TTY::Prompt do
                      ":confirm_keys [:space] are conflicting with the same keys in :select_keys")
   end
 
-
   it "sets prompt prefix" do
     prompt = TTY::Prompt::Test.new(prefix: "[?] ")
     choices = %w[vodka beer wine whisky bourbon]
