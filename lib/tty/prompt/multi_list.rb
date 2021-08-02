@@ -25,7 +25,9 @@ module TTY
       def initialize(prompt, **options)
         super
         @selected = SelectedChoices.new
-        @select_keys = init_select_keys(options.fetch(:select_keys, DEFAULT_SELECT_KEYS))
+        @select_keys = init_select_keys(options.fetch(:select_keys) do
+                                          self.class::DEFAULT_SELECT_KEYS
+                                        end)
         @help = options[:help]
         @echo = options.fetch(:echo, true)
         @min  = options[:min]
@@ -99,10 +101,11 @@ module TTY
       #
       # @api private
       def keypress(event)
-        if (@select_keys.keys & [event.key.name, event.value]).empty?
-          super(event)
-        else
+        if @select_keys.keys.include?(event.key.name) ||
+           @select_keys.keys.include?(event.value)
           select_choice
+        else
+          super(event)
         end
       end
 

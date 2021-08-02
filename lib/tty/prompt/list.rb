@@ -57,8 +57,8 @@ module TTY
         @symbols      = @prompt.symbols.merge(options.fetch(:symbols, {}))
         @quiet        = options.fetch(:quiet) { @prompt.quiet }
         @confirm_keys = init_action_keys(options.fetch(:confirm_keys) do
-                          self.class::DEFAULT_CONFIRM_KEYS
-                        end)
+                                           self.class::DEFAULT_CONFIRM_KEYS
+                                         end)
         @filter       = []
         @filter_cache = {}
         @help         = options[:help]
