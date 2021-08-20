@@ -40,6 +40,8 @@ module TTY
       #   the marker for the selected item
       # @option options [String] :enum
       #   the delimiter for the item index
+      # @option options [Array<Symbol, String, Hash{Symbol, String => String}>]
+      #   :confirm_keys the key(s) to confirm the selected item(s)
       #
       # @api public
       def initialize(prompt, **options)

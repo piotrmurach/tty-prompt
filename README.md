@@ -967,7 +967,7 @@ You may also pass your own key labels to be displayed in the hint:
 
 ```ruby
 choices = ["Jax Sr", "Jax", "Jax Jr"]
-prompt.select("Choose your destiny?", choices, confirm_keys: [:enter, {escape: "ESC"}, {"," => "Comma (,)"}])
+prompt.select("Choose your destiny?", choices, confirm_keys: [:enter, {ctrl_s: "Ctrl-S"}, {"," => "Comma (,)"}])
 # =>
 # Choose your destiny? (Press ↑/↓ to move and Enter, ESC or Comma (,) to select)
 # ‣ Jax Sr
@@ -979,10 +979,9 @@ Confirm keys may be configured using the DSL, similar to `:choices`:
 
 ```ruby
 choices = ["Jax Sr", "Jax", "Jax Jr"]
-
 prompt.select("Choose your destiny?") do |menu|
   menu.choices choices
-  menu.confirm_keys :enter, {escape: "ESC"}, {"," => "Comma (,)"}
+  menu.confirm_keys :enter, {ctrl_s: "Ctrl-S"}, {"," => "Comma (,)"}
 end
 # =>
 # Choose your destiny? (Press ↑/↓ to move and Enter, ESC or Comma (,) to select)
@@ -1251,7 +1250,7 @@ The user can then press the `Ctrl+S` or the `,` key to confirm their selection:
 # Select drinks? vodka, beer, whisky
 ```
 
-You may also configure the keys using the DSL, in the same way that is done for [select](#2628-confirm_keys)
+You may also configure the keys using the DSL, in the same way that is done for [select](#2628-confirm_keys).
 
 #### 2.6.3.11 `:select_keys`
 
@@ -1300,7 +1299,7 @@ Similar to the `:confirm_keys` option, you may also pass your own key labels to 
 
 ```ruby
 choices = ["gin", "gin tonic", "gin fizz", "beer"]
-prompt.multi_select("Select drinks?", choices, filter: true, select_keys: [{ctr_s: "Ctrl-S"}, {space: "Spacebar"}])
+prompt.multi_select("Select drinks?", choices, filter: true, select_keys: [{ctrl_s: "Ctrl-S"}, {space: "Spacebar"}])
 # =>
 # Select drinks? (Press ↑/↓ arrow keys to move, Ctrl-S or Spacebar/Ctrl+A|R to select (all|rev), Enter to finish and letters to filter)
 # ‣ ⬡ gin
@@ -1314,9 +1313,8 @@ You can also configure your keys using the DSL, similar to `:confirm_keys`:
 choices = ["gin", "gin tonic", "gin fizz", "beer"]
 prompt.multi_select("Select drinks?") do |menu|
   menu.choices choices
-  menu.select_keys({ctr_s: "Ctrl-S"}, {space: "Spacebar"})
+  menu.select_keys({ctrl_s: "Ctrl-S"})
 end
-
 # =>
 # Select drinks? (Press ↑/↓ arrow keys to move, Ctrl-S or Spacebar/Ctrl+A|R to select (all|rev), and Enter to finish)
 # ‣ ⬡ gin
