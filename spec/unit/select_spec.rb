@@ -144,13 +144,9 @@ RSpec.describe TTY::Prompt, "#select" do
             end
     expect(value).to eq("Large")
     expect(prompt.output.string).to eq([
-      "\e[?25lWhat size? \e[90m(Press #{up_down} arrow to move and Ctrl+S to select)\e[0m\n",
-      "\e[32m#{symbols[:marker]} Large\e[0m\n",
-      "  Medium\n",
-      "  Small",
-      "\e[2K\e[1G\e[1A" * 3,
-      "\e[2K\e[1G",
-      "What size? \e[32mLarge\e[0m\n\e[?25h"
+      output_helper("What size?", choices, "Large", init: true,
+        hint: "Press #{up_down} arrow to move and Ctrl+S to select"),
+      exit_message("What size?", "Large")
     ].join)
   end
 
