@@ -155,8 +155,9 @@ module TTY
         return if conflicting_keys.empty?
 
         raise ConfigurationError,
-              ":confirm_keys #{conflicting_keys} are conflicting with " \
-              "the same keys in :select_keys"
+              ":confirm_keys and :select_keys cannot use the same " \
+              "#{conflicting_keys.map(&:inspect).join(', ')} " \
+              "key#{'s' if conflicting_keys.size > 1}"
       end
 
       # Setup default options and active selection

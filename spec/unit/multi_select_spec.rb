@@ -310,7 +310,7 @@ RSpec.describe TTY::Prompt do
     expect {
       prompt.multi_select("Select drinks?", %w[vodka beer wine], confirm_keys: [:space])
     }.to raise_error(TTY::Prompt::ConfigurationError,
-                     ":confirm_keys [:space] are conflicting with the same keys in :select_keys")
+                     ":confirm_keys and :select_keys cannot use the same :space key")
   end
 
   it "raises error when confirm and select keys clash (configured)" do
@@ -319,7 +319,7 @@ RSpec.describe TTY::Prompt do
     expect {
       prompt.multi_select("Select drinks?", %w[vodka beer wine], confirm_keys: %i[space ctrl_s], select_keys: [:space])
     }.to raise_error(TTY::Prompt::ConfigurationError,
-                     ":confirm_keys [:space] are conflicting with the same keys in :select_keys")
+                     ":confirm_keys and :select_keys cannot use the same :space key")
   end
 
   it "sets prompt prefix" do
