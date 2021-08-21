@@ -161,7 +161,7 @@ Asking question with list of options couldn't be easier using `select` like so:
 ```ruby
 prompt.select("Choose your destiny?", %w(Scorpion Kano Jax))
 # =>
-# Choose your destiny? (Press ↑/↓ arrow to move, Space or Enter to select)
+# Choose your destiny? (Press ↑/↓ arrow to move and Space or Enter to select)
 # ‣ Scorpion
 #   Kano
 #   Jax
