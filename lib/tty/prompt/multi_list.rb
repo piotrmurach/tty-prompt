@@ -18,7 +18,7 @@ module TTY
 
       # Create instance of TTY::Prompt::MultiList menu.
       #
-      # @param [Prompt] :prompt
+      # @param [Prompt] prompt
       # @param [Hash] options
       # @option options [Array<Symbol, String, Hash{Symbol, String => String}>]
       #   :select_keys the key(s) used for selecting choices

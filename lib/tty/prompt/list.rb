@@ -30,7 +30,7 @@ module TTY
 
       # Create instance of TTY::Prompt::List menu.
       #
-      # @param Hash options
+      # @param [Hash] options
       #   the configuration options
       # @option options [Symbol] :default
       #   the default active choice, defaults to 1
@@ -111,7 +111,7 @@ module TTY
       # Initialize any default or custom action keys
       # setting up their labels and dealing with compat
       #
-      # @param [Array<Symbol, String, Hash{Symbol, String => String}>]
+      # @param [Array<Symbol, String, Hash{Symbol, String => String}>] keys
       #
       # @return [Hash{Symbol, String => String}]
       #
@@ -134,9 +134,9 @@ module TTY
       #   keys_with_labels(keys)
       #   # => {enter: "Enter", ctrl_s: "Ctrl-S"}
       #
-      # @param [Array<Symbol, String, Hash{Symbol, String => String}>]
+      # @param [Array<Symbol, String, Hash{Symbol, String => String}>] keys
       #
-      # @return [String]
+      # @return [Hash{Symbol, String => String}]
       #
       # @api private
       def keys_with_labels(keys)
@@ -148,7 +148,7 @@ module TTY
 
       # Convert a key name into a human-readable label
       #
-      # @param [Symbol, String]
+      # @param [Symbol, String] key_name
       #
       # @return [String]
       #
@@ -170,7 +170,7 @@ module TTY
       #   ensure_eol_compat(keys)
       #   # => {enter: "Enter", return: "Enter", ctrl_s: "Ctrl+S"}
       #
-      # @param [Hash{Symbol, String => String}]
+      # @param [Hash{Symbol, String => String}] keys
       #
       # @return [Hash{Symbol, String => String}]
       #
@@ -284,7 +284,7 @@ module TTY
       #   keys_help(keys)
       #   # => "Enter"
       #
-      # @param [Hash{Symbol, String => String}]
+      # @param [Hash{Symbol, String => String}] keys
       #
       # @return [String]
       #
@@ -368,8 +368,8 @@ module TTY
       # Call the list menu by passing question and choices
       #
       # @param [String] question
+      # @param [Array[Object]] possibilities
       #
-      # @param
       # @api public
       def call(question, possibilities, &block)
         choices(possibilities)
@@ -625,7 +625,7 @@ module TTY
 
       # Clear screen lines
       #
-      # @param [String]
+      # @param [Integer] lines
       #
       # @api private
       def refresh(lines)
