@@ -1,5 +1,13 @@
 # Change log
 
+## [v0.23.2] - unreleased
+
+### Changed
+* Change multi select validation to ensure min is not greater than max
+### Fixed
+* Fix multi select validation - min option also validated now when both min and max are specified
+
+
 ## [v0.23.1] - 2021-04-17
 
 ### Changed
