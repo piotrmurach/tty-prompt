@@ -45,7 +45,7 @@ module TTY
       def keyenter(*)
         valid = true
         valid = @min <= @selected.size if @min
-        valid = @selected.size <= @max if @max
+        valid &= @selected.size <= @max if @max
 
         super if valid
       end

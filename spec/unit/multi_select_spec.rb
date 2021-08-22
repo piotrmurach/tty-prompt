@@ -17,8 +17,12 @@ RSpec.describe TTY::Prompt do
     out = []
     out << "\e[?25l" if init
     out << prompt << " "
-    out << "(min. #{options[:min]}) " if options[:min]
-    out << "(max. #{options[:max]}) " if options[:max]
+    if options[:min] && options[:max]
+      out << "(min. #{options[:min]}, max. #{options[:max]}) "
+    else
+      out << "(min. #{options[:min]}) " if options[:min]
+      out << "(max. #{options[:max]}) " if options[:max]
+    end
     out << selected.join(", ")
     out << " " if (init || hint) && !selected.empty?
     out << "\e[90m(#{hint})\e[0m" if hint
@@ -903,6 +907,38 @@ RSpec.describe TTY::Prompt do
         exit_message("What letter?", %w[B C])
 
       expect(prompt.output.string).to eq(expected_output)
+    end
+  end
+
+  context "with :min and :max" do
+    it "requires a min number of choices" do
+      prompt.on(:keypress) do |e|
+        prompt.trigger(:keydown) if e.value == "j"
+      end
+      prompt.input << " " << "\r" << "j" << " " << "\r"
+      prompt.input.rewind
+
+      choices = %w[A B C]
+      value = prompt.multi_select("What letter?", choices, min: 2, max: 2)
+      expect(value).to eq(%w[A B])
+
+      expected_output =
+        output_helper("What letter?", choices, "A", [], init: true, min: 2, max: 2,
+          hint: "Press #{up_down} arrow to move, Space to select and Enter to finish") +
+        output_helper("What letter?", choices, "A", %w[A], min: 2, max: 2) +
+        output_helper("What letter?", choices, "A", %w[A], min: 2, max: 2) +
+        output_helper("What letter?", choices, "B", %w[A], min: 2, max: 2) +
+        output_helper("What letter?", choices, "B", %w[A B], min: 2, max: 2) +
+        exit_message("What letter?", %w[A B])
+
+      expect(prompt.output.string).to eq(expected_output)
+    end
+    it "raises an error message when the min is greater than max" do
+      choices = %w[A B C]
+      expect {
+        prompt.multi_select("What letter?", choices, min: 3, max: 2)
+      }.to raise_error(TTY::Prompt::ConfigurationError, 
+                       "min must not be greater than max")
     end
   end
 end
