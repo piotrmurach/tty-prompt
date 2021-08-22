@@ -1825,7 +1825,7 @@ You could also use `pastel`:
 ```ruby
 notice = Pastel.new.cyan.on_blue.detach
 prompt = TTY::Prompt.new(active_color: notice)
-````
+```
 
 Or use coloring of your own choice:
 
@@ -1868,7 +1868,7 @@ You could also use `pastel`:
 ```ruby
 notice = Pastel.new.cyan.on_blue.detach
 prompt = TTY::Prompt.new(help_color: notice)
-````
+```
 
 Or use coloring of your own choice:
 
@@ -1916,7 +1916,7 @@ Prompts such as `select`, `multi_select`, `expand`, `slider` support `:quiet` wh
 prompt = TTY::Prompt.new(quiet: true)
 # single prompt
 prompt.select("What is your favorite color?", %w(blue yellow orange))
-````
+```
 
 ### 3.8 `:track_history`
 
