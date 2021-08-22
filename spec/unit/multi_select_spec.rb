@@ -933,6 +933,7 @@ RSpec.describe TTY::Prompt do
 
       expect(prompt.output.string).to eq(expected_output)
     end
+    
     it "raises an error message when the min is greater than max" do
       choices = %w[A B C]
       expect {
