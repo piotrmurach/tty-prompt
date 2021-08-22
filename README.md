@@ -407,6 +407,7 @@ end
 ```
 
 Available letter casing settings are:
+
 ```ruby
 :up         # change to upper case
 :down       # change to small case
@@ -838,6 +839,7 @@ prompt.select("Choose your letter?", letters, per_page: 4)
 ```
 
 You can also customise page navigation text using `:help` option:
+
 ```ruby
 letters = ("A".."Z").to_a
 prompt.select("Choose your letter?") do |menu|
@@ -956,6 +958,7 @@ After the user types "Jax":
 ```
 
 After the user presses space:
+
 ```ruby
 # =>
 # Choose your destiny? (Filter: "Jax ")
@@ -1245,6 +1248,7 @@ prompt.multi_select("Select drinks?", choices, confirm_keys: [:ctrl_s, ","])
 ```
 
 The user can then press the `Ctrl+S` or the `,` key to confirm their selection:
+
 ```ruby
 # =>
 # Select drinks? vodka, beer, whisky
@@ -1288,6 +1292,7 @@ and then presses space:
 ```
 
 The user can then press the `Ctrl+S` key combo to select the options:
+
 ```ruby
 # =>
 # Select drinks? (Filter: "gin ")
@@ -1309,6 +1314,7 @@ prompt.multi_select("Select drinks?", choices, filter: true, select_keys: [{ctrl
 ```
 
 You can also configure your keys using the DSL, similar to `:confirm_keys`:
+
 ```ruby
 choices = ["gin", "gin tonic", "gin fizz", "beer"]
 prompt.multi_select("Select drinks?") do |menu|
