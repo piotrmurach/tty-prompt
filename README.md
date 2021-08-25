@@ -972,7 +972,7 @@ You may also pass your own key labels to be displayed in the hint:
 choices = ["Jax Sr", "Jax", "Jax Jr"]
 prompt.select("Choose your destiny?", choices, confirm_keys: [:enter, {ctrl_s: "Ctrl-S"}, {"," => "Comma (,)"}])
 # =>
-# Choose your destiny? (Press ↑/↓ to move and Enter, ESC or Comma (,) to select)
+# Choose your destiny? (Press ↑/↓ arrow to move and Enter, Ctrl-S or Comma (,) to select)
 # ‣ Jax Sr
 #   Jax
 #   Jax Jr
@@ -987,7 +987,7 @@ prompt.select("Choose your destiny?") do |menu|
   menu.confirm_keys :enter, {ctrl_s: "Ctrl-S"}, {"," => "Comma (,)"}
 end
 # =>
-# Choose your destiny? (Press ↑/↓ to move and Enter, ESC or Comma (,) to select)
+# Choose your destiny? (Press ↑/↓ arrow to move and Enter, Ctrl-S or Comma (,) to select)
 # ‣ Jax Sr
 #   Jax
 #   Jax Jr

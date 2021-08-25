@@ -112,6 +112,7 @@ module TTY
       # setting up their labels and dealing with compat
       #
       # @param [Array<Symbol, String, Hash{Symbol, String => String}>] keys
+      #   the key(s) as only name or name and label pair
       #
       # @return [Hash{Symbol, String => String}]
       #
@@ -135,6 +136,7 @@ module TTY
       #   # => {enter: "Enter", ctrl_s: "Ctrl-S"}
       #
       # @param [Array<Symbol, String, Hash{Symbol, String => String}>] keys
+      #   the key(s) as only name or name and label pair
       #
       # @return [Hash{Symbol, String => String}]
       #
@@ -149,6 +151,7 @@ module TTY
       # Convert a key name into a human-readable label
       #
       # @param [Symbol, String] key_name
+      #   the key name to convert to label
       #
       # @return [String]
       #
@@ -171,6 +174,7 @@ module TTY
       #   # => {enter: "Enter", return: "Enter", ctrl_s: "Ctrl+S"}
       #
       # @param [Hash{Symbol, String => String}] keys
+      #   the key(s) as name and label pair
       #
       # @return [Hash{Symbol, String => String}]
       #
@@ -285,6 +289,7 @@ module TTY
       #   # => "Enter"
       #
       # @param [Hash{Symbol, String => String}] keys
+      #   the key(s) as name and label pair
       #
       # @return [String]
       #

@@ -149,6 +149,8 @@ module TTY
 
       # Checks that there are no key options clashing
       #
+      # @raise [ConfigurationError]
+      #
       # @api private
       def check_conflicting_keys
         conflicting_keys = @confirm_keys.keys & @select_keys.keys
