@@ -84,6 +84,24 @@ RSpec.describe TTY::Prompt do
     expect(prompt.output.string).to eq(expected_output)
   end
 
+  it "resets all selections when the reset choice is selected" do
+    choices = %w[vodka beer wine whisky bourbon none]
+    prompt.on(:keypress) { |e| prompt.trigger(:keydown) if e.value == "j" }
+    prompt.input << "j" << " " << "j" << " " << "j" << "j" << " " << "j" << " " << "\r"
+
+    prompt.input.rewind
+    expect(prompt.multi_select("Select drinks?", choices, reset_choice: "none")).to eq(["none"])
+  end
+
+  it "ignores an incorrect reset choice" do
+    choices = %w[vodka beer wine whisky bourbon none]
+    prompt.on(:keypress) { |e| prompt.trigger(:keydown) if e.value == "j" }
+    prompt.input << "j" << " " << "j" << " " << "j" << "j" << " " << "j" << " " << "\r"
+
+    prompt.input.rewind
+    expect(prompt.multi_select("Select drinks?", choices, reset_choice: "nope")).to eq(%w[beer wine bourbon none])
+  end
+
   it "selects item when space pressed but doesn't echo item if echo: false" do
     choices = %w[vodka beer wine whisky bourbon]
     prompt.input << " \r"

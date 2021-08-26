@@ -1152,6 +1152,22 @@ prompt.multi_select("Select drinks?", choices, max: 3)
 #   ⬢ whisky
 # ‣ ⬡ bourbon
 ```
+#### 2.6.3.10 `:reset_choice`
+
+To define a special 'none of the above' choice that will deselect all other choices:
+
+```ruby
+choices = %w(vodka beer wine whisky bourbon none)
+prompt.multi_select("Favourite drinks?", choices, reset_choice: 'none')
+# =>
+# Select drinks? none
+#   ⬡ vodka
+#   ⬡ beer
+#   ⬡ wine
+#   ⬡ whisky
+#   ⬡ bourbon
+# ‣ ⬢ none
+```
 
 ### 2.6.4 enum_select
 

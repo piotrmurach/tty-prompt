@@ -1,5 +1,6 @@
 # Change log
-
+### Added
+* Add the option of a 'clear all' choice to the multi_select prompt by Emanuele Tozzato (@etozzato)
 ## [v0.23.1] - 2021-04-17
 
 ### Changed

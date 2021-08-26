@@ -23,6 +23,7 @@ module TTY
         @echo = options.fetch(:echo, true)
         @min  = options[:min]
         @max  = options[:max]
+        @reset_choice = Choice.from(options[:reset_choice])
       end
 
       # Set a minimum number of choices
@@ -59,6 +60,9 @@ module TTY
         if @selected.include?(active_choice)
           @selected.delete_at(@active - 1)
         else
+          if active_choice == @reset_choice || @selected.include?(@reset_choice)
+            @selected.clear
+          end
           return if @max && @selected.size >= @max
 
           @selected.insert(@active - 1, active_choice)
