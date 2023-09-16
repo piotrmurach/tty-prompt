@@ -18,35 +18,27 @@ on:
 jobs:
   tests:
     name: Ruby ${{ matrix.ruby }}
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.os || 'ubuntu-latest' }}
     strategy:
       fail-fast: false
       matrix:
-        os:
-          - ubuntu-latest
         ruby:
-          - 2.3
-          - 2.4
-          - 2.5
-          - 2.6
-          - 3.0
+          - "2.0"
+          - "2.1"
+          - "2.3"
+          - "2.4"
+          - "2.5"
+          - "2.6"
+          - "3.0"
           - ruby-head
           - jruby-9.2.13.0
           - jruby-head
           - truffleruby-head
         include:
-          - ruby: 2.1
-            os: ubuntu-latest
-            coverage: false
-            bundler: 1
-          - ruby: 2.2
-            os: ubuntu-latest
-            coverage: false
-            bundler: 1
-          - ruby: 2.7
-            os: ubuntu-latest
+          - ruby: "2.2"
+            os: ubuntu-20.04
+          - ruby: "2.7"
             coverage: true
-            bundler: latest
     env:
       COVERAGE: ${{ matrix.coverage }}
       COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
@@ -57,8 +49,6 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
-          bundler: ${{ matrix.bundler }}
-      - name: Install dependencies
-        run: bundle install --jobs 4 --retry 3
+          bundler-cache: true
       - name: Run tests
         run: bundle exec rake ci
