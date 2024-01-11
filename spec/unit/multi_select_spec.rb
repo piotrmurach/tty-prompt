@@ -905,4 +905,34 @@ RSpec.describe TTY::Prompt do
       expect(prompt.output.string).to eq(expected_output)
     end
   end
+
+  context "with :preserve_order" do
+    it "preserves user choice ordering" do
+      choices = %w[A B C]
+      prompt.on(:keypress) { |e|
+        prompt.trigger(:keyup)   if e.value == "k"
+        prompt.trigger(:keydown) if e.value == "j"
+      }
+      prompt.input << " " << "j" << " " << "j" << " " << "k" << " " << " " << "\r"
+      prompt.input.rewind
+
+      value = prompt.multi_select("What letter?", choices, preserve_order: true, per_page: 100)
+      expect(value).to eq(%w[A C B])
+
+      expected_output =
+        output_helper("What letter?", choices, "A", [], init: true, preserve_order: true,
+          hint: "Press #{up_down} arrow to move, Space/Ctrl+A|R to select (all|rev) and Enter to finish") +
+        output_helper("What letter?", choices, "A", %w[A], preserve_order: true) +
+        output_helper("What letter?", choices, "B", %w[A], preserve_order: true) +
+        output_helper("What letter?", choices, "B", %w[A B], preserve_order: true) +
+        output_helper("What letter?", choices, "C", %w[A B], preserve_order: true) +
+        output_helper("What letter?", choices, "C", %w[A B C], preserve_order: true) +
+        output_helper("What letter?", choices, "B", %w[A B C], preserve_order: true) +
+        output_helper("What letter?", choices, "B", %w[A C], preserve_order: true) +
+        output_helper("What letter?", choices, "B", %w[A C B], preserve_order: true) +
+        exit_message("What letter?", %w[A C B])
+
+      expect(prompt.output.string).to eq(expected_output)
+    end
+  end
 end

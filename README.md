@@ -99,6 +99,7 @@ Or install it yourself as:
       * [2.6.3.7 :filter](#2637-filter)
       * [2.6.3.8 :min](#2638-min)
       * [2.6.3.9 :max](#2639-max)
+      * [2.6.3.10 :preserve_order](#26310-preserve_order)
     * [2.6.4 enum_select](#264-enum_select)
       * [2.6.4.1 :per_page](#2641-per_page)
       * [2.6.4.1 :disabled](#2641-disabled)
@@ -1146,6 +1147,22 @@ choices = %w(vodka beer wine whisky bourbon)
 prompt.multi_select("Select drinks?", choices, max: 3)
 # =>
 # Select drinks? (max. 3) vodka, beer, whisky
+#   ⬢ vodka
+#   ⬢ beer
+#   ⬡ wine
+#   ⬢ whisky
+# ‣ ⬡ bourbon
+```
+
+#### 2.6.3.10 `:preserve_order`
+
+To preserve the ordering of an user selections, use the `:preserve_order` option:
+
+```ruby
+choices = %w(vodka beer wine whisky bourbon)
+prompt.multi_select("Select drinks?", choices, preserve_order: true)
+# =>
+# Select drinks? (max. 3) beer, vodka, whisky
 #   ⬢ vodka
 #   ⬢ beer
 #   ⬡ wine

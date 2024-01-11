@@ -1,5 +1,10 @@
 # Change log
 
+## [v0.23.2] - 2023-01-11
+
+### Changed
+* Change multi_select to allow preserve user choice ordering
+
 ## [v0.23.1] - 2021-04-17
 
 ### Changed
