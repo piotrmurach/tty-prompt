@@ -112,6 +112,7 @@ Or install it yourself as:
     * [2.11.2 warn](#2112-warn)
     * [2.11.3 error](#2113-error)
   * [2.12 keyboard events](#212-keyboard-events)
+  * [2.13 commands](#213-commands)
 * [3. settings](#3-settings)
   * [3.1 :symbols](#31-symbols)
   * [3.2 :active_color](#32-active_color)
@@ -1539,7 +1540,7 @@ Print message(s) in green do:
 prompt.ok(...)
 ```
 
-#### 2.12.2 warn
+#### 2.11.2 warn
 
 Print message(s) in yellow do:
 
@@ -1606,6 +1607,32 @@ The available events are:
 * `:keyescape`
 * `:keydelete`
 * `:keybackspace`
+
+### 2.13 Commands
+
+To show a command and the associated arguments in a list as the user enters keys into the input.
+
+```ruby
+prompt.command(">", { "read" => ["key"] })
+# =>
+# >
+# read key
+```
+
+Commands are a pairing of a string for the command name and an array of arguments for the command.
+
+If you only want a few commands to be displayed while typing you can use `num_commands_shown`.
+
+```ruby
+commands = {
+  "read" => ["key"],
+  "write" => ["key", "value"]
+}
+prompt.command(">", commands, num_commands_shown: 1)
+# =>
+# > wr
+# write key value
+```
 
 ## 3 settings
 

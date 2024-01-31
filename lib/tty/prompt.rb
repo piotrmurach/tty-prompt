@@ -7,6 +7,7 @@ require "tty-reader"
 require "tty-screen"
 
 require_relative "prompt/answers_collector"
+require_relative "prompt/command_list"
 require_relative "prompt/confirm_question"
 require_relative "prompt/errors"
 require_relative "prompt/expander"
@@ -534,6 +535,11 @@ module TTY
     def collect(**options, &block)
       collector = AnswersCollector.new(self, **options)
       collector.call(&block)
+    end
+
+    def command(message, commands = {}, **options, &block)
+      command = CommandList.new(self, **options)
+      command.call(message, commands, &block)
     end
 
     # Check if outputing to terminal
