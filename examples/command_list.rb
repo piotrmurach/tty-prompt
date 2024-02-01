@@ -2,14 +2,12 @@
 
 require_relative "../lib/tty-prompt"
 
-prompt = TTY::Prompt.new
+prompt = TTY::Prompt.new(track_history: true)
 
-commands = [
-  {
-    "read" => value: ["key"],
-    "write" => value: ["key", "value"]
-  }
-]
+commands = {
+  "read" => ["key"],
+  "write" => ["key", "value"]
+}
 
 answer = prompt.command(">", commands)
 

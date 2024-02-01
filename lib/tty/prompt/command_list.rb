@@ -83,7 +83,7 @@ module TTY
       #
       # @api public
       def keypress(event)
-        return unless event.key.name == :alpha || event.key.name == :space
+        return unless event.key.name == :alpha || event.key.name == :space || event.key.name == :num
         @current_command += event.value
       end
 
@@ -108,7 +108,7 @@ module TTY
           @prompt.print(refresh)
         end
 
-        @prompt.print(@prompt.clear_line + @current_command + "\n")
+        @prompt.print(@prompt.clear_line + render_header + "\n")
       end
 
       # Render the header
