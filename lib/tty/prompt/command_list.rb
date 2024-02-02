@@ -84,7 +84,7 @@ module TTY
       #
       # @api public
       def keypress(event)
-        return unless event.key.name == :alpha || event.key.name == :space || event.key.name == :num
+        return unless event.key.name == :alpha || event.key.name == :space || event.key.name == :num || event.key.name == :ignore
         @current_command += event.value
       end
 
