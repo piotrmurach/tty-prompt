@@ -10,5 +10,6 @@ commands = {
 }
 
 answer = prompt.command(">", commands)
+answer = prompt.command(">", commands)
 
 puts answer.inspect

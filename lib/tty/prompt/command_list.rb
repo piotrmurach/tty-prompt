@@ -68,6 +68,7 @@ module TTY
         @prompt.subscribe(self) do
           render
         end
+        @prompt.reader.add_to_history(@current_command)
         @current_command
       end
 
@@ -92,6 +93,21 @@ module TTY
       # @api public
       def keybackspace(*)
         @current_command = @current_command.chop
+      end
+
+      # Respond to key tab event
+      def keytab(*)
+        @current_command = @current_displayed_commands.first if @current_displayed_commands.size > 0
+      end
+
+      # Respond to key up event
+      def keyup(*)
+        @current_command = @prompt.reader.history_previous if @prompt.reader.history_previous?
+      end
+
+      # Respond to key down event
+      def keydown(*)
+        @current_command = @prompt.reader.history_next if @prompt.reader.history_next?
       end
 
       private
