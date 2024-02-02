@@ -107,7 +107,11 @@ module TTY
 
       # Respond to key down event
       def keydown(*)
-        @current_command = @prompt.reader.history_next if @prompt.reader.history_next?
+        if @prompt.reader.history_next?
+          @current_command = @prompt.reader.history_next
+        else
+          @current_command = ''
+        end
       end
 
       private
