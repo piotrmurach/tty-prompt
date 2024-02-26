@@ -5,13 +5,13 @@
 # TTY::Prompt
 
 [![Gem Version](https://badge.fury.io/rb/tty-prompt.svg)][gem]
-[![Actions CI](https://github.com/piotrmurach/tty-prompt/workflows/CI/badge.svg?branch=master)][gh_actions_ci]
+[![Actions CI](https://github.com/piotrmurach/tty-prompt/actions/workflows/ci.yml/badge.svg)][gh_actions_ci]
 [![Build status](https://ci.appveyor.com/api/projects/status/4cguoiah5dprbq7n?svg=true)][appveyor]
 [![Code Climate](https://codeclimate.com/github/piotrmurach/tty-prompt/badges/gpa.svg)][codeclimate]
 [![Coverage Status](https://coveralls.io/repos/github/piotrmurach/tty-prompt/badge.svg)][coverage]
 
 [gem]: http://badge.fury.io/rb/tty-prompt
-[gh_actions_ci]: https://github.com/piotrmurach/tty-prompt/actions?query=workflow%3ACI
+[gh_actions_ci]: https://github.com/piotrmurach/tty-prompt/actions/workflows/ci.yml
 [travis]: http://travis-ci.org/piotrmurach/tty-prompt
 [appveyor]: https://ci.appveyor.com/project/piotrmurach/tty-prompt
 [codeclimate]: https://codeclimate.com/github/piotrmurach/tty-prompt
