@@ -1,5 +1,8 @@
 # Change log
 
+## [v0.24.0] - 2023-02-02
+* Add Command List type of input
+
 ## [v0.23.1] - 2021-04-17
 
 ### Changed
