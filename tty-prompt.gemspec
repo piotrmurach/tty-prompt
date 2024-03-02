@@ -17,6 +17,7 @@ Gem::Specification.new do |spec|
       "bug_tracker_uri"   => "https://github.com/piotrmurach/tty-prompt/issues",
       "changelog_uri"     => "https://github.com/piotrmurach/tty-prompt/blob/master/CHANGELOG.md",
       "documentation_uri" => "https://www.rubydoc.info/gems/tty-prompt",
+      "funding_uri"       => "https://github.com/sponsors/piotrmurach",
       "homepage_uri"      => spec.homepage,
       "source_code_uri"   => "https://github.com/piotrmurach/tty-prompt"
     }
