@@ -19,6 +19,7 @@ Gem::Specification.new do |spec|
       "documentation_uri" => "https://www.rubydoc.info/gems/tty-prompt",
       "funding_uri"       => "https://github.com/sponsors/piotrmurach",
       "homepage_uri"      => spec.homepage,
+      "rubygems_mfa_required" => "true",
       "source_code_uri"   => "https://github.com/piotrmurach/tty-prompt"
     }
   end
