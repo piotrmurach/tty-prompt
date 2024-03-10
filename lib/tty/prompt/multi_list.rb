@@ -2,6 +2,7 @@
 
 require_relative "list"
 require_relative "selected_choices"
+require_relative "ordered_selected_choices"
 
 module TTY
   class Prompt
@@ -18,7 +19,8 @@ module TTY
       # @api public
       def initialize(prompt, **options)
         super
-        @selected = SelectedChoices.new
+        @preserve_order = options.fetch(:preserve_order, false)
+        @selected = selected_choices_klass.new
         @help = options[:help]
         @echo = options.fetch(:echo, true)
         @min  = options[:min]
@@ -71,7 +73,7 @@ module TTY
       def keyctrl_a(*)
         return if @max && @max < choices.size
 
-        @selected = SelectedChoices.new(choices.enabled, choices.enabled_indexes)
+        @selected = selected_choices_klass.new(choices.enabled, choices.enabled_indexes)
       end
 
       # Revert currently selected choices when Ctrl+I is pressed
@@ -84,7 +86,7 @@ module TTY
                     acc << idx if !choice.disabled? && !@selected.include?(choice)
                     acc
                   end
-        @selected = SelectedChoices.new(choices.enabled - @selected.to_a, indexes)
+        @selected = selected_choices_klass.new(choices.enabled - @selected.to_a, indexes)
       end
 
       private
@@ -102,7 +104,7 @@ module TTY
             choices.index(choices.find_by(:name, d.to_s))
           end
         end
-        @selected = SelectedChoices.new(@choices.values_at(*default_indexes),
+        @selected = selected_choices_klass.new(@choices.values_at(*default_indexes),
                                         default_indexes)
 
         if @default.empty?
@@ -218,6 +220,16 @@ module TTY
         end
 
         output.join
+      end
+
+      # Render either SelectedChoices or OrderedSelectedChoices based on preserve_order option
+      #
+      # @return [Class]
+      #
+      # @api private
+      def selected_choices_klass
+        return OrderedSelectedChoices if @preserve_order
+        SelectedChoices
       end
     end # MultiList
   end # Prompt
