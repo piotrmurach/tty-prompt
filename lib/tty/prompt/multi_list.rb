@@ -18,6 +18,7 @@ module TTY
       # @api public
       def initialize(prompt, **options)
         super
+        check_minmax(options[:min], options[:max])
         @selected = SelectedChoices.new
         @help = options[:help]
         @echo = options.fetch(:echo, true)
@@ -29,6 +30,7 @@ module TTY
       #
       # @api public
       def min(value)
+        check_minmax(value, @max)
         @min = value
       end
 
@@ -36,6 +38,7 @@ module TTY
       #
       # @api public
       def max(value)
+        check_minmax(@min, value)
         @max = value
       end
 
@@ -45,7 +48,7 @@ module TTY
       def keyenter(*)
         valid = true
         valid = @min <= @selected.size if @min
-        valid = @selected.size <= @max if @max
+        valid &= @selected.size <= @max if @max
 
         super if valid
       end
@@ -134,6 +137,17 @@ module TTY
         help << "min. #{@min}" if @min
         help << "max. #{@max}" if @max
         "(%s) " % [help.join(", ")]
+      end
+
+      # Check that min is not greater than max
+      #
+      # @raise [ConfigurationError]
+      #
+      # @api_private
+      def check_minmax(min, max)
+        return unless min && max && min > max
+
+        raise ConfigurationError, "min must not be greater than max"
       end
 
       # Build a default help text
