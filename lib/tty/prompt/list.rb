@@ -14,14 +14,23 @@ module TTY
     # @api private
     class List
       # Allowed keys for filter, along with backspace and canc.
-      FILTER_KEYS_MATCHER = /\A([[:alnum:]]|[[:punct:]])\Z/.freeze
+      FILTER_KEYS_MATCHER = /\A([[:alnum:]]|[[:punct:]]|[[:blank:]])\Z/.freeze
 
       # Checks type of default parameter to be integer
       INTEGER_MATCHER = /\A\d+\Z/.freeze
 
+      # The default keys that confirm the selected item(s)
+      DEFAULT_CONFIRM_KEYS = %i[space return enter].freeze
+
+      # The keys that signify "end of line" (EOL).
+      # Depending on whether we are on a Unix system / Windows
+      # the "Enter" key may translate to CR and/or LF characters.
+      # See also List#ensure_eol_compat
+      EOL_KEYS = %i[enter return].freeze
+
       # Create instance of TTY::Prompt::List menu.
       #
-      # @param Hash options
+      # @param [Hash] options
       #   the configuration options
       # @option options [Symbol] :default
       #   the default active choice, defaults to 1
@@ -31,6 +40,8 @@ module TTY
       #   the marker for the selected item
       # @option options [String] :enum
       #   the delimiter for the item index
+      # @option options [Array<Symbol, String, Hash{Symbol, String => String}>]
+      #   :confirm_keys the key(s) to confirm the selected item(s)
       #
       # @api public
       def initialize(prompt, **options)
@@ -47,6 +58,9 @@ module TTY
         @filterable   = options.fetch(:filter) { false }
         @symbols      = @prompt.symbols.merge(options.fetch(:symbols, {}))
         @quiet        = options.fetch(:quiet) { @prompt.quiet }
+        @confirm_keys = init_action_keys(options.fetch(:confirm_keys) do
+                                           self.class::DEFAULT_CONFIRM_KEYS
+                                         end)
         @filter       = []
         @filter_cache = {}
         @help         = options[:help]
@@ -77,6 +91,105 @@ module TTY
       # @api public
       def default(*default_values)
         @default = default_values
+      end
+
+      # Set confirm keys
+      #
+      # @param [Array<Symbol, String, Hash{Symbol, String => String}>] keys
+      #   the key(s) to confirm the selected item(s)
+      #
+      # @return [Hash{Symbol, String => String}]
+      #
+      # @api public
+      def confirm_keys(*keys)
+        keys = keys.flatten
+        return @confirm_keys if keys.empty?
+
+        @confirm_keys = init_action_keys(keys)
+      end
+
+      # Initialize any default or custom action keys
+      # setting up their labels and dealing with compat
+      #
+      # @param [Array<Symbol, String, Hash{Symbol, String => String}>] keys
+      #   the key(s) as only name or name and label pair
+      #
+      # @return [Hash{Symbol, String => String}]
+      #
+      # @api private
+      def init_action_keys(keys)
+        keys = keys_with_labels(keys)
+        ensure_eol_compat(keys)
+      end
+
+      # Normalize a list of key symbols or symbol-label hashes
+      # into a single symbol-label lookup hash.
+      #
+      # @example Only with symbol keys
+      #   keys = [:enter, :ctrl_s]
+      #   keys_with_labels(keys)
+      #   # => {enter: "Enter", ctrl_s: "Ctrl+S"}
+      #
+      # @example With mixed keys
+      #   keys = [:enter, {ctrl_s: "Ctrl-S"}]
+      #   keys_with_labels(keys)
+      #   # => {enter: "Enter", ctrl_s: "Ctrl-S"}
+      #
+      # @param [Array<Symbol, String, Hash{Symbol, String => String}>] keys
+      #   the key(s) as only name or name and label pair
+      #
+      # @return [Hash{Symbol, String => String}]
+      #
+      # @api private
+      def keys_with_labels(keys)
+        keys.reduce({}) do |result, key|
+          obj = key.is_a?(::Hash) ? key : {key => key_help_label(key)}
+          result.merge(obj)
+        end
+      end
+
+      # Convert a key name into a human-readable label
+      #
+      # @param [Symbol, String] key_name
+      #   the key name to convert to label
+      #
+      # @return [String]
+      #
+      # @api private
+      def key_help_label(key_name)
+        if key_name == :return
+          "Enter"
+        else
+          key_name.to_s.split("_").map(&:capitalize).join("+")
+        end
+      end
+
+      # Ensure that if any EOL char is passed as an action key
+      # then all EOL chars are included (for cross-system compat)
+      # Maintain any custom labels.
+      #
+      # @example
+      #   keys = {return: "Enter", ctrl_s: "Ctrl+S"}
+      #   ensure_eol_compat(keys)
+      #   # => {enter: "Enter", return: "Enter", ctrl_s: "Ctrl+S"}
+      #
+      # @param [Hash{Symbol, String => String}] keys
+      #   the key(s) as name and label pair
+      #
+      # @return [Hash{Symbol, String => String}]
+      #
+      # @api private
+      def ensure_eol_compat(keys)
+        key_symbols = keys.keys.sort_by(&:to_s)
+        key_intersection = EOL_KEYS & key_symbols
+
+        if key_intersection.empty? || key_intersection == EOL_KEYS
+          keys
+        else
+          eol_label = keys[key_intersection.first]
+          missing_key = (EOL_KEYS - key_intersection).first
+          keys.merge({missing_key => eol_label})
+        end
       end
 
       # Select paginator based on the current navigation key
@@ -143,7 +256,7 @@ module TTY
       #
       # @api public
       def show_help(value = (not_set = true))
-        return @show_ehlp if not_set
+        return @show_help if not_set
 
         @show_help = value
       end
@@ -163,11 +276,38 @@ module TTY
         arrows.join
       end
 
+      # Information about keys that confirm the selection
+      #
+      # @example Get help string for many keys
+      #   keys = {return: "Enter", ctrl_s: "Ctrl+S", space: "Space"}
+      #   keys_help(keys)
+      #   # => "Enter, Ctrl+S or Space"
+      #
+      # @example Get help string for one key
+      #   keys = {return: "Enter"}
+      #   keys_help(keys)
+      #   # => "Enter"
+      #
+      # @param [Hash{Symbol, String => String}] keys
+      #   the key(s) as name and label pair
+      #
+      # @return [String]
+      #
+      # @api private
+      def keys_help(keys)
+        labels = keys.values.uniq
+        if labels.length == 1
+          labels[0]
+        else
+          "#{labels[0..-2].join(', ')} or #{labels[-1]}"
+        end
+      end
+
       # Default help text
       #
       # Note that enumeration and filter are mutually exclusive
       #
-      # @a public
+      # @api public
       def default_help
         str = []
         str << "(Press "
@@ -175,7 +315,7 @@ module TTY
         str << " or 1-#{choices.size} number" if enumerate?
         str << " to move"
         str << (filterable? ? "," : " and")
-        str << " Enter to select"
+        str << " #{keys_help(@confirm_keys)} to select"
         str << " and letters to filter" if filterable?
         str << ")"
         str.join
@@ -233,8 +373,8 @@ module TTY
       # Call the list menu by passing question and choices
       #
       # @param [String] question
+      # @param [Array[Object]] possibilities
       #
-      # @param
       # @api public
       def call(question, possibilities, &block)
         choices(possibilities)
@@ -262,12 +402,6 @@ module TTY
 
         @active = value
       end
-
-      def keyenter(*)
-        @done = true unless choices.empty?
-      end
-      alias keyreturn keyenter
-      alias keyspace keyenter
 
       def search_choice_in(searchable)
         searchable.find { |i| !choices[i - 1].disabled? }
@@ -305,7 +439,6 @@ module TTY
         @paging_changed = @by_page
         @by_page = false
       end
-      alias keytab keydown
 
       # Moves all choices page by page keeping the current selected item
       # at the same level on each page.
@@ -348,10 +481,20 @@ module TTY
       end
       alias keypage_up keyleft
 
-      def keypress(event)
-        return unless filterable?
+      # Callback fired when a confirm key is pressed
+      #
+      # @api private
+      def confirm
+        @done = true unless choices.empty?
+      end
 
-        if event.value =~ FILTER_KEYS_MATCHER
+      def keypress(event)
+        if @confirm_keys.keys.include?(event.key.name) ||
+           @confirm_keys.keys.include?(event.value)
+          confirm
+        elsif event.key.name == :tab
+          keydown
+        elsif filterable? && event.value =~ FILTER_KEYS_MATCHER
           @filter << event.value
           @active = 1
         end
@@ -487,7 +630,7 @@ module TTY
 
       # Clear screen lines
       #
-      # @param [String]
+      # @param [Integer] lines
       #
       # @api private
       def refresh(lines)

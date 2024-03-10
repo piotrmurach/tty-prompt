@@ -10,15 +10,26 @@ module TTY
     #
     # @api private
     class MultiList < List
+      # The default keys that confirm the selected item(s)
+      DEFAULT_CONFIRM_KEYS = %i[return enter].freeze
+
+      # The default keys that select choices
+      DEFAULT_SELECT_KEYS = %i[space].freeze
+
       # Create instance of TTY::Prompt::MultiList menu.
       #
-      # @param [Prompt] :prompt
+      # @param [Prompt] prompt
       # @param [Hash] options
+      # @option options [Array<Symbol, String, Hash{Symbol, String => String}>]
+      #   :select_keys the key(s) used for selecting choices
       #
       # @api public
       def initialize(prompt, **options)
         super
         @selected = SelectedChoices.new
+        @select_keys = init_select_keys(options.fetch(:select_keys) do
+                                          self.class::DEFAULT_SELECT_KEYS
+                                        end)
         @help = options[:help]
         @echo = options.fetch(:echo, true)
         @min  = options[:min]
@@ -39,22 +50,45 @@ module TTY
         @max = value
       end
 
-      # Callback fired when enter/return key is pressed
+      # Callback fired when a confirm key is pressed
       #
       # @api private
-      def keyenter(*)
+      def confirm
         valid = true
         valid = @min <= @selected.size if @min
         valid = @selected.size <= @max if @max
 
         super if valid
       end
-      alias keyreturn keyenter
 
-      # Callback fired when space key is pressed
+      # @see List#confirm_keys
+      #
+      # @api public
+      def confirm_keys(*keys)
+        super
+        check_conflicting_keys
+        @confirm_keys
+      end
+
+      # Set select keys
+      #
+      # @param [Array<Symbol, String, Hash{Symbol, String => String}>] keys
+      #   the key(s) used for selecting choices
+      #
+      # @return [Hash{Symbol, String => String}]
+      #
+      # @api public
+      def select_keys(*keys)
+        keys = keys.flatten
+        return @select_keys if keys.empty?
+
+        @select_keys = init_select_keys(keys)
+      end
+
+      # Callback fired when the selection key is pressed
       #
       # @api private
-      def keyspace(*)
+      def select_choice
         active_choice = choices[@active - 1]
         if @selected.include?(active_choice)
           @selected.delete_at(@active - 1)
@@ -62,6 +96,18 @@ module TTY
           return if @max && @selected.size >= @max
 
           @selected.insert(@active - 1, active_choice)
+        end
+      end
+
+      # Callback fired when any key is pressed
+      #
+      # @api private
+      def keypress(event)
+        if @select_keys.keys.include?(event.key.name) ||
+           @select_keys.keys.include?(event.value)
+          select_choice
+        else
+          super(event)
         end
       end
 
@@ -88,6 +134,33 @@ module TTY
       end
 
       private
+
+      # Initialize any default or custom select keys
+      # setting up their labels and dealing with any key conflicts
+      #
+      # @see List#init_action_keys
+      #
+      # @api private
+      def init_select_keys(keys)
+        @select_keys = init_action_keys(keys)
+        check_conflicting_keys
+        @select_keys
+      end
+
+      # Checks that there are no key options clashing
+      #
+      # @raise [ConfigurationError]
+      #
+      # @api private
+      def check_conflicting_keys
+        conflicting_keys = @confirm_keys.keys & @select_keys.keys
+        return if conflicting_keys.empty?
+
+        raise ConfigurationError,
+              ":confirm_keys and :select_keys cannot use the same " \
+              "#{conflicting_keys.map(&:inspect).join(', ')} " \
+              "key#{'s' if conflicting_keys.size > 1}"
+      end
 
       # Setup default options and active selection
       #
@@ -146,12 +219,12 @@ module TTY
         str << "(Press "
         str << "#{arrows_help} arrow"
         str << " or 1-#{choices.size} number" if enumerate?
-        str << " to move, Space"
+        str << " to move, #{keys_help(@select_keys)}"
         str << "/Ctrl+A|R" if @max.nil?
         str << " to select"
         str << " (all|rev)" if @max.nil?
         str << (filterable? ? "," : " and")
-        str << " Enter to finish"
+        str << " #{keys_help(@confirm_keys)} to finish"
         str << " and letters to filter" if filterable?
         str << ")"
         str.join
