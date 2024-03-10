@@ -3,6 +3,8 @@
 module TTY
   class Prompt
     class AnswersCollector
+      attr_reader :prompt
+
       # Initialize answer collector
       #
       # @api public
