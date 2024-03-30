@@ -1,5 +1,10 @@
 # Change log
 
+## master
+
+### Fixed
+* Fix Prompt#ask not having custom messages set from key arguments
+
 ## [v0.23.1] - 2021-04-17
 
 ### Changed

@@ -176,7 +176,7 @@ module TTY
     #
     # @api public
     def invoke_question(object, message, **options, &block)
-      options[:messages] = self.class.messages
+      options[:messages] = self.class.messages.merge(options[:messages] || {})
       question = object.new(self, **options)
       question.(message, &block)
     end
