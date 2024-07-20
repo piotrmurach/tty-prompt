@@ -32,7 +32,7 @@ RSpec.describe TTY::Prompt do
       prefix += if disabled
                   "\e[31m#{symbols[:cross]}\e[0m #{num}#{name} #{disabled}"
                 elsif selected.include?(name)
-                  "\e[32m#{symbols[:radio_on]}\e[0m #{num}#{name}"
+                  "\e[32m#{symbols[:radio_on]} #{num}#{name}\e[0m"
                 else
                   "#{symbols[:radio_off]} #{num}#{name}"
                 end
@@ -99,7 +99,7 @@ RSpec.describe TTY::Prompt do
       "  #{symbols[:radio_off]} bourbon",
       "\e[2K\e[1G\e[1A" * 5, "\e[2K\e[1G",
       "Select drinks? \n",
-      "#{symbols[:marker]} \e[32m#{symbols[:radio_on]}\e[0m vodka\n",
+      "#{symbols[:marker]} \e[32m#{symbols[:radio_on]} vodka\e[0m\n",
       "  #{symbols[:radio_off]} beer\n",
       "  #{symbols[:radio_off]} wine\n",
       "  #{symbols[:radio_off]} whisky\n",
@@ -149,7 +149,7 @@ RSpec.describe TTY::Prompt do
       "  - 5) bourbon",
       "\e[2K\e[1G\e[1A" * 5, "\e[2K\e[1G",
       "Select drinks? vodka\n",
-      "> \e[32m=\e[0m 1) vodka\n",
+      "> \e[32m= 1) vodka\e[0m\n",
       "  - 2) beer\n",
       "  - 3) wine\n",
       "  - 4) whisky\n",
@@ -175,10 +175,10 @@ RSpec.describe TTY::Prompt do
     expect(prompt.output.string).to eq([
       "\e[?25lSelect drinks? beer, bourbon \e[90m(Press #{up_down} arrow to move, Space/Ctrl+A|R to select (all|rev) and Enter to finish)\e[0m\n",
       "  #{symbols[:radio_off]} vodka\n",
-      "  \e[32m#{symbols[:radio_on]}\e[0m beer\n",
+      "  \e[32m#{symbols[:radio_on]} beer\e[0m\n",
       "  #{symbols[:radio_off]} wine\n",
       "  #{symbols[:radio_off]} whisky\n",
-      "#{symbols[:marker]} \e[32m#{symbols[:radio_on]}\e[0m bourbon",
+      "#{symbols[:marker]} \e[32m#{symbols[:radio_on]} bourbon\e[0m",
       "\e[2K\e[1G\e[1A" * 5, "\e[2K\e[1G",
       "Select drinks? \e[32mbeer, bourbon\e[0m\n\e[?25h"
     ].join)
@@ -277,7 +277,7 @@ RSpec.describe TTY::Prompt do
     expect(prompt.multi_select("Select drinks?", choices, options)).to eq(["vodka"])
     expect(prompt.output.string).to eq([
       "\e[?25lSelect drinks? vodka \e[90m(Press #{up_down} arrow to move, Space/Ctrl+A|R to select (all|rev) and Enter to finish)\e[0m\n",
-      "> \e[34m#{symbols[:radio_on]}\e[0m vodka\n",
+      "> \e[34m#{symbols[:radio_on]} vodka\e[0m\n",
       "  #{symbols[:radio_off]} beer\n",
       "  #{symbols[:radio_off]} wine\n",
       "  #{symbols[:radio_off]} whisky\n",

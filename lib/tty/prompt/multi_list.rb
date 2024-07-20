@@ -204,8 +204,7 @@ module TTY
           indicator = (index + 1 == @active) ?  @symbols[:marker] : " "
           indicator += " "
           message = if @selected.include?(choice) && !choice.disabled?
-                      selected = @prompt.decorate(@symbols[:radio_on], @active_color)
-                      "#{selected} #{num}#{choice.name}"
+                      @prompt.decorate("#{@symbols[:radio_on]} #{num}#{choice.name}", @active_color)
                     elsif choice.disabled?
                       @prompt.decorate(@symbols[:cross], :red) +
                         " #{num}#{choice.name} #{choice.disabled}"
