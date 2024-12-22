@@ -75,6 +75,15 @@ RSpec.describe TTY::Prompt::Paginator, "#paginate" do
     expect(paginator.end_index).to eq(6)
   end
 
+  it "always returns a page that includes the current selection" do
+    list = (1..100).to_a
+    list.each do |one_based_index|
+      zero_based_page_indexes = described_class.new.paginate(list, one_based_index, 5).map(&:last)
+      zero_based_index = one_based_index - 1
+      expect(zero_based_page_indexes).to include(zero_based_index)
+    end
+  end
+
   it "starts with default selection" do
     list = %w[a b c d e f g]
     paginator = described_class.new(per_page: 3, default: 3)

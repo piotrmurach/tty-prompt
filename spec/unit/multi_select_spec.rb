@@ -380,7 +380,7 @@ RSpec.describe TTY::Prompt do
       expect(answer).to eq(["D"])
 
       expected_output =
-        output_helper("What letter?", choices[3..5], "D", %w[D], init: true,
+        output_helper("What letter?", choices[2..4], "D", %w[D], init: true,
           hint: "Press #{up_down}/#{left_right} arrow to move, Space/Ctrl+A|R to select (all|rev) and Enter to finish") +
         exit_message("What letter?", %w[D])
 
@@ -396,7 +396,7 @@ RSpec.describe TTY::Prompt do
       expect(answer).to eq([4])
 
       expected_output =
-        output_helper("What letter?", choices.keys[3..5], :D, [:D], init: true,
+        output_helper("What letter?", choices.keys[2..4], :D, [:D], init: true,
           hint: "Press #{up_down}/#{left_right} arrow to move, Space/Ctrl+A|R to select (all|rev) and Enter to finish") +
         exit_message("What letter?", %w[D])
 
@@ -416,7 +416,7 @@ RSpec.describe TTY::Prompt do
       expect(answer).to eq(["D"])
 
       expected_output =
-        output_helper("What letter?", choices[3..5], "D", %w[D], init: true,
+        output_helper("What letter?", choices[2..4], "D", %w[D], init: true,
           hint: "Press #{up_down}/#{left_right} arrow to move, Space/Ctrl+A|R to select (all|rev) and Enter to finish") +
         exit_message("What letter?", %w[D])
 
@@ -472,7 +472,7 @@ RSpec.describe TTY::Prompt do
       expect(answer).to eq(%w[4 10])
 
       expected_output =
-        output_helper("What number?", choices[3..6], "4", ["4"], init: true,
+        output_helper("What number?", choices[1..4], "4", ["4"], init: true,
           hint: "Press #{up_down}/#{left_right} arrow to move, Space/Ctrl+A|R to select (all|rev) and Enter to finish") +
         output_helper("What number?", choices[4..7], "8", ["4"]) +
         output_helper("What number?", choices[8..9], "10", ["4"]) +

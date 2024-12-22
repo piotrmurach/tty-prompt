@@ -394,9 +394,9 @@ RSpec.describe TTY::Prompt, "#select" do
       expect(answer).to eq("D")
       expected_output = [
         "\e[?25lWhat letter? \e[90m(Press #{up_down}/#{left_right} arrow to move and Enter to select)\e[0m\n",
+        "  C\n",
         "\e[32m#{symbols[:marker]} D\e[0m\n",
-        "  E\n",
-        "  F",
+        "  E",
         "\e[2K\e[1G\e[1A" * 3,
         "\e[2K\e[1G",
         "What letter? \e[32mD\e[0m\n\e[?25h"
@@ -416,9 +416,9 @@ RSpec.describe TTY::Prompt, "#select" do
       expect(answer).to eq(4)
       expected_output = [
         "\e[?25lWhat letter? \e[90m(Press #{up_down}/#{left_right} arrow to move and Enter to select)\e[0m\n",
+        "  C\n",
         "\e[32m#{symbols[:marker]} D\e[0m\n",
-        "  E\n",
-        "  F",
+        "  E",
         "\e[2K\e[1G\e[1A" * 3,
         "\e[2K\e[1G",
         "What letter? \e[32mD\e[0m\n\e[?25h"
@@ -441,9 +441,9 @@ RSpec.describe TTY::Prompt, "#select" do
 
       expected_output = [
         "\e[?25lWhat letter? \e[90m(Press #{up_down}/#{left_right} arrow to move and Enter to select)\e[0m\n",
+        "  C\n",
         "\e[32m#{symbols[:marker]} D\e[0m\n",
-        "  E\n",
-        "  F",
+        "  E",
         "\e[2K\e[1G\e[1A" * 3,
         "\e[2K\e[1G",
         "What letter? \e[32mD\e[0m\n\e[?25h"
@@ -484,7 +484,7 @@ RSpec.describe TTY::Prompt, "#select" do
       expect(answer).to eq("10")
 
       expected_output = [
-        output_helper("What number?", choices[3..6], "4", init: true,
+        output_helper("What number?", choices[1..4], "4", init: true,
           hint: "Press #{up_down}/#{left_right} arrow to move and Enter to select"),
         output_helper("What number?", choices[4..7], "8"),
         output_helper("What number?", choices[8..9], "10"),

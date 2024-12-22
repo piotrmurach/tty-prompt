@@ -21,7 +21,7 @@ module TTY
       #
       # @api private
       def initialize(**options)
-        @last_index  = Array(options[:default]).flatten.first || 0
+        @last_index  = Array(options[:default]).flatten.first
         @per_page    = options[:per_page]
         @start_index = Array(options[:default]).flatten.first
       end
@@ -75,15 +75,23 @@ module TTY
           end
         end
 
-        step = (current_index - @last_index).abs
-        if current_index > @last_index # going up
-          if current_index >= @end_index && current_index < list.size - 1
-            last_page = list.size - @per_page
-            @start_index = [@start_index + step, last_page].min
+        if @last_index.nil?
+          if current_index == @start_index && current_index > 0
+            @start_index -= 1
+          elsif current_index == @end_index && current_index < list.size - 1
+            @start_index += 1
           end
-        elsif current_index < @last_index # going down
-          if current_index <= @start_index && current_index > 0
-            @start_index = [@start_index - step, 0].max
+        else
+          step = (current_index - @last_index).abs
+          if current_index > @last_index # going up
+            if current_index >= @end_index && current_index < list.size - 1
+              last_page = list.size - @per_page
+              @start_index = [@start_index + step, last_page].min
+            end
+          elsif current_index < @last_index # going down
+            if current_index <= @start_index && current_index > 0
+              @start_index = [@start_index - step, 0].max
+            end
           end
         end
 
