@@ -299,7 +299,7 @@ module TTY
     # @param [Array[Object]] choices
     #   the choices to select from
     #
-    # @return [String]
+    # @return [Array<String>]
     #
     # @api public
     def multi_select(question, *args, &block)
