@@ -1,5 +1,11 @@
 # Change log
 
+## [v0.23.2] - 2025-01-03
+
+### Changed
+
+* TTY::Prompt#multi_select return type to `[Array<String>]`
+
 ## [v0.23.1] - 2021-04-17
 
 ### Changed
